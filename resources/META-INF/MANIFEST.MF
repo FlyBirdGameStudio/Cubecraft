@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Main-Class: com.SunriseStudio.cubecraft.Start
+Created-By: SunriseStudio2022
+Class-Path: ./libraries/gson-2.2.4.jar ./libraries/joml-1.10.4.jar ./libraries/lwjgl-compatibility.jar ./libraries/lwjgl.jar ./libraries/netty-all-4.1.25.Final.jar ./libraries/joml-1.10.4.jar
+
+

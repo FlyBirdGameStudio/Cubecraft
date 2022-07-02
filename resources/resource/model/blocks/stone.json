@@ -1,0 +1,16 @@
+{
+	"meta":{
+		"id":"stone",
+		"author":"cubecraft",
+		"render_type":"alpha"
+	},
+	"model":[
+		{
+			"type":"cube",
+			"start":[0,0,0],
+			"end":[1,1,1],
+			"textures":["/assets/texture/block/stone.png"],
+			"texture_usage":"all"
+		}	
+	]
+}
