@@ -17,4 +17,8 @@ public class HashMapSet<K extends KeyComparable<K>,V extends KeyGetter<K>> {
     public V get(K k){
         return this.map.getOrDefault(k.hashCode(),null);
     }
+
+    public boolean contains(K k) {
+        return map.containsKey(k.hashCode());
+    }
 }

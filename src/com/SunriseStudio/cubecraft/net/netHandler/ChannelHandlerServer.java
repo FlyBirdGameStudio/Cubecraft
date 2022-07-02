@@ -1,4 +1,4 @@
-package com.SunriseStudio.cubecraft.net.handler;
+package com.SunriseStudio.cubecraft.net.netHandler;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

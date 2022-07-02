@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 
 public class ArrayQueue <E extends Comparable<E>> {
     public PriorityQueue<PriorityAdapter<E>> items=new PriorityQueue<>();
+    public HashSet<Integer> e=new HashSet<>();
 
     //information
     public int size() {
@@ -15,8 +16,8 @@ public class ArrayQueue <E extends Comparable<E>> {
         return this.items.isEmpty();
     }
 
-    public boolean contains(Object o) {
-        return this.items.contains(o);
+    public boolean contains(E e) {
+        return this.e.contains(e.hashCode());
     }
 
     //operation
@@ -29,7 +30,10 @@ public class ArrayQueue <E extends Comparable<E>> {
     }
 
     public void add(E e) {
-        items.offer(new PriorityAdapter<>(e));
+        if(!contains(e)) {
+            items.offer(new PriorityAdapter<>(e));
+            this.e.add(e.hashCode());
+        }
     }
 
     public void addAll(List<E> all){

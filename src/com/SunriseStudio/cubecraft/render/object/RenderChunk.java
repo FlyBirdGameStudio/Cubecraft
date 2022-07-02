@@ -1,5 +1,6 @@
 package com.SunriseStudio.cubecraft.render.object;
 
+import com.SunriseStudio.cubecraft.render.Camera;
 import com.SunriseStudio.cubecraft.util.grass3D.render.culling.ICuller;
 import com.SunriseStudio.cubecraft.util.grass3D.render.draw.ChanneledVertexArrayBuilder;
 import com.SunriseStudio.cubecraft.util.grass3D.render.draw.IVertexArrayBuilder;
@@ -27,8 +28,19 @@ public class RenderChunk implements KeyGetter<RenderChunkPos>,IRenderObject{
         this.compileVisibleArea();
     }
 
+    public static AABB getAABBFromPos(RenderChunkPos renderChunkPos, Camera camera) {
+        return new AABB(
+                camera.getPosition().x-renderChunkPos.x()*16,
+                camera.getPosition().y-renderChunkPos.y()*16,
+                camera.getPosition().z-renderChunkPos.z()*16,
+                camera.getPosition().x-renderChunkPos.x()*16+16,
+                camera.getPosition().y-renderChunkPos.y()*16+16,
+                camera.getPosition().z-renderChunkPos.z()*16+16
+        );
+    }
 
-//-----update-----
+
+    //-----update-----
     @Override
     public void render(){
         GL11.glCallList(this.renderList);

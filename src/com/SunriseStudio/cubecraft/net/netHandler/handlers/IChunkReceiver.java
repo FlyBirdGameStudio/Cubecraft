@@ -1,6 +1,6 @@
-package com.SunriseStudio.cubecraft.net.handler.handlers;
+package com.SunriseStudio.cubecraft.net.netHandler.handlers;
 
-import com.SunriseStudio.cubecraft.net.handler.IClientHandler;
+import com.SunriseStudio.cubecraft.net.netHandler.IClientHandler;
 import com.SunriseStudio.cubecraft.util.collections.ArrayUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

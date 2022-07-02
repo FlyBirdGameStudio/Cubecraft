@@ -17,6 +17,7 @@ import com.SunriseStudio.cubecraft.gui.FontRenderer;
 import com.SunriseStudio.cubecraft.resources.ResourcePacks;
 import com.SunriseStudio.cubecraft.resources.ResourceUtil;
 import com.SunriseStudio.cubecraft.util.grass3D.render.GLUtil;
+import com.SunriseStudio.cubecraft.util.grass3D.render.culling.Frustum;
 import com.SunriseStudio.cubecraft.util.math.AABB;
 import com.SunriseStudio.cubecraft.util.timer.Timer;
 import com.SunriseStudio.cubecraft.world.Dimension;
@@ -59,6 +60,7 @@ public class CubeCraft extends LoopTickingApplication {
     private final IDimensionAccess clientWorld = new Dimension();
     private final Player player = new Player(clientWorld);
 
+
     @Override
     public void init() throws LWJGLException {
         this.timer=new Timer(20);
@@ -83,6 +85,13 @@ public class CubeCraft extends LoopTickingApplication {
         logHandler.info("game stopped...");
         LogHandler.allSave();
         System.exit(0);
+    }
+
+    @Override
+    public void on1sec() {
+        if (Runtime.getRuntime().freeMemory() < 1024 * 1024 * 200){
+            new Thread(System::gc).start();
+        }
     }
 
     @Override

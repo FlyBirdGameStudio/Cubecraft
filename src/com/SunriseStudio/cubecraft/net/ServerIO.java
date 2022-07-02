@@ -1,7 +1,7 @@
 package com.SunriseStudio.cubecraft.net;
 
-import com.SunriseStudio.cubecraft.net.handler.ChannelHandlerServer;
-import com.SunriseStudio.cubecraft.net.handler.IServerHandler;
+import com.SunriseStudio.cubecraft.net.netHandler.ChannelHandlerServer;
+import com.SunriseStudio.cubecraft.net.netHandler.IServerHandler;
 import com.SunriseStudio.cubecraft.util.ReflectHelper;
 import com.SunriseStudio.cubecraft.util.collections.options.Option;
 import com.SunriseStudio.cubecraft.util.collections.options.Options;

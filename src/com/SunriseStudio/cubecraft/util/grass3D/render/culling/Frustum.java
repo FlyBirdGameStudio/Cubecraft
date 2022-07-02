@@ -2,6 +2,8 @@ package com.SunriseStudio.cubecraft.util.grass3D.render.culling;
 
 import com.SunriseStudio.cubecraft.util.math.AABB;
 
+import org.joml.FrustumIntersection;
+import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 
@@ -17,6 +19,21 @@ public class Frustum extends ICuller{
     float[] proj = new float[16];
     float[] modl = new float[16];
     float[] clip = new float[16];
+
+    private final FrustumIntersection frustumIntersection=new FrustumIntersection();
+
+    @Override
+    public void update() {
+        FloatBuffer proj = BufferUtils.createFloatBuffer(16);
+        FloatBuffer modl = BufferUtils.createFloatBuffer(16);
+        modl.clear();
+        modl.clear();
+        GL11.glGetFloat(2983, proj);
+        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, modl);
+        proj.flip().limit(16);
+        modl.flip().limit(16);
+        frustumIntersection.set(new Matrix4f(proj).mul(new Matrix4f(modl)));
+    }
 
     public Frustum() {
         calculateFrustum();
@@ -34,9 +51,8 @@ public class Frustum extends ICuller{
         this._proj.clear();
         this._modl.clear();
         this._clip.clear();
-        GL11.glGetFloat(2983, this._proj);
-        GL11.glGetFloat(2982, this._modl);
 
+    
 
         this._proj.flip().limit(16);
         this._proj.get(this.proj);
@@ -88,7 +104,6 @@ public class Frustum extends ICuller{
         this.m_Frustum[5][2] = this.clip[11] + this.clip[10];
         this.m_Frustum[5][3] = this.clip[15] + this.clip[14];
         this.normalizePlane(this.m_Frustum, 5);
-        //this.frustumIntersection=new FrustumIntersection(new Matrix4f(FloatBuffer.wrap(this.clip)));
     }
 
 
@@ -137,14 +152,15 @@ public class Frustum extends ICuller{
                 return false;
             }
         }
-
         return true;
     }
 
     @Override
     public boolean aabbVisible(AABB aabb) {
         //return this.cubeInFrustum(aabb.x0, aabb.y0, aabb.z0, aabb.x1, aabb.y1, aabb.z1);
-        return true;
+        return this.frustumIntersection.testAab(
+                (float) aabb.x0, (float) aabb.y0, (float) aabb.z0,
+                (float) aabb.x1, (float) aabb.y1, (float) aabb.z1);
     }
 
     @Override

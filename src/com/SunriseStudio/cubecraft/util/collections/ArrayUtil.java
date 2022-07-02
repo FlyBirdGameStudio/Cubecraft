@@ -1,5 +1,7 @@
 package com.SunriseStudio.cubecraft.util.collections;
 
+import io.netty.buffer.ByteBuf;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -28,6 +30,11 @@ public class ArrayUtil {
             }
             return b;
         });
+    }
+
+    @SafeVarargs
+    public static <T> T[] allocate(T... args) {
+        return args;
     }
 
     public interface ArrayIterationAction<E>{

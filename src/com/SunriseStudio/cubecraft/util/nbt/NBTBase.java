@@ -1,8 +1,9 @@
 package com.SunriseStudio.cubecraft.util.nbt;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+
+import java.io.*;
 
 public abstract class NBTBase
 {

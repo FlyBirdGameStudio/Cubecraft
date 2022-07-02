@@ -4,8 +4,8 @@ public class GameSetting {
     public static GameSetting instance=new GameSetting();
 
     //render
-    public int renderDistance =2;
-    public int renderLoadingDistance=5;
+    public int renderDistance =6;
+    public int renderLoadingDistance=8;
     //display
     public int GUIScale=2;
     public int maxUpdatesPreFrame=1;

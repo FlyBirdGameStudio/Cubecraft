@@ -36,12 +36,11 @@ public class EnvironmentRenderer extends IWorldRenderer{
         GL11.glDisable(GL11.GL_CULL_FACE);
         GL11.glCallList(this.skyList);
         GL11.glEnable(GL11.GL_CULL_FACE);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        for (long i = (long) (this.player.x-d- world.time*1)/CLOUD_SIZE; i < (this.player.x+d- world.time*1)/CLOUD_SIZE; i+=1) {
+        for (long i = (long) (this.player.x-d- world.time*0.05)/CLOUD_SIZE; i < (this.player.x+d- world.time*0.05)/CLOUD_SIZE; i+=1) {
             for (long j = (long) (this.player.z-d)/CLOUD_SIZE; j < (this.player.z+d)/CLOUD_SIZE; j+=1) {
                 if(noise.getValue(i*256,j*256)>16){
                     GL11.glPushMatrix();
-                    camera.setupObjectCamera(new Vector3d(i*CLOUD_SIZE+ world.time*1,CLOUD_HEIGHT,j*CLOUD_SIZE));
+                    camera.setupObjectCamera(new Vector3d(i*CLOUD_SIZE+ world.time*0.05,CLOUD_HEIGHT,j*CLOUD_SIZE));
                     GL11.glCallList(this.cloudList);
                     if(noise.getValue((i-1)*256,j*256)<=16){
                         GL11.glCallList(cloudList+3);
@@ -59,7 +58,6 @@ public class EnvironmentRenderer extends IWorldRenderer{
                 }
             }
         }
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 

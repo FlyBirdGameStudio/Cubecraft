@@ -34,4 +34,8 @@ public abstract class ICuller {
     public static ICuller CreateOcclusionCuller(){return new OcclusionCuller();}
     public static ICuller CreateFrustumCuller(){return new Frustum();}
     public static ICuller CreateJomlFrustumCuller(){return new JomlFrustumAdapter();}
+
+    public void update() {
+
+    }
 }

@@ -113,7 +113,7 @@ public class SimplexNoise extends Synth {
 
         // Add contributions from each corner to get the final noise value.
         // The result is scaled to return values in the interval [-1,1]
-        return 40.0f / 0.884343445f * (n0 + n1 + n2);    //accurate to e-9 so that values scale to [-1, 1], same acc as F2 G2.
+        return 40.0f / 0.884343445f * (n0 + n1 + n2);    //accurate to sender-9 so that values scale to [-1, 1], same acc as F2 G2.
     }
 
     double _grad(int hash, double x, double y) {

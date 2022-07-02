@@ -1,4 +1,4 @@
-package com.SunriseStudio.cubecraft.net.handler;
+package com.SunriseStudio.cubecraft.net.netHandler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

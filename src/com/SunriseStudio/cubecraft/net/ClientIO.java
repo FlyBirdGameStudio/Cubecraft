@@ -1,7 +1,7 @@
 package com.SunriseStudio.cubecraft.net;
 
-import com.SunriseStudio.cubecraft.net.handler.ChannelHandlerClient;
-import com.SunriseStudio.cubecraft.net.handler.IClientHandler;
+import com.SunriseStudio.cubecraft.net.netHandler.ChannelHandlerClient;
+import com.SunriseStudio.cubecraft.net.netHandler.IClientHandler;
 import com.SunriseStudio.cubecraft.util.ReflectHelper;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
