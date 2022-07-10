@@ -27,3 +27,13 @@
 ### 其他更新
 - 添加了timer和timertask（没有实现）
 - 添加了zh_cn.lang和lang文件的解析器
+## alpha0.1.5(2022-07-10)
+- 加入了input-handler
+- 加入了全屏
+- 加入双击按键检测
+- 删除多余代码
+- 添加了screen的输入控制器回调
+- 整理screen基类
+- 整理debugscreen
+- 双击空格切换飞行，而不再使用z
+- 加入疾跑

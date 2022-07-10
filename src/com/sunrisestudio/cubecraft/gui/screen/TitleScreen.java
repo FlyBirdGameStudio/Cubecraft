@@ -29,7 +29,7 @@ public class TitleScreen extends Screen {
             singlePlayerButton.setLayout(new OriginLayout(0,-10,300,30, OriginLayout.Origin.MIDDLE_MIDDLE,0));
             singlePlayerButton.setBorder(new Border(0,0,4,4));
             singlePlayerButton.setListener(() -> {
-            this.cubeCraft.setScreen(new LoadingScreen(new TitleScreen(), new HUDScreen(), new LoadingScreenTask() {
+            this.platform.setScreen(new LoadingScreen(new TitleScreen(), new HUDScreen(), new LoadingScreenTask() {
                 @Override
                 public void run() {
                     for (int i = 0; i < 101; i++) {
@@ -51,7 +51,7 @@ public class TitleScreen extends Screen {
             multiPlayerButton.setLayout(new OriginLayout(0,20,300,30, OriginLayout.Origin.MIDDLE_MIDDLE,0));
             multiPlayerButton.setBorder(new Border(0,0,4,4));
             multiPlayerButton.setListener(() -> {
-                this.cubeCraft.setScreen(new HUDScreen());//actullyJoinTheGame
+                this.platform.setScreen(new HUDScreen());//actullyJoinTheGame
             });
             this.components.add(multiPlayerButton);
         }//multi player button
@@ -60,7 +60,7 @@ public class TitleScreen extends Screen {
             settingButton.setLayout(new OriginLayout(-75,50,150,30, OriginLayout.Origin.MIDDLE_MIDDLE,0));
             settingButton.setBorder(new Border(0,4,4,4));
             settingButton.setListener(() -> {
-                this.cubeCraft.setScreen(new SettingScreen());//actullyJoinTheGame
+                this.platform.setScreen(new SettingScreen(this));
             });
             this.components.add(settingButton);
         }//setting button
@@ -69,7 +69,7 @@ public class TitleScreen extends Screen {
             quitButton.setLayout(new OriginLayout(75,50,150,30, OriginLayout.Origin.MIDDLE_MIDDLE,0));
             quitButton.setBorder(new Border(4,4,4,4));
             quitButton.setListener(() -> {
-                this.cubeCraft.stop();
+                this.platform.stop();
             });
             this.components.add(quitButton);
         }//exit button

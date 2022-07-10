@@ -8,9 +8,7 @@ import com.sunrisestudio.cubecraft.gui.layout.OriginLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PauseScreen
-extends Screen {
-    private List<Button> buttons = new ArrayList<Button>();
+public class PauseScreen extends Screen {
     @Override
     public void init() {
         this.components.clear();
@@ -19,7 +17,7 @@ extends Screen {
             singlePlayerButton.setLayout(new OriginLayout(0,-10,300,30, OriginLayout.Origin.MIDDLE_MIDDLE,0));
             singlePlayerButton.setBorder(new Border(0,0,4,4));
             singlePlayerButton.setListener(() -> {
-                this.cubeCraft.setScreen(new HUDScreen());
+                this.platform.setScreen(new HUDScreen());
             });
             this.components.add(singlePlayerButton);
         }//single player button
@@ -28,7 +26,7 @@ extends Screen {
             multiPlayerButton.setLayout(new OriginLayout(0,20,300,30, OriginLayout.Origin.MIDDLE_MIDDLE,0));
             multiPlayerButton.setBorder(new Border(0,0,4,4));
             multiPlayerButton.setListener(() -> {
-                this.cubeCraft.setScreen(new SettingScreen());
+                this.platform.setScreen(new SettingScreen(this));
             });
             this.components.add(multiPlayerButton);
         }//multi player button
@@ -37,7 +35,7 @@ extends Screen {
             settingButton.setLayout(new OriginLayout(0,50,300,30, OriginLayout.Origin.MIDDLE_MIDDLE,0));
             settingButton.setBorder(new Border(0,0,4,4));
             settingButton.setListener(() -> {
-                this.cubeCraft.setScreen(new TitleScreen());
+                this.platform.setScreen(new TitleScreen());
             });
             this.components.add(settingButton);
         }//setting button
@@ -46,11 +44,15 @@ extends Screen {
     @Override
     public void tick() {
         super.tick();
-
     }
 
     @Override
     public boolean isInGameGUI() {
         return true;
+    }
+
+    @Override
+    public Screen getParentScreen() {
+        return new HUDScreen();
     }
 }

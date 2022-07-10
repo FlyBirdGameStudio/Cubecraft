@@ -50,10 +50,10 @@ public class LoadingScreen extends Screen{
         this.progressBar.setStatus(this.task.getStatus());
         //this.label.text=this.task.getText();
         if(this.task.getStatus()>=100){
-            this.cubeCraft.setScreen(this.onFinished);
+            this.platform.setScreen(this.onFinished);
         }
         if(this.task.isCancelled()){
-            this.cubeCraft.setScreen(this.onCancelled);
+            this.platform.setScreen(this.onCancelled);
         }
     }
 

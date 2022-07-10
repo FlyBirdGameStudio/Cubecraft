@@ -20,6 +20,8 @@ import com.sunrisestudio.cubecraft.gui.FontRenderer;
 import com.sunrisestudio.cubecraft.resources.ResourcePacks;
 import com.sunrisestudio.cubecraft.world.entity.EntityMap;
 import com.sunrisestudio.grass3d.render.GLUtil;
+import com.sunrisestudio.util.input.InputCallbackHandler;
+import com.sunrisestudio.util.input.KeyboardCallback;
 import com.sunrisestudio.util.lang.Language;
 import com.sunrisestudio.util.timer.Timer;
 
@@ -28,7 +30,6 @@ import com.sunrisestudio.cubecraft.world.block.registery.BlockMap;
 import com.sunrisestudio.cubecraft.world.entity._Player;
 import com.sunrisestudio.cubecraft.world.entity.humanoid.Player;
 import com.sunrisestudio.cubecraft.gui.DisplayScreenInfo;
-import com.sunrisestudio.cubecraft.gui.screen.HUDScreen;
 import com.sunrisestudio.cubecraft.gui.screen.LogoLoadingScreen;
 import com.sunrisestudio.cubecraft.gui.screen.TitleScreen;
 import com.sunrisestudio.grass3d.render.textures.Texture2D;
@@ -43,6 +44,7 @@ import org.lwjglx.input.Keyboard;
 import org.lwjglx.input.Mouse;
 import org.lwjglx.opengl.Display;
 import org.lwjglx.opengl.DisplayMode;
+import org.lwjglx.opengl.PixelFormat;
 
 
 //todo:add server net support;
@@ -51,8 +53,9 @@ import org.lwjglx.opengl.DisplayMode;
 
 public class CubeCraft extends LoopTickingApplication {
     private DisplayScreenInfo screenInfo;
+    private boolean fullscreen;
 
-    public static final String VERSION = "alpha-0.1.0";
+    public static final String VERSION = "alpha-0.1.5";
     public _Level world;
 
     public ContentWorldRenderer worldRenderer;
@@ -67,6 +70,7 @@ public class CubeCraft extends LoopTickingApplication {
     private final BlockMap blockMap=new BlockMap();
     private final EntityMap entityMap=new EntityMap();
 
+    private long lastToggle =System.currentTimeMillis();
 
     @Override
     public void init() throws LWJGLException {
@@ -84,6 +88,24 @@ public class CubeCraft extends LoopTickingApplication {
         this.worldRenderer = new ContentWorldRenderer(this.world, this._player);
 
         this.clientWorld.getEntityAccess().addEntity(this.player);
+
+        InputCallbackHandler.registerGlobalKeyboardCallback("cubecraft:main",new KeyboardCallback(){
+            @Override
+            public void onKeyEventPressed() {
+                if(Keyboard.getEventKey()==Keyboard.KEY_F11){
+                    try {
+                        Display.setFullscreen(!Display.isFullscreen());
+                    } catch (LWJGLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                if(Keyboard.getEventKey()==Keyboard.KEY_ESCAPE){
+                    if(CubeCraft.this.screen.getParentScreen()!=null){
+                        CubeCraft.this.setScreen(CubeCraft.this.screen.getParentScreen());
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -137,23 +159,17 @@ public class CubeCraft extends LoopTickingApplication {
 
     @Override
     public void longTick() {
-        while (Mouse.next()) {
-            if (Mouse.getEventButton() == 0 && Mouse.getEventButtonState()) {
-                //this.handleMouseClick();
-                if (Display.isActive() && this.screen instanceof HUDScreen) {
-                    Mouse.setGrabbed(true);
-                }
-            }
-            if (Mouse.getEventButton() == 1 && Mouse.getEventButtonState()) {
-                //right click
-            }
-        }
+        InputCallbackHandler.tick();
         this.screen.tick();
         this.world.tick();
+
         new Thread(this.clientWorld::tick).start();
     }
 
     public void setScreen(Screen screen) {
+        if (screen != null) {
+            screen.destroy();
+        }
         this.screen = screen;
         if (screen != null) {
             screen.init(this);
@@ -215,10 +231,9 @@ public class CubeCraft extends LoopTickingApplication {
                 Integer.parseInt((String) Start.getArgs("height", "720"))));
         Display.setTitle((String) Start.getArgs("title", "CubeCraft-" + VERSION));
         Display.setResizable(true);
-        Display.create();
+        Display.create(new PixelFormat(),Boolean.getBoolean((String) Start.getArgs("fullScreen", "false")));
         Keyboard.create();
         Mouse.create();
-        Display.setFullscreen(Boolean.getBoolean((String) Start.getArgs("fullScreen", "false")));
         GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES,GameSetting.instance.FXAA);
         //.setIcon(ResourceUtil.getImageBufferFromStream(ResourcePacks.instance.getImage("/resources/textures/gui/logo2.png")));
         getDisplaySize();
