@@ -1,5 +1,8 @@
 package com.sunrisestudio.cubecraft.world.entity;
 
+import com.sunrisestudio.cubecraft.world.Registry;
+import com.sunrisestudio.cubecraft.world.World;
+import com.sunrisestudio.cubecraft.world.block.LiquidBlock;
 import com.sunrisestudio.util.math.AABB;
 import com.sunrisestudio.util.math.HitBox;
 import com.sunrisestudio.util.math.HitResult;
@@ -7,8 +10,9 @@ import com.sunrisestudio.util.nbt.NBTDataIO;
 import com.sunrisestudio.util.nbt.NBTTagCompound;
 import com.sunrisestudio.cubecraft.world.HittableObject;
 import com.sunrisestudio.cubecraft.world.block.BlockFacing;
-import com.sunrisestudio.cubecraft.world.access.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.entity.item.Item;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaterniond;
 import org.joml.Vector3d;
 
@@ -18,11 +22,14 @@ import java.util.List;
 import java.util.UUID;
 
 public abstract class Entity implements HittableObject, NBTDataIO {
+    public boolean sneak=false;
     private String uuid;
+
+    @Nullable
     public HitResult hitResult;
     protected IWorldAccess world;
     public boolean runningMode;
-    public boolean flyingMode = true;
+    public boolean flyingMode = false;
 
     //position
     public double xo;
@@ -53,7 +60,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
     public Entity(IWorldAccess world) {
         this.world = world;
         this.resetPos();
-        this.uuid = UUID.nameUUIDFromBytes(String.valueOf(System.currentTimeMillis()+this.hashCode()).getBytes(StandardCharsets.UTF_8)).toString();
+        this.uuid = UUID.nameUUIDFromBytes(String.valueOf(System.currentTimeMillis()^this.hashCode()).getBytes(StandardCharsets.UTF_8)).toString();
     }
 
     protected void resetPos() {
@@ -111,21 +118,21 @@ public abstract class Entity implements HittableObject, NBTDataIO {
         ArrayList<AABB> aABBs = this.world.getCollisionBox(this.collisionBox.expand(xa, ya, za));
         for (i = 0; i < aABBs.size(); ++i) {
             if (aABBs.get(i) != null)
-                ya = ((AABB) aABBs.get(i)).clipYCollide(this.collisionBox, ya);
+                ya = aABBs.get(i).clipYCollide(this.collisionBox, ya);
         }
         this.collisionBox.move(0.0f, ya, 0.0f);
         for (i = 0; i < aABBs.size(); ++i) {
             if (aABBs.get(i) != null)
-                xa = ((AABB) aABBs.get(i)).clipXCollide(this.collisionBox, xa);
+                xa = aABBs.get(i).clipXCollide(this.collisionBox, xa);
         }
         this.collisionBox.move(xa, 0.0f, 0.0f);
         for (i = 0; i < aABBs.size(); ++i) {
             if (aABBs.get(i) != null)
-                za = ((AABB) aABBs.get(i)).clipZCollide(this.collisionBox, za);
+                za = aABBs.get(i).clipZCollide(this.collisionBox, za);
         }
         this.collisionBox.move(0.0f, 0.0f, za);
         this.horizontalCollision = xaOrg != xa || zaOrg != za;
-        boolean bl = this.onGround = yaOrg != ya && yaOrg < 0.0f;
+        this.onGround = yaOrg != ya && yaOrg < 0.0f;
         if (xaOrg != xa) {
             this.xd = 0.0f;
         }
@@ -231,10 +238,10 @@ public abstract class Entity implements HittableObject, NBTDataIO {
             }
         }
 
-        speed *= this.world.getBlockAccess().getBlock((long) x, (long) y, (long) z).getResistance();
+        speed *= 1-this.world.getBlock((long) x, (long) y, (long) z).getResistance();
 
-        if (true) {//water
-            this.moveRelative(xa, za, 0.027f * speed);
+        if (this.inLiquid()) {//water
+
             this.move(this.xd, this.yd, this.zd);
             this.xd *= 0.8f;
             this.yd *= 0.8f;
@@ -245,21 +252,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
             if (this.horizontalCollision && this.isFree(this.xd, this.yd + 0.6f - this.y + yo, this.zd)) {
                 this.yd = 0.3f;
             }
-
-        } else if (true) {//in lava
-            this.moveRelative(xa, za, 0.02f * speed);
-            this.move(this.xd, this.yd, this.zd);
-            this.xd *= 0.5f;
-            this.yd *= 0.5f;
-            this.zd *= 0.5f;
-            if (!flyingMode) {
-                this.yd -= 0.02;
-            }
-            if (this.horizontalCollision && this.isFree(this.xd, this.yd + 0.6f - this.y + yo, this.zd)) {
-                this.yd = 0.3f;
-            }
         } else {
-            this.moveRelative(xa, za, this.onGround ? 0.1f * speed : 0.02f * speed);
             this.move(this.xd, this.yd, this.zd);
             this.xd *= 0.91f;
             this.yd *= 0.98f;
@@ -281,6 +274,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
      * calculate where the hit result of entity based on coord and rotation
      */
     public void clipSelectionBox() {
+        this.hitResult=null;
         HitBox hitbox = null;
         int f = 114514;
         List<HitBox> aABBs = this.world.getSelectionBox(this);
@@ -324,26 +318,30 @@ public abstract class Entity implements HittableObject, NBTDataIO {
             }
         }
 
-        //check facing of hit
-        if (to.y >= hitbox.y1) {
-            f = 0;
+        if(hitbox!=null) {
+            //check facing of hit
+            if (to.y >= hitbox.y1) {
+                f = 0;
+            }
+            if (to.y <= hitbox.y0) {
+                f = 1;
+            }
+            if (to.z >= hitbox.z1) {
+                f = 2;
+            }
+            if (to.z <= hitbox.z0) {
+                f = 3;
+            }
+            if (to.x >= hitbox.x1) {
+                f = 4;
+            }
+            if (to.x <= hitbox.x0) {
+                f = 5;
+            }
         }
-        if (to.y <= hitbox.y0) {
-            f = 1;
+        if(f!=114514) {
+            this.hitResult = new HitResult(BlockFacing.fromId(f), hitbox);
         }
-        if (to.z >= hitbox.z1) {
-            f = 2;
-        }
-        if (to.z <= hitbox.z0) {
-            f = 3;
-        }
-        if (to.x >= hitbox.x1) {
-            f = 4;
-        }
-        if (to.x <= hitbox.x0) {
-            f = 5;
-        }
-        this.hitResult = new HitResult(BlockFacing.fromId(f), hitbox);
     }
 
     public boolean isFree(double xa, double ya, double za) {
@@ -355,17 +353,11 @@ public abstract class Entity implements HittableObject, NBTDataIO {
         return true;//!this.world.containsAnyLiquid(box);
     }
 
-    /*
-    public boolean isInWater() {
-        return this.world.containsLiquid(this.collisionBox.grow(0.0f, -0.4f, 0.0f), 1);
-    }
 
-    public boolean isInLava() {
-        return this.world.containsLiquid(this.collisionBox, 2);
-    }
-     */
 
-    public abstract void render(float interpolationTime);
+    public void render(float interpolationTime){
+        Registry.getEntityModelManager().get(this.getID()).render(this);
+    }
 
 
 //  ------ data ------
@@ -421,6 +413,21 @@ public abstract class Entity implements HittableObject, NBTDataIO {
         this.zRot = physics.getFloat("roll");
     }
 
+
+
     public void die() {
+
+    }
+
+    public void setWorld(World world) {
+        this.world=world;
+    }
+
+    //event
+    public void onInteract(Entity from){}
+
+
+    public boolean inLiquid() {
+        return this.world.getBlock((long) x, (long) y, (long) z) instanceof LiquidBlock;
     }
 }

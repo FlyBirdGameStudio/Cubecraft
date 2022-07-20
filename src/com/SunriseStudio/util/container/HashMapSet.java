@@ -21,4 +21,8 @@ public class HashMapSet<K extends KeyComparable<K>,V extends KeyGetter<K>> {
     public boolean contains(K k) {
         return map.containsKey(k.hashCode());
     }
+
+    public int size() {
+        return this.map.size();
+    }
 }

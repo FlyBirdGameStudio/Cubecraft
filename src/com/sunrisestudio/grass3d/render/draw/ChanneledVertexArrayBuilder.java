@@ -3,6 +3,7 @@ package com.sunrisestudio.grass3d.render.draw;
 import com.sunrisestudio.util.container.buffer.BufferBuilder;
 import com.sunrisestudio.util.container.ArrayUtil;
 
+import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 
 /**
@@ -14,11 +15,11 @@ public class ChanneledVertexArrayBuilder implements IVertexArrayBuilder {
 
     //data
     public int vertexCount = 0;
-    float[] color;
-    float[] normal;
-    float[] tc;
-    float[] vertex;
-    float[] raw;
+    double[] color;
+    double[] normal;
+    double[] tc;
+    double[] vertex;
+    double[] raw;
 
     //texture
     private float u;
@@ -37,10 +38,10 @@ public class ChanneledVertexArrayBuilder implements IVertexArrayBuilder {
     private float l = 1.0f;
 
     public ChanneledVertexArrayBuilder(int size) {
-        color = new float[size*4];
-        normal = new float[size*3];
-        tc = new float[size*3];
-        vertex = new float[size*3];
+        color = new double[size*4];
+        normal = new double[size*3];
+        tc = new double[size*3];
+        vertex = new double[size*3];
     }
 
     public void clear() {
@@ -49,7 +50,7 @@ public class ChanneledVertexArrayBuilder implements IVertexArrayBuilder {
 
     @Override
     public void end() {
-        this.raw=new float[vertexCount*13];
+        this.raw=new double[vertexCount*13];
         for (int i=0;i<vertexCount;i++){
             raw[i*13]=tc[i*3];
             raw[i*13+1]=tc[i*3+1];
@@ -160,27 +161,27 @@ public class ChanneledVertexArrayBuilder implements IVertexArrayBuilder {
 
 
     @Override
-    public FloatBuffer getRawBuffer() {
-        return BufferBuilder.getF(this.raw);
+    public DoubleBuffer getRawBuffer() {
+        return BufferBuilder.getD(this.raw);
     }
 
     @Override
-    public FloatBuffer getVertexBuffer() {
-        return BufferBuilder.getF(ArrayUtil.copySub(0,vertexCount*3,vertex));
+    public DoubleBuffer getVertexBuffer() {
+        return BufferBuilder.getD(ArrayUtil.copySub(0,vertexCount*3,vertex));
     }
 
     @Override
-    public FloatBuffer getNormalBuffer() {
-        return BufferBuilder.getF(ArrayUtil.copySub(0,vertexCount*3,normal));
+    public DoubleBuffer getNormalBuffer() {
+        return BufferBuilder.getD(ArrayUtil.copySub(0,vertexCount*3,normal));
     }
 
     @Override
-    public FloatBuffer getColorBuffer() {
-        return BufferBuilder.getF(ArrayUtil.copySub(0,vertexCount*4,color));
+    public DoubleBuffer getColorBuffer() {
+        return BufferBuilder.getD(ArrayUtil.copySub(0,vertexCount*4,color));
     }
 
     @Override
-    public FloatBuffer getTexCoordBuffer() {
-        return BufferBuilder.getF(ArrayUtil.copySub(0,vertexCount*3,tc));
+    public DoubleBuffer getTexCoordBuffer() {
+        return BufferBuilder.getD(ArrayUtil.copySub(0,vertexCount*3,tc));
     }
 }

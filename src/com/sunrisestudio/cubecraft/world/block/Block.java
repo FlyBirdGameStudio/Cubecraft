@@ -1,12 +1,13 @@
 package com.sunrisestudio.cubecraft.world.block;
 
+import com.sunrisestudio.cubecraft.world.Registry;
+import com.sunrisestudio.grass3d.render.draw.IVertexArrayBuilder;
 import com.sunrisestudio.util.math.AABB;
 import com.sunrisestudio.util.nbt.NBTDataIO;
 import com.sunrisestudio.util.nbt.NBTTagCompound;
 import com.sunrisestudio.cubecraft.world.HittableObject;
 import com.sunrisestudio.cubecraft.world.block.material.IBlockMaterial;
-import com.sunrisestudio.cubecraft.world.block.registery.BlockMap;
-import com.sunrisestudio.cubecraft.world.access.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
 
 public class Block implements HittableObject, NBTDataIO {
@@ -33,7 +34,7 @@ public class Block implements HittableObject, NBTDataIO {
 	}
 
 	public IBlockMaterial getMaterial() {
-		return BlockMap.getInstance().getByID(this.id);
+		return Registry.getBlockMap().get(this.id);
 	}
 
 	public AABB[] getCollisionBox(){
@@ -58,7 +59,7 @@ public class Block implements HittableObject, NBTDataIO {
 
 	@Override
 	public void onHit(Entity from, IWorldAccess world) {
-		world.getBlockAccess().setBlock(x,y,z,"air",BlockFacing.Up);
+		world.setBlock(x,y,z,"air",BlockFacing.Up);
 	}
 
 	/**
@@ -94,4 +95,10 @@ public class Block implements HittableObject, NBTDataIO {
 	public void setTicking(boolean b) {
 		this.needTick=b;
 	}
+
+	public void render(IWorldAccess world,long renderX, long renderY, long renderZ, IVertexArrayBuilder builder){
+		getMaterial().render(world,this.x,this.y,this.z,renderX,renderY,renderZ,facing,builder);
+	}
+
+
 }

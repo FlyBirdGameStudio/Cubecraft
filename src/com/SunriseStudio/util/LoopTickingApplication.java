@@ -77,4 +77,8 @@ public abstract class LoopTickingApplication implements Runnable{
     public boolean isRunning() {
         return this.running;
     }
+
+    public Timer getTimer() {
+        return this.timer;
+    }
 }

@@ -1,4 +1,38 @@
-## alpha-0.1.4更新（2022-07-08）
+
+## alpha0.1.9(2022-07-20/2)
+- 添加了screen从json的加载
+- 添加了screen的xml格式和dtd文件
+- 主菜单加入了splashtext
+- 添加FAML和相关的解析类包
+- Grass3d可以设置窗口位置和大小了
+- 重新支持了FXAA
+- 添加了lang文件映射
+- 修改了部分lang键
+
+
+## alpha0.1.8(2022-07-20)
+- 加入了modloader
+- 加入了模型解析
+- 加入了实体模型
+- 实装世界格式
+- 删除多余代码
+- 加入语言系统
+- 加入splashtext
+- 添加玩家动画（未解析）
+- 主要针对技术更新，因此能说的部分不多 xd
+
+## alpha0.1.5(2022-07-10)
+- 加入了input-handler
+- 加入了全屏
+- 加入双击按键检测
+- 删除多余代码
+- 添加了screen的输入控制器回调
+- 整理screen基类
+- 整理debugscreen
+- 双击空格切换飞行，而不再使用z
+- 加入疾跑
+
+## alpha-0.1.4（2022-07-08）
 ### 世界
 - 目前客户端维度在本地运行
 - 添加了loadingticket和loadchunkradius
@@ -27,13 +61,3 @@
 ### 其他更新
 - 添加了timer和timertask（没有实现）
 - 添加了zh_cn.lang和lang文件的解析器
-## alpha0.1.5(2022-07-10)
-- 加入了input-handler
-- 加入了全屏
-- 加入双击按键检测
-- 删除多余代码
-- 添加了screen的输入控制器回调
-- 整理screen基类
-- 整理debugscreen
-- 双击空格切换飞行，而不再使用z
-- 加入疾跑

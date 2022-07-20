@@ -39,4 +39,8 @@ public class MathHelper {
         l = l * l * 42317861L + l * 11L;
         return l >> 16;
     }
+
+    public static double scale(double x, double outputMin, double outputMax, double inputMin, double inputMax){
+        return (x- inputMax)/(inputMax - inputMin)*(outputMax - outputMin)+ outputMin;
+    }
 }

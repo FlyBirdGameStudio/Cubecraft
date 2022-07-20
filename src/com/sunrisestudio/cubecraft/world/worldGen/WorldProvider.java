@@ -1,7 +1,7 @@
 package com.sunrisestudio.cubecraft.world.worldGen;
 
 import com.sunrisestudio.cubecraft.Start;
-import com.sunrisestudio.cubecraft.world.access.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.chunk.Chunk;
 import com.sunrisestudio.cubecraft.world.chunk.ChunkPos;
 
@@ -12,10 +12,14 @@ public class WorldProvider {
     public static final int REGION_GRID_SIZE=64;
     public static HashMap<String,WorldProvider> providers=new HashMap<>();
 
-    public IWorldAccess dimension;
+    public IWorldAccess world;
 
-    public static WorldProvider getProvider(String id) {
-        return providers.get(id);
+    public WorldProvider(IWorldAccess world) {
+        this.world=world;
+    }
+
+    public static WorldProvider getProvider(IWorldAccess world) {
+        return providers.getOrDefault(world.getID(),new WorldProvider(world));
     }
 
     /**
@@ -38,15 +42,14 @@ public class WorldProvider {
 
 
         //for example:region(3,3,4)is"gamepath/saves/world/dim-0/3_3_4.region"
-        String region=Start.getGamePath()+"/saves/"+dimension.getLevel().getName()+"/"+dimension.getID()+
+        String region=Start.getGamePath()+"/saves/"+"/"+ world.getID()+
                 "/"+regionX+"_"+regionY+"_"+regionZ+".region";
         File regionFile=new File(region);
-        return null;
+        return genChunk(pos);
     }
 
     private Chunk genChunk(ChunkPos pos){
-        Chunk chunk=new Chunk(this.dimension,pos);
-
+        Chunk chunk=new Chunk(this.world,pos);
         return chunk;
     }
 }

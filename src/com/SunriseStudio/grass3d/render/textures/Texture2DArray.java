@@ -50,7 +50,10 @@ public class Texture2DArray extends Texture{
             newPixels[i * 4 + 3] = (byte)a;
         }
         this.bind();
-        GL12.glTexSubImage3D(getType(),1,0,0,prevLayer,width,height,1,GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE,BufferBuilder.getB(newPixels));
+        ByteBuffer buf=BufferBuilder.getB(newPixels);
+        GL12.glTexSubImage3D(getType(),1,0,0,prevLayer,width,height,1,GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE,buf);
+        buf=null;
+
         this.textureMapping.put(path,prevLayer);
         this.unbind();
         logHandler.checkGLError("load");
@@ -61,7 +64,7 @@ public class Texture2DArray extends Texture{
     }
 
     public void buildMipmap(){
-        //createMipMap();
+        createMipMap();
     }
 
     @Override

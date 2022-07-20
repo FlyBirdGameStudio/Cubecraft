@@ -5,7 +5,7 @@ import com.sunrisestudio.util.container.options.Options;
 import com.sunrisestudio.cubecraft.world.block.BlockFacing;
 import com.sunrisestudio.cubecraft.world.chunk.Chunk;
 import com.sunrisestudio.cubecraft.world.chunk.ChunkPos;
-import com.sunrisestudio.cubecraft.world.access.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.worldGen.noiseGenerator.ImprovedNoise;
 
 public class ChunkProviderOverworld extends ChunkProvider{

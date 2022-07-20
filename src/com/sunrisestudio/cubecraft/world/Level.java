@@ -1,6 +1,6 @@
 package com.sunrisestudio.cubecraft.world;
 
-import com.sunrisestudio.cubecraft.world.access.IWorldAccess;
+import org.w3c.dom.Document;
 
 import java.util.HashSet;
 

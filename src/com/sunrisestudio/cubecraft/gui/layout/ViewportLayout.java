@@ -3,13 +3,12 @@ package com.sunrisestudio.cubecraft.gui.layout;
 public class ViewportLayout extends LayoutManager{
     public float left,right,bottom,top;
 
-    public ViewportLayout(int left,int right,int bottom,int top,Border border,int layer){
+    public ViewportLayout(int left,int right,int bottom,int top,int layer){
         this.left=left;
         this.right=right;
         this.bottom=bottom;
         this.top=top;
         this.layer=layer;
-        this.border=border;
     }
 
     @Override

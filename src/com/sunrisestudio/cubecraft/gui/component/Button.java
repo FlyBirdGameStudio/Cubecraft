@@ -1,10 +1,11 @@
 package com.sunrisestudio.cubecraft.gui.component;
 
 
+import com.sunrisestudio.cubecraft.gui.FontAlignment;
+import com.sunrisestudio.grass3d.platform.Mouse;
 import com.sunrisestudio.grass3d.render.textures.Texture2D;
 import com.sunrisestudio.grass3d.render.ShapeRenderer;
 import com.sunrisestudio.cubecraft.gui.FontRenderer;
-import org.lwjglx.input.Mouse;
 
 public class Button extends Component{
     public Texture2D texture=new Texture2D(false,false);
@@ -16,7 +17,6 @@ public class Button extends Component{
     private Listener listener;
 
     public Button(int color, int textColor, String text) {
-        this.color=color;
         this.textColor=textColor;
         this.text=text;
         this.texture.generateTexture();
@@ -26,7 +26,7 @@ public class Button extends Component{
     public boolean hovered=false;
 
     private void render(int x, int y, int w, int h,int layer) {
-        FontRenderer.render(text, x+w/2,y+8,textColor,8, FontRenderer.Alignment.MIDDLE);
+        FontRenderer.render(text, x+w/2,y+8,textColor,8, FontAlignment.MIDDLE);
         drawBack(x,y,-1,w,h,0xFFFFFF);
     }
 

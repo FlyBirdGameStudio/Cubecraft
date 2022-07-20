@@ -10,7 +10,22 @@ public class OriginLayout extends LayoutManager{
         MIDDLE_BOTTOM,
         RIGHT_TOP,
         RIGHT_MIDDLE,
-        RIGHT_BOTTOM
+        RIGHT_BOTTOM;
+
+        public static Origin from(String meta) {
+            return switch (meta){
+                case "left_top"->LEFT_TOP;
+                case "left_middle"->LEFT_MIDDLE;
+                case "left_bottom"->LEFT_BOTTOM;
+                case "middle_top"->MIDDLE_TOP;
+                case "middle_middle"->MIDDLE_MIDDLE;
+                case "middle_bottom"->MIDDLE_BOTTOM;
+                case "right_top"->RIGHT_TOP;
+                case "right_middle"->RIGHT_MIDDLE;
+                case "right_bottom"->RIGHT_BOTTOM;
+                default -> MIDDLE_MIDDLE;
+            };
+        }
     }
 
     public OriginLayout(int rx,int ry,int width,int height,Origin origin,int layer){

@@ -1,6 +1,6 @@
 package com.sunrisestudio.cubecraft.server;
 
-import com.sunrisestudio.cubecraft.options.StartGameArguments;
+import com.sunrisestudio.util.StartArguments;
 import com.sunrisestudio.util.LogHandler;
 
 public class StartServer {
@@ -9,7 +9,7 @@ public class StartServer {
     public static void main(String[] args) {
         LogHandler logHandler=LogHandler.create("start","server");
         //init game runtime
-        startGameArguments=new StartGameArguments(args);
+        startArguments =new StartArguments(args);
         gamePath= (String) getArgs("path",System.getProperty("user.dir"));
 
         //start thread
@@ -31,9 +31,9 @@ public class StartServer {
         return gamePath;
     }
 
-    private static StartGameArguments startGameArguments;
+    private static StartArguments startArguments;
 
     public static Object getArgs(String id,Object ifNull){
-        return startGameArguments.getValue(id,ifNull);
+        return startArguments.getValue(id,ifNull);
     }
 }

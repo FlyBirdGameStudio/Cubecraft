@@ -3,7 +3,7 @@ package com.sunrisestudio.cubecraft.world.worldGen;
 import com.sunrisestudio.util.container.options.Option;
 import com.sunrisestudio.cubecraft.world.chunk.Chunk;
 import com.sunrisestudio.cubecraft.world.chunk.ChunkPos;
-import com.sunrisestudio.cubecraft.world.access.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.IWorldAccess;
 
 import java.util.concurrent.Callable;
 

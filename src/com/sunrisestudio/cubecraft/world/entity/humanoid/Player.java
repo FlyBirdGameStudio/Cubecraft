@@ -1,6 +1,6 @@
 package com.sunrisestudio.cubecraft.world.entity.humanoid;
 
-import com.sunrisestudio.cubecraft.world.access.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
 import com.sunrisestudio.cubecraft.world.entity.item.Item;
 

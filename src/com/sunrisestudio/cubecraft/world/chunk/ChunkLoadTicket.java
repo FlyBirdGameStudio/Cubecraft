@@ -31,11 +31,11 @@ public class ChunkLoadTicket {
         this.time--;
     }
 
-    public static ChunkLoadTicket fromDistance(byte range,int ticks) {
+    public static ChunkLoadTicket fromDistance(int range,int ticks) {
         Option opt=new Option("setting.server");
-        if(range< (int)opt.get("setting.server.sim_entity_dist")){
+        if(range< (int)opt.getOrDefault("setting.server.sim_entity_dist",8)){
             return new ChunkLoadTicket(ChunkLoadLevel.Entity_TICKING,ticks);
-        } else if (range<(int)opt.get("setting.server.sim_block_dist")) {
+        } else if (range<(int)opt.getOrDefault("setting.server.sim_block_dist",12)) {
             return new ChunkLoadTicket(ChunkLoadLevel.Block_TICKING,ticks);
         }else{
             return new ChunkLoadTicket(ChunkLoadLevel.None_TICKING,ticks);

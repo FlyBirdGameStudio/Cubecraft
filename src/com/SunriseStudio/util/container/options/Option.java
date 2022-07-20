@@ -16,4 +16,12 @@ public class Option {
     public Option(String namespace){
         this.items=Options.getValues(namespace);
     }
+
+    public Object getOrDefault(String s, Object d) {
+        if(items.get(s)==null){
+            return d;
+        }else {
+            return items.get(s);
+        }
+    }
 }

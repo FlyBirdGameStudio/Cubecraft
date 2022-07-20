@@ -1,11 +1,14 @@
 package com.sunrisestudio.cubecraft.world;
 
 import com.sunrisestudio.cubecraft.world.block.Tile;
+import com.sunrisestudio.cubecraft.world.chunk.Chunk;
+import com.sunrisestudio.cubecraft.world.chunk.ChunkPos;
 import com.sunrisestudio.cubecraft.world.chunk._Chunk;
 import com.sunrisestudio.cubecraft.world.entity._Entity;
 import com.sunrisestudio.cubecraft.world.worldGen.WorldGen;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sunrisestudio.util.container.HashMapSet;
 import com.sunrisestudio.util.math.AABB;
 
 import java.io.File;
@@ -19,10 +22,11 @@ import java.util.Random;
  * This class specifies class file version 49.0 but uses Java 6 signatures.  Assumed Java 6.
  */
 public class _Level {
-    private static final int LOADING_DISTANCE=6;
+    private static final int LOADING_DISTANCE=3;
 
     private ArrayList<LevelListener> levelListeners = new ArrayList<>();
     public ArrayList<_Chunk> chunks =new ArrayList<>();
+   // public HashMapSet<ChunkPos, Chunk> chunks=new HashMapSet<>();
     public ArrayList<_Entity> entities =new ArrayList<>();
 
     private Random worldRandom;

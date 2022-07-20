@@ -3,22 +3,26 @@ package com.sunrisestudio.cubecraft.gui.screen;
 import com.sunrisestudio.cubecraft.gui.DisplayScreenInfo;
 import com.sunrisestudio.cubecraft.GameSetting;
 import com.sunrisestudio.cubecraft.CubeCraft;
-import com.sunrisestudio.util.FraggedUtil;
+import com.sunrisestudio.cubecraft.gui.FontAlignment;
+import com.sunrisestudio.grass3d.platform.Display;
+import com.sunrisestudio.grass3d.platform.Keyboard;
+import com.sunrisestudio.grass3d.platform.Mouse;
+import com.sunrisestudio.grass3d.render.GLUtil;
 import com.sunrisestudio.util.SystemInfo;
 import com.sunrisestudio.grass3d.render.ShapeRenderer;
 import com.sunrisestudio.cubecraft.render.renderer.ChunkRenderer;
 import com.sunrisestudio.cubecraft.gui.FontRenderer;
 import com.sunrisestudio.grass3d.render.textures.Texture2D;
-import com.sunrisestudio.util.input.KeyboardCallback;
-import com.sunrisestudio.util.input.MouseCallBack;
-import org.lwjglx.input.Keyboard;
-import org.lwjglx.input.Mouse;
-import org.lwjglx.opengl.Display;
+import com.sunrisestudio.grass3d.platform.input.InputHandler;
+import com.sunrisestudio.grass3d.platform.input.KeyboardCallback;
+import com.sunrisestudio.grass3d.platform.input.MouseCallBack;
+
 
 import java.text.DecimalFormat;
 
 public class HUDScreen extends Screen {
     private Texture2D actionBar=new Texture2D(false,false);
+
 
     public HUDScreen(){
         super();
@@ -34,41 +38,43 @@ public class HUDScreen extends Screen {
     private boolean debugScreen;
     @Override
     public void render(DisplayScreenInfo info) {
+        GLUtil.enableBlend();
+        this.platform.controller.tick();
         DecimalFormat format=new DecimalFormat();
         format.applyPattern("0.000");
         this.platform._player.turn(Mouse.getDX(),Mouse.getDY());
         if (this.debugScreen) {
             FontRenderer.renderShadow("CubeCraft-" + CubeCraft.VERSION,
-                    2, 2, 16777215, 8, FontRenderer.Alignment.LEFT);
+                    2, 2, 16777215, 8, FontAlignment.LEFT);
 
             FontRenderer.renderShadow("帧率:" + this.platform.getShortTickTPS(),
-                    2, 12, 16777215, 8, FontRenderer.Alignment.LEFT);
+                    2, 12, 16777215, 8, FontAlignment.LEFT);
 
             FontRenderer.renderShadow("显示:" + Display.getWidth() + "/" + Display.getHeight(),
-                    2, 22, 16777215, 8 , FontRenderer.Alignment.LEFT);
+                    2, 22, 16777215, 8 , FontAlignment.LEFT);
 
             ChunkRenderer cr= (ChunkRenderer) this.platform.worldRenderer.renderers.get("cubecraft:chunk_renderer");
             FontRenderer.renderShadow("地形渲染(总数/可见/更新):"+cr.allCount+"/"+cr.visibleCount+"/"+cr.updateCount,
-                    2,32,16777215,8, FontRenderer.Alignment.LEFT);
+                    2,32,16777215,8, FontAlignment.LEFT);
 
             FontRenderer.renderShadow("位置（x/y/z）:" + format.format(this.platform._player.x) + "/" + format.format(this.platform._player.y) + "/" + format.format(this.platform._player.z),
-                    2, 50, 16777215, 8, FontRenderer.Alignment.LEFT);
+                    2, 50, 16777215, 8, FontAlignment.LEFT);
 
             FontRenderer.renderShadow("相机角度（yaw/pitch/roll）:"+ format.format(this.platform._player.xRot) + "/" + format.format(this.platform._player.yRot) + "/" + format.format(this.platform._player.zRot),
-                    2,60,0xFFFFFF,8, FontRenderer.Alignment.LEFT);
+                    2,60,0xFFFFFF,8, FontAlignment.LEFT);
 
             FontRenderer.renderShadow("系统：" + SystemInfo.getOSName()+"/"+SystemInfo.getOSVersion(),
-                    info.scrWidth()-2, 2, 16777215, 8, FontRenderer.Alignment.RIGHT);
+                    info.scrWidth()-2, 2, 16777215, 8, FontAlignment.RIGHT);
 
             FontRenderer.renderShadow("内存(已使用/总量)："+ SystemInfo.getUsedMemory()+"/"+SystemInfo.getTotalMemory(),
-                    info.scrWidth()-2,12,0xFFFFFF,8, FontRenderer.Alignment.RIGHT);
+                    info.scrWidth()-2,12,0xFFFFFF,8, FontAlignment.RIGHT);
 
             FontRenderer.renderShadow("JVM："+ SystemInfo.getJavaName()+"/"+SystemInfo.getJavaVersion(),
-                    info.scrWidth()-2,22,0xFFFFFF,8, FontRenderer.Alignment.RIGHT);
+                    info.scrWidth()-2,22,0xFFFFFF,8, FontAlignment.RIGHT);
 
 
-            FontRenderer.renderShadow(String.valueOf(this.platform._player.selectSlot),
-                    2, 70, 16777215, 8 , FontRenderer.Alignment.LEFT);
+            FontRenderer.renderShadow("位置（x/y/z）:" + format.format(this.platform.player.x) + "/" + format.format(this.platform.player.y) + "/" + format.format(this.platform.player.z),
+                    2, 70, 16777215, 8 , FontAlignment.LEFT);
         }
 
 
@@ -77,7 +83,7 @@ public class HUDScreen extends Screen {
         ShapeRenderer.drawRectUV(w/2d-91,w/2d+91, h-22,h,0,0,0,182/256f,0,22/32f);
         int slotBase= (int) (w/2d+20*(-4.5+ platform._player.selectSlot));
         ShapeRenderer.drawRectUV((slotBase)-2, (slotBase+23), h-(23), h,0,0,232/256f,1,0,22/32f);
-
+        GLUtil.disableBlend();
     }
 
     @Override
@@ -121,8 +127,9 @@ public class HUDScreen extends Screen {
         return new KeyboardCallback(){
             @Override
             public void onKeyEventNext() {
+                HUDScreen.this.platform.controller.setKey(Keyboard.getEventKey(), Keyboard.getEventKeyState());
                 HUDScreen.this.platform._player.setKey(Keyboard.getEventKey(), Keyboard.getEventKeyState());
-                if(FraggedUtil.isDoubleClicked(Keyboard.KEY_SPACE,250)){
+                if(InputHandler.isDoubleClicked(Keyboard.KEY_SPACE,250)){
                     HUDScreen.this.platform._player.flyingMode=!HUDScreen.this.platform._player.flyingMode;
                 }
             }

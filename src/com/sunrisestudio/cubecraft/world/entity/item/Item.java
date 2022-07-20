@@ -1,6 +1,6 @@
 package com.sunrisestudio.cubecraft.world.entity.item;
 
-import com.sunrisestudio.cubecraft.world.access.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
 import org.joml.Vector3d;
 

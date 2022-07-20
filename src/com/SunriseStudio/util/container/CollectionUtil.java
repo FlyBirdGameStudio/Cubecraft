@@ -24,4 +24,8 @@ public class CollectionUtil {
         void action(K key,V item);
     }
 
+
+    public static <T>List<T> pack(T... item){
+        return Arrays.asList(item);
+    }
 }

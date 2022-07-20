@@ -1,15 +1,13 @@
 package com.sunrisestudio.cubecraft;
 
-import com.sunrisestudio.cubecraft.options.StartGameArguments;
-import com.sunrisestudio.util.LogHandler;
+import com.sunrisestudio.util.StartArguments;
 
 public class Start {
     public static void main(String[] args) {
         //init game runtime
-        startGameArguments=new StartGameArguments(args);
-        gamePath= (String) getArgs("path",System.getProperty("user.dir"));
-        loadLib();
-        LogHandler logHandler = LogHandler.create("start", "client");
+        startArguments =new StartArguments(args);
+        gamePath= (String) startArguments.getValue("path", System.getProperty("user.dir"));
+        System.setProperty("java.library.path", (String) startArguments.getValue("native","native"));
 
         //start thread
         Thread thread=new Thread(new CubeCraft());
@@ -17,19 +15,15 @@ public class Start {
         thread.start();
     }
 
-    private static String gamePath;
+    private static String gamePath=System.getProperty("user.dir");
 
     public static String getGamePath() {
         return gamePath;
     }
 
-    private static StartGameArguments startGameArguments;
+    private static StartArguments startArguments;
 
-    public static Object getArgs(String id,Object ifNull){
-        return startGameArguments.getValue(id,ifNull);
-    }
-
-    public static void loadLib(){
-        System.setProperty("java.library.path", (String) startGameArguments.getValue("native","native"));
+    public static StartArguments getStartGameArguments() {
+        return Start.startArguments;
     }
 }

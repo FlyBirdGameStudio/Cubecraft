@@ -1,7 +1,7 @@
 package com.sunrisestudio.cubecraft.world.entity;
 
 import com.sunrisestudio.util.LogHandler;
-import com.sunrisestudio.cubecraft.world.access.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.IWorldAccess;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;

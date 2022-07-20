@@ -3,6 +3,7 @@ package com.sunrisestudio.grass3d.render.draw;
 import org.joml.Vector2f;
 import org.joml.Vector3d;
 
+import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 
 public interface IVertexArrayBuilder {
@@ -36,13 +37,13 @@ public interface IVertexArrayBuilder {
         vertexUV(xyz.x,xyz.y,xyz.z,uv.x,uv.y,layer);
     }
 
-    FloatBuffer getRawBuffer();
+    DoubleBuffer getRawBuffer();
 
-    FloatBuffer getVertexBuffer();
+    DoubleBuffer getVertexBuffer();
 
-    FloatBuffer getNormalBuffer();
+    DoubleBuffer getNormalBuffer();
 
-    FloatBuffer getColorBuffer();
+    DoubleBuffer getColorBuffer();
 
-    FloatBuffer getTexCoordBuffer();
+    DoubleBuffer getTexCoordBuffer();
 }

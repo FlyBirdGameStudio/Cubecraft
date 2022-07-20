@@ -2,7 +2,7 @@ package com.sunrisestudio.cubecraft.render.renderer;
 
 import com.sunrisestudio.cubecraft.GameSetting;
 
-import com.sunrisestudio.cubecraft.render.Camera;
+import com.sunrisestudio.grass3d.render.Camera;
 import com.sunrisestudio.cubecraft.render.object.RenderChunkPos;
 
 import com.sunrisestudio.grass3d.render.textures.Texture2D;
@@ -25,7 +25,7 @@ import org.lwjgl.opengl.*;
 
 import java.util.*;
 
-public class ChunkRenderer extends IWorldRenderer {
+public class ChunkRenderer extends IRenderer {
     public Texture2D terrain=new Texture2D(false,true);
     public LogHandler logHandler=LogHandler.create("ChunkRenderer","client");
 
@@ -60,6 +60,7 @@ public class ChunkRenderer extends IWorldRenderer {
 
         GLUtil.enableBlend();
         this.camera.setUpGlobalCamera();
+        //this.camera.setupGlobalTranslate();
 
         //handle chunk update
         this.updateChunks();
@@ -90,7 +91,6 @@ public class ChunkRenderer extends IWorldRenderer {
                 if (
                         this.camera.objectDistanceSmallerThan(new Vector3d(c.x * 16, c.y * 16, c.z * 16),GameSetting.instance.renderDistance * 16)
                 ) {
-
                     GL11.glPushMatrix();
                     this.camera.setupObjectCamera(new Vector3d(c.x * 16, c.y * 16, c.z * 16));
                     c.render();
@@ -99,8 +99,11 @@ public class ChunkRenderer extends IWorldRenderer {
                 }
                 allCount++;
         }
+
+
         this.terrain.unbind();
         updateCount=this.updateQueue.size();
+        GLUtil.disableBlend();
     }
 
     private void updateChunks() {
@@ -154,7 +157,7 @@ public class ChunkRenderer extends IWorldRenderer {
             for (long cz = playerCZ - 1-GameSetting.instance.renderDistance; cz <= playerCZ + GameSetting.instance.renderDistance; cz++) {
                 for (int cy = playerCY - 1-GameSetting.instance.renderDistance; cy <= playerCY + GameSetting.instance.renderDistance; cy++) {
                     if (
-                            cy >= 0 &&
+                            cy >= -512 &&
                             cy < 512 / 16&&
                             camera.objectDistanceSmallerThan(new Vector3d(cx*16,cy*16,cz*16),GameSetting.instance.renderDistance*16)&&
                             !this.chunks.contains(new RenderChunkPos(cx,cy,cz))
@@ -182,9 +185,6 @@ public class ChunkRenderer extends IWorldRenderer {
             }
         }
     }
-
-
-
 }
 
 

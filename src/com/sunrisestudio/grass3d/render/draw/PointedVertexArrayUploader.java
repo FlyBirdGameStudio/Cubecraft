@@ -1,7 +1,8 @@
 package com.sunrisestudio.grass3d.render.draw;
 
 import com.sunrisestudio.util.LogHandler;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.*;
+import org.lwjgl.system.MemoryUtil;
 
 /**
  * this uploader upload every channel using vertexPointer().
@@ -19,10 +20,10 @@ public class PointedVertexArrayUploader extends IVertexArrayUploader {
         GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
         GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
 
-        GL11.glTexCoordPointer(3,0,builder.getTexCoordBuffer());
-        GL11.glColorPointer(4, 0,builder.getColorBuffer());
-        GL11.glNormalPointer(0, builder.getNormalBuffer());
-        GL11.glVertexPointer(3,0, builder.getVertexBuffer());
+        GL11.glTexCoordPointer(3,GL11.GL_DOUBLE,0,MemoryUtil.memAddress(builder.getTexCoordBuffer()));
+        GL11.glColorPointer(4, GL11.GL_DOUBLE,0,MemoryUtil.memAddress(builder.getColorBuffer()));
+        GL11.glNormalPointer(GL11.GL_DOUBLE,0, MemoryUtil.memAddress(builder.getNormalBuffer()));
+        GL11.glVertexPointer(3,GL11.GL_DOUBLE,0, MemoryUtil.memAddress( builder.getVertexBuffer()));
 
         GL11.glDrawArrays(GL11.GL_QUADS, 0, builder.getVertexCount());
 

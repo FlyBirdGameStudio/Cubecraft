@@ -5,10 +5,11 @@ import com.sunrisestudio.cubecraft.GameSetting;
 import com.sunrisestudio.cubecraft.gui.LoadingScreenTask;
 import com.sunrisestudio.cubecraft.gui.component.Button;
 import com.sunrisestudio.cubecraft.gui.component.ProgressBar;
+import com.sunrisestudio.grass3d.platform.Display;
 import com.sunrisestudio.grass3d.render.textures.Texture2D;
 import com.sunrisestudio.grass3d.render.ShapeRenderer;
 import com.sunrisestudio.cubecraft.gui.layout.OriginLayout;
-import org.lwjglx.opengl.Display;
+import com.sunrisestudio.util.lang.Language;
 
 public class LoadingScreen extends Screen{
     private final Texture2D bg;
@@ -33,14 +34,14 @@ public class LoadingScreen extends Screen{
     public void init() {
         this.progressBar=new ProgressBar();
         this.progressBar.setLayout(new OriginLayout(0,0,160,16,OriginLayout.Origin.MIDDLE_MIDDLE,0));
-        this.components.add(this.progressBar);
+        this.addComponent(this.progressBar);
         //this.label=new Label("fuck!",26,0xFFFFFF,0, FontRenderer.Alignment.MIDDLE);
         //this.label.setLayout(new OriginLayout(0,-40,0,16, OriginLayout.Origin.MIDDLE_MIDDLE,0));
         //this.components.add(this.label);
-        Button button=new Button(0xFFFFFF,0xFFFFFF,"返回");
+        Button button=new Button(0xFFFFFF,0xFFFFFF, Language.get("loadingworld"));
         button.setLayout(new OriginLayout(0,24,300,24, OriginLayout.Origin.MIDDLE_MIDDLE,1));
         button.setListener(() -> LoadingScreen.this.task.cancel());
-        this.components.add(button);
+        this.addComponent(button);
         new Thread(this.task).start();
     }
 

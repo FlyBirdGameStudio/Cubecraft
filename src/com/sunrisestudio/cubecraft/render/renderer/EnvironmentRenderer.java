@@ -1,7 +1,7 @@
 package com.sunrisestudio.cubecraft.render.renderer;
 
 import com.sunrisestudio.cubecraft.GameSetting;
-import com.sunrisestudio.cubecraft.render.Camera;
+import com.sunrisestudio.grass3d.render.Camera;
 import com.sunrisestudio.grass3d.render.draw.ChanneledVertexArrayBuilder;
 import com.sunrisestudio.util.container.buffer.BufferBuilder;
 import com.sunrisestudio.grass3d.render.GLUtil;
@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
 
-public class EnvironmentRenderer extends IWorldRenderer{
+public class EnvironmentRenderer extends IRenderer {
     public static final int SKY_SIZE=256;
     private static final int CLOUD_SIZE = 64;
     private static final double CLOUD_HEIGHT = 384;
@@ -30,6 +30,7 @@ public class EnvironmentRenderer extends IWorldRenderer{
 
     @Override
     public void render(float interpolationTime) {
+        GLUtil.enableBlend();
         int d= GameSetting.instance.renderDistance*16+1024;
         GLUtil.setupFog(d/6, BufferBuilder.getF(world.getFogColor()));
         GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -62,6 +63,7 @@ public class EnvironmentRenderer extends IWorldRenderer{
         }
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GLUtil.disableBlend();
     }
 
     public void updateSky(){

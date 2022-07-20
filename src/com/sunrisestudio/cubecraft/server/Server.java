@@ -5,7 +5,7 @@ import com.sunrisestudio.util.LogHandler;
 import com.sunrisestudio.util.LoopTickingApplication;
 import com.sunrisestudio.util.container.options.Option;
 import com.sunrisestudio.util.timer.Timer;
-import com.sunrisestudio.cubecraft.world.access.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.Level;
 
 import java.util.concurrent.ExecutorService;

@@ -3,23 +3,25 @@ package com.sunrisestudio.cubecraft.gui.screen;
 import com.sunrisestudio.cubecraft.CubeCraft;
 import com.sunrisestudio.cubecraft.gui.DisplayScreenInfo;
 import com.sunrisestudio.cubecraft.GameSetting;
+import com.sunrisestudio.cubecraft.gui.component.Button;
 import com.sunrisestudio.cubecraft.gui.component.Component;
-import com.sunrisestudio.util.input.InputCallbackHandler;
-import com.sunrisestudio.util.input.KeyboardCallback;
-import com.sunrisestudio.util.input.MouseCallBack;
-import org.lwjglx.input.Mouse;
-import org.lwjglx.opengl.Display;
+import com.sunrisestudio.grass3d.platform.Display;
+import com.sunrisestudio.grass3d.platform.Mouse;
+import com.sunrisestudio.grass3d.platform.input.InputHandler;
+import com.sunrisestudio.grass3d.platform.input.KeyboardCallback;
+import com.sunrisestudio.grass3d.platform.input.MouseCallBack;
+import com.sunrisestudio.util.container.CollectionUtil;
+
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public abstract class Screen {
     protected CubeCraft platform;
-    protected ArrayList<Component> components=new ArrayList<>();
+    protected HashMap<String,Component> components=new HashMap<>();
 
     //init
-    public Screen(){
-        this.init();
-    }
+    public Screen(){}
 
     /**<h3>init a screen here,runs when screen initialize.</h3>
      * This method need to overwrite.
@@ -27,11 +29,15 @@ public abstract class Screen {
      */
     public void init(){}
 
+    /**
+     * system call-init
+     * @param cubeCraft
+     */
     public void init(CubeCraft cubeCraft) {
         this.platform = cubeCraft;
         this.init();
-        InputCallbackHandler.registerGlobalKeyboardCallback("cubecraft:scr_callback_default",this.getKeyboardCallback());
-        InputCallbackHandler.registerGlobalMouseCallback("cubecraft:scr_callback_default",this.getMouseCallback());
+        InputHandler.registerGlobalKeyboardCallback("cubecraft:scr_callback_default",this.getKeyboardCallback());
+        InputHandler.registerGlobalMouseCallback("cubecraft:scr_callback_default",this.getMouseCallback());
     }
 
     /**
@@ -40,9 +46,7 @@ public abstract class Screen {
      * @param info display info
      */
     public void render(DisplayScreenInfo info) {
-        for (Component p: this.components) {
-            p.render();
-        }
+        CollectionUtil.iterateMap(this.components, (key, item) -> item.render());
     }
 
     /**
@@ -50,10 +54,10 @@ public abstract class Screen {
      * You can update everything here,but if you put any {@link Component} here than you have to call super.tick();
      */
     public void tick() {
-        for (Component p:this.components){
-            p.resize(Display.getWidth()/ GameSetting.instance.GUIScale,Display.getHeight()/GameSetting.instance.GUIScale);
-            p.tick(Mouse.getX()/ GameSetting.instance.GUIScale,(-Mouse.getY()+Display.getHeight())/GameSetting.instance.GUIScale);
-        }
+        CollectionUtil.iterateMap(this.components, (key, item)-> {
+            item.resize(Display.getWidth()/ GameSetting.instance.GUIScale,Display.getHeight()/GameSetting.instance.GUIScale);
+            item.tick(Mouse.getX()/ GameSetting.instance.GUIScale,(-Mouse.getY()+Display.getHeight())/GameSetting.instance.GUIScale);
+        });
     }
 
     /**
@@ -71,8 +75,8 @@ public abstract class Screen {
      * you have to call super.destroy() when overwriting this method.
      */
     public void destroy(){
-        InputCallbackHandler.releaseGlobalKeyboardCallback("cubecraft:scr_callback_default");
-        InputCallbackHandler.releaseGlobalMouseCallback("cubecraft:scr_callback_default");
+        InputHandler.releaseGlobalKeyboardCallback("cubecraft:scr_callback_default");
+        InputHandler.releaseGlobalMouseCallback("cubecraft:scr_callback_default");
     }
 
 
@@ -86,7 +90,7 @@ public abstract class Screen {
     }
 
     /**
-     * <h3>get a mouse callback for this screen.</h3>
+     * <h3>get a keyboard callback for this screen.</h3>
      * This method need to overwrite.
      * @return callback
      */
@@ -94,7 +98,19 @@ public abstract class Screen {
         return new KeyboardCallback();
     }
 
+    /**
+     * overriding this returning to set parent screen for this.
+     * @return screen
+     */
     public Screen getParentScreen() {
         return null;
+    }
+
+    /**
+     * offer a component.
+     * @param component
+     */
+    protected void addComponent(Component component) {
+        this.components.put(component.toString(),component);
     }
 }

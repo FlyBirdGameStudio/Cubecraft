@@ -1,18 +1,29 @@
 package com.sunrisestudio.cubecraft.gui.screen;
 
-import com.sunrisestudio.cubecraft.gui.DisplayScreenInfo;
+import com.google.gson.Gson;
+import com.sunrisestudio.cubecraft.gui.*;
 import com.sunrisestudio.cubecraft.GameSetting;
-import com.sunrisestudio.cubecraft.gui.LoadingScreenTask;
 import com.sunrisestudio.cubecraft.gui.component.Button;
+import com.sunrisestudio.cubecraft.gui.component.Label;
+import com.sunrisestudio.cubecraft.resources.ResourcePacks;
+import com.sunrisestudio.grass3d.platform.Display;
+import com.sunrisestudio.grass3d.render.GLUtil;
 import com.sunrisestudio.grass3d.render.textures.Texture2D;
 import com.sunrisestudio.grass3d.render.ShapeRenderer;
 import com.sunrisestudio.cubecraft.gui.layout.Border;
 import com.sunrisestudio.cubecraft.gui.layout.OriginLayout;
-import org.lwjglx.opengl.Display;
+import com.sunrisestudio.util.lang.Language;
+import org.lwjgl.opengl.GL11;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Random;
+
 
 public class TitleScreen extends Screen {
     private Texture2D bg;
     private Texture2D logoTex;
+    private String splashText;
 
     @Override
     public void init() {
@@ -22,13 +33,10 @@ public class TitleScreen extends Screen {
         logoTex=new Texture2D(false,false);
         logoTex.generateTexture();
         logoTex.load("/resource/textures/gui/logo.png");
-
         this.components.clear();
-        {
-            Button singlePlayerButton=new Button(0xFFFFFF,0xFFFFFF,"单人游戏");
-            singlePlayerButton.setLayout(new OriginLayout(0,-10,300,30, OriginLayout.Origin.MIDDLE_MIDDLE,0));
-            singlePlayerButton.setBorder(new Border(0,0,4,4));
-            singlePlayerButton.setListener(() -> {
+        this.components.putAll(ScreenLoader.load("/resource/gui/titlescreen.json"));
+
+        ((Button) components.get("button_singleplayer")).setListener(() -> {
             this.platform.setScreen(new LoadingScreen(new TitleScreen(), new HUDScreen(), new LoadingScreenTask() {
                 @Override
                 public void run() {
@@ -43,51 +51,47 @@ public class TitleScreen extends Screen {
                     }
                 }
             }));//actullyJoinTheGame
-            });
-            this.components.add(singlePlayerButton);
-        }//single player button
+        });
+        ((Button) components.get("button_multiplayer")).setListener(() -> {
+            this.platform.setScreen(new HUDScreen());//actullyJoinTheGame
+        });
+        ((Button) components.get("button_option")).setListener(() -> {
+            this.platform.setScreen(new SettingScreen(this));
+        });
+        ((Button) components.get("button_quit")).setListener(() -> TitleScreen.this.platform.stop());
         {
-            Button multiPlayerButton=new Button(0xFFFFFF,0xFFFFFF,"多人游戏");
-            multiPlayerButton.setLayout(new OriginLayout(0,20,300,30, OriginLayout.Origin.MIDDLE_MIDDLE,0));
-            multiPlayerButton.setBorder(new Border(0,0,4,4));
-            multiPlayerButton.setListener(() -> {
-                this.platform.setScreen(new HUDScreen());//actullyJoinTheGame
-            });
-            this.components.add(multiPlayerButton);
-        }//multi player button
-        {
-            Button settingButton=new Button(0xFFFFFF,0xFFFFFF,"设置");
-            settingButton.setLayout(new OriginLayout(-75,50,150,30, OriginLayout.Origin.MIDDLE_MIDDLE,0));
-            settingButton.setBorder(new Border(0,4,4,4));
-            settingButton.setListener(() -> {
-                this.platform.setScreen(new SettingScreen(this));
-            });
-            this.components.add(settingButton);
-        }//setting button
-        {
-            Button quitButton=new Button(0xFFFFFF,0xFFFFFF,"退出");
-            quitButton.setLayout(new OriginLayout(75,50,150,30, OriginLayout.Origin.MIDDLE_MIDDLE,0));
-            quitButton.setBorder(new Border(4,4,4,4));
-            quitButton.setListener(() -> {
-                this.platform.stop();
-            });
-            this.components.add(quitButton);
-        }//exit button
+            String[] splash;
+            try {
+                splash=new Gson().fromJson(new String(ResourcePacks.instance.getResource("/resource/text/splash.json","/resource/text/splash.json").readAllBytes(), StandardCharsets.UTF_8),String[].class);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            this. splashText=splash[new Random().nextInt(splash.length)];
+        }//splash
     }
 
     @Override
     public void render(DisplayScreenInfo info) {
         this.bg.bind();
         ShapeRenderer.begin();
-        ShapeRenderer.drawRectUV(0,Display.getWidth()/ GameSetting.instance.GUIScale,0,Display.getHeight()/GameSetting.instance.GUIScale,-1,-1,0,1,0,1);
+        ShapeRenderer.drawRectUV(0, Display.getWidth()/ GameSetting.instance.GUIScale,0,Display.getHeight()/GameSetting.instance.GUIScale,-1,-1,0,1,0,1);
         ShapeRenderer.end();
         this.bg.unbind();
         ShapeRenderer.setColor(0xFFFFFF);
         this.logoTex.bind();
         ShapeRenderer.drawRectUV(info.centerX()-160, info.centerX()+160,
-                info.centerY()-100,info.centerY()-20,
+                info.centerY()-120,info.centerY()-40,
                 1,1,0,1,0,1);
         this.logoTex.unbind();
         super.render(info);
+        GLUtil.disableDepthTest();
+        GL11.glPushMatrix();
+        GL11.glTranslatef(info.centerX()+95,info.centerY()-72,0);
+        double sin=Math.sin(System.currentTimeMillis()/300d)*0.1+1.1;
+        GL11.glScaled(sin,sin,sin);
+        GL11.glRotatef(-30,0,0,1);
+        FontRenderer.renderShadow(splashText,0,0,0xefff00,12,FontAlignment.MIDDLE);
+        GL11.glPopMatrix();
+        GLUtil.enableDepthTest();
     }
 }

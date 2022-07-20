@@ -4,7 +4,8 @@ import com.sunrisestudio.cubecraft.GameSetting;
 import com.sunrisestudio.cubecraft.gui.layout.LayoutManager;
 import com.sunrisestudio.cubecraft.gui.screen.Screen;
 import com.sunrisestudio.cubecraft.gui.layout.Border;
-import org.lwjglx.opengl.Display;
+import com.sunrisestudio.grass3d.platform.Display;
+
 
 public abstract class Component {
     public Screen parent;

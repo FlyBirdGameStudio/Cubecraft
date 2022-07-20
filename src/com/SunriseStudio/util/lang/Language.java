@@ -26,6 +26,11 @@ public class Language {
 
 
     public HashMap<String,String> map=new HashMap<>();
+
+    public static String get(String s) {
+        return selectedLanguage.map.getOrDefault(s,s);
+    }
+
     public void attachTranslationFile(InputStream in){
         this.map.putAll(getLangFromStream(in));
     }
@@ -54,6 +59,7 @@ public class Language {
                     } else {
                         sb.append(c);
                     }
+
                 }
                 v = sb.toString();
                 result.put(k, v);

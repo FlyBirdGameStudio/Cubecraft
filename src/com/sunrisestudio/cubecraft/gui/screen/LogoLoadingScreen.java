@@ -71,6 +71,6 @@ public class LogoLoadingScreen extends Screen {
 
     public void updateProgress(float prog) {
         this.prog=prog;
-        platform.shortTick();
+        this.platform.shortTick();
     }
 }

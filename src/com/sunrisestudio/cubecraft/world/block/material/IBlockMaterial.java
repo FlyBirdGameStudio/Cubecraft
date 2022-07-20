@@ -1,9 +1,11 @@
 package com.sunrisestudio.cubecraft.world.block.material;
 
+import com.sunrisestudio.cubecraft.world.Registry;
+import com.sunrisestudio.grass3d.render.draw.IVertexArrayBuilder;
 import com.sunrisestudio.util.math.AABB;
 import com.sunrisestudio.util.math.HitBox;
 import com.sunrisestudio.cubecraft.world.block.BlockFacing;
-import com.sunrisestudio.cubecraft.world.access.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
 import com.sunrisestudio.cubecraft.world.entity.item.Item;
 
@@ -123,5 +125,7 @@ public abstract class IBlockMaterial {
         return hits;
     }
 
-
+    public void render(IWorldAccess world, long x, long y, long z, long renderX, long renderY, long renderZ, BlockFacing facing, IVertexArrayBuilder builder) {
+        Registry.getBlockModelManager().get(this.id).render(builder,world,renderX,renderY,renderZ,x,y,z,facing);
+    }
 }

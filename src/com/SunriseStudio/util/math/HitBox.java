@@ -1,6 +1,6 @@
 package com.sunrisestudio.util.math;
 
-import com.sunrisestudio.cubecraft.world.access.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
 
 public class HitBox extends AABB {

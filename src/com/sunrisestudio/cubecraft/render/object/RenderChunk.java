@@ -1,6 +1,6 @@
 package com.sunrisestudio.cubecraft.render.object;
 
-import com.sunrisestudio.cubecraft.render.Camera;
+import com.sunrisestudio.grass3d.render.Camera;
 import com.sunrisestudio.grass3d.render.culling.ICuller;
 import com.sunrisestudio.grass3d.render.draw.ChanneledVertexArrayBuilder;
 import com.sunrisestudio.grass3d.render.draw.IVertexArrayBuilder;
@@ -56,7 +56,7 @@ public class RenderChunk implements KeyGetter<RenderChunkPos>,IRenderObject{
                 for (long cz = 0; cz < 16; ++cz) {
                     Tile renderTile = Tile.tiles[RenderChunk.this.world.getTile(cx+x*16, cy+y* 16L, cz+z*16 )];
                     if (renderTile != null){
-                        renderTile.render(builder, RenderChunk.this.world, 0, cx, cy, cz,cx+x*16, cy+y*16, cz+z*16);
+                        renderTile.render(builder, RenderChunk.this.world, 0, cx,cy,cz,cx+x*16, cy+y*16, cz+z*16);
                     }
                 }
             }
@@ -84,11 +84,6 @@ public class RenderChunk implements KeyGetter<RenderChunkPos>,IRenderObject{
 
 
 //-----position-----
-    //@Override
-    //public boolean equalsAnother(UUIDGetter<RenderChunkPos> uid) {
-        //return this.getUID().compare(uid.getUID());
-    //}
-
 
     @Override
     public final double distanceTo(_Entity target) {

@@ -73,8 +73,17 @@ public class ArrayUtil {
         return b;
     }
 
+
     public static float[] copySub(int start,int end,float[] arr){
         float[] result=new float[end-start];
+        for (int i=start;i<end;i++){
+            result[i-start]=arr[i];
+        }
+        return result;
+    }
+
+    public static double[] copySub(int start,int end,double[] arr){
+        double[] result=new double[end-start];
         for (int i=start;i<end;i++){
             result[i-start]=arr[i];
         }

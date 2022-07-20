@@ -1,7 +1,7 @@
 package com.sunrisestudio.cubecraft.world.entity;
 
 import com.sunrisestudio.cubecraft.world._Level;
-import org.lwjglx.input.Keyboard;
+import com.sunrisestudio.grass3d.platform.Keyboard;
 
 public class _Player
 extends _Entity {

@@ -2,7 +2,7 @@ package com.sunrisestudio.cubecraft.world.entity.humanoid;
 
 import com.sunrisestudio.util.math.AABB;
 import com.sunrisestudio.util.math.HitBox;
-import com.sunrisestudio.cubecraft.world.access.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
 import org.joml.Vector3d;
 

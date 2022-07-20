@@ -5,7 +5,7 @@ import com.sunrisestudio.util.nbt.NBTDataIO;
 import com.sunrisestudio.util.nbt.NBTTagCompound;
 import com.sunrisestudio.cubecraft.world.block.Block;
 import com.sunrisestudio.cubecraft.world.block.BlockFacing;
-import com.sunrisestudio.cubecraft.world.access.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
 
 public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
@@ -23,7 +23,7 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
         for (int xd = 0; xd < WIDTH; xd++) {
             for (int yd = 0; yd < WIDTH;yd++) {
                 for (int zd = 0; zd < WIDTH; zd++) {
-                    blocks[xd][yd][zd]=new Block(xd+x*16,yd,zd+z*16, "air");
+                    blocks[xd][yd][zd]=new Block(xd+x*16,yd,zd+z*16, "cubecraft:air");
                 }
             }
         }
@@ -40,7 +40,7 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
         if(x>=0&&y>=0&&z>=0&&x<WIDTH&&y<WIDTH&&z<WIDTH)
             return blocks[x][y][z];
         else
-            return null;
+            return new Block(x,y,z,"cubecraft:air");
     }
 
 
@@ -79,7 +79,7 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
                 }
             }
         }
-        for (Entity e:this.dimension.getEntityAccess().getAllEntities()){
+        for (Entity e:this.dimension.getAllEntities()){
             if(e.shouldSave()) {
                 if (e.x > this.x * 16 && e.x < this.x * 16 + 16) {
                     if (e.y > this.y * 16 && e.y < this.y * 16 + 16) {

@@ -2,7 +2,7 @@ package com.sunrisestudio.util;
 
 import com.sunrisestudio.cubecraft.Start;
 import org.lwjgl.opengl.GL11;
-import org.lwjglx.util.glu.GLU;
+import org.lwjgl.util.glu.GLU;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -86,9 +86,7 @@ public class LogHandler {
     public void checkGLError(String status){
         int errorStatus= GL11.glGetError();
         if (errorStatus != 0) {
-            String errorString = GLU.gluErrorString(errorStatus);
-            this.error(errorString+":"+status);
-            throw new RuntimeException();
+            throw new RuntimeException(errorStatus+":"+status);
         }
     }
     public void exception(Exception e){
@@ -133,4 +131,6 @@ public class LogHandler {
             this.color=color;
         }
     }
+
+
 }
