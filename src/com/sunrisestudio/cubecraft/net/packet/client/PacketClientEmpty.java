@@ -1,7 +1,7 @@
 package com.sunrisestudio.cubecraft.net.packet.client;
 
-import com.sunrisestudio.util.container.buffer.NettyBufferBuilder;
-import com.sunrisestudio.util.nbt.NBTTagCompound;
+import com.sunrisestudio.util.container.BufferBuilder;
+import com.sunrisestudio.util.file.nbt.tag.NBTTagCompound;
 import io.netty.buffer.ByteBuf;
 
 public record PacketClientEmpty() implements ClientPacket {
@@ -14,6 +14,6 @@ public record PacketClientEmpty() implements ClientPacket {
     public ByteBuf serialize() {
         NBTTagCompound packet=new NBTTagCompound();
         packet.setString("type",getType());
-        return NettyBufferBuilder.fromNBT(packet,50);
+        return BufferBuilder.fromNBT(packet,50);
     }
 }

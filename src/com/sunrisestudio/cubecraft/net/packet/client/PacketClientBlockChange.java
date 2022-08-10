@@ -1,10 +1,10 @@
 package com.sunrisestudio.cubecraft.net.packet.client;
 
-import com.sunrisestudio.util.container.buffer.NettyBufferBuilder;
-import com.sunrisestudio.cubecraft.world.block.Block;
+import com.sunrisestudio.util.container.BufferBuilder;
+import com.sunrisestudio.cubecraft.world.block.BlockState;
 import io.netty.buffer.ByteBuf;
 
-public record PacketClientBlockChange(Block newBlock)implements ClientPacket {
+public record PacketClientBlockChange(BlockState newBlockState)implements ClientPacket {
     @Override
     public String getType() {
         return "cubecraft:block_update";
@@ -12,6 +12,6 @@ public record PacketClientBlockChange(Block newBlock)implements ClientPacket {
 
     @Override
     public ByteBuf serialize() {
-        return NettyBufferBuilder.fromNBT(newBlock.getData(),128);
+        return BufferBuilder.fromNBT(newBlockState.getData(),128);
     }
 }

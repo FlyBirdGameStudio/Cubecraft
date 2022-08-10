@@ -1,8 +1,13 @@
 package com.sunrisestudio.grass3d.render.culling;
+import com.sunrisestudio.grass3d.render.Camera;
 import com.sunrisestudio.util.math.AABB;
 import org.lwjgl.opengl.*;
 
 public class OcclusionCuller extends ICuller{
+    public OcclusionCuller(Camera camera) {
+        super(camera);
+    }
+
     public boolean listVisible(int list){
         //关闭颜色写入
         GL11.glColorMask(false,false,false,false);

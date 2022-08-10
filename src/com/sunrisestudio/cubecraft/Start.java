@@ -1,13 +1,18 @@
 package com.sunrisestudio.cubecraft;
 
-import com.sunrisestudio.util.StartArguments;
+import com.sunrisestudio.cubecraft.client.CubeCraft;
+import com.sunrisestudio.cubecraft.client.resources.ResourceManager;
+import com.sunrisestudio.util.LogHandler;
+import com.sunrisestudio.util.container.StartArguments;
 
 public class Start {
     public static void main(String[] args) {
         //init game runtime
         startArguments =new StartArguments(args);
         gamePath= (String) startArguments.getValue("path", System.getProperty("user.dir"));
-        System.setProperty("java.library.path", (String) startArguments.getValue("native","native"));
+        System.setProperty("java.library.path", (String) startArguments.getValue("native",gamePath+"native"));
+        LogHandler.setLogPath(getGamePath()+"/data/logs/");
+        ResourceManager.createResourceFolder();
 
         //start thread
         Thread thread=new Thread(new CubeCraft());

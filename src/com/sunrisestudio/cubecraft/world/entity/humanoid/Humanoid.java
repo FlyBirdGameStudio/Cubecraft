@@ -9,12 +9,12 @@ import org.joml.Vector3d;
 public abstract class Humanoid extends Entity {
     @Override
     public Vector3d getCameraPosition() {
-        return new Vector3d(0.3,1.62,0);
+        return new Vector3d(0,1.62,0);
     }
 
     @Override
     public double getReachDistance() {
-        return 3;
+        return 5;
     }
 
     @Override

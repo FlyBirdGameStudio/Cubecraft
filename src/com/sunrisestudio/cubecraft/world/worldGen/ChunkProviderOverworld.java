@@ -10,7 +10,7 @@ import com.sunrisestudio.cubecraft.world.worldGen.noiseGenerator.ImprovedNoise;
 
 public class ChunkProviderOverworld extends ChunkProvider{
     public ChunkProviderOverworld(ChunkPos pos, long seed, IWorldAccess target) {
-        super(pos, seed, target);
+
     }
 
     @Override

@@ -1,10 +1,18 @@
 package com.sunrisestudio.grass3d.render.culling;
 
+import com.sunrisestudio.grass3d.render.Camera;
 import com.sunrisestudio.util.math.AABB;
 
 import java.util.Arrays;
 
 public abstract class ICuller {
+    final Camera camera;
+
+    public ICuller(Camera camera){
+        this.camera = camera;
+    }
+
+
     public boolean listVisible(int list) {
         return true;
     }
@@ -31,11 +39,9 @@ public abstract class ICuller {
         return booleans;
     }
 
-    public static ICuller CreateOcclusionCuller(){return new OcclusionCuller();}
-    public static ICuller CreateFrustumCuller(){return new Frustum();}
-    public static ICuller CreateJomlFrustumCuller(){return new JomlFrustumAdapter();}
-
     public void update() {
 
     }
+
+
 }

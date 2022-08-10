@@ -1,6 +1,6 @@
 package com.sunrisestudio.util;
 
-import com.sunrisestudio.cubecraft.CubeCraft;
+import com.sunrisestudio.cubecraft.client.CubeCraft;
 
 import java.io.IOException;
 import java.lang.reflect.Field;

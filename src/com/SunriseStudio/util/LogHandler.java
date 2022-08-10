@@ -2,7 +2,6 @@ package com.sunrisestudio.util;
 
 import com.sunrisestudio.cubecraft.Start;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -11,14 +10,19 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class LogHandler {
+    private static String logPath;
+
     private static final HashMap<String, ArrayList<Log>> logArrays=new HashMap<>();
     public static HashMap<String,File> files=new HashMap<>();
     public static HashMap<String,LogHandler> handlers=new HashMap<>();
+
+
+
     public static LogHandler create(String source,String file){
         if(logOutput) {
             if (!files.containsKey(file)) {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-                String path = Start.getGamePath() + "/logs/" + file + "_" + formatter.format(new Date(System.currentTimeMillis())) + ".log";
+                String path = logPath + file + "_" + formatter.format(new Date(System.currentTimeMillis())) + ".log";
                 File logFile = new File(path);
                 logFile.getParentFile().mkdir();
                 try {
@@ -112,15 +116,15 @@ public class LogHandler {
             Date date = new Date(System.currentTimeMillis());
             return err.color+"[" + formatter.format(date) + "]" +
                     "[" + err.name + "]" +
-                    "[" + source + "]" +StringColorConstants.WHITE+
+                    "[" + source + "]" + ColorUtil.WHITE+
                     message;
         }
     }
 
     public enum Errors{
-        INFO("INFO", StringColorConstants.GREEN),
-        WARNING("WARNING", StringColorConstants.YELLOW),
-        ERROR("ERROR",StringColorConstants.RED);
+        INFO("INFO", ColorUtil.GREEN),
+        WARNING("WARNING", ColorUtil.YELLOW),
+        ERROR("ERROR", ColorUtil.RED);
 
         public final String name;
 
@@ -132,5 +136,7 @@ public class LogHandler {
         }
     }
 
-
+    public static void setLogPath(String logPath) {
+        LogHandler.logPath = logPath;
+    }
 }

@@ -1,9 +1,14 @@
 package com.sunrisestudio.grass3d.render.culling;
 
+import com.sunrisestudio.grass3d.render.Camera;
 import com.sunrisestudio.util.math.AABB;
 import org.joml.FrustumIntersection;
 
 public class JomlFrustumAdapter extends ICuller{
+    public JomlFrustumAdapter(Camera camera) {
+        super(camera);
+    }
+
     @Override
     public boolean aabbVisible(AABB aabb) {
         return new FrustumIntersection().testAab((float) aabb.x0,(float) aabb.y0,(float) aabb.z0,(float) aabb.x1,(float) aabb.y1,(float) aabb.z1);

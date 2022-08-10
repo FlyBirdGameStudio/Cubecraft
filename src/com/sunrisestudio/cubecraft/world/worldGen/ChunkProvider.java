@@ -8,17 +8,12 @@ import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import java.util.concurrent.Callable;
 
 public abstract class ChunkProvider implements Callable<Chunk> {
-    private final ChunkPos pos;
-    private final long seed;
-    private final Option worldProviderSetting;
-    private final IWorldAccess dimension;
+    private ChunkPos pos;
+    private long seed;
+    private Option worldProviderSetting;
+    public IWorldAccess dimension;
 
-    public ChunkProvider(ChunkPos pos, long seed, IWorldAccess target){
-        this.dimension=target;
-        this.worldProviderSetting=new Option("worldGen.provider");
-        this.seed=seed;
-        this.pos=pos;
-    }
+
 
     @Override
     public Chunk call() {

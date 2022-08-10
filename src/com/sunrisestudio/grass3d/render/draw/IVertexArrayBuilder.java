@@ -37,13 +37,14 @@ public interface IVertexArrayBuilder {
         vertexUV(xyz.x,xyz.y,xyz.z,uv.x,uv.y,layer);
     }
 
-    DoubleBuffer getRawBuffer();
 
-    DoubleBuffer getVertexBuffer();
+    double[] getRawArray();
 
-    DoubleBuffer getNormalBuffer();
+    double[] getVertexArray();
 
-    DoubleBuffer getColorBuffer();
+    double[] getNormalArray();
 
-    DoubleBuffer getTexCoordBuffer();
+    double[] getColorArray();
+
+    double[] getTexCoordArray();
 }

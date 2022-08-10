@@ -1,29 +1,29 @@
 package com.sunrisestudio.cubecraft.world.chunk;
 
 import com.sunrisestudio.util.container.keyMap.KeyGetter;
-import com.sunrisestudio.util.nbt.NBTDataIO;
-import com.sunrisestudio.util.nbt.NBTTagCompound;
-import com.sunrisestudio.cubecraft.world.block.Block;
+import com.sunrisestudio.cubecraft.world.block.BlockState;
 import com.sunrisestudio.cubecraft.world.block.BlockFacing;
 import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
+import com.sunrisestudio.util.file.nbt.NBTDataIO;
+import com.sunrisestudio.util.file.nbt.tag.NBTTagCompound;
 
 public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
     private final long x,y,z;
     public static final int WIDTH=16;
-    private final Block[][][] blocks;
+    private final BlockState[][][] blockStates;
     public IWorldAccess dimension;
     public ChunkLoadTicket ticket=new ChunkLoadTicket(ChunkLoadLevel.None_TICKING,256);
 
     public Chunk(IWorldAccess dimension, ChunkPos p){
-        this.blocks=new Block[WIDTH][WIDTH][WIDTH];
+        this.blockStates =new BlockState[WIDTH][WIDTH][WIDTH];
         this.x=p.x();
         this.z=p.z();
         this.y=p.y();
         for (int xd = 0; xd < WIDTH; xd++) {
             for (int yd = 0; yd < WIDTH;yd++) {
                 for (int zd = 0; zd < WIDTH; zd++) {
-                    blocks[xd][yd][zd]=new Block(xd+x*16,yd,zd+z*16, "cubecraft:air");
+                    blockStates[xd][yd][zd]=new BlockState("cubecraft:air");
                 }
             }
         }
@@ -31,16 +31,20 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
 
     public void setBlock(int x, int y, int z, String id, BlockFacing f){
         if(x>=0&&y>=0&&z>=0&&x<WIDTH&&y<WIDTH&&z<WIDTH) {
-            blocks[x][y][z].setId(id);
-            blocks[x][y][z].setFacing(f);
+            blockStates[x][y][z].setId(id);
+            blockStates[x][y][z].setFacing(f);
+        }else{
+            throw new IllegalArgumentException("position not in range!");
         }
     }
 
-    public Block getBlock(int x, int y, int z) {
-        if(x>=0&&y>=0&&z>=0&&x<WIDTH&&y<WIDTH&&z<WIDTH)
-            return blocks[x][y][z];
-        else
-            return new Block(x,y,z,"cubecraft:air");
+    public BlockState getBlock(int x, int y, int z) {
+        if(x>=0&&y>=0&&z>=0&&x<WIDTH&&y<WIDTH&&z<WIDTH) {
+            return blockStates[x][y][z];
+        }else{
+            //throw new IllegalArgumentException("position not in range!");
+            return new BlockState("cubecraft:air");
+        }
     }
 
 
@@ -55,11 +59,11 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
                 for (int xd = 0; xd < WIDTH; xd++) {
                     for (int yd = 0; yd < WIDTH;yd++) {
                         for (int zd = 0; zd < WIDTH; zd++) {
-                            if(blocks[xd][yd][zd].getMaterial().isBlockEntity()){
-                                blocks[xd][yd][zd].getMaterial().onBlockUpdate(this.dimension,xd+x*16,yd+y*16,zd+z*16);
-                            }else if(blocks[xd][yd][zd].needTick()){
-                                blocks[xd][yd][zd].getMaterial().onBlockUpdate(this.dimension,xd+x*16,yd+y*16,zd+z*16);
-                                blocks[xd][yd][zd].setTicking(false);
+                            if(blockStates[xd][yd][zd].getMaterial().isBlockEntity()){
+                                blockStates[xd][yd][zd].getMaterial().onBlockUpdate(this.dimension,xd+x*16,yd+y*16,zd+z*16);
+                            }else if(blockStates[xd][yd][zd].needTick()){
+                                blockStates[xd][yd][zd].getMaterial().onBlockUpdate(this.dimension,xd+x*16,yd+y*16,zd+z*16);
+                                blockStates[xd][yd][zd].setTicking(false);
                             }
                         }
                     }
@@ -75,7 +79,7 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
         for (int xd = 0; xd < WIDTH; xd++) {
             for (int yd = 0; yd < WIDTH;yd++) {
                 for (int zd = 0; zd < WIDTH; zd++) {
-                    compound.setCompoundTag(xd+"-"+yd+"-"+zd,this.blocks[xd][yd][zd].getData());
+                    compound.setCompoundTag(xd+"-"+yd+"-"+zd,this.blockStates[xd][yd][zd].getData());
                 }
             }
         }
@@ -98,9 +102,19 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
         for (int xd = 0; xd < WIDTH; xd++) {
             for (int yd = 0; yd < WIDTH;yd++) {
                 for (int zd = 0; zd < WIDTH; zd++) {
-                   this.blocks[xd][yd][zd].setData(tag.getCompoundTag(xd+"-"+yd+"-"+zd));
+                   this.blockStates[xd][yd][zd].setData(tag.getCompoundTag(xd+"-"+yd+"-"+zd));
                 }
             }
         }
+    }
+
+    public void addTicket(ChunkLoadTicket ticket) {
+        if(ticket.getChunkLoadLevel().containsLevel(this.ticket.getChunkLoadLevel())){
+            this.ticket.setChunkLoadLevel(ticket.getChunkLoadLevel());
+        }
+        if(ticket.getTime()>this.ticket.getTime()){
+            this.ticket.setTime(ticket.getTime());
+        }
+
     }
 }

@@ -6,7 +6,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MultiRenderCompileService<V extends VertexArrayCompileCallable> {
-    private final ArrayQueue<DrawCompile> multiDrawResult=new ArrayQueue<>();
+    private final ArrayQueue<DrawCompile[]> multiDrawResult=new ArrayQueue<>();
     private final ExecutorService multiDrawService;
 
     public MultiRenderCompileService(int max){
@@ -21,7 +21,7 @@ public class MultiRenderCompileService<V extends VertexArrayCompileCallable> {
         return this.multiDrawResult.size();
     }
 
-    public DrawCompile get(){
+    public DrawCompile[] get(){
         return this.multiDrawResult.poll();
     }
 }

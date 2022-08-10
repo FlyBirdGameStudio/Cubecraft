@@ -25,6 +25,10 @@ public class HitBox extends AABB {
      * @return hit box
      */
     public static HitBox createFromCollision(Entity target){
-        return new HitBox(target.collisionBox, (iDimensionAccess, from) -> target.onHit(from,iDimensionAccess));
+        return new HitBox(target.collisionBox, (iDimensionAccess, from) -> target.onHit(from,iDimensionAccess, (long) target.x, (long) target.y, (long) target.z));
+    }
+
+    public void hit(IWorldAccess worldAccess,Entity from){
+        this.hitListener.hit(worldAccess,from);
     }
 }

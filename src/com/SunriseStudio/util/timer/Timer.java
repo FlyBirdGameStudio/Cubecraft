@@ -54,7 +54,7 @@ public class Timer
 		this.fps = (float)(1000000000L / passedNs);
 		this.passedTime += passedNs * this.timeScale * this.ticksPerSecond / 1.0E9f;
 		this.ticks = (int)this.passedTime;
-		this.ticks= (int) MathHelper.step(this.ticks,100,0);
+		this.ticks= (int) MathHelper.clamp(this.ticks,100,0);
 		this.passedTime -= this.ticks;
 		this.interpolatedTime = this.passedTime;
 
@@ -73,5 +73,14 @@ public class Timer
 
 	public void runTaskDelay(TimerTask task,long delay){
 
+	}
+
+	public static long last;
+	public static void startTiming(){
+		last=System.currentTimeMillis();
+	}
+
+	public static long endTiming(){
+		return System.currentTimeMillis()-last;
 	}
 }

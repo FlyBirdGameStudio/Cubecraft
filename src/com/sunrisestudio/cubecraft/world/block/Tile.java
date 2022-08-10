@@ -1,7 +1,7 @@
 package com.sunrisestudio.cubecraft.world.block;
 
 import com.sunrisestudio.grass3d.render.draw.IVertexArrayBuilder;
-import com.sunrisestudio.cubecraft.world.entity._Player;
+
 import com.sunrisestudio.cubecraft.world.entity.particle.Particle;
 import com.sunrisestudio.cubecraft.world.entity.particle.ParticleEngine;
 import com.sunrisestudio.cubecraft.world._Level;
@@ -210,51 +210,6 @@ public class Tile {
             vertexBuilder.vertexUV(x0+0.001, y0, z0, u1, v1);
             vertexBuilder.vertexUV(x0+0.001, y1, z0, u1, v0);
             vertexBuilder.vertexUV(x0+0.001, y1, z1, u0, v0);
-        }
-    }
-
-    public void renderFaceNoTexture(_Player player, IVertexArrayBuilder vertexBuilder, int x, int y, int z, int face) {
-        float x0 = (float)x + 0.0f;
-        float x1 = (float)x + 1.0f;
-        float y0 = (float)y + 0.0f;
-        float y1 = (float)y + 1.0f;
-        float z0 = (float)z + 0.0f;
-        float z1 = (float)z + 1.0f;
-        if (face == 0 && (float)y > player.y) {
-            vertexBuilder.vertex(x0, y0, z1);
-            vertexBuilder.vertex(x0, y0, z0);
-            vertexBuilder.vertex(x1, y0, z0);
-            vertexBuilder.vertex(x1, y0, z1);
-        }
-        if (face == 1 && (float)y < player.y) {
-            vertexBuilder.vertex(x1, y1, z1);
-            vertexBuilder.vertex(x1, y1, z0);
-            vertexBuilder.vertex(x0, y1, z0);
-            vertexBuilder.vertex(x0, y1, z1);
-        }
-        if (face == 2 && (float)z > player.z) {
-            vertexBuilder.vertex(x0, y1, z0);
-            vertexBuilder.vertex(x1, y1, z0);
-            vertexBuilder.vertex(x1, y0, z0);
-            vertexBuilder.vertex(x0, y0, z0);
-        }
-        if (face == 3 && (float)z < player.z) {
-            vertexBuilder.vertex(x0, y1, z1);
-            vertexBuilder.vertex(x0, y0, z1);
-            vertexBuilder.vertex(x1, y0, z1);
-            vertexBuilder.vertex(x1, y1, z1);
-        }
-        if (face == 4 && (float)x > player.x) {
-            vertexBuilder.vertex(x0, y1, z1);
-            vertexBuilder.vertex(x0, y1, z0);
-            vertexBuilder.vertex(x0, y0, z0);
-            vertexBuilder.vertex(x0, y0, z1);
-        }
-        if (face == 5 && (float)x < player.x) {
-            vertexBuilder.vertex(x1, y0, z1);
-            vertexBuilder.vertex(x1, y0, z0);
-            vertexBuilder.vertex(x1, y1, z0);
-            vertexBuilder.vertex(x1, y1, z1);
         }
     }
 

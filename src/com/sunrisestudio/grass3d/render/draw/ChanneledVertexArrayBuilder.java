@@ -1,14 +1,11 @@
 package com.sunrisestudio.grass3d.render.draw;
 
-import com.sunrisestudio.util.container.buffer.BufferBuilder;
+import com.sunrisestudio.util.container.BufferBuilder;
 import com.sunrisestudio.util.container.ArrayUtil;
-
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
 
 /**
  * this builder grouped any type of attribute in to channel.
- * it is more efficient when using{@link PointedVertexArrayUploader}.
+ * it is more efficient when using{@link VertexPointerUploader}.
  * it is still compatible with any type of {@link IVertexArrayUploader},but it will not working well.
  */
 public class ChanneledVertexArrayBuilder implements IVertexArrayBuilder {
@@ -157,31 +154,29 @@ public class ChanneledVertexArrayBuilder implements IVertexArrayBuilder {
         return vertexCount;
     }
 
-
-
-
     @Override
-    public DoubleBuffer getRawBuffer() {
-        return BufferBuilder.getD(this.raw);
+    public double[] getRawArray() {
+        return ArrayUtil.copySub(0,vertexCount*13,this.raw);
     }
 
     @Override
-    public DoubleBuffer getVertexBuffer() {
-        return BufferBuilder.getD(ArrayUtil.copySub(0,vertexCount*3,vertex));
+    public double[] getVertexArray() {
+        return ArrayUtil.copySub(0,vertexCount*3,vertex);
     }
 
     @Override
-    public DoubleBuffer getNormalBuffer() {
-        return BufferBuilder.getD(ArrayUtil.copySub(0,vertexCount*3,normal));
+    public double[] getNormalArray() {
+        return ArrayUtil.copySub(0,vertexCount*3,normal);
     }
 
     @Override
-    public DoubleBuffer getColorBuffer() {
-        return BufferBuilder.getD(ArrayUtil.copySub(0,vertexCount*4,color));
+    public double[] getColorArray() {
+        return ArrayUtil.copySub(0,vertexCount*4,color);
     }
 
     @Override
-    public DoubleBuffer getTexCoordBuffer() {
-        return BufferBuilder.getD(ArrayUtil.copySub(0,vertexCount*3,tc));
+    public double[] getTexCoordArray() {
+        return ArrayUtil.copySub(0,vertexCount*3,tc);
     }
+
 }

@@ -1,7 +1,7 @@
 package com.sunrisestudio.grass3d.render.textures;
 
-import com.sunrisestudio.cubecraft.resources.ResourcePacks;
-import com.sunrisestudio.util.container.buffer.BufferBuilder;
+import com.sunrisestudio.cubecraft.client.resources.ResourceManager;
+import com.sunrisestudio.util.container.BufferBuilder;
 import org.lwjgl.opengl.*;
 
 import java.awt.image.BufferedImage;
@@ -32,7 +32,7 @@ public class Texture2DArray extends Texture{
 
     @Override
     public void load(String path) {
-        BufferedImage img= ResourcePacks.instance.getImage(path);
+        BufferedImage img= ResourceManager.instance.getImage(path);
         int width=img.getWidth();
         int height=img.getHeight();
 
@@ -50,7 +50,7 @@ public class Texture2DArray extends Texture{
             newPixels[i * 4 + 3] = (byte)a;
         }
         this.bind();
-        ByteBuffer buf=BufferBuilder.getB(newPixels);
+        ByteBuffer buf=BufferBuilder.from(newPixels);
         GL12.glTexSubImage3D(getType(),1,0,0,prevLayer,width,height,1,GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE,buf);
         buf=null;
 

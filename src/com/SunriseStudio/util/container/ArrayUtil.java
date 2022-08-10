@@ -11,22 +11,12 @@ public class ArrayUtil {
     }
 
     public static <T>boolean arrayMatchAny(T t, T[] arr){
-        return Arrays.stream(arr).anyMatch(t2 -> {
-            boolean b=false;
-            if(Objects.equals(t2, t)){
-                b=true;
-            }
-            return b;
-        });
+        return Arrays.asList(arr).contains(t);
     }
 
     public static <T>boolean arrayMatchNone(T t, T[] arr){
         return Arrays.stream(arr).noneMatch(t2 -> {
-            boolean b=false;
-            if(Objects.equals(t2, t)){
-                b=true;
-            }
-            return b;
+            return Objects.equals(t2, t);
         });
     }
 
@@ -76,9 +66,7 @@ public class ArrayUtil {
 
     public static float[] copySub(int start,int end,float[] arr){
         float[] result=new float[end-start];
-        for (int i=start;i<end;i++){
-            result[i-start]=arr[i];
-        }
+        if (end - start >= 0) System.arraycopy(arr, start, result, 0, end - start);
         return result;
     }
 

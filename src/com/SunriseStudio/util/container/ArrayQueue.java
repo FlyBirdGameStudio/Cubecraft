@@ -42,7 +42,11 @@ public class ArrayQueue <E> {
     }
 
     public E poll(){
-        return this.items.poll().e;
+        if(items.size()>0) {
+            return this.items.poll().e;
+        }else{
+            return null;
+        }
     }
     public List<E> pollAll(int count){
         ArrayList<E> returns=new ArrayList<>();

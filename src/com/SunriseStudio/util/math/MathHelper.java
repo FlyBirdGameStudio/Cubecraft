@@ -1,16 +1,27 @@
 package com.sunrisestudio.util.math;
 
+import org.joml.Vector3d;
+
 public class MathHelper {
     public static double linear_interpolate(double x,double y,double t){
         return x + (y - x) * t;
     }
 
+    public static Vector3d linear_interpolate(Vector3d x,Vector3d y,double t){
+        return new Vector3d(
+                linear_interpolate(x.x,y.x,t),
+                linear_interpolate(x.y,y.y,t),
+                linear_interpolate(x.z,y.z,t)
+        );
+    }
+
+
     public static double smooth_interpolate(double x,double y,double t){
-        double a= step((t-x)/(y-x),0,1);
+        double a= clamp((t-x)/(y-x),0,1);
         return t*t*(3-2*t);
     }
 
-    public static double step(double x, double max, double min){
+    public static double clamp(double x, double max, double min){
         if(x>max){
             x=max;
         }
@@ -20,7 +31,7 @@ public class MathHelper {
         return x;
     }
 
-    public static double step(double x,double step){
+    public static double step(double x, double step){
         if(x<step){
             return 0.0;
         }else{
@@ -42,5 +53,81 @@ public class MathHelper {
 
     public static double scale(double x, double outputMin, double outputMax, double inputMin, double inputMax){
         return (x- inputMax)/(inputMax - inputMin)*(outputMax - outputMin)+ outputMin;
+    }
+
+    public static long getChunkPos(long world,long aspect){
+        int fix=world<0?1:0;
+        return world/aspect-fix;
+    }
+
+    public static long getRelativePosInChunk(long world,long aspect){
+        long a=getChunkPos(world, aspect)*aspect;
+        return world-a-(world<0?1:0);
+    }
+
+    public static long floor(double d) {
+        final long n = (long)d;
+        if (d < n) {
+            return n - 1;
+        }
+        return n;
+    }
+
+    public static Vector3d getIntermediateWithXValue(final Vector3d self,final Vector3d vec3D, double float2) {
+        final double n = vec3D.x - self.x;
+        final double n2 = vec3D.y - self.y;
+        final double n3 = vec3D.z - self.z;
+        if (n * n < 1.0E-7f) {
+            return null;
+        }
+        if ((float2 = (float2 - self.x) / n) < 0.0f || float2 > 1.0f) {
+            return null;
+        }
+        return new Vector3d(self.x + n * float2, self.y + n2 * float2, self.z + n3 * float2);
+    }
+
+    public static Vector3d getIntermediateWithYValue(final Vector3d self,final Vector3d vec3D, double float2) {
+        final double n = vec3D.x - self.x;
+        final double n2 = vec3D.y - self.y;
+        final double n3 = vec3D.z - self.z;
+        if (n2 * n2 < 1.0E-7f) {
+            return null;
+        }
+        if ((float2 = (float2 - self.y) / n2) < 0.0f || float2 > 1.0f) {
+            return null;
+        }
+        return new Vector3d(self.x + n * float2, self.y + n2 * float2, self.z + n3 * float2);
+    }
+
+    public static Vector3d getIntermediateWithZValue(final Vector3d self,final Vector3d vec3D, double float2) {
+        final double n = vec3D.x - self.x;
+        final double n2 = vec3D.y - self.y;
+        final double n3;
+        if ((n3 = vec3D.z - self.z) * n3 < 1.0E-7f) {
+            return null;
+        }
+        if ((float2 = (float2 - self.z) / n3) < 0.0f || float2 > 1.0f) {
+            return null;
+        }
+        return new Vector3d(self.x + n * float2, self.y + n2 * float2, self.z + n3 * float2);
+    }
+
+    public static int floor_double(double d) {
+        final int n = (int)d;
+        if (d < n) {
+            return n - 1;
+        }
+        return n;
+    }
+
+    /**
+     * get "t" from a,b,x
+     */
+    public static double reverse_interpolate(double a,double b,double x){
+        return (x-a)/(b-a);
+    }
+
+    public static double reverse_interpolate_abs(double a,double b,double x) {
+        return (x-a)/Math.abs(b-a);
     }
 }

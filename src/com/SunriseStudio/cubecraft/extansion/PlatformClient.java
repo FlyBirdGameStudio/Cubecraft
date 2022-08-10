@@ -1,8 +1,8 @@
 package com.sunrisestudio.cubecraft.extansion;
 
-import com.sunrisestudio.cubecraft.CubeCraft;
-import com.sunrisestudio.cubecraft.gui.DisplayScreenInfo;
-import com.sunrisestudio.cubecraft.gui.screen.Screen;
+import com.sunrisestudio.cubecraft.client.CubeCraft;
+import com.sunrisestudio.cubecraft.client.gui.DisplayScreenInfo;
+import com.sunrisestudio.cubecraft.client.gui.screen.Screen;
 import com.sunrisestudio.cubecraft.net.ClientIO;
 import com.sunrisestudio.cubecraft.world.IWorldAccess;
 

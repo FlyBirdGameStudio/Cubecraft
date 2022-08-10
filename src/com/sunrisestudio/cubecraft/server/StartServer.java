@@ -1,6 +1,6 @@
 package com.sunrisestudio.cubecraft.server;
 
-import com.sunrisestudio.util.StartArguments;
+import com.sunrisestudio.util.container.StartArguments;
 import com.sunrisestudio.util.LogHandler;
 
 public class StartServer {

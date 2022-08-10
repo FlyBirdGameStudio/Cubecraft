@@ -1,5 +1,8 @@
 package com.sunrisestudio.util.math;
 
+import com.sunrisestudio.cubecraft.world.block.BlockFacing;
+import org.joml.Vector3d;
+
 public class AABB {
     private double epsilon = 0.0f;
     public double x0;
@@ -122,6 +125,97 @@ public class AABB {
     }
 
     public AABB grow(double r) {
-        return this.grow(r,r,r);
+        return this.grow(r, r, r);
+    }
+
+    public static boolean isClosest(Vector3d x, Vector3d a, Vector3d b) {
+        return a == null || x.distanceSquared(b) < x.distanceSquared(a);
+    }
+
+    public Vector3d getCenter() {
+        return getSize().mul(0.5).add(new Vector3d(x0, y0, z0));
+    }
+
+    public Vector3d getSize() {
+        return new Vector3d(x1 - x0, y1 - y0, z1 - z0);
+    }
+
+
+    public boolean positionInBoundYZ(double y, double z) {
+        return y>y0&&y<y1&&z>z0&&z<z1;
+    }
+
+    public boolean positionInBoundXZ(double x, double z) {
+        return x>x0&&x<x1&&z>z0&&z<z1;
+    }
+
+    public boolean positionInBoundXY(double x, double y) {
+        return x>x0&&x<x1&&y>y0&&y<y1;
+    }
+
+    /**
+     * min distance from a point to 8 vertices of this box.
+     * @param vector3d point
+     * @return distance
+     */
+    public double distanceMin(Vector3d vector3d){
+        return Math.min(
+                Math.min(
+                        Math.min(
+                                    vector3d.distance(new Vector3d(x0,y0,z0)),
+                                    vector3d.distance(new Vector3d(x1,y0,z0))
+                                ),
+                        Math.min(
+                                vector3d.distance(new Vector3d(x0,y1,z0)),
+                                vector3d.distance(new Vector3d(x1,y1,z0))
+                        )
+                ),
+                Math.min(
+                        Math.min(
+                                vector3d.distance(new Vector3d(x0,y0,z1)),
+                                vector3d.distance(new Vector3d(x1,y0,z1))
+                        ),
+                        Math.min(
+                                vector3d.distance(new Vector3d(x0,y1,z1)),
+                                vector3d.distance(new Vector3d(x1,y1,z1))
+                        )
+                )
+        );
+    }
+
+    /**
+     * max distance from a point to 8 vertices of this box.
+     * @param vector3d point
+     * @return distance
+     */
+    public double distanceMax(Vector3d vector3d){
+        return Math.max(
+                Math.max(
+                        Math.max(
+                                vector3d.distance(new Vector3d(x0,y0,z0)),
+                                vector3d.distance(new Vector3d(x1,y0,z0))
+                        ),
+                        Math.min(
+                                vector3d.distance(new Vector3d(x0,y1,z0)),
+                                vector3d.distance(new Vector3d(x1,y1,z0))
+                        )
+                ),
+                Math.max(
+                        Math.max(
+                                vector3d.distance(new Vector3d(x0,y0,z1)),
+                                vector3d.distance(new Vector3d(x1,y0,z1))
+                        ),
+                        Math.max(
+                                vector3d.distance(new Vector3d(x0,y1,z1)),
+                                vector3d.distance(new Vector3d(x1,y1,z1))
+                        )
+                )
+        );
+    }
+
+    public boolean isVectorInside(Vector3d point) {
+        return point.x>x0&&point.x<x1&&
+               point.y>y0&&point.y<y1&&
+               point.z>z0&&point.z<z1;
     }
 }

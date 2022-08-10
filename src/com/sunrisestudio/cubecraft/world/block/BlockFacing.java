@@ -1,7 +1,7 @@
 package com.sunrisestudio.cubecraft.world.block;
 
 
-import com.sunrisestudio.util.container.Vector3;
+import com.sunrisestudio.util.math.Vector3;
 import com.sunrisestudio.util.math.RotationMatrixConstants;
 import org.joml.Matrix4f;
 

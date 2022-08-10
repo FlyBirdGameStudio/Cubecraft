@@ -1,18 +1,20 @@
 package com.sunrisestudio.cubecraft.world.entity;
 
-import com.sunrisestudio.cubecraft.world.Registry;
+import com.sunrisestudio.cubecraft.Registry;
 import com.sunrisestudio.cubecraft.world.World;
-import com.sunrisestudio.cubecraft.world.block.LiquidBlock;
-import com.sunrisestudio.util.math.AABB;
-import com.sunrisestudio.util.math.HitBox;
-import com.sunrisestudio.util.math.HitResult;
-import com.sunrisestudio.util.nbt.NBTDataIO;
-import com.sunrisestudio.util.nbt.NBTTagCompound;
-import com.sunrisestudio.cubecraft.world.HittableObject;
+
 import com.sunrisestudio.cubecraft.world.block.BlockFacing;
+import com.sunrisestudio.cubecraft.world.block.LiquidBlockState;
+import com.sunrisestudio.util.file.nbt.NBTDataIO;
+
+import com.sunrisestudio.util.file.nbt.tag.NBTTagCompound;
+import com.sunrisestudio.util.math.*;
+
+import com.sunrisestudio.cubecraft.world.HittableObject;
 import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.entity.item.Item;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3d;
 import org.joml.Quaterniond;
 import org.joml.Vector3d;
 
@@ -44,8 +46,6 @@ public abstract class Entity implements HittableObject, NBTDataIO {
     public double yd;
     public double zd;
 
-    public double xa = 0.0;
-    public double za = 0.0;
 
     //rotation
     public float yRot;
@@ -101,6 +101,13 @@ public abstract class Entity implements HittableObject, NBTDataIO {
         if (this.xRot > 90.0f) {
             this.xRot = 90.0f;
         }
+
+        if (this.yRot < -180.0f) {
+            this.yRot = 180.0f;
+        }
+        if (this.yRot > 180.0f) {
+            this.yRot = -180.0f;
+        }
     }
 
     /**
@@ -146,6 +153,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
         this.y = this.collisionBox.y0;
         this.z = (this.collisionBox.z0 + this.collisionBox.z1) / 2.0f;
     }
+
 
     /**
      * simulate relative move and turn them into momentum in 3 axis
@@ -196,7 +204,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
      * @return distance(blocks)
      */
     public double getReachDistance() {
-        return 2.5;
+        return 10;
     }
 
     /**
@@ -221,7 +229,6 @@ public abstract class Entity implements HittableObject, NBTDataIO {
         this.zo = this.z;
 
         this.clipSelectionBox();
-
         float speed;
 
         if (flyingMode) {
@@ -269,79 +276,21 @@ public abstract class Entity implements HittableObject, NBTDataIO {
         }
     }
 
-
     /**
      * calculate where the hit result of entity based on coord and rotation
      */
     public void clipSelectionBox() {
         this.hitResult=null;
-        HitBox hitbox = null;
-        int f = 114514;
-        List<HitBox> aABBs = this.world.getSelectionBox(this);
-        Vector3d to = new Vector3d(getCameraPosition().add(getReachDistance(), 0, 0)).rotate(new Quaterniond(this.xRot, this.yRot, this.zRot, 1.0f));
+        Vector3d from=new Vector3d(x,y+1.62,z);
 
-        double xaOrg = to.x;
-        double yaOrg = to.y;
-        double zaOrg = to.z;
+        this.hitResult= RayTest.rayTrace(world.getSelectionBox(this),from,getHitTargetPos());
+    }
 
-        AABB rayCollider = new AABB(to.x - 0.001, to.y - 0.001, to.z - 0.001, to.x + 0.001, to.y + 0.001, to.z + 0.001);
-
-        //check which box collides ray.
-
-        //IDK what but i`d like to check x axis first
-        for (HitBox aabb : aABBs) {
-            if (aabb != null) {
-                to.y = aabb.clipXCollide(rayCollider, to.y);
-                //if hit any box then it is the target(x<orgX means dist is clipped)
-                if (Math.abs(to.y) < Math.abs(yaOrg)) {
-                    hitbox = aabb;
-                    break;
-                }
-            }
-        }
-        for (HitBox aabb : aABBs) {
-            if (aabb != null) {
-                to.x = aabb.clipXCollide(rayCollider, to.x);
-                if (Math.abs(to.x) < Math.abs(xaOrg)) {
-                    hitbox = aabb;
-                    break;
-                }
-            }
-        }
-        for (HitBox aabb : aABBs) {
-            if (aabb != null) {
-                to.z = aabb.clipXCollide(rayCollider, to.z);
-                if (Math.abs(to.z) < Math.abs(zaOrg)) {
-                    hitbox = aabb;
-                    break;
-                }
-            }
-        }
-
-        if(hitbox!=null) {
-            //check facing of hit
-            if (to.y >= hitbox.y1) {
-                f = 0;
-            }
-            if (to.y <= hitbox.y0) {
-                f = 1;
-            }
-            if (to.z >= hitbox.z1) {
-                f = 2;
-            }
-            if (to.z <= hitbox.z0) {
-                f = 3;
-            }
-            if (to.x >= hitbox.x1) {
-                f = 4;
-            }
-            if (to.x <= hitbox.x0) {
-                f = 5;
-            }
-        }
-        if(f!=114514) {
-            this.hitResult = new HitResult(BlockFacing.fromId(f), hitbox);
-        }
+    public Vector3d getHitTargetPos(){
+        Vector3d from=new Vector3d(x,y+1.62,z);
+        Vector3d rel=new Vector3d(0,0,getReachDistance());
+        Vector3d to = new Vector3d(from).mul(new Matrix3d().rotate(new Quaterniond(xRot,yRot,zRot,1.0))).add(rel);
+        return to;
     }
 
     public boolean isFree(double xa, double ya, double za) {
@@ -413,8 +362,6 @@ public abstract class Entity implements HittableObject, NBTDataIO {
         this.zRot = physics.getFloat("roll");
     }
 
-
-
     public void die() {
 
     }
@@ -426,8 +373,11 @@ public abstract class Entity implements HittableObject, NBTDataIO {
     //event
     public void onInteract(Entity from){}
 
-
     public boolean inLiquid() {
-        return this.world.getBlock((long) x, (long) y, (long) z) instanceof LiquidBlock;
+        return this.world.getBlock((long) x, (long) y, (long) z) instanceof LiquidBlockState;
+    }
+
+    @Override
+    public void onHit(Entity from, IWorldAccess world, long bx, long by, long bz) {
     }
 }

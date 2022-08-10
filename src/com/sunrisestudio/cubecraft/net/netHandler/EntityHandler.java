@@ -34,7 +34,7 @@ public class EntityHandler extends NetHandler {
 
     @EventHandler
     public void onEntityAttack(BlockChangeEvent e){
-        this.sendPacket(new PacketClientBlockChange(e.newBlock()));
+        this.sendPacket(new PacketClientBlockChange(e.newBlockState()));
     }
 
 

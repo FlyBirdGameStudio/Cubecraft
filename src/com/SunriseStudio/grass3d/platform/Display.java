@@ -1,14 +1,15 @@
 package com.sunrisestudio.grass3d.platform;
 
+import com.sunrisestudio.cubecraft.client.resources.ImageUtil;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.ALC;
-import org.lwjgl.openal.ALC10;
-import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.IntBuffer;
 
 public class Display {
@@ -133,7 +134,9 @@ public class Display {
         created = true;
     }
 
-
+    public static void setVsyncEnable(boolean vsync){
+        GLFW.glfwSwapInterval(vsync?1:0);
+    }
 
 
 
@@ -217,6 +220,24 @@ public class Display {
 
     public static boolean isActive() {
         return focused;
+    }
+
+    public static void setIcon(InputStream in)  {
+        GLFWImage image = GLFWImage.malloc();
+        BufferedImage img;
+        try {
+            img=ImageIO.read(in);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        image.set(img.getWidth(),img.getHeight(), ImageUtil.getByteFromBufferedImage_RGBA(img));
+        GLFWImage.Buffer images = GLFWImage.malloc(1);
+        images.put(0, image);
+        GLFW.glfwSetWindowIcon(handle, images);
+
+        images.free();
+        image.free();
     }
 
 

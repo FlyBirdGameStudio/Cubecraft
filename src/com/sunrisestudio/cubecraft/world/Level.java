@@ -17,4 +17,8 @@ public class Level {
     public String getName() {
         return this.name;
     }
+
+    public long getSeed() {
+        return 0;
+    }
 }

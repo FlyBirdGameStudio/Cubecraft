@@ -1,7 +1,7 @@
 package com.sunrisestudio.cubecraft.world.entity;
 
-import com.sunrisestudio.util.nbt.NBTDataIO;
-import com.sunrisestudio.util.nbt.NBTTagCompound;
+import com.sunrisestudio.util.file.nbt.NBTDataIO;
+import com.sunrisestudio.util.file.nbt.tag.NBTTagCompound;
 
 public class EntityLocation implements NBTDataIO {
     public double x,y,z,xRot,yRot,zRot;

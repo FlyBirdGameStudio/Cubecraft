@@ -1,6 +1,6 @@
 package com.sunrisestudio.cubecraft.net.packet.client;
 
-import com.sunrisestudio.util.container.buffer.NettyBufferBuilder;
+import com.sunrisestudio.util.container.BufferBuilder;
 import com.sunrisestudio.cubecraft.world.entity.EntityLocation;
 import io.netty.buffer.ByteBuf;
 
@@ -12,6 +12,6 @@ public record PacketClientPositionChange(EntityLocation location) implements Cli
 
     @Override
     public ByteBuf serialize() {
-        return NettyBufferBuilder.fromNBT(location.getData(),128);
+        return BufferBuilder.fromNBT(location.getData(),128);
     }
 }

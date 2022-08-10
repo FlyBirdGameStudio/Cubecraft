@@ -7,12 +7,9 @@ import com.sunrisestudio.cubecraft.world.entity.item.Item;
 public class Player extends Humanoid {
     public Player(IWorldAccess world) {
         super(world);
+        this.flyingMode=true;
     }
 
-    @Override
-    public void onHit(Entity from, IWorldAccess world) {
-
-    }
 
     @Override
     public void render(float interpolationTime) {
@@ -29,4 +26,9 @@ public class Player extends Humanoid {
         return new Item[0];
     }
 
+
+    @Override
+    public void tick() {
+        super.tick();
+    }
 }

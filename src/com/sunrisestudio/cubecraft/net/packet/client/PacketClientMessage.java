@@ -1,7 +1,7 @@
 package com.sunrisestudio.cubecraft.net.packet.client;
 
-import com.sunrisestudio.util.container.buffer.NettyBufferBuilder;
-import com.sunrisestudio.util.nbt.NBTTagCompound;
+import com.sunrisestudio.util.container.BufferBuilder;
+import com.sunrisestudio.util.file.nbt.tag.NBTTagCompound;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
 import io.netty.buffer.ByteBuf;
 
@@ -17,6 +17,6 @@ public record PacketClientMessage(Entity sender, String message) implements Clie
         compound.setString("sender",sender.getUID());
         compound.setString("msg",message);
 
-        return NettyBufferBuilder.fromNBT(compound,message.length()+16);
+        return BufferBuilder.fromNBT(compound,message.length()+16);
     }
 }

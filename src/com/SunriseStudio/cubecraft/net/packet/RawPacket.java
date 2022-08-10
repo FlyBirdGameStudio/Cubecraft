@@ -1,8 +1,8 @@
 package com.sunrisestudio.cubecraft.net.packet;
 
-import com.sunrisestudio.util.container.buffer.NettyBufferBuilder;
+import com.sunrisestudio.util.container.BufferBuilder;
 import com.sunrisestudio.util.event.TypeGettableEventItem;
-import com.sunrisestudio.util.nbt.NBTTagCompound;
+import com.sunrisestudio.util.file.nbt.tag.NBTTagCompound;
 import io.netty.buffer.ByteBuf;
 
 public record RawPacket(String type, ByteBuf data) implements TypeGettableEventItem {
@@ -16,7 +16,7 @@ public record RawPacket(String type, ByteBuf data) implements TypeGettableEventI
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setString("type", packet.getType());
         nbt.setByteArray("data", packet.data.array());
-        return NettyBufferBuilder.fromNBT(nbt, 50);
+        return BufferBuilder.fromNBT(nbt, 50);
     }
 
     /**
@@ -25,10 +25,10 @@ public record RawPacket(String type, ByteBuf data) implements TypeGettableEventI
      * @return wrapped buffer
      */
     public static RawPacket unSerialize(ByteBuf bytebuf) {
-        NBTTagCompound nbt = (NBTTagCompound) NettyBufferBuilder.toNBT(bytebuf);
+        NBTTagCompound nbt = (NBTTagCompound) BufferBuilder.toNBT(bytebuf);
         return new RawPacket(
                 nbt.getString("type"),
-                NettyBufferBuilder.wrap(nbt.getByteArray("data"))
+                BufferBuilder.wrap(nbt.getByteArray("data"))
         );
     }
 
