@@ -52,7 +52,7 @@ import java.io.File;
 
 public class CubeCraft extends LoopTickingApplication {
     private DisplayScreenInfo screenInfo;
-    public static final String VERSION = "alpha-0.2.4";
+    public static final String VERSION = "alpha-0.2.5";
     public LevelRenderer levelRenderer;
     private Screen screen;
     private final ClientIO clientIO = new ClientIO();
