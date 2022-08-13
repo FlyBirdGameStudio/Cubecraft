@@ -22,7 +22,7 @@ public class LogoLoadingScreen extends Screen {
     }
 
     @Override
-    public void render(DisplayScreenInfo info) {
+    public void render(DisplayScreenInfo info,float interpolationTime) {
         GLUtil.enableBlend();
 
         int xc=info.centerX();

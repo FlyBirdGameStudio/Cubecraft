@@ -4,6 +4,7 @@ import com.sunrisestudio.cubecraft.world._Level;
 
 import java.util.Random;
 
+@Deprecated
 public class GrassTile
 extends Tile {
     protected GrassTile(int id) {

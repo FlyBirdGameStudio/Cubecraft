@@ -15,11 +15,6 @@ public abstract class Item extends Entity {
     }
 
     @Override
-    public double getReachDistance() {
-        return 0;
-    }
-
-    @Override
     public Item[] getDrop() {
         return null;
     }

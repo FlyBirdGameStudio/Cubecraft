@@ -18,7 +18,7 @@ public class Player extends Humanoid {
 
     @Override
     public String getID() {
-        return "player";
+        return "cubecraft:player";
     }
 
     @Override

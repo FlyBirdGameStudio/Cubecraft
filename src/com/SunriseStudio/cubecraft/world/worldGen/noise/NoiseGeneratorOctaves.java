@@ -2,7 +2,7 @@ package com.sunrisestudio.cubecraft.world.worldGen.noise;
 
 import java.util.Random;
 
-import com.sunrisestudio.cubecraft.world.worldGen.NoiseGenerator;
+import com.sunrisestudio.cubecraft.world.worldGen.noiseGenerator.NoiseGenerator;
 
 
 public final class NoiseGeneratorOctaves extends NoiseGenerator {

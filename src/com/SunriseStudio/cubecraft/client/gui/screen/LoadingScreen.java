@@ -12,7 +12,6 @@ import com.sunrisestudio.cubecraft.client.gui.layout.OriginLayout;
 import com.sunrisestudio.util.file.lang.Language;
 
 public class LoadingScreen extends Screen{
-    private final Texture2D bg;
     public LoadingScreenTask task;
     public ProgressBar progressBar;
     public Screen onFinished;
@@ -24,10 +23,6 @@ public class LoadingScreen extends Screen{
         this.onFinished=onFinished;
         this.onCancelled=onCancelled;
         this.task=task;
-
-        bg=new Texture2D(false,false);
-        bg.generateTexture();
-        bg.load("/resource/textures/gui/bg.png");
     }
 
     @Override
@@ -63,12 +58,8 @@ public class LoadingScreen extends Screen{
     }
 
     @Override
-    public void render(DisplayScreenInfo info) {
-        this.bg.bind();
-        ShapeRenderer.begin();
-        ShapeRenderer.drawRectUV(0, Display.getWidth()/ GameSetting.instance.GUIScale,0,Display.getHeight()/GameSetting.instance.GUIScale,-1,-1,0,1,0,1);
-        ShapeRenderer.end();
-        this.bg.unbind();
-        super.render(info);
+    public void render(DisplayScreenInfo info, float interpolationTime) {
+        super.render(info, interpolationTime);
+        renderPictureBackground();
     }
 }

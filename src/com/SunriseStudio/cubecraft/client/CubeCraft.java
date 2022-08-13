@@ -13,21 +13,20 @@ package com.sunrisestudio.cubecraft.client;
 
 import com.sunrisestudio.cubecraft.GameSetting;
 import com.sunrisestudio.cubecraft.PlayerController;
-import com.sunrisestudio.cubecraft.Registry;
+import com.sunrisestudio.cubecraft.registery.Registry;
 import com.sunrisestudio.cubecraft.Start;
 import com.sunrisestudio.cubecraft.client.gui.DisplayScreenInfo;
 import com.sunrisestudio.cubecraft.client.gui.FontRenderer;
 import com.sunrisestudio.cubecraft.client.gui.screen.LogoLoadingScreen;
 import com.sunrisestudio.cubecraft.client.gui.screen.Screen;
 import com.sunrisestudio.cubecraft.client.gui.screen.TitleScreen;
-import com.sunrisestudio.cubecraft.client.render.renderer.WorldRenderer;
+import com.sunrisestudio.cubecraft.client.render.renderer.LevelRenderer;
 import com.sunrisestudio.cubecraft.client.resources.ResourceManager;
 import com.sunrisestudio.cubecraft.extansion.ExtansionRunningTarget;
 import com.sunrisestudio.cubecraft.extansion.ModManager;
 import com.sunrisestudio.cubecraft.extansion.PlatformClient;
 import com.sunrisestudio.cubecraft.net.ClientIO;
 import com.sunrisestudio.cubecraft.world.IWorldAccess;
-import com.sunrisestudio.cubecraft.world.LevelInfo;
 import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.entity.humanoid.Player;
 import com.sunrisestudio.grass3d.audio.Audio;
@@ -45,7 +44,6 @@ import com.sunrisestudio.util.timer.Timer;
 import org.lwjgl.opengl.GL11;
 
 import java.io.File;
-import java.util.Date;
 
 //todo:add server net support
 //todo:add resource support
@@ -55,7 +53,7 @@ import java.util.Date;
 public class CubeCraft extends LoopTickingApplication {
     private DisplayScreenInfo screenInfo;
     public static final String VERSION = "alpha-0.2.4";
-    public WorldRenderer worldRenderer;
+    public LevelRenderer levelRenderer;
     private Screen screen;
     private final ClientIO clientIO = new ClientIO();
     public IWorldAccess clientWorld = null;
@@ -66,7 +64,7 @@ public class CubeCraft extends LoopTickingApplication {
     public void joinWorld(World world){
         this.clientWorld=world;
         player.setPos(0,10,0);
-        this.worldRenderer = new WorldRenderer(this.clientWorld, this.player);
+        this.levelRenderer = new LevelRenderer(this.clientWorld, this.player);
         this.clientWorld.addEntity(this.player);
     }
 
@@ -78,6 +76,7 @@ public class CubeCraft extends LoopTickingApplication {
 
     @Override
     public void init() {
+        GameSetting.instance.read();
         this.timer = new Timer(20);
         this.logHandler = LogHandler.create("main", "client");
         this.initDisplay();
@@ -110,7 +109,8 @@ public class CubeCraft extends LoopTickingApplication {
 
     @Override
     public void on1sec() {
-        System.gc();
+        if(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory()>512*1024*1024)
+            System.gc();
     }
 
     @Override
@@ -122,7 +122,7 @@ public class CubeCraft extends LoopTickingApplication {
 
         if (this.screen.isInGameGUI()) {
             this.logHandler.checkGLError("pre_world_render");
-            worldRenderer.render(this.timer.interpolatedTime, this.screenInfo.scrWidth(), this.screenInfo.scrHeight());
+            levelRenderer.render(this.timer.interpolatedTime);
             this.logHandler.checkGLError("post_world_render");
         }
         if (Display.isCloseRequested()) {
@@ -133,10 +133,12 @@ public class CubeCraft extends LoopTickingApplication {
 
         if (this.screen != null) {
             GLUtil.enableDepthTest();
+            GLUtil.enableBlend();
             this.logHandler.checkGLError("pre_screen_render");
             this.screenInfo = this.getDisplaySize();
-            this.screen.render(this.screenInfo);
+            this.screen.render(this.screenInfo,this.timer.interpolatedTime);
             this.logHandler.checkGLError("post_screen_render");
+            GLUtil.disableBlend();
         }
         Display.sync(120);
         Display.update();
@@ -168,9 +170,11 @@ public class CubeCraft extends LoopTickingApplication {
         this.setScreen(logoLoadingScreen);
         Screen.initBGRenderer();
 
+
+
         //register blocks
         logHandler.info("constructing...");
-       Registry.registerVanillaContent();
+        Registry.registerVanillaContent();
         File[] mods = new File(Start.getGamePath() + "/mods").listFiles();
         if(new File(Start.getGamePath() + "/mods").exists()) {
             if (mods != null) {
@@ -211,7 +215,7 @@ public class CubeCraft extends LoopTickingApplication {
     }
 
     private DisplayScreenInfo getDisplaySize() {
-        int scale = GameSetting.instance.GUIScale;
+        int scale = GameSetting.instance.getValueAsInt("client.gui.scale",2);
         return new DisplayScreenInfo(
                 scale,
                 Math.max(Display.getWidth() / scale, 1),
@@ -239,4 +243,7 @@ public class CubeCraft extends LoopTickingApplication {
                 this.clientWorld,
                 this.player);
     }
+
+
+
 }

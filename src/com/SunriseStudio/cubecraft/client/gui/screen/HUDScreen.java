@@ -1,7 +1,6 @@
 package com.sunrisestudio.cubecraft.client.gui.screen;
 
 import com.sunrisestudio.cubecraft.client.gui.DisplayScreenInfo;
-import com.sunrisestudio.cubecraft.GameSetting;
 import com.sunrisestudio.cubecraft.client.CubeCraft;
 import com.sunrisestudio.cubecraft.client.gui.FontAlignment;
 import com.sunrisestudio.grass3d.platform.Display;
@@ -40,7 +39,8 @@ public class HUDScreen extends Screen {
     private boolean showGUI=true;
 
     @Override
-    public void render(DisplayScreenInfo info) {
+    public void render(DisplayScreenInfo info,float interpolationTime) {
+        super.render(info, interpolationTime);
         GLUtil.enableBlend();
         this.platform.player.turn(Mouse.getDX(), Mouse.getDY(), 0);
         if(showGUI) {
@@ -57,24 +57,22 @@ public class HUDScreen extends Screen {
                 FontRenderer.renderShadow("本地客户端tps：" + this.platform.getTimingInfo().longTickTPS() + "/MSPT:" + this.platform.getTimingInfo().longTickMSPT(),
                         2, r0_l+20, 0xFFFFFF, 8, FontAlignment.LEFT);
 
-                FontRenderer.renderShadow("本地区块缓存:" + this.platform.clientWorld.getChunkCache().size(),
+                FontRenderer.renderShadow("本地区块缓存:%d".formatted(this.platform.clientWorld.getChunkCache().size()),
                         2, r0_l+30, 16777215, 8, FontAlignment.LEFT);
 
 
                 int r1_l=42;
-                ChunkRenderer cr = (ChunkRenderer) this.platform.worldRenderer.renderers.get("cubecraft:chunk_renderer");
-                FontRenderer.renderShadow("地形渲染(总数/可见/更新):" + cr.allCount + "/" + cr.visibleCount + "/" + cr.updateCount,
+                ChunkRenderer cr = (ChunkRenderer) this.platform.levelRenderer.renderers.get("cubecraft:chunk_renderer");
+                FontRenderer.renderShadow("地形渲染(总数/可见/更新):%d,%d,%d".formatted(cr.allCount,cr.visibleCount,cr.updateCount),
                         2, r1_l+0, 16777215, 8, FontAlignment.LEFT);
 
-                FontRenderer.renderShadow("位置（x/y/z）:" + format.format(this.platform.player.x) + "/" + format.format(this.platform.player.y) + "/" + format.format(this.platform.player.z),
+                FontRenderer.renderShadow("位置（x/y/z）:%f/%f/%f".formatted(this.platform.player.x,this.platform.player.y,this.platform.player.z),
                         2, r1_l+10, 16777215, 8, FontAlignment.LEFT);
 
-                FontRenderer.renderShadow("相机角度（yaw/pitch/roll）:" + format.format(this.platform.player.xRot) + "/" + format.format(this.platform.player.yRot) + "/" + format.format(this.platform.player.zRot),
+                FontRenderer.renderShadow("相机角度（x/y/z）:%f/%f/%f".formatted(this.platform.player.xRot,this.platform.player.yRot,this.platform.player.zRot),
                         2, r1_l+20, 0xFFFFFF, 8, FontAlignment.LEFT);
 
-
-
-                FontRenderer.renderShadow("系统：" + SystemInfo.getOSName() + "/" + SystemInfo.getOSVersion(),
+                FontRenderer.renderShadow("系统:%s-%s".formatted(SystemInfo.getOSName(),SystemInfo.getOSVersion()),
                         info.scrWidth() - 2, 2, 16777215, 8, FontAlignment.RIGHT);
 
                 FontRenderer.renderShadow("内存(已使用/总量)：" + SystemInfo.getUsedMemory() + "/" + SystemInfo.getTotalMemory(),
@@ -85,20 +83,30 @@ public class HUDScreen extends Screen {
 
 
                 HitResult hitResult=this.platform.player.hitResult;
-                FontRenderer.renderShadow("目标方块：" +(hitResult!=null?hitResult.aabb().x0+"/"+hitResult.aabb().y0+"/"+hitResult.aabb().z0+"="+hitResult.facing():"null"),
+                FontRenderer.renderShadow("目标方块：" +(hitResult!=null?hitResult.aabb().getPosition().x+"/"+hitResult.aabb().getPosition().y+"/"+hitResult.aabb().getPosition().z+"="+hitResult.facing():"null"),
                             info.centerX()+3,info.centerY(),0xFFFFFF,8,FontAlignment.LEFT);
 
                 Vector3d v=this.platform.player.getHitTargetPos();
-                FontRenderer.renderShadow("目标位置：" +"%f/%f/%f".formatted(v.x,v.y,v.z),
+                FontRenderer.renderShadow("目标位置:%f/%f/%f".formatted(v.x,v.y,v.z),
                         info.centerX()+3,info.centerY()+10,0xFFFFFF,8,FontAlignment.LEFT);
 
 
             }
             this.actionBar.bind();
-            int w = Display.getWidth() / GameSetting.instance.GUIScale, h = Display.getHeight() / GameSetting.instance.GUIScale;
-            ShapeRenderer.drawRectUV(w / 2d - 91, w / 2d + 91, h - 22, h, 0, 0, 0, 182 / 256f, 0, 22 / 32f);
-            int slotBase = (int) (w / 2d + 20 * (-4.5 + 0));
-            ShapeRenderer.drawRectUV((slotBase) - 2, (slotBase + 23), h - (23), h, 0, 0, 232 / 256f, 1, 0, 22 / 32f);
+            float scale2=1.2f;
+            int slot=8;
+            int w =info.scrWidth(),h=info.scrHeight();
+            int slotBase = (int) ((info.centerX() + 20 * scale2 * (slot-4.5)));
+            ShapeRenderer.drawRectUV(
+                    info.centerX() - 91*scale2, info.centerX() + 91*scale2,
+                    h - 22*scale2, h,
+                    0, 0, 0, 182 / 256f, 0, 22 / 32f
+            );
+            ShapeRenderer.drawRectUV(
+                    (slotBase - 2*scale2), (slotBase + 23*scale2),
+                    h - (23)*scale2, h,
+                    0, 0, 232 / 256f, 1, 0, 22 / 32f
+            );
             GLUtil.disableBlend();
         }
     }
@@ -138,12 +146,14 @@ public class HUDScreen extends Screen {
                 if(Display.isActive()){
                     Mouse.setGrabbed(true);
                 }
-
+                platform.player.attack();
             }
+
+
 
             @Override
             public void onRightClick() {
-                super.onRightClick();
+                platform.player.interact();
             }
         };
     }

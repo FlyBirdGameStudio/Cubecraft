@@ -4,6 +4,9 @@ import com.sunrisestudio.cubecraft.client.CubeCraft;
 import com.sunrisestudio.cubecraft.client.gui.DisplayScreenInfo;
 import com.sunrisestudio.cubecraft.GameSetting;
 import com.sunrisestudio.cubecraft.client.gui.component.Component;
+import com.sunrisestudio.cubecraft.client.gui.component.Popup;
+import com.sunrisestudio.cubecraft.client.render.object.RenderChunk;
+import com.sunrisestudio.cubecraft.registery.Registry;
 import com.sunrisestudio.grass3d.platform.Display;
 import com.sunrisestudio.grass3d.platform.Mouse;
 import com.sunrisestudio.grass3d.platform.input.InputHandler;
@@ -12,9 +15,12 @@ import com.sunrisestudio.grass3d.platform.input.MouseCallBack;
 import com.sunrisestudio.grass3d.render.ShapeRenderer;
 import com.sunrisestudio.grass3d.render.textures.Texture2D;
 import com.sunrisestudio.util.container.CollectionUtil;
+import org.lwjgl.opengl.GL11;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public abstract class Screen {
     protected CubeCraft platform;
@@ -45,8 +51,9 @@ public abstract class Screen {
      * You can do anything here,but if you put any {@link Component} here than you have to call super.render();
      * @param info display info
      */
-    public void render(DisplayScreenInfo info) {
+    public void render(DisplayScreenInfo info,float interpolationTime) {
         CollectionUtil.iterateMap(this.components, (key, item) -> item.render());
+        renderPopup(info,interpolationTime);
     }
 
     /**
@@ -55,9 +62,11 @@ public abstract class Screen {
      */
     public void tick() {
         CollectionUtil.iterateMap(this.components, (key, item)-> {
-            item.resize(Display.getWidth()/ GameSetting.instance.GUIScale,Display.getHeight()/GameSetting.instance.GUIScale);
-            item.tick(Mouse.getX()/ GameSetting.instance.GUIScale,(-Mouse.getY()+Display.getHeight())/GameSetting.instance.GUIScale);
+            int scale=GameSetting.instance.getValueAsInt("client.gui.scale",2);
+            item.resize(Display.getWidth()/ scale,Display.getHeight()/scale);
+            item.tick(Mouse.getX()/ scale,(-Mouse.getY()+Display.getHeight())/scale);
         });
+        tickPopup();
     }
 
     /**
@@ -117,25 +126,53 @@ public abstract class Screen {
 
     private static Texture2D bg;
     public static void initBGRenderer(){
-        bg=new Texture2D(false,false);
-        bg.generateTexture();
-        bg.load("/resource/textures/gui/bg.png");
+        Registry.getTextureManager().create2DTexture("/resource/textures/gui/bg.png",false,false);
+        Registry.getTextureManager().create2DTexture("/resource/textures/gui/popup.png",false,false);
     }
 
     public static void renderPictureBackground(){
-        bg.bind();
+        int scale=GameSetting.instance.getValueAsInt("client.gui.scale",2);
+        Registry.getTextureManager().bind2dTexture("/resource/textures/gui/bg.png");
         ShapeRenderer.begin();
-        ShapeRenderer.drawRectUV(0, Display.getWidth()/ GameSetting.instance.GUIScale,0,Display.getHeight()/GameSetting.instance.GUIScale,-1,-1,0,1,0,1);
+        ShapeRenderer.drawRectUV(0, Display.getWidth()/ scale,0,Display.getHeight()/scale,-1,-1,0,1,0,1);
         ShapeRenderer.end();
-        bg.unbind();
+        Registry.getTextureManager().unBind2dTexture("/resource/textures/gui/bg.png");
     }
 
     public static void renderMask(){
+        int scale= GameSetting.instance.getValueAsInt("client.gui.scale",2);
         ShapeRenderer.setColor(0,0,0,127);
-        ShapeRenderer.drawRect(0,Display.getWidth()/ GameSetting.instance.GUIScale,0,Display.getHeight()/GameSetting.instance.GUIScale,-1,-1);
+        ShapeRenderer.drawRect(0,Display.getWidth()/ scale,0,Display.getHeight()/scale,-1,-1);
     }
 
-    public static void createPopup(){
-        //todo:create popup
+
+
+    private static ArrayList<Popup> popupList=new ArrayList<>();
+
+    public static void createPopup(String title,String subTitle,int time,int type){
+        popupList.add(new Popup("",title,subTitle,time,type));
+    }
+
+    public static void tickPopup(){
+        Iterator<Popup> p= popupList.iterator();
+        while (p.hasNext()){
+            Popup pop=p.next();
+            pop.tick();
+            if(pop.remaining<=0){
+                p.remove();
+            }
+        }
+    }
+
+    public static void renderPopup(DisplayScreenInfo info,float interpolationTime){
+        Registry.getTextureManager().bind2dTexture("/resource/textures/gui/popup.png");
+        int yPop=0;
+        for (Popup p:popupList){
+            GL11.glPushMatrix();
+            GL11.glTranslated(info.scrWidth()-200-16+p.getPos(interpolationTime),yPop,0);
+            p.render(info);
+            GL11.glPopMatrix();
+            yPop+=50;
+        }
     }
 }

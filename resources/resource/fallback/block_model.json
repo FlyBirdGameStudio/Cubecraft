@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "id": "grass_block",
+    "namespace": "cubecraft",
+    "render_type": "alpha",
+    "grouped_texture_source": "cubecraft:terrain"
+  },
+  "model": [
+    {
+      "start": [0, 0, 0],
+      "end": [1, 1, 1],
+      "top": {
+        "culling": "solid",
+        "texture": "/assets/texture/block/grass_top.png",
+        "uv_start": [0, 0],
+        "uv_end": [1, 1]
+      },
+      "bottom": {
+        "culling": "solid",
+	    "texture": "/assets/texture/block/dirt.png",
+        "uv_start": [0, 0],
+        "uv_end": [1, 1]
+      },
+      "left": {
+        "culling": "solid",
+        "texture": "/assets/texture/block/dirt.png",
+        "uv_start": [0, 0],
+        "uv_end": [1, 1]
+      },
+      "right": {
+        "culling": "solid",
+        "texture": "/assets/texture/block/dirt.png",
+        "uv_start": [0, 0],
+        "uv_end": [1, 1]
+      },
+      "front": {
+        "culling": "solid",
+        "texture": "/assets/texture/block/dirt.png",
+        "uv_start": [0, 0],
+        "uv_end": [1, 1]
+      },
+      "back": {
+        "culling": "solid",
+        "texture": "/assets/texture/block/dirt.png",
+        "uv_start": [0, 0],
+        "uv_end": [1, 1]
+      }
+    }
+  ]
+}

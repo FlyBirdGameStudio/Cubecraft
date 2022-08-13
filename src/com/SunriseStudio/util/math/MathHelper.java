@@ -130,4 +130,17 @@ public class MathHelper {
     public static double reverse_interpolate_abs(double a,double b,double x) {
         return (x-a)/Math.abs(b-a);
     }
+
+
+    public static Vector3d getVectorForRotation(float pitch, float yaw) {
+        float f = (float) Math.cos(-yaw * 0.017453292F - (float)Math.PI);
+        float f1 = (float) Math.sin(-yaw * 0.017453292F - (float)Math.PI);
+        float f2 = (float) -Math.cos(-pitch * 0.017453292F);
+        float f3 = (float) Math.sin(-pitch * 0.017453292F);
+        return new Vector3d((f1 * f2), f3, (f * f2));
+    }
+
+    public static long toExactWorldPos(double pos) {
+        return (long) (pos-(pos>=0?0:1));
+    }
 }

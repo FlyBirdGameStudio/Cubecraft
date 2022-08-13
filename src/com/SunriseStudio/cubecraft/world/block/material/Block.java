@@ -1,18 +1,20 @@
 package com.sunrisestudio.cubecraft.world.block.material;
 
+import com.sunrisestudio.cubecraft.world.HittableObject;
+import com.sunrisestudio.cubecraft.world.block.BlockState;
 import com.sunrisestudio.grass3d.render.draw.IVertexArrayBuilder;
-import com.sunrisestudio.util.math.AABB;
-import com.sunrisestudio.util.math.HitBox;
+import com.sunrisestudio.util.math.*;
 import com.sunrisestudio.cubecraft.world.block.BlockFacing;
 import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
 import com.sunrisestudio.cubecraft.world.entity.item.Item;
+import org.joml.Vector3d;
 
 /**
  * defines all data for a block.
  * STRUCTURE FINISHED-2022-6-14
  */
-public abstract class Block {
+public abstract class Block{
     private String id;
 //  ------ physic ------
 
@@ -114,13 +116,11 @@ public abstract class Block {
         return aabbs;
     }
 
-    public HitBox[] getSelectionBox(IWorldAccess world,long x, long y, long z) {
+    public HitBox[] getSelectionBox(IWorldAccess world, long x, long y, long z, BlockState bs) {
         HitBox[] hits=new HitBox[getSelectionBoxSizes().length];
         for (int i=0;i<getSelectionBoxSizes().length;i++){
             AABB aabb=getCollisionBoxSizes()[i];
-            hits[i]=new HitBox(new AABB(x+aabb.x0,y+aabb.y0,z+aabb.z0,x+aabb.x1,y+aabb.y1,z+aabb.z1), (iDimensionAccess, from) -> {
-                world.setBlock(x,y,z,"cubecraft:air", BlockFacing.Up);
-            });
+            hits[i]=new HitBox(aabb.cloneMove(x,y,z),bs,new Vector3d(x,y,z));
         }
         return hits;
     }

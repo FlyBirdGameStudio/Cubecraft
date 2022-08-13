@@ -5,6 +5,7 @@ import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.entity.humanoid.Player;
 import com.sunrisestudio.grass3d.render.Camera;
 import com.sunrisestudio.grass3d.render.draw.ChanneledVertexArrayBuilder;
+import com.sunrisestudio.grass3d.render.draw.VertexArrayUploader;
 import com.sunrisestudio.util.ColorUtil;
 import com.sunrisestudio.util.container.BufferBuilder;
 import com.sunrisestudio.grass3d.render.GLUtil;
@@ -15,7 +16,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
 
-public class EnvironmentRenderer extends IRenderer {
+public class EnvironmentRenderer extends IWorldRenderer {
     public static final int SKY_SIZE=256;
     private static final int CLOUD_SIZE = 64;
     private static final double CLOUD_HEIGHT = 384;
@@ -32,7 +33,8 @@ public class EnvironmentRenderer extends IRenderer {
     @Override
     public void render(float interpolationTime) {
         GLUtil.enableBlend();
-        int d= GameSetting.instance.renderDistance*16+1024;
+        int d= GameSetting.instance.getValueAsInt("client.render.chunk.renderDistance",4) *16+1024;
+
         GLUtil.setupFog(d/6, BufferBuilder.from(ColorUtil.int1Float1ToFloat4(world.getWorldInfo().fogColor(),1.0f)));
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         this.camera.setUpGlobalCamera();
@@ -40,8 +42,10 @@ public class EnvironmentRenderer extends IRenderer {
         GL11.glCallList(this.skyList);
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-        for (long i = (long) (this.player.x-d- world.getTime()*0.05)/CLOUD_SIZE; i < (this.player.x+d- world.getTime()*0.05)/CLOUD_SIZE; i+=1) {
-            for (long j = (long) (this.player.z-d)/CLOUD_SIZE; j < (this.player.z+d)/CLOUD_SIZE; j+=1) {
+        int d2=d*2;
+        /*
+        for (long i = (long) (this.player.x-d2- world.getTime()*0.05)/CLOUD_SIZE; i < (this.player.x+d2- world.getTime()*0.05)/CLOUD_SIZE; i+=1) {
+            for (long j = (long) (this.player.z-d2)/CLOUD_SIZE; j < (this.player.z+d2)/CLOUD_SIZE; j+=1) {
                 if(noise.getValue(i*256,j*256)>16){
                     GL11.glPushMatrix();
                     camera.setupObjectCamera(new Vector3d(i*CLOUD_SIZE+ world.getTime()*0.05,CLOUD_HEIGHT,j*CLOUD_SIZE));
@@ -62,14 +66,16 @@ public class EnvironmentRenderer extends IRenderer {
                 }
             }
         }
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
+         */
         GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
         GLUtil.disableBlend();
     }
 
     public void updateSky(){
-        int vLength= GameSetting.instance.renderDistance*16;
-        int hLength=GameSetting.instance.renderDistance*16+1024;
+        int d2=GameSetting.instance.getValueAsInt("client.render.chunk.renderDistance",4);
+        int vLength= d2*16;
+        int hLength=d2*16+1024;
         ChanneledVertexArrayBuilder v=new ChanneledVertexArrayBuilder(1048576);
         v.begin();
         for (int i = -hLength; i <hLength ; i+=SKY_SIZE) {
@@ -120,6 +126,7 @@ public class EnvironmentRenderer extends IRenderer {
         IVertexArrayUploader.createNewPointedUploader().upload(v);
         GL11.glEndList();
     }
+
 
     public void updateCloud(){
         ChanneledVertexArrayBuilder vertexBuilder=new ChanneledVertexArrayBuilder(24);
@@ -188,10 +195,5 @@ public class EnvironmentRenderer extends IRenderer {
         GL11.glNewList(this.cloudList+4,GL11.GL_COMPILE);
         IVertexArrayUploader.createNewPointedUploader().upload(vertexBuilder);
         GL11.glEndList();
-    }
-
-    @Override
-    public void chunkUpdate(long x, long y, long z) {
-
     }
 }

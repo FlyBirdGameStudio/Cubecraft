@@ -6,6 +6,7 @@ import com.sunrisestudio.cubecraft.client.gui.*;
 import com.sunrisestudio.cubecraft.GameSetting;
 import com.sunrisestudio.cubecraft.client.gui.component.Button;
 import com.sunrisestudio.cubecraft.client.gui.component.Label;
+import com.sunrisestudio.cubecraft.client.gui.component.Popup;
 import com.sunrisestudio.cubecraft.client.resources.ResourceManager;
 import com.sunrisestudio.cubecraft.extansion.ModManager;
 import com.sunrisestudio.cubecraft.extansion.PluginManager;
@@ -56,7 +57,7 @@ public class TitleScreen extends Screen {
             this.platform.joinWorld(new World(new LevelInfo("NULL", "NULL", 0, new Date(), false, "NULL", null)));
         });
         ((Button) components.get("button_multiplayer")).setListener(() -> {
-            //this.platform.setScreen(new HUDScreen());//actullyJoinTheGame
+            Screen.createPopup("?","function not implmented!",60, Popup.WARNING);
         });
         ((Button) components.get("button_option")).setListener(() -> {
             this.platform.setScreen(new SettingScreen(this));
@@ -76,19 +77,17 @@ public class TitleScreen extends Screen {
         ((Label) components.get("version_string")).text= Language.getInstance().getFormattedMessage(
                 "titlescreen.version", CubeCraft.VERSION, ModManager.getLoadedMods().size(), PluginManager.getLoadedPlugins().size()
         );
+
+        ((Label) components.get("copyright_string")).text= "©SunriseStudio,Do not Copy!";
+
+
     }
 
     @Override
-    public void render(DisplayScreenInfo info) {
+    public void render(DisplayScreenInfo info,float interpolationTime) {
         renderPictureBackground();
         ShapeRenderer.setColor(0xFFFFFF);
-        this.logoTex.bind();
-        ShapeRenderer.drawRectUV(info.centerX()-160, info.centerX()+160,
-                info.centerY()-120,info.centerY()-40,
-                1,1,0,1,0,1);
-        this.logoTex.unbind();
-        super.render(info);
-        GLUtil.disableDepthTest();
+        super.render(info,interpolationTime);
         GL11.glPushMatrix();
         GL11.glTranslatef(info.centerX()+95,info.centerY()-72,0);
         double sin=Math.sin(System.currentTimeMillis()/300d)*0.1+1.1;
@@ -96,6 +95,12 @@ public class TitleScreen extends Screen {
         GL11.glRotatef(-30,0,0,1);
         FontRenderer.renderShadow(splashText,0,0,0xefff00,12,FontAlignment.MIDDLE);
         GL11.glPopMatrix();
-        GLUtil.enableDepthTest();
+
+        this.logoTex.bind();
+        ShapeRenderer.setColor(0xffffff);
+        ShapeRenderer.drawRectUV(info.centerX()-160, info.centerX()+160,
+                info.centerY()-120,info.centerY()-40,
+                -0.001,-0.001,0,1,0,1);
+        this.logoTex.unbind();
     }
 }

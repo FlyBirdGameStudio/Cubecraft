@@ -115,7 +115,7 @@ public class RayTest {
         }
 
         //this will never happen if collide is true.
-        return -1;
+        return 0;
     }
 
     /**
@@ -125,16 +125,16 @@ public class RayTest {
      * @param destination destination
      * @return hit result.Contains face and aabb.If no aabb selected will return null. Remind the NPE.
      */
-    public static HitResult rayTrace(ArrayList<AABB> aabbs,Vector3d from, Vector3d destination){
-        ArrayList<AABB> intersects=new ArrayList<>();
-        for(AABB aabb:aabbs){
+    public static HitResult rayTrace(ArrayList<HitBox> aabbs,Vector3d from, Vector3d destination){
+        ArrayList<HitBox> intersects=new ArrayList<>();
+        for(HitBox aabb:aabbs){
             if (innerSection(aabb,from,destination)){
                 intersects.add(aabb);
             }
         }
         intersects.sort(Comparator.comparingDouble(o -> o.distanceMin(from)));
         if(intersects.size()>0) {
-            AABB aabb = intersects.get(0);
+            HitBox aabb = intersects.get(0);
             return new HitResult(aabb, getInnerSectionFacing(aabb, from, destination));
         }else{
             return null;

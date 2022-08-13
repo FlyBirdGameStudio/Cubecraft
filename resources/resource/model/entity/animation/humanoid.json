@@ -1,0 +1,90 @@
+{
+  "frames": [
+    {
+      "id": "arm_-1",
+      "rotation": [-10,0,5],
+      "rotation_anchor": [],
+      "translation": [0,0,0]
+    },
+    {
+      "id": "arm_0",
+      "rotation": [-10,0,5],
+      "rotation_anchor": [],
+      "translation": [0,0,0]
+    },
+    {
+      "id": "arm_1",
+      "rotation": [-10,0,5],
+      "rotation_anchor": [],
+      "translation": [0,0,0]
+    }
+  ],
+  "timeline": {
+    "frames":[
+      {
+        "id": "left_arm",
+        "frames": [
+          "arm_0",
+          "arm_-1",
+          "arm_0",
+          "arm_1",
+          "arm_0"
+        ]
+      },
+      {
+        "id": "right_arm",
+        "frames": [
+          "arm_0",
+          "arm_1",
+          "arm_0",
+          "arm_-1",
+          "arm_0"
+        ]
+      }
+    ],
+    "walk": {
+      "smooth": true,
+      "frame":0.9,
+      "frames": [
+        {
+          "id":"left_hand",
+          "timeline": "left_arm"
+        },
+        {
+          "id":"right_hand",
+          "timeline": "right_arm"
+        },
+        {
+          "id":"left_leg",
+          "timeline": "right_arm"
+        },
+        {
+          "id":"right_leg",
+          "timeline": "left_arm"
+        }
+      ]
+    },
+    "run": "walk",
+    "stand": null,
+    "jump": null,
+    "swim": null,
+    "die": null
+  },
+  "rotate": [
+    {
+      "id": "head",
+      "attach": "x",
+      "source": "yaw"
+    },
+    {
+      "id": "head",
+      "attach": "z",
+      "source": "roll"
+    },
+    {
+      "id": "over",
+      "attach": "y",
+      "source": "pitch"
+    }
+  ]
+}

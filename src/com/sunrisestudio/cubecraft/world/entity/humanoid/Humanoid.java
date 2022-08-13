@@ -19,7 +19,7 @@ public abstract class Humanoid extends Entity {
 
     @Override
     public HitBox[] getSelectionBoxes() {
-        return new HitBox[]{HitBox.createFromCollision(this)};
+        return null;
     }
 
     @Override

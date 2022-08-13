@@ -1,0 +1,56 @@
+# content
+button.confirm=确认
+button.back=返回
+
+# mainscreen
+titlescreen.button.singleplayer=单人游戏
+titlescreen.button.multiplayer=多人游戏
+titlescreen.button.setting=设置
+titlescreen.button.quit=退出
+titlescreen.version=CubeCraft-%s(模组:%d个,插件:%d个)
+titlescreen.auth=""
+
+# do not modify this line,you can attach everything on it.
+
+
+# pausescreen
+pausescreen.title=游戏暂停
+pausescreen.button.backtogame=回到游戏
+pausescreen.button.option=选项
+pausescreen.button.achievement=成就
+pausescreen.button.opentonet=对局域网开放
+pausescreen.button.saveandquit=退出
+
+settingscreen.button.video=视频
+settingscreen.button.control=控制
+
+
+# world selection
+worldselection.title=世界选择
+worldselection.button.join=进入世界
+worldselection.button.create=创建世界
+worldselection.button.delete=删除世界
+worldselection.button.option=世界选项
+
+# server selection
+serverselection.title=服务器选择
+serverselection.button.join=进入服务器
+serverselection.button.add=添加服务器
+serverselection.button.delete=删除服务器
+serverselection.button.directconnect=直接连接
+
+# blocks
+block.air.name=空气
+block.air.description=无处不在的基础方块
+block.stone.name=石头
+block.stone.description=脚下大地的基石
+block.dirt.name=泥土
+block.dirt.description=初生演替的产物
+block.gsrass.name=草方块
+block.grass.description=地表的第一批生命
+block.cobblestone.name=圆石
+block.cobblestone.description=不是原石！
+block.water.name=水
+block.water.description=为什么你拿到这个东西了？
+block.lava.name=岩浆
+block.lava.description=为什么你拿到这个东西了？

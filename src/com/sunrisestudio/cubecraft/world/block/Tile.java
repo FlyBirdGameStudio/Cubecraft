@@ -8,24 +8,15 @@ import com.sunrisestudio.cubecraft.world._Level;
 import com.sunrisestudio.util.math.AABB;
 
 import java.util.Random;
-
+@Deprecated
 public class Tile {
-    public static final int NOT_LIQUID = 0;
-    public static final int LIQUID_WATER = 1;
-    public static final int LIQUID_LAVA = 2;
     public static final Tile[] tiles = new Tile[256];
     public static final boolean[] shouldTick = new boolean[256];
-    public static final Tile empty = null;
     public static final Tile rock = new Tile(1, 1);
     public static final Tile grass = new GrassTile(2);
-    public static final Tile dirt = new DirtTile(3, 2);
-    public static final Tile stoneBrick = new Tile(4, 16);
-    public static final Tile wood = new Tile(5, 4);
-    public static final Tile bedrock = new Tile(7, 17);
+    public static final Tile dirt = new Tile(3, 2);
     public static final Tile water = new LiquidTile(8, 1);
-    public static final Tile calmWater = new CalmLiquidTile(9, 1);
     public static final Tile lava = new LiquidTile(10, 2);
-    public static final Tile calmLava = new CalmLiquidTile(11, 2);
     public int tex;
     public final int id;
     protected double xx0;

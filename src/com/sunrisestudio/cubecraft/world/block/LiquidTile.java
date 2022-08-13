@@ -6,6 +6,7 @@ import com.sunrisestudio.util.math.AABB;
 
 import java.util.Random;
 
+@Deprecated
 public class LiquidTile
 extends Tile {
     protected int liquidType;
@@ -104,16 +105,5 @@ extends Tile {
     @Override
     public int getLiquidType() {
         return this.liquidType;
-    }
-
-    @Override
-    public void neighborChanged(_Level world, int x, int y, int z, int type) {
-        if (this.liquidType == 1 && (type == lava.id || type == calmLava.id)) {
-            world.setTileNoUpdate(x, y, z, rock.id);
-        }
-        if (this.liquidType == 2 && (type == water.id || type == calmWater.id)) {
-            world.setTileNoUpdate(x, y, z, rock.id);
-        }
-
     }
 }

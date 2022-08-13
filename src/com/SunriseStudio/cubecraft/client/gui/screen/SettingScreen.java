@@ -41,14 +41,12 @@ public class SettingScreen extends Screen {
     }
 
     @Override
-    public void render(DisplayScreenInfo info) {
-        GLUtil.enableBlend();
-        super.render(info);
+    public void render(DisplayScreenInfo info,float interpolationTime) {
+        super.render(info,interpolationTime);
         if(!this.isInGameGUI()){
             Screen.renderPictureBackground();
         }else{
             renderMask();
         }
-        GLUtil.disableBlend();
     }
 }

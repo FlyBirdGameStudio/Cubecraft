@@ -1,10 +1,9 @@
 package com.sunrisestudio.cubecraft.world.entity;
 
-import com.sunrisestudio.cubecraft.Registry;
+import com.sunrisestudio.cubecraft.registery.Registry;
 import com.sunrisestudio.cubecraft.world.World;
 
-import com.sunrisestudio.cubecraft.world.block.BlockFacing;
-import com.sunrisestudio.cubecraft.world.block.LiquidBlockState;
+
 import com.sunrisestudio.util.file.nbt.NBTDataIO;
 
 import com.sunrisestudio.util.file.nbt.tag.NBTTagCompound;
@@ -14,13 +13,11 @@ import com.sunrisestudio.cubecraft.world.HittableObject;
 import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.entity.item.Item;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix3d;
-import org.joml.Quaterniond;
+
 import org.joml.Vector3d;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public abstract class Entity implements HittableObject, NBTDataIO {
@@ -288,9 +285,8 @@ public abstract class Entity implements HittableObject, NBTDataIO {
 
     public Vector3d getHitTargetPos(){
         Vector3d from=new Vector3d(x,y+1.62,z);
-        Vector3d rel=new Vector3d(0,0,getReachDistance());
-        Vector3d to = new Vector3d(from).mul(new Matrix3d().rotate(new Quaterniond(xRot,yRot,zRot,1.0))).add(rel);
-        return to;
+        Vector3d to = MathHelper.getVectorForRotation(yRot,xRot);
+        return new Vector3d(x,y-getReachDistance(),z);
     }
 
     public boolean isFree(double xa, double ya, double za) {
@@ -374,10 +370,29 @@ public abstract class Entity implements HittableObject, NBTDataIO {
     public void onInteract(Entity from){}
 
     public boolean inLiquid() {
-        return this.world.getBlock((long) x, (long) y, (long) z) instanceof LiquidBlockState;
+        //return this.world.getBlock((long) x, (long) y, (long) z) instanceof LiquidBlockState;
+        return false;
     }
 
     @Override
-    public void onHit(Entity from, IWorldAccess world, long bx, long by, long bz) {
+    public void onHit(Entity from, IWorldAccess world, HitResult hr) {
+
+    }
+
+    @Override
+    public void onInteract(Entity from, IWorldAccess world, HitResult hr) {
+
+    }
+
+    public void attack(){
+        if(this.hitResult!=null){
+            this.hitResult.hit(world,this);
+        }
+    }
+
+    public void interact(){
+        if(this.hitResult!=null){
+            this.hitResult.interact(world,this);
+        }
     }
 }
