@@ -1,6 +1,8 @@
 package com.sunrisestudio.grass3d.platform;
 
 import com.sunrisestudio.cubecraft.client.resources.ImageUtil;
+import com.sunrisestudio.grass3d.platform.input.Keyboard;
+import com.sunrisestudio.grass3d.platform.input.Mouse;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;

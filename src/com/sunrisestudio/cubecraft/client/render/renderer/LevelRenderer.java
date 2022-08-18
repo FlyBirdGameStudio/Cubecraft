@@ -11,7 +11,6 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
 
-//todo:fix chunk removing
 public class LevelRenderer {
 
     public HashMap<String, IWorldRenderer>renderers;

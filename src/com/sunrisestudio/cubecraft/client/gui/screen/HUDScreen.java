@@ -4,8 +4,8 @@ import com.sunrisestudio.cubecraft.client.gui.DisplayScreenInfo;
 import com.sunrisestudio.cubecraft.client.CubeCraft;
 import com.sunrisestudio.cubecraft.client.gui.FontAlignment;
 import com.sunrisestudio.grass3d.platform.Display;
-import com.sunrisestudio.grass3d.platform.Keyboard;
-import com.sunrisestudio.grass3d.platform.Mouse;
+import com.sunrisestudio.grass3d.platform.input.Keyboard;
+import com.sunrisestudio.grass3d.platform.input.Mouse;
 import com.sunrisestudio.grass3d.render.GLUtil;
 import com.sunrisestudio.util.SystemInfo;
 import com.sunrisestudio.grass3d.render.ShapeRenderer;
@@ -16,18 +16,21 @@ import com.sunrisestudio.grass3d.platform.input.KeyboardCallback;
 import com.sunrisestudio.grass3d.platform.input.MouseCallBack;
 import com.sunrisestudio.util.math.HitResult;
 import org.joml.Vector3d;
+import org.lwjgl.opengl.GL11;
 
 
 import java.text.DecimalFormat;
 
 public class HUDScreen extends Screen {
     private Texture2D actionBar=new Texture2D(false,false);
-
+    private Texture2D pointer=new Texture2D(false,false);
 
     public HUDScreen(){
         super();
         this.actionBar.generateTexture();
         this.actionBar.load("/resource/textures/gui/actionbar.png");
+        this.pointer.generateTexture();
+        this.pointer.load("/resource/textures/gui/icons/pointer.png");
     }
 
     @Override
@@ -42,7 +45,6 @@ public class HUDScreen extends Screen {
     public void render(DisplayScreenInfo info,float interpolationTime) {
         super.render(info, interpolationTime);
         GLUtil.enableBlend();
-        this.platform.player.turn(Mouse.getDX(), Mouse.getDY(), 0);
         if(showGUI) {
             DecimalFormat format = new DecimalFormat();
             format.applyPattern("0.000");
@@ -92,6 +94,7 @@ public class HUDScreen extends Screen {
 
 
             }
+
             this.actionBar.bind();
             float scale2=1.2f;
             int slot=8;
@@ -107,7 +110,16 @@ public class HUDScreen extends Screen {
                     h - (23)*scale2, h,
                     0, 0, 232 / 256f, 1, 0, 22 / 32f
             );
+
+            this.pointer.bind();
+            GL11.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR,GL11.GL_ONE_MINUS_DST_COLOR);
+            ShapeRenderer.drawRectUV(
+                    info.centerX()-8,info.centerX()+8,
+                    info.centerY()-8,info.centerY()+8,
+                    0,0,0,1,0,1
+            );
             GLUtil.disableBlend();
+            this.platform.controller.tickFast();
         }
     }
 
@@ -162,18 +174,9 @@ public class HUDScreen extends Screen {
     public KeyboardCallback getKeyboardCallback() {
         return new KeyboardCallback(){
             @Override
-            public void onKeyEventNext() {
-                HUDScreen.this.platform.controller.setKey(Keyboard.getEventKey(), Keyboard.getEventKeyState());
-            }
-
-            @Override
             public void onKeyEventPressed() {
                 if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
                     Mouse.setGrabbed(false);
-                    HUDScreen.this.platform.controller.releaseAllKeys();
-                }
-                if (Keyboard.getEventKey() == Keyboard.KEY_LCONTROL) {
-                    HUDScreen.this.platform.player.runningMode=!HUDScreen.this.platform.player.runningMode;
                 }
                 if (Keyboard.getEventKey() == Keyboard.KEY_F3) {
                     HUDScreen.this.debugScreen=!HUDScreen.this.debugScreen;
@@ -188,5 +191,11 @@ public class HUDScreen extends Screen {
     @Override
     public Screen getParentScreen() {
         return new PauseScreen();
+    }
+
+    @Override
+    public void tick() {
+        platform.controller.tick();
+        super.tick();
     }
 }

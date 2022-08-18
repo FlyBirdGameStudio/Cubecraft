@@ -100,4 +100,6 @@ public interface IWorldAccess{
     void addListener(WorldListener iWorldRenderer);
 
     void removeListener(WorldListener iWorldRenderer);
+
+    boolean isfree(AABB[] collisionBox);
 }

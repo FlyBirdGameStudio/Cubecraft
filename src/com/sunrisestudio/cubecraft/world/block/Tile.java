@@ -12,11 +12,9 @@ import java.util.Random;
 public class Tile {
     public static final Tile[] tiles = new Tile[256];
     public static final boolean[] shouldTick = new boolean[256];
-    public static final Tile rock = new Tile(1, 1);
     public static final Tile grass = new GrassTile(2);
     public static final Tile dirt = new Tile(3, 2);
     public static final Tile water = new LiquidTile(8, 1);
-    public static final Tile lava = new LiquidTile(10, 2);
     public int tex;
     public final int id;
     protected double xx0;

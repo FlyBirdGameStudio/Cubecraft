@@ -59,10 +59,10 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
                 for (int xd = 0; xd < WIDTH; xd++) {
                     for (int yd = 0; yd < WIDTH;yd++) {
                         for (int zd = 0; zd < WIDTH; zd++) {
-                            if(blockStates[xd][yd][zd].getMaterial().isBlockEntity()){
-                                blockStates[xd][yd][zd].getMaterial().onBlockUpdate(this.dimension,xd+x*16,yd+y*16,zd+z*16);
+                            if(blockStates[xd][yd][zd].getBlock().isBlockEntity()){
+                                blockStates[xd][yd][zd].getBlock().onBlockUpdate(this.dimension,xd+x*16,yd+y*16,zd+z*16);
                             }else if(blockStates[xd][yd][zd].needTick()){
-                                blockStates[xd][yd][zd].getMaterial().onBlockUpdate(this.dimension,xd+x*16,yd+y*16,zd+z*16);
+                                blockStates[xd][yd][zd].getBlock().onBlockUpdate(this.dimension,xd+x*16,yd+y*16,zd+z*16);
                                 blockStates[xd][yd][zd].setTicking(false);
                             }
                         }

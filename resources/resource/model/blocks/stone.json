@@ -1,16 +1,56 @@
 {
-	"meta":{
-		"id":"stone",
-		"author":"cubecraft",
-		"render_type":"alpha"
-	},
-	"model":[
+	"used_textures":["/resource/textures/block/stone.png"],
+	"inventory_projection": "isometric",
+	"components":[
 		{
+			"id": "#default",
 			"type":"cube",
 			"start":[0,0,0],
 			"end":[1,1,1],
-			"textures":["/assets/texture/block/stone.png"],
-			"texture_usage":"all"
-		}	
+			"faces": [
+				{
+					"id":"cubecraft:cube_0",
+					"render_type": "alpha",
+					"texture": "/resource/textures/block/stone.png",
+					"culling": "solid",
+					"uv": [0,1,0,1]
+				},
+				{
+					"id":"cubecraft:cube_1",
+					"render_type": "alpha",
+					"texture": "/resource/textures/block/stone.png",
+					"culling": "solid",
+					"uv": [0,1,0,1]
+				},
+				{
+					"id":"cubecraft:cube_2",
+					"render_type": "alpha",
+					"texture": "/resource/textures/block/stone.png",
+					"culling": "solid",
+					"uv": [0,1,0,1]
+				},
+				{
+					"id":"cubecraft:cube_3",
+					"render_type": "alpha",
+					"texture": "/resource/textures/block/stone.png",
+					"culling": "solid",
+					"uv": [0,1,0,1]
+				},
+				{
+					"id":"cubecraft:cube_4",
+					"render_type": "alpha",
+					"texture": "/resource/textures/block/stone.png",
+					"culling": "solid",
+					"uv": [0,1,0,1]
+				},
+				{
+					"id":"cubecraft:cube_5",
+					"render_type": "alpha",
+					"texture": "/resource/textures/block/stone.png",
+					"culling": "solid",
+					"uv": [0,1,0,1]
+				}
+			]
+		}
 	]
 }

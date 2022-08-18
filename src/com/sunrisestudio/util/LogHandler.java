@@ -1,6 +1,5 @@
 package com.sunrisestudio.util;
 
-import com.sunrisestudio.cubecraft.Start;
 import org.lwjgl.opengl.GL11;
 
 import java.io.File;

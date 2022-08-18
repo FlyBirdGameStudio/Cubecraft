@@ -30,4 +30,9 @@ public class Player extends Humanoid {
     public void tick() {
         super.tick();
     }
+
+    @Override
+    public double getReachDistance() {
+        return 5;
+    }
 }

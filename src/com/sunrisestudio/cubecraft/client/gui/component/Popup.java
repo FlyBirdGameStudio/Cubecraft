@@ -7,7 +7,6 @@ import com.sunrisestudio.cubecraft.registery.Registry;
 import com.sunrisestudio.grass3d.render.GLUtil;
 import com.sunrisestudio.grass3d.render.ShapeRenderer;
 import com.sunrisestudio.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
 
 public class Popup {
     private int xo;
@@ -38,7 +37,7 @@ public class Popup {
 
     public void render(DisplayScreenInfo info){
         GLUtil.enableBlend();
-        Registry.getTextureManager().bind2dTexture("/resource/textures/gui/popup.png");
+        Registry.getTextureManager().bind2dTexture("/resource/textures/gui/controls/popup.png");
         ShapeRenderer.drawRectUV(4,196,4,46,0,0, 0,1,
                 type*42/198f,(type+1)*42/198f
         );
@@ -47,7 +46,7 @@ public class Popup {
                 type*30/198f,(type+1)*30/198f
                 ,168/198f,1
         );
-        Registry.getTextureManager().unBind2dTexture("/resource/textures/gui/popup.png");
+        Registry.getTextureManager().unBind2dTexture("/resource/textures/gui/controls/popup.png");
         FontRenderer.renderShadow(title,40,12,0xffffff,12, FontAlignment.LEFT);
         FontRenderer.renderShadow(subTitle,40,28,0xffffff,8, FontAlignment.LEFT);
     }

@@ -35,13 +35,25 @@ public enum BlockFacing {
     }
 
     public Vector3<Long> findNear(long x, long y, long z, int radius){
-        switch (this){
-            case Up:y+=radius;
-            case Down:y-=radius;
-            case West:z+=radius;
-            case East:z-=radius;
-            case North:x+=radius;
-            case South:x-=radius;
+        switch (this.numID) {
+            case 0 -> y += radius;
+            case 1 -> y -= radius;
+            case 2 -> z += radius;
+            case 3 -> z -= radius;
+            case 4 -> x += radius;
+            case 5 -> x -= radius;
+        }
+        return new Vector3<>(x, y, z);
+    }
+
+    public static Vector3<Long> findNear(long x, long y, long z, int radius,int id){
+        switch (id) {
+            case 0 -> y += radius;
+            case 1 -> y -= radius;
+            case 2 -> z += radius;
+            case 3 -> z -= radius;
+            case 4 -> x += radius;
+            case 5 -> x -= radius;
         }
         return new Vector3<>(x, y, z);
     }

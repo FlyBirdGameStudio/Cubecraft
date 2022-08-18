@@ -12,14 +12,10 @@
 package com.sunrisestudio.cubecraft.client;
 
 import com.sunrisestudio.cubecraft.GameSetting;
-import com.sunrisestudio.cubecraft.PlayerController;
 import com.sunrisestudio.cubecraft.registery.Registry;
-import com.sunrisestudio.cubecraft.Start;
 import com.sunrisestudio.cubecraft.client.gui.DisplayScreenInfo;
 import com.sunrisestudio.cubecraft.client.gui.FontRenderer;
-import com.sunrisestudio.cubecraft.client.gui.screen.LogoLoadingScreen;
-import com.sunrisestudio.cubecraft.client.gui.screen.Screen;
-import com.sunrisestudio.cubecraft.client.gui.screen.TitleScreen;
+import com.sunrisestudio.cubecraft.client.gui.screen.*;
 import com.sunrisestudio.cubecraft.client.render.renderer.LevelRenderer;
 import com.sunrisestudio.cubecraft.client.resources.ResourceManager;
 import com.sunrisestudio.cubecraft.extansion.ExtansionRunningTarget;
@@ -31,7 +27,7 @@ import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.entity.humanoid.Player;
 import com.sunrisestudio.grass3d.audio.Audio;
 import com.sunrisestudio.grass3d.platform.Display;
-import com.sunrisestudio.grass3d.platform.Keyboard;
+import com.sunrisestudio.grass3d.platform.input.Keyboard;
 import com.sunrisestudio.grass3d.platform.input.InputHandler;
 import com.sunrisestudio.grass3d.platform.input.KeyboardCallback;
 import com.sunrisestudio.grass3d.render.GLUtil;
@@ -51,19 +47,23 @@ import java.io.File;
 
 
 public class CubeCraft extends LoopTickingApplication {
-    private DisplayScreenInfo screenInfo;
     public static final String VERSION = "alpha-0.2.5";
+
+    private DisplayScreenInfo screenInfo;
     public LevelRenderer levelRenderer;
     private Screen screen;
+
     private final ClientIO clientIO = new ClientIO();
     public IWorldAccess clientWorld = null;
     public Player player = new Player(null);
     public final PlayerController controller=new PlayerController(this.player);
 
 
+    //world
+
     public void joinWorld(World world){
         this.clientWorld=world;
-        player.setPos(0,10,0);
+        player.setPos(400,20,0);
         this.levelRenderer = new LevelRenderer(this.clientWorld, this.player);
         this.clientWorld.addEntity(this.player);
     }
@@ -73,6 +73,8 @@ public class CubeCraft extends LoopTickingApplication {
         this.player=null;
     }
 
+
+    //init and stop
 
     @Override
     public void init() {
@@ -96,73 +98,6 @@ public class CubeCraft extends LoopTickingApplication {
                 }
             }
         });
-    }
-
-    @Override
-    public void stop() {
-        Display.destroy();
-        logHandler.info("game stopped...");
-        LogHandler.allSave();
-        Audio.destroy();
-        System.exit(0);
-    }
-
-    @Override
-    public void on1sec() {
-        if(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory()>512*1024*1024)
-            System.gc();
-    }
-
-    @Override
-    public void shortTick() {
-        this.logHandler.checkGLError("pre_render");
-        this.screenInfo = getDisplaySize();
-        Display.clear();
-        GL11.glClear(16640);
-
-        if (this.screen.isInGameGUI()) {
-            this.logHandler.checkGLError("pre_world_render");
-            levelRenderer.render(this.timer.interpolatedTime);
-            this.logHandler.checkGLError("post_world_render");
-        }
-        if (Display.isCloseRequested()) {
-            this.stop();
-        }
-
-        GLUtil.setupOrthogonalCamera(0, 0, Display.getWidth(), Display.getHeight(), screenInfo.scrWidth(), screenInfo.scrHeight());
-
-        if (this.screen != null) {
-            GLUtil.enableDepthTest();
-            GLUtil.enableBlend();
-            this.logHandler.checkGLError("pre_screen_render");
-            this.screenInfo = this.getDisplaySize();
-            this.screen.render(this.screenInfo,this.timer.interpolatedTime);
-            this.logHandler.checkGLError("post_screen_render");
-            GLUtil.disableBlend();
-        }
-        Display.sync(120);
-        Display.update();
-        this.logHandler.checkGLError("post_render");
-    }
-
-    @Override
-    public void longTick() {
-        InputHandler.tick();
-        this.screen.tick();
-        this.controller.tick();
-        if(this.clientWorld!=null){
-            this.clientWorld.tick();
-        }
-    }
-
-    public void setScreen(Screen screen) {
-        if (screen != null) {
-            screen.destroy();
-        }
-        this.screen = screen;
-        if (screen != null) {
-            screen.init(this);
-        }
     }
 
     private void loadGameContent() {
@@ -192,7 +127,7 @@ public class CubeCraft extends LoopTickingApplication {
         this.logHandler.info("loading resources...");
         this.logHandler.checkGLError("pre_font_load");
         for (int i = 0; i < 256; i++) {
-            if (i >= 241 && i <= 248 || i >= 216 && i <= 239 || i == 8) {
+            if (i >= 241 && i <= 248 || i >= 216 && i <= 239 || i == 8||i==0xf0) {
                 continue;
             }
             FontRenderer.textures[i] = new Texture2D(false, false);
@@ -212,6 +147,81 @@ public class CubeCraft extends LoopTickingApplication {
                 "/resource/text/language/zh_cn.lang",
                 "/resource/text/language/zh_cn.lang"
         ));
+    }
+
+    @Override
+    public void stop() {
+        Display.destroy();
+        logHandler.info("game stopped...");
+        LogHandler.allSave();
+        Audio.destroy();
+        System.exit(0);
+    }
+
+
+    //loop
+
+    @Override
+    public void on1sec() {
+        if(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory()>512*1024*1024)
+            System.gc();
+    }
+
+    @Override
+    public void shortTick() {
+        this.render();
+    }
+
+    @Override
+    public void longTick() {
+        InputHandler.tick();
+        this.screen.tick();
+        if(this.clientWorld!=null){
+            this.clientWorld.tick();
+        }
+    }
+
+
+    //render
+    public void setScreen(Screen screen) {
+        if (screen != null) {
+            screen.destroy();
+        }
+        this.screen = screen;
+        if (screen != null) {
+            screen.init(this);
+        }
+    }
+
+    private void render(){
+        this.logHandler.checkGLError("pre_render");
+        this.screenInfo = getDisplaySize();
+        Display.clear();
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);//16640
+
+        if (this.screen.isInGameGUI()) {
+            this.logHandler.checkGLError("pre_world_render");
+            levelRenderer.render(this.timer.interpolatedTime);
+            this.logHandler.checkGLError("post_world_render");
+        }
+        if (Display.isCloseRequested()) {
+            this.stop();
+        }
+
+        GLUtil.setupOrthogonalCamera(0, 0, Display.getWidth(), Display.getHeight(), screenInfo.scrWidth(), screenInfo.scrHeight());
+
+        if (this.screen != null) {
+            GLUtil.enableDepthTest();
+            GLUtil.enableBlend();
+            this.logHandler.checkGLError("pre_screen_render");
+            this.screenInfo = this.getDisplaySize();
+            this.screen.render(this.screenInfo,this.timer.interpolatedTime);
+            this.logHandler.checkGLError("post_screen_render");
+            GLUtil.disableBlend();
+        }
+        Display.sync(120);
+        Display.update();
+        this.logHandler.checkGLError("post_render");
     }
 
     private DisplayScreenInfo getDisplaySize() {
@@ -243,7 +253,5 @@ public class CubeCraft extends LoopTickingApplication {
                 this.clientWorld,
                 this.player);
     }
-
-
 
 }

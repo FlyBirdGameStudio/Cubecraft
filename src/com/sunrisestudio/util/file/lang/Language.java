@@ -35,6 +35,10 @@ public class Language {
         this.map.putAll(getLangFromStream(in));
     }
 
+    public void clear(){
+        this.map.clear();
+    }
+
     public static HashMap<String,String> getLangFromStream(InputStream inputStream){
         HashMap<String,String> result=new HashMap<>();
         byte[] b;

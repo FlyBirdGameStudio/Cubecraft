@@ -34,9 +34,7 @@ public abstract class Component {
         }
     }
 
-    public void tick(int xm,int ym){
-
-    }
+    public void tick(int xm,int ym){}
     public abstract void render();
 
     public void setLayout(LayoutManager layoutManager){
@@ -53,4 +51,6 @@ public abstract class Component {
     public void setBorder(Border border) {
         this.layoutManager.border=border;
     }
+
+    public void onClicked(int xm,int ym) {}
 }

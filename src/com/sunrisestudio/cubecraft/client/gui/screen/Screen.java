@@ -5,16 +5,18 @@ import com.sunrisestudio.cubecraft.client.gui.DisplayScreenInfo;
 import com.sunrisestudio.cubecraft.GameSetting;
 import com.sunrisestudio.cubecraft.client.gui.component.Component;
 import com.sunrisestudio.cubecraft.client.gui.component.Popup;
-import com.sunrisestudio.cubecraft.client.render.object.RenderChunk;
+import com.sunrisestudio.cubecraft.client.resources.ResourceManager;
 import com.sunrisestudio.cubecraft.registery.Registry;
 import com.sunrisestudio.grass3d.platform.Display;
-import com.sunrisestudio.grass3d.platform.Mouse;
+import com.sunrisestudio.grass3d.platform.input.Keyboard;
+import com.sunrisestudio.grass3d.platform.input.Mouse;
 import com.sunrisestudio.grass3d.platform.input.InputHandler;
 import com.sunrisestudio.grass3d.platform.input.KeyboardCallback;
 import com.sunrisestudio.grass3d.platform.input.MouseCallBack;
 import com.sunrisestudio.grass3d.render.ShapeRenderer;
 import com.sunrisestudio.grass3d.render.textures.Texture2D;
 import com.sunrisestudio.util.container.CollectionUtil;
+import com.sunrisestudio.util.file.lang.Language;
 import org.lwjgl.opengl.GL11;
 
 
@@ -44,6 +46,28 @@ public abstract class Screen {
         this.init();
         InputHandler.registerGlobalKeyboardCallback("cubecraft:scr_callback_default",this.getKeyboardCallback());
         InputHandler.registerGlobalMouseCallback("cubecraft:scr_callback_default",this.getMouseCallback());
+        InputHandler.registerGlobalKeyboardCallback("cubecraft:scr_callback_base",new KeyboardCallback(){
+            @Override
+            public void onKeyEventPressed() {
+                if(Keyboard.getEventKey()==Keyboard.KEY_F9){
+                    createPopup("reloading...","reloading current UI...",40,Popup.INFO);
+                    Language.selectedLanguage.clear();
+                    Language.selectedLanguage.attachTranslationFile(
+                            ResourceManager.instance.getResource("/resource/text/language/zh_cn.lang",
+                                    "/resource/text/language/zh_cn.lang")
+                    );
+                    Screen.this.init();
+                    createPopup("reload success","UI fully reloaded.",40,Popup.SUCCESS);
+                }
+            }
+        });
+        InputHandler.registerGlobalMouseCallback("cubecraft:scr_callback_base",new MouseCallBack(){
+            @Override
+            public void onLeftClick() {
+                int scale=GameSetting.instance.getValueAsInt("client.gui.scale",2);
+                CollectionUtil.iterateMap(Screen.this.components, (key, item) -> item.onClicked(Mouse.getX()/ scale,(-Mouse.getY()+Display.getHeight())/scale));
+            }
+        });
     }
 
     /**
@@ -84,8 +108,7 @@ public abstract class Screen {
      * you have to call super.destroy() when overwriting this method.
      */
     public void destroy(){
-        InputHandler.releaseGlobalKeyboardCallback("cubecraft:scr_callback_default");
-        InputHandler.releaseGlobalMouseCallback("cubecraft:scr_callback_default");
+
     }
 
 
@@ -127,7 +150,7 @@ public abstract class Screen {
     private static Texture2D bg;
     public static void initBGRenderer(){
         Registry.getTextureManager().create2DTexture("/resource/textures/gui/bg.png",false,false);
-        Registry.getTextureManager().create2DTexture("/resource/textures/gui/popup.png",false,false);
+        Registry.getTextureManager().create2DTexture("/resource/textures/gui/controls/popup.png",false,false);
     }
 
     public static void renderPictureBackground(){
@@ -165,7 +188,7 @@ public abstract class Screen {
     }
 
     public static void renderPopup(DisplayScreenInfo info,float interpolationTime){
-        Registry.getTextureManager().bind2dTexture("/resource/textures/gui/popup.png");
+        Registry.getTextureManager().bind2dTexture("/resource/textures/gui/controls/popup.png");
         int yPop=0;
         for (Popup p:popupList){
             GL11.glPushMatrix();

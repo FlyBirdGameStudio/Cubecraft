@@ -1,6 +1,6 @@
 package com.sunrisestudio.cubecraft.client.resources;
 
-import com.sunrisestudio.cubecraft.Start;
+import com.sunrisestudio.cubecraft.client.Start;
 import com.sunrisestudio.util.LogHandler;
 
 import javax.imageio.ImageIO;
@@ -41,7 +41,7 @@ public class ResourceManager {
 
     public BufferedImage getImage(String path){
         try {
-            return ImageIO.read(this.getResource(path, "resources/resource/minecraft/fallback/texture.png"));
+            return ImageIO.read(this.getResource(path, "resource/fallback/texture.png"));
         } catch (Exception e) {
             logHandler.warning("can not read textures:"+path+",because of "+e);
         }

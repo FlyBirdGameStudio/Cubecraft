@@ -1,7 +1,5 @@
 package com.sunrisestudio.grass3d.platform.input;
 
-import com.sunrisestudio.grass3d.platform.Keyboard;
-import com.sunrisestudio.grass3d.platform.Mouse;
 import com.sunrisestudio.util.LogHandler;
 import com.sunrisestudio.util.container.CollectionUtil;
 
@@ -21,18 +19,17 @@ public class InputHandler {
     private static final HashMap<String, KeyboardCallback> keyboardCallbacks =new HashMap<>();
     private static final Map<String, MouseCallBack> mouseCallbacks=new HashMap<>();
 
+
     /**
      * register a callback for keyboard,fail with id conflict.
      * @param id id
      * @param cb callback
      */
     public static void registerGlobalKeyboardCallback(String id, KeyboardCallback cb){
-        if(keyboardCallbacks.containsKey(id)){
-            logHandler.error("conflict keyboard callback register");
-        }else{
-            keyboardCallbacks.put(id,cb);
-        }
+        keyboardCallbacks.put(id,cb);
     }
+
+
 
     /**
      * release a keyboard callback.
@@ -48,12 +45,9 @@ public class InputHandler {
      * @param cb callback
      */
     public static void registerGlobalMouseCallback(String id, MouseCallBack cb){
-        if(mouseCallbacks.containsKey(id)){
-            logHandler.error("conflict mouse callback register");
-        }else{
-            mouseCallbacks.put(id,cb);
-        }
+        mouseCallbacks.put(id,cb);
     }
+
 
     /**
      * release a mouse callback.
@@ -67,44 +61,49 @@ public class InputHandler {
      * tick the input and holding all callbacks.
      */
     public static void tick(){
+
+        HashMap<String,KeyboardCallback> kb=keyboardCallbacks;
         while (Keyboard.next()){
-            CollectionUtil.iterateMap(keyboardCallbacks, (key, item) -> {
+            CollectionUtil.iterateMap(kb, (key, item) -> {
                 item.onKeyEventNext();
             });
             if(Keyboard.getEventKeyState()){
-                CollectionUtil.iterateMap(keyboardCallbacks, (key, item) -> {
+                CollectionUtil.iterateMap(kb, (key, item) -> {
                     item.onKeyEventPressed();
                 });
             }
         }
-        while (Mouse.next()){
-            CollectionUtil.iterateMap(mouseCallbacks, (key, item) -> {
-                item.onMouseEventNext();
 
+        HashMap<String,MouseCallBack> m= (HashMap<String, MouseCallBack>) mouseCallbacks;
+        //CollectionUtil.iterateMap(mouseCallbacks,((key, item) -> m.put(key,item)));
+        while (Mouse.next()){
+            CollectionUtil.iterateMap(m, (key, item) -> {
+                item.onMouseEventNext();
             });
 
             if(Mouse.isButtonDown(0)){
-                CollectionUtil.iterateMap(mouseCallbacks, (key, item) -> {
+                CollectionUtil.iterateMap(m, (key, item) -> {
                     item.onLeftClick();
                 });
             }
             if(Mouse.isButtonDown(1)){
-                CollectionUtil.iterateMap(mouseCallbacks, (key, item) -> {
+                CollectionUtil.iterateMap(m, (key, item) -> {
                     item.onRightClick();
                 });
             }
             if(Mouse.isButtonDown(2)){
-                CollectionUtil.iterateMap(mouseCallbacks, (key, item) -> {
+                CollectionUtil.iterateMap(m, (key, item) -> {
                     item.onMidClick();
                 });
             }
         }
         int scroll=Mouse.getDWheel();
         if(scroll!=0){
-            CollectionUtil.iterateMap(mouseCallbacks, (key, item) -> {
+            CollectionUtil.iterateMap(m, (key, item) -> {
                 item.onScroll(scroll);
             });
         }
+
     }
 
     /**
@@ -113,7 +112,7 @@ public class InputHandler {
      * @param timeElapse time elapse from first click to next click
      * @return clicked?
      */
-    public static boolean isDoubleClicked(int key, float timeElapse) {
+    public static boolean isKeyDoubleClicked(int key, float timeElapse) {
         if (Keyboard.isKeyDown(key)) {
             if (!keyDownStatus) {
                 keyDownStatus = true;

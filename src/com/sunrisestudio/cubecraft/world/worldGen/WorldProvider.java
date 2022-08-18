@@ -1,11 +1,12 @@
 package com.sunrisestudio.cubecraft.world.worldGen;
 
-import com.sunrisestudio.cubecraft.Start;
+import com.sunrisestudio.cubecraft.client.Start;
 import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.block.BlockFacing;
 import com.sunrisestudio.cubecraft.world.chunk.Chunk;
 import com.sunrisestudio.cubecraft.world.chunk.ChunkPos;
 import com.sunrisestudio.cubecraft.world.worldGen.noiseGenerator.PerlinNoise;
+import org.joml.SimplexNoise;
 
 import java.io.File;
 import java.util.HashMap;
@@ -57,13 +58,14 @@ public class WorldProvider {
         return genChunk(pos);
     }
 
+
     private Chunk genChunk(ChunkPos pos) {
         Chunk chunk = new Chunk(WorldProvider.this.world, pos);
         //new ChunkProvider0223(world).generate(chunk);
 
         for (int xd = 0; xd < Chunk.WIDTH; xd++) {
             for (int zd = 0; zd < Chunk.WIDTH; zd++) {
-                double h=test.getValue(pos.toWorldPosX(xd) / 10d, pos.toWorldPosZ(zd) / 10d)*8 - pos.toWorldPosY(0);
+                double h=test.getValue(pos.toWorldPosX(xd) / 8d, pos.toWorldPosZ(zd) / 8d)*8 - pos.toWorldPosY(0);
                 for (int yd = 0; yd < (h>16?16:h); yd++) {
                     if(yd<h-3) {
                         chunk.setBlock(xd, yd, zd, "cubecraft:stone", BlockFacing.fromId(0));
@@ -72,9 +74,15 @@ public class WorldProvider {
                     } else if (yd<h) {
                         chunk.setBlock(xd, yd, zd, "cubecraft:grass_block", BlockFacing.fromId(0));
                     }
+
+                    if(SimplexNoise.noise((float) (pos.toWorldPosX(xd)/64f), (float) (pos.toWorldPosY(yd)/64f), (float) (pos.toWorldPosZ(zd)/64f))>0.4){
+                        chunk.setBlock(xd, yd, zd, "cubecraft:air", BlockFacing.fromId(0));
+                    }
                 }
+
             }
         }
+
         return chunk;
     }
 }

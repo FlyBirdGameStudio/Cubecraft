@@ -26,7 +26,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
 
     @Nullable
     public HitResult hitResult;
-    protected IWorldAccess world;
+    public IWorldAccess world;
     public boolean runningMode;
     public boolean flyingMode = false;
 
@@ -228,21 +228,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
         this.clipSelectionBox();
         float speed;
 
-        if (flyingMode) {
-            if (runningMode) {
-                speed = 2.77f;
-            } else {
-                speed = 2f;
-            }
-        } else {
-            if (runningMode) {
-                speed = 1.58f;
-            } else {
-                speed = 1.0f;
-            }
-        }
 
-        speed *= 1-this.world.getBlock((long) x, (long) y, (long) z).getResistance();
 
         if (this.inLiquid()) {//water
 
@@ -285,8 +271,8 @@ public abstract class Entity implements HittableObject, NBTDataIO {
 
     public Vector3d getHitTargetPos(){
         Vector3d from=new Vector3d(x,y+1.62,z);
-        Vector3d to = MathHelper.getVectorForRotation(yRot,xRot);
-        return new Vector3d(x,y-getReachDistance(),z);
+        Vector3d to = MathHelper.getVectorForRotation(xRot,yRot-180);
+        return to.mul(getReachDistance()).add(from);
     }
 
     public boolean isFree(double xa, double ya, double za) {

@@ -289,4 +289,9 @@ public class World implements IWorldAccess {
     public void removeListener(WorldListener worldListener){
         this.listeners.remove(worldListener);
     }
+
+    @Override
+    public boolean isfree(AABB[] collisionBox) {
+        return true;
+    }
 }

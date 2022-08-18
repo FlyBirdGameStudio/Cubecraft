@@ -4,7 +4,7 @@ package com.sunrisestudio.cubecraft.client.gui.screen;
 import com.sunrisestudio.cubecraft.client.gui.DisplayScreenInfo;
 import com.sunrisestudio.cubecraft.client.gui.ScreenLoader;
 import com.sunrisestudio.cubecraft.client.gui.component.Button;
-import com.sunrisestudio.cubecraft.client.gui.component.Popup;
+import com.sunrisestudio.cubecraft.client.gui.screen.options.SettingScreen;
 import com.sunrisestudio.grass3d.render.GLUtil;
 
 public class PauseScreen extends Screen {
@@ -25,8 +25,6 @@ public class PauseScreen extends Screen {
         ((Button)this.components.get("button_save_and_quit")).setListener(() -> {
             this.platform.setScreen(new TitleScreen());
         });
-
-        createPopup("FUCK!","jsy fucked yor game!!!!!",60, Popup.ERROR);
     }
 
 

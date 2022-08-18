@@ -29,7 +29,7 @@ public class BlockBehaviors{
 
             @Override
             public float getResistance() {
-                return 0;
+                return 1;
             }
 
             @Override
@@ -91,7 +91,7 @@ public class BlockBehaviors{
 
             @Override
             public float getResistance() {
-                return 0;
+                return 1;
             }
 
             @Override

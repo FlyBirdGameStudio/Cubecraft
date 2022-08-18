@@ -1,5 +1,8 @@
 package com.sunrisestudio.grass3d.render.textures;
 
+import com.sunrisestudio.cubecraft.client.render.model.ModelManager;
+import com.sunrisestudio.cubecraft.client.render.model.object.Model;
+import com.sunrisestudio.cubecraft.client.resources.ImageUtil;
 import com.sunrisestudio.cubecraft.client.resources.ResourceManager;
 import com.sunrisestudio.util.container.BufferBuilder;
 import org.lwjgl.opengl.*;
@@ -35,36 +38,12 @@ public class Texture2DArray extends Texture{
         BufferedImage img= ResourceManager.instance.getImage(path);
         int width=img.getWidth();
         int height=img.getHeight();
-
-        int[] rawPixels =new int[width*height];
-        byte[] newPixels = new byte[rawPixels.length * 4];
-        img.getRGB(0, 0, width , height, rawPixels, 0, width);
-        for (int i = 0; i < rawPixels.length; ++i) {
-            int a = rawPixels[i] >> 24 & 0xFF;
-            int r = rawPixels[i] >> 16 & 0xFF;
-            int g = rawPixels[i] >> 8 & 0xFF;
-            int b = rawPixels[i] & 0xFF;
-            newPixels[i * 4] = (byte)r;
-            newPixels[i * 4 + 1] = (byte)g;
-            newPixels[i * 4 + 2] = (byte)b;
-            newPixels[i * 4 + 3] = (byte)a;
-        }
         this.bind();
-        ByteBuffer buf=BufferBuilder.from(newPixels);
-        GL12.glTexSubImage3D(getType(),1,0,0,prevLayer,width,height,1,GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE,buf);
-        buf=null;
-
+        GL12.glTexSubImage3D(getType(),1,0,0,prevLayer,width,height,1,GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE,ImageUtil.getByteFromBufferedImage_RGBA(img));
         this.textureMapping.put(path,prevLayer);
         this.unbind();
         logHandler.checkGLError("load");
-    }
-
-    public void setPrevLayer(int prevLayer) {
-        this.prevLayer = prevLayer;
-    }
-
-    public void buildMipmap(){
-        createMipMap();
+        prevLayer++;
     }
 
     @Override
@@ -79,5 +58,9 @@ public class Texture2DArray extends Texture{
     @Override
     public int getBindingType() {
         return GL30.GL_TEXTURE_2D_ARRAY;
+    }
+
+    public int getLayer(String texture) {
+        return this.textureMapping.get(texture);
     }
 }

@@ -3,7 +3,7 @@ package com.sunrisestudio.util.math;
 import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
 
-public record HitResult(HitBox aabb, int facing) {
+public record HitResult(HitBox aabb, byte facing) {
     public void hit(IWorldAccess worldAccess, Entity from) {
         this.aabb.getObject().onHit(from,worldAccess,this);
     }

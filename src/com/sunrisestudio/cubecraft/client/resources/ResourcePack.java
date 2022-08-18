@@ -1,6 +1,6 @@
 package com.sunrisestudio.cubecraft.client.resources;
 
-import com.sunrisestudio.cubecraft.Start;
+import com.sunrisestudio.cubecraft.client.Start;
 
 import java.io.*;
 import java.util.*;

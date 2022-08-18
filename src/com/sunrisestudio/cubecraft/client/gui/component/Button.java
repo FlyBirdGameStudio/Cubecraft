@@ -2,7 +2,6 @@ package com.sunrisestudio.cubecraft.client.gui.component;
 
 
 import com.sunrisestudio.cubecraft.client.gui.FontAlignment;
-import com.sunrisestudio.grass3d.platform.Mouse;
 import com.sunrisestudio.grass3d.render.textures.Texture2D;
 import com.sunrisestudio.grass3d.render.ShapeRenderer;
 import com.sunrisestudio.cubecraft.client.gui.FontRenderer;
@@ -20,7 +19,7 @@ public class Button extends Component{
         this.textColor=textColor;
         this.text=text;
         this.texture.generateTexture();
-        this.texture.load("/resource/textures/gui/button.png");
+        this.texture.load("/resource/textures/gui/controls/button.png");
     }
     public boolean enabled=true;
     public boolean hovered=false;
@@ -51,16 +50,13 @@ public class Button extends Component{
         int y1=y0+this.layoutManager.aHeight;
         if(xm>x0&&xm<x1&&ym>y0&&ym<y1){
             if (!this.hovered){
-                texture.load("/resource/textures/gui/button_selected.png");
+                texture.load("/resource/textures/gui/controls/button_selected.png");
             }
             this.hovered=true;
-            if(Mouse.isButtonDown(0)&&this.listener!=null){
-                this.listener.buttonClicked();
-            }
 
         }else{
             if (this.hovered){
-                texture.load("/resource/textures/gui/button.png");
+                texture.load("/resource/textures/gui/controls/button.png");
             }
             this.hovered=false;
         }
@@ -78,5 +74,16 @@ public class Button extends Component{
 
     public interface Listener {
         void buttonClicked();
+    }
+
+    @Override
+    public void onClicked(int xm,int ym) {
+        int x0=this.layoutManager.ax;
+        int x1=x0+this.layoutManager.aWidth;
+        int y0=this.layoutManager.ay;
+        int y1=y0+this.layoutManager.aHeight;
+        if(xm>x0&&xm<x1&&ym>y0&&ym<y1&&this.listener!=null) {
+            this.listener.buttonClicked();
+        }
     }
 }

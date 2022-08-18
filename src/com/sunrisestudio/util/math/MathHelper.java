@@ -143,4 +143,12 @@ public class MathHelper {
     public static long toExactWorldPos(double pos) {
         return (long) (pos-(pos>=0?0:1));
     }
+
+    public static double dist(Vector3d v0,Vector3d v1){
+        return Math.sqrt(pow2(v0.x-v1.x)+pow2(v0.y-v1.y)+pow2(v0.z-v1.z));
+    }
+
+    public static double pow2(double a){
+        return a*a;
+    }
 }

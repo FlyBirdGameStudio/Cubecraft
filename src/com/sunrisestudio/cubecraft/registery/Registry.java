@@ -2,6 +2,7 @@ package com.sunrisestudio.cubecraft.registery;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sunrisestudio.cubecraft.client.render.model.FaceTypeAdapterRenderer;
 import com.sunrisestudio.cubecraft.client.render.model.ModelManager;
 import com.sunrisestudio.cubecraft.client.render.model.object.BlockModel;
 import com.sunrisestudio.cubecraft.client.render.model.object.EntityModel;
@@ -45,13 +46,11 @@ public class Registry {
     }
 
 
-    //render
+    //model&texture
     private static final ModelManager<BlockModel> blockModelManager= new ModelManager<>("/resource/fallback/block_model.json", BlockModel.class);
     private static final ModelManager<EntityModel> entityModelManager=new ModelManager<>("/resource/fallback/entity_model.json",EntityModel.class);
     private static final TextureManager textureManager=new TextureManager();
-    private static final NameSpacedRegisterMap<? extends IBlockRenderer,?> blockRendererMap=new NameSpacedRegisterMap<>(null);
-    private static final NameSpacedRegisterMap<? extends IEntityRenderer,?> entityRendererMap=new NameSpacedRegisterMap<>(null);
-    public static NameSpacedConstructingMap<IWorldRenderer> worldRenderers=new NameSpacedConstructingMap<>(IWorldAccess.class,Player.class, Camera.class);
+    public static NameSpacedRegisterMap<FaceTypeAdapterRenderer,?>faceTypeAdapterRendererMap=new NameSpacedRegisterMap<>(null);
 
     public static ModelManager<BlockModel> getBlockModelManager() {
         return blockModelManager;
@@ -59,9 +58,17 @@ public class Registry {
     public static ModelManager<EntityModel> getEntityModelManager() {
         return entityModelManager;
     }
+    public static NameSpacedRegisterMap<FaceTypeAdapterRenderer, ?> getFaceTypeAdapterRendererMap() {return faceTypeAdapterRendererMap;}
     public static TextureManager getTextureManager() {
         return textureManager;
     }
+
+
+    //render
+    private static final NameSpacedRegisterMap<? extends IBlockRenderer,?> blockRendererMap=new NameSpacedRegisterMap<>(null);
+    private static final NameSpacedRegisterMap<? extends IEntityRenderer,?> entityRendererMap=new NameSpacedRegisterMap<>(null);
+    public static NameSpacedConstructingMap<IWorldRenderer> worldRenderers=new NameSpacedConstructingMap<>(IWorldAccess.class,Player.class, Camera.class);
+
     public static NameSpacedRegisterMap<? extends IBlockRenderer, ?> getBlockRendererMap() {
         return blockRendererMap;
     }
@@ -69,6 +76,9 @@ public class Registry {
         return entityRendererMap;
     }
     public static NameSpacedConstructingMap<IWorldRenderer> getWorldRenderers() {return worldRenderers;}
+
+
+
 
     //reader
     private static final Gson gson=new GsonBuilder()
@@ -92,6 +102,8 @@ public class Registry {
 
         getWorldRenderers().registerItem("cubecraft:chunk_renderer", ChunkRenderer.class);
         getWorldRenderers().registerItem("cubecraft:entity_renderer", EntityRenderer.class);
-        //getWorldRenderers().registerItem("cubecraft:environment_renderer", EnvironmentRenderer.class);
+
+        getFaceTypeAdapterRendererMap().registerGetter(FaceRenderers.class);
     }
+
 }

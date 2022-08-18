@@ -142,15 +142,15 @@ public class AABB {
 
 
     public boolean positionInBoundYZ(double y, double z) {
-        return y>y0&&y<y1&&z>z0&&z<z1;
+        return y>=y0&&y<=y1&&z>=z0&&z<=z1;
     }
 
     public boolean positionInBoundXZ(double x, double z) {
-        return x>x0&&x<x1&&z>z0&&z<z1;
+        return x>=x0&&x<=x1&&z>=z0&&z<=z1;
     }
 
     public boolean positionInBoundXY(double x, double y) {
-        return x>x0&&x<x1&&y>y0&&y<y1;
+        return x>=x0&&x<=x1&&y>=y0&&y<=y1;
     }
 
     /**
@@ -162,23 +162,23 @@ public class AABB {
         return Math.min(
                 Math.min(
                         Math.min(
-                                    vector3d.distance(new Vector3d(x0,y0,z0)),
-                                    vector3d.distance(new Vector3d(x1,y0,z0))
+                                MathHelper.dist(vector3d,new Vector3d(x0,y0,z0)),
+                                MathHelper.dist(vector3d,new Vector3d(x1,y0,z0))
                                 ),
                         Math.min(
-                                vector3d.distance(new Vector3d(x0,y1,z0)),
-                                vector3d.distance(new Vector3d(x1,y1,z0))
+                                MathHelper.dist(vector3d,new Vector3d(x0,y1,z0)),
+                                MathHelper.dist(vector3d,new Vector3d(x1,y1,z0))
                         )
                 ),
                 Math.min(
                         Math.min(
-                                vector3d.distance(new Vector3d(x0,y0,z1)),
-                                vector3d.distance(new Vector3d(x1,y0,z1))
-                        ),
+                                MathHelper.dist(vector3d,new Vector3d(x0,y0,z1)),
+                                MathHelper.dist(vector3d,new Vector3d(x1,y0,z1))
+                                ),
                         Math.min(
-                                vector3d.distance(new Vector3d(x0,y1,z1)),
-                                vector3d.distance(new Vector3d(x1,y1,z1))
-                        )
+                                MathHelper.dist(vector3d,new Vector3d(x0,y1,z1)),
+                                MathHelper.dist(vector3d,new Vector3d(x1,y1,z1))
+                                )
                 )
         );
     }
@@ -192,30 +192,39 @@ public class AABB {
         return Math.max(
                 Math.max(
                         Math.max(
-                                vector3d.distance(new Vector3d(x0,y0,z0)),
-                                vector3d.distance(new Vector3d(x1,y0,z0))
+                                MathHelper.dist(vector3d,new Vector3d(x0,y0,z0)),
+                                MathHelper.dist(vector3d,new Vector3d(x1,y0,z0))
                         ),
-                        Math.min(
-                                vector3d.distance(new Vector3d(x0,y1,z0)),
-                                vector3d.distance(new Vector3d(x1,y1,z0))
+                        Math.max(
+                                MathHelper.dist(vector3d,new Vector3d(x0,y1,z0)),
+                                MathHelper.dist(vector3d,new Vector3d(x1,y1,z0))
                         )
                 ),
                 Math.max(
                         Math.max(
-                                vector3d.distance(new Vector3d(x0,y0,z1)),
-                                vector3d.distance(new Vector3d(x1,y0,z1))
+                                MathHelper.dist(vector3d,new Vector3d(x0,y0,z1)),
+                                MathHelper.dist(vector3d,new Vector3d(x1,y0,z1))
                         ),
                         Math.max(
-                                vector3d.distance(new Vector3d(x0,y1,z1)),
-                                vector3d.distance(new Vector3d(x1,y1,z1))
+                                MathHelper.dist(vector3d,new Vector3d(x0,y1,z1)),
+                                MathHelper.dist(vector3d,new Vector3d(x1,y1,z1))
                         )
                 )
         );
     }
 
     public boolean isVectorInside(Vector3d point) {
-        return point.x>x0&&point.x<x1&&
-               point.y>y0&&point.y<y1&&
-               point.z>z0&&point.z<z1;
+        return isVectorInside(point.x,point.y,point.z);
+    }
+
+    public boolean isVectorInside(double x,double y,double z) {
+        return x>=x0&&x<=x1&&
+                y>=y0&&y<=y1&&
+                z>=z0&&z<=z1;
+    }
+
+    @Override
+    public String toString() {
+        return "%f/%f/%f - %f/%f/%f".formatted(x0,y0,z0,x1,y1,z1);
     }
 }

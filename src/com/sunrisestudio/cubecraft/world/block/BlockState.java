@@ -1,117 +1,129 @@
 package com.sunrisestudio.cubecraft.world.block;
 
 import com.sunrisestudio.cubecraft.registery.Registry;
+import com.sunrisestudio.cubecraft.world.HittableObject;
+import com.sunrisestudio.cubecraft.world.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.block.material.Block;
+import com.sunrisestudio.cubecraft.world.entity.Entity;
 import com.sunrisestudio.grass3d.render.draw.IVertexArrayBuilder;
-import com.sunrisestudio.util.math.*;
 import com.sunrisestudio.util.file.nbt.NBTDataIO;
 import com.sunrisestudio.util.file.nbt.tag.NBTTagCompound;
-import com.sunrisestudio.cubecraft.world.HittableObject;
-import com.sunrisestudio.cubecraft.world.block.material.Block;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
-import com.sunrisestudio.cubecraft.world.entity.Entity;
+import com.sunrisestudio.util.math.AABB;
+import com.sunrisestudio.util.math.HitBox;
+import com.sunrisestudio.util.math.HitResult;
 
-public class BlockState implements NBTDataIO ,HittableObject {
-	BlockFacing facing;
-	private String id;
-	private NBTTagCompound blockMeta;
-	private String innerBlockId;
-	private boolean needTick;
-	private String biomeID;
+public class BlockState implements NBTDataIO, HittableObject {
+    private byte facing;
+    private String id;
+    private String biome;
+    private NBTTagCompound blockMeta;
+
+    private boolean needTick;
+
+    public String getId() {
+        return id;
+    }
+
+    public BlockState setId(String id) {
+        this.id = id;
+        return this;
+    }
+
+    public BlockState setFacing(BlockFacing f) {
+        this.facing = f.numID;
+        return this;
+    }
+
+    public BlockState setFacing(byte f) {
+        this.facing = f;
+        return this;
+    }
 
 
-	public BlockState(String id) {
-		this.id=id;
-	}
+    public BlockFacing getFacing() {
+        return BlockFacing.fromId(this.facing);
+    }
 
-	public String getId() {
-		return id;
-	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String[] getTags() {
+        return this.getBlock().getTags();
+    }
 
-	public Block getMaterial() {
-		return Registry.getBlockMap().get(this.id);
-	}
+    public Block getBlock() {
+        return Registry.getBlockMap().get(this.id);
+    }
 
-	public AABB[] getCollisionBox(long x,long y,long z){
-		return this.getMaterial().getCollisionBox(x,y,z);
-	}
 
-	public String[] getTags() {
-		return this.getMaterial().getTags();
-	}
+    public BlockState(String id) {
+        this.id = id;
+    }
 
-	public void setFacing(BlockFacing f) {
-		this.facing=f;
-	}
 
-	public BlockFacing getFacing() {
-		return facing;
-	}
+    public AABB[] getCollisionBox(long x, long y, long z) {
+        return this.getBlock().getCollisionBox(x, y, z);
+    }
 
     public HitBox[] getSelectionBox(IWorldAccess world, long x, long y, long z) {
-		return this.getMaterial().getSelectionBox(world,x,y,z,this);
+        return this.getBlock().getSelectionBox(world, x, y, z, this);
     }
 
-	/**
-	 * defines a resistance of a block.entity`s speed will multiply this value.
-	 * @return value
-	 */
-	public float getResistance() {
-		return 1.0f;
-	}
+    /**
+     * defines a resistance of a block.entity`s speed will multiply this value.
+     *
+     * @return value
+     */
+    public float getResistance() {
+        return getBlock().getResistance();
+    }
 
-	@Override
-	public NBTTagCompound getData(){
-		NBTTagCompound compound=new NBTTagCompound();
-		compound.setByte("facing",this.facing.getNumID());
-		compound.setString("id",this.id);
-		compound.setString("innerBlock",this.innerBlockId);
-		compound.setCompoundTag("meta",this.blockMeta);
-		return compound;
-	}
+    @Override
+    public NBTTagCompound getData() {
+        NBTTagCompound compound = new NBTTagCompound();
+        compound.setByte("facing", this.facing);
+        compound.setString("id", this.id);
+        compound.setCompoundTag("meta", this.blockMeta);
+        return compound;
+    }
 
-	@Override
-	public void setData(NBTTagCompound compound){
-		this.facing=BlockFacing.fromId(compound.getByte("facing"));
-		this.id=compound.getString("id");
-		this.innerBlockId=compound.getString("innerBlock");
-		this.blockMeta=compound.getCompoundTag("meta");
-	}
+    @Override
+    public void setData(NBTTagCompound compound) {
+        this.facing = compound.getByte("facing");
+        this.id = compound.getString("id");
+        this.blockMeta = compound.getCompoundTag("meta");
+    }
 
     public boolean needTick() {
-		return this.needTick;
+        return this.needTick;
     }
 
-	public void setTicking(boolean b) {
-		this.needTick=b;
-	}
+    public void setTicking(boolean b) {
+        this.needTick = b;
+    }
 
-	public void render(IWorldAccess world,long x,long y,long z,long renderX, long renderY, long renderZ, IVertexArrayBuilder builder){
-		getMaterial().render(world,x,y,z,renderX,renderY,renderZ,facing,builder);
-	}
+    public void render(IWorldAccess world, long x, long y, long z, long renderX, long renderY, long renderZ, IVertexArrayBuilder builder) {
+        getBlock().render(world, x, y, z, renderX, renderY, renderZ, getFacing(), builder);
+    }
 
-	//test
-	@Override
-	public void onHit(Entity from, IWorldAccess world, HitResult hr) {
-		world.setBlock(
-				(long) hr.aabb().getPosition().x,
-				(long) hr.aabb().getPosition().y,
-				(long) hr.aabb().getPosition().z,
-				"cubecraft:air", BlockFacing.Up
-		);
-	}
+    //test
+    @Override
+    public void onHit(Entity from, IWorldAccess world, HitResult hr) {
+        this.getBlock().onHit(
+                from, world,
+                (long) hr.aabb().getPosition().x,
+                (long) hr.aabb().getPosition().y,
+                (long) hr.aabb().getPosition().z,
+                hr.facing()
+        );
+    }
 
-	@Override
-	public void onInteract(Entity from, IWorldAccess world, HitResult hr) {
-		Vector3<Long> pos=BlockFacing.fromId(hr.facing()).findNear(
-				(long) hr.aabb().getPosition().x,
-				(long) hr.aabb().getPosition().y,
-				(long) hr.aabb().getPosition().z,
-				1
-		);
-		world.setBlock(pos.x(),pos.y(),pos.z(),"cubecraft:stone", BlockFacing.Up);
-	}
+    @Override
+    public void onInteract(Entity from, IWorldAccess world, HitResult hr) {
+        this.getBlock().onInteract(
+                from, world,
+                (long) hr.aabb().getPosition().x,
+                (long) hr.aabb().getPosition().y,
+                (long) hr.aabb().getPosition().z,
+                hr.facing()
+        );
+    }
 }
