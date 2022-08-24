@@ -1,5 +1,6 @@
-package com.sunrisestudio.cubecraft.client;
+package com.sunrisestudio.cubecraft;
 
+import com.sunrisestudio.cubecraft.client.Cubecraft;
 import com.sunrisestudio.cubecraft.client.resources.ResourceManager;
 import com.sunrisestudio.util.LogHandler;
 import com.sunrisestudio.util.container.StartArguments;
@@ -14,7 +15,7 @@ public class Start {
         ResourceManager.createResourceFolder();
 
         //start thread
-        Thread thread=new Thread(new CubeCraft());
+        Thread thread=new Thread(new Cubecraft());
         thread.setName("client_main");
         thread.start();
     }

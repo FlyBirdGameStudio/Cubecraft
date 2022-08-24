@@ -1,6 +1,6 @@
 package com.sunrisestudio.util;
 
-import com.sunrisestudio.cubecraft.client.CubeCraft;
+import com.sunrisestudio.cubecraft.client.Cubecraft;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -10,7 +10,7 @@ import java.util.jar.JarFile;
 
 public class ReflectHelper {
     public static Iterator<Class<?>> getAllClass(){
-        Class<?> classLoaderClass = CubeCraft.class.getClassLoader().getClass();
+        Class<?> classLoaderClass = Cubecraft.class.getClassLoader().getClass();
         Field classLoaderField=null;
         try {
             classLoaderField = classLoaderClass.getDeclaredField("classes");

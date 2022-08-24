@@ -1,15 +1,15 @@
 package com.sunrisestudio.cubecraft.world.worldGen;
 
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.util.container.options.Option;
 import com.sunrisestudio.util.container.options.Options;
 import com.sunrisestudio.cubecraft.world.block.BlockFacing;
 import com.sunrisestudio.cubecraft.world.chunk.Chunk;
 import com.sunrisestudio.cubecraft.world.chunk.ChunkPos;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.worldGen.noiseGenerator.ImprovedNoise;
 
 public class ChunkProviderOverworld extends ChunkProvider{
-    public ChunkProviderOverworld(ChunkPos pos, long seed, IWorldAccess target) {
+    public ChunkProviderOverworld(ChunkPos pos, long seed, World target) {
 
     }
 

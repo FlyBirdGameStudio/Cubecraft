@@ -1,5 +1,7 @@
 package com.sunrisestudio.cubecraft.world.worldGen.noiseGenerator;
 
+import com.sunrisestudio.util.math.MathHelper;
+
 public abstract class Synth {
     public abstract double getValue(double var1, double var3);
 

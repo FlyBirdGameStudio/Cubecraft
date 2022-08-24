@@ -1,7 +1,6 @@
 package com.sunrisestudio.cubecraft.world.worldGen.noise;
 
 
-import com.sunrisestudio.cubecraft.world.worldGen.noiseGenerator.NoiseGenerator;
 import com.sunrisestudio.util.math.MathHelper;
 
 import java.util.Random;

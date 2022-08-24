@@ -10,8 +10,6 @@ titlescreen.button.quit=退出
 titlescreen.version=CubeCraft-%s(模组:%d个,插件:%d个)
 titlescreen.auth=""
 
-# do not modify this line,you can attach everything on it.
-
 
 # pausescreen
 pausescreen.title=游戏暂停

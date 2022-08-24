@@ -1,7 +1,7 @@
 package com.sunrisestudio.cubecraft.client.gui.screen;
 
 import com.google.gson.Gson;
-import com.sunrisestudio.cubecraft.client.CubeCraft;
+import com.sunrisestudio.cubecraft.client.Cubecraft;
 import com.sunrisestudio.cubecraft.client.gui.*;
 import com.sunrisestudio.cubecraft.client.gui.component.Button;
 import com.sunrisestudio.cubecraft.client.gui.component.Label;
@@ -34,7 +34,7 @@ public class TitleScreen extends Screen {
         logoTex.generateTexture();
         logoTex.load("/resource/textures/gui/logo.png");
         this.components.clear();
-        this.components.putAll(ScreenLoader.load("/resource/gui/titlescreen.json"));
+        this.components.putAll(ScreenLoader.load("/resource/ui/titlescreen.json"));
 
         ((Button) components.get("button_singleplayer")).setListener(() -> {
             this.platform.setScreen(new LoadingScreen(new TitleScreen(), new HUDScreen(), new LoadingScreenTask() {
@@ -72,7 +72,7 @@ public class TitleScreen extends Screen {
 
 
         ((Label) components.get("version_string")).text= Language.getInstance().getFormattedMessage(
-                "titlescreen.version", CubeCraft.VERSION, ModManager.getLoadedMods().size(), PluginManager.getLoadedPlugins().size()
+                "titlescreen.version", Cubecraft.VERSION, ModManager.getLoadedMods().size(), PluginManager.getLoadedPlugins().size()
         );
 
         ((Label) components.get("copyright_string")).text= "©SunriseStudio,Do not Copy!";

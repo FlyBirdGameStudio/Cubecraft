@@ -1,7 +1,5 @@
 package com.sunrisestudio.cubecraft.world.worldGen.noise;
 
-import com.sunrisestudio.cubecraft.world.worldGen.noiseGenerator.NoiseGenerator;
-
 public final class NoiseGeneratorCombined extends NoiseGenerator {
     private NoiseGenerator noiseGenerator;
     private NoiseGenerator noiseGenerator2;

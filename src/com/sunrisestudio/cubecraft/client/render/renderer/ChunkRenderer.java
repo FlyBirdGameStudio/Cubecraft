@@ -1,7 +1,7 @@
 package com.sunrisestudio.cubecraft.client.render.renderer;
 
 import com.sunrisestudio.cubecraft.GameSetting;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.entity.humanoid.Player;
 import com.sunrisestudio.grass3d.render.Camera;
 import com.sunrisestudio.cubecraft.client.render.object.RenderChunkPos;
@@ -17,7 +17,7 @@ import com.sunrisestudio.grass3d.render.GLUtil;
 import com.sunrisestudio.grass3d.render.culling.ProjectionMatrixFrustum;
 import com.sunrisestudio.grass3d.render.multiThread.MultiRenderCompileService;
 import com.sunrisestudio.util.math.MathHelper;
-import com.sunrisestudio.util.timer.Timer;
+import org.joml.Math;
 import org.joml.Vector3d;
 import org.lwjgl.opengl.*;
 import java.util.ArrayList;
@@ -27,16 +27,12 @@ import java.util.List;
 public class ChunkRenderer extends IWorldRenderer {
     public Texture2D terrain=new Texture2D(false,true);
     public LogHandler logHandler=LogHandler.create("ChunkRenderer","client");
-
     private final ProjectionMatrixFrustum frustum=new ProjectionMatrixFrustum(this.camera);
-
     public HashMapSet<RenderChunkPos, RenderChunk> chunks=new HashMapSet<>();
     public ArrayQueue<RenderChunkPos> updateQueue=new ArrayQueue<>();
     public MultiRenderCompileService<RenderChunk> updateService=new MultiRenderCompileService<>( GameSetting.instance.getValueAsInt("client.render.chunk.drawThread",1));
 
-
-
-    public ChunkRenderer(IWorldAccess w, Player p, Camera c) {
+    public ChunkRenderer(World w, Player p, Camera c) {
         super(w, p,c);
         terrain.generateTexture();
         terrain.load("/resource/textures/blocks/terrain.png");
@@ -156,43 +152,62 @@ public class ChunkRenderer extends IWorldRenderer {
         }
     }
 
+    public void setUpdate(long x,long y,long z){
+        RenderChunkPos pos=new RenderChunkPos(x, y, z);
+        this.updateService.startDrawing(this.chunks.get(pos));
+        updateQueue.remove(pos);
+    }
+
+
     @Override
     public void blockChanged(long x, long y, long z) {
-        this.updateService.startDrawing(this.chunks.get(new RenderChunkPos(
+        if(MathHelper.getRelativePosInChunk(x,16)==0){
+            setUpdate(
+                    MathHelper.getChunkPos(x,16)-1,
+                    MathHelper.getChunkPos(y,16),
+                    MathHelper.getChunkPos(z,16)
+            );
+        }
+        if(MathHelper.getRelativePosInChunk(x,16)==15){
+            setUpdate(
+                    MathHelper.getChunkPos(x,16)+1,
+                    MathHelper.getChunkPos(y,16),
+                    MathHelper.getChunkPos(z,16)
+            );
+        }
+        if(MathHelper.getRelativePosInChunk(y,16)==0){
+            setUpdate(
+                    MathHelper.getChunkPos(x,16),
+                    MathHelper.getChunkPos(y,16)-1,
+                    MathHelper.getChunkPos(z,16)
+            );
+        }
+        if(MathHelper.getRelativePosInChunk(y,16)==15){
+            setUpdate(
+                    MathHelper.getChunkPos(x,16),
+                    MathHelper.getChunkPos(y,16)+1,
+                    MathHelper.getChunkPos(z,16)
+            );
+        }
+        if(MathHelper.getRelativePosInChunk(z,16)==0){
+            setUpdate(
+                    MathHelper.getChunkPos(x,16),
+                    MathHelper.getChunkPos(y,16),
+                    MathHelper.getChunkPos(z,16)-1
+            );
+        }
+        if(MathHelper.getRelativePosInChunk(z,16)==15){
+            setUpdate(
+                    MathHelper.getChunkPos(x,16),
+                    MathHelper.getChunkPos(y,16),
+                    MathHelper.getChunkPos(z,16)+1
+            );
+        }
+        setUpdate(
                 MathHelper.getChunkPos(x,16),
                 MathHelper.getChunkPos(y,16),
                 MathHelper.getChunkPos(z,16)
-        )));
-        this.updateService.startDrawing(this.chunks.get(new RenderChunkPos(
-                MathHelper.getChunkPos(x+1,16),
-                MathHelper.getChunkPos(y,16),
-                MathHelper.getChunkPos(z,16)
-        )));
-        this.updateService.startDrawing(this.chunks.get(new RenderChunkPos(
-                MathHelper.getChunkPos(x-1,16),
-                MathHelper.getChunkPos(y,16),
-                MathHelper.getChunkPos(z,16)
-        )));
-        this.updateService.startDrawing(this.chunks.get(new RenderChunkPos(
-                MathHelper.getChunkPos(x,16),
-                MathHelper.getChunkPos(y+1,16),
-                MathHelper.getChunkPos(z,16)
-        )));
-        this.updateService.startDrawing(this.chunks.get(new RenderChunkPos(
-                MathHelper.getChunkPos(x,16),
-                MathHelper.getChunkPos(y-1,16),
-                MathHelper.getChunkPos(z,16)
-        )));
-        this.updateService.startDrawing(this.chunks.get(new RenderChunkPos(
-                MathHelper.getChunkPos(x,16),
-                MathHelper.getChunkPos(y,16),
-                MathHelper.getChunkPos(z+1,16)
-        )));
-        this.updateService.startDrawing(this.chunks.get(new RenderChunkPos(
-                MathHelper.getChunkPos(x,16),
-                MathHelper.getChunkPos(y,16),
-                MathHelper.getChunkPos(z-1,16)
-        )));
+        );
     }
 }
 

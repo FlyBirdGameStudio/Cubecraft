@@ -12,6 +12,9 @@ public class FontRenderer {
     public static Texture2D[] textures = new Texture2D[256];
 
     public static void render(String s, int x, int y, int color, int size, FontAlignment alignment) {
+        if(s==null){
+            return;
+        }
         GLUtil.enableBlend();
         char[] rawData = s.toCharArray();
         int contWidth = 0;

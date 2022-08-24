@@ -236,22 +236,20 @@ public class RayTest {
      * @return collide position,if not collided return null.
      */
     public static Vector3d test(Vector3d from, Vector3d dest, AABB aabb) {
-
         final double distMin = aabb.distanceMin(from),//min dist to aabb
                 distMax = aabb.distanceMax(from),//max dist to aabb
                 distAll = MathHelper.dist(from, dest);//dist from a to b
-
-        final double cosXDist = (dest.x - from.x) / distAll,//x cos of distAll
-                cosYDist = (dest.y - from.y) / distAll,//y cos of distAll
-                cosZDist = (dest.z - from.z) / distAll;//z cos of distAll
 
         if(distMin>distAll){
             return null;
         }
 
-
         //do sample here.
-        for (double sampleDist=distMin;sampleDist<distMax;sampleDist+=STEP){
+        for (
+                double sampleDist=distMin-aabb.getMaxWidth()/1.414/*pow(2)*/;
+                sampleDist<distMax+aabb.getMaxWidth()/1.414;
+                sampleDist+=STEP
+        ){
             double t=sampleDist/distAll;
             double t1=(sampleDist+STEP)/distAll;
             if(aabb.isVectorInside(MathHelper.linear_interpolate(from,dest,t1))){

@@ -1,11 +1,15 @@
 package com.sunrisestudio.cubecraft.world.worldGen;
 
-import com.sunrisestudio.cubecraft.client.Start;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
+import com.sunrisestudio.cubecraft.Start;
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.block.BlockFacing;
 import com.sunrisestudio.cubecraft.world.chunk.Chunk;
 import com.sunrisestudio.cubecraft.world.chunk.ChunkPos;
 import com.sunrisestudio.cubecraft.world.worldGen.noiseGenerator.PerlinNoise;
+import com.sunrisestudio.cubecraft.world.worldGen.noiseGenerator.Synth;
+import com.sunrisestudio.cubecraft.world.worldGen.pipeline.IChunkGenerator;
+import com.sunrisestudio.cubecraft.world.worldGen.pipeline.object.ChunkGeneratorOverWorld;
+import com.sunrisestudio.cubecraft.world.worldGen.templete.Scale;
 import org.joml.SimplexNoise;
 
 import java.io.File;
@@ -16,16 +20,16 @@ public class WorldProvider {
     public static final int REGION_GRID_SIZE = 64;
     public static HashMap<String, WorldProvider> providers = new HashMap<>();
 
-    public IWorldAccess world;
+    public World world;
 
-    PerlinNoise test;
+    Synth test;
 
-    public WorldProvider(IWorldAccess world) {
+    public WorldProvider(World world) {
         this.world = world;
-        this.test= new PerlinNoise(new Random(world.getSeed()), 3);
+        this.test= new Scale(new PerlinNoise(new Random(world.getSeed()), 3),1,1);
     }
 
-    public static WorldProvider getProvider(IWorldAccess world) {
+    public static WorldProvider getProvider(World world) {
         return providers.getOrDefault(world.getID(), new WorldProvider(world));
     }
 
@@ -63,25 +67,9 @@ public class WorldProvider {
         Chunk chunk = new Chunk(WorldProvider.this.world, pos);
         //new ChunkProvider0223(world).generate(chunk);
 
-        for (int xd = 0; xd < Chunk.WIDTH; xd++) {
-            for (int zd = 0; zd < Chunk.WIDTH; zd++) {
-                double h=test.getValue(pos.toWorldPosX(xd) / 8d, pos.toWorldPosZ(zd) / 8d)*8 - pos.toWorldPosY(0);
-                for (int yd = 0; yd < (h>16?16:h); yd++) {
-                    if(yd<h-3) {
-                        chunk.setBlock(xd, yd, zd, "cubecraft:stone", BlockFacing.fromId(0));
-                    } else if (yd<h-1) {
-                        chunk.setBlock(xd, yd, zd, "cubecraft:dirt", BlockFacing.fromId(0));
-                    } else if (yd<h) {
-                        chunk.setBlock(xd, yd, zd, "cubecraft:grass_block", BlockFacing.fromId(0));
-                    }
-
-                    if(SimplexNoise.noise((float) (pos.toWorldPosX(xd)/64f), (float) (pos.toWorldPosY(yd)/64f), (float) (pos.toWorldPosZ(zd)/64f))>0.4){
-                        chunk.setBlock(xd, yd, zd, "cubecraft:air", BlockFacing.fromId(0));
-                    }
-                }
-
-            }
-        }
+        IChunkGenerator generator=new ChunkGeneratorOverWorld();
+        generator.init(new WorldGeneratorSetting(0,new HashMap<>()));
+        generator.generate(chunk);
 
         return chunk;
     }

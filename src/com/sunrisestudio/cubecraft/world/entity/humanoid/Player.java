@@ -1,10 +1,10 @@
 package com.sunrisestudio.cubecraft.world.entity.humanoid;
 
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.entity.item.Item;
 
 public class Player extends Humanoid {
-    public Player(IWorldAccess world) {
+    public Player(World world) {
         super(world);
         this.flyingMode=true;
     }

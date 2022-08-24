@@ -32,7 +32,7 @@ public class ScreenLoader {
     public static HashMap<String, Component> load(String file) {
         String json;
         try {
-            json = new String(ResourceManager.instance.getResource(file, null).readAllBytes(), StandardCharsets.UTF_8);
+            json = new String(ResourceManager.instance.getResource(file, "/resource/fallback/ui.json").readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

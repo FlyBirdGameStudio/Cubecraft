@@ -2,7 +2,7 @@ package com.sunrisestudio.cubecraft.world.block;
 
 import com.sunrisestudio.cubecraft.registery.Registry;
 import com.sunrisestudio.cubecraft.world.HittableObject;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.block.material.Block;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
 import com.sunrisestudio.grass3d.render.draw.IVertexArrayBuilder;
@@ -15,10 +15,9 @@ import com.sunrisestudio.util.math.HitResult;
 public class BlockState implements NBTDataIO, HittableObject {
     private byte facing;
     private String id;
-    private String biome;
+    private String biome="cubecraft:plains";
     private NBTTagCompound blockMeta;
 
-    private boolean needTick;
 
     public String getId() {
         return id;
@@ -63,12 +62,12 @@ public class BlockState implements NBTDataIO, HittableObject {
         return this.getBlock().getCollisionBox(x, y, z);
     }
 
-    public HitBox[] getSelectionBox(IWorldAccess world, long x, long y, long z) {
+    public HitBox[] getSelectionBox(World world, long x, long y, long z) {
         return this.getBlock().getSelectionBox(world, x, y, z, this);
     }
 
     /**
-     * defines a resistance of a block.entity`s speed will multiply this value.
+     * defines a resistance of a block. Entity`s speed will multiply this value.
      *
      * @return value
      */
@@ -92,21 +91,13 @@ public class BlockState implements NBTDataIO, HittableObject {
         this.blockMeta = compound.getCompoundTag("meta");
     }
 
-    public boolean needTick() {
-        return this.needTick;
-    }
-
-    public void setTicking(boolean b) {
-        this.needTick = b;
-    }
-
-    public void render(IWorldAccess world, long x, long y, long z, long renderX, long renderY, long renderZ, IVertexArrayBuilder builder) {
+    public void render(World world, long x, long y, long z, long renderX, long renderY, long renderZ, IVertexArrayBuilder builder) {
         getBlock().render(world, x, y, z, renderX, renderY, renderZ, getFacing(), builder);
     }
 
     //test
     @Override
-    public void onHit(Entity from, IWorldAccess world, HitResult hr) {
+    public void onHit(Entity from, World world, HitResult hr) {
         this.getBlock().onHit(
                 from, world,
                 (long) hr.aabb().getPosition().x,
@@ -117,7 +108,7 @@ public class BlockState implements NBTDataIO, HittableObject {
     }
 
     @Override
-    public void onInteract(Entity from, IWorldAccess world, HitResult hr) {
+    public void onInteract(Entity from, World world, HitResult hr) {
         this.getBlock().onInteract(
                 from, world,
                 (long) hr.aabb().getPosition().x,
@@ -125,5 +116,13 @@ public class BlockState implements NBTDataIO, HittableObject {
                 (long) hr.aabb().getPosition().z,
                 hr.facing()
         );
+    }
+
+    public void setBiome(String id) {
+        this.biome=id;
+    }
+
+    public String getBiome() {
+        return biome;
     }
 }

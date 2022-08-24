@@ -1,11 +1,11 @@
 package com.sunrisestudio.cubecraft.registery;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.block.material.Block;
 import com.sunrisestudio.cubecraft.world.block.material.OverwrittenBlock;
 import com.sunrisestudio.util.container.namespace.GetterDepend;
 import com.sunrisestudio.util.container.namespace.NameSpaceItemGetter;
 
-public class Blocks{
+public class BlockRegistery {
 
 
     //environment
@@ -14,7 +14,7 @@ public class Blocks{
     public Block air(Block behavior){
         return new OverwrittenBlock(behavior){
             @Override
-            public boolean shouldRender(IWorldAccess world, long x, long y, long z) {
+            public boolean shouldRender(World world, long x, long y, long z) {
                 return false;
             }
         };

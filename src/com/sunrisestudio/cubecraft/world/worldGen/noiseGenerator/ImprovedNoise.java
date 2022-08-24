@@ -12,6 +12,10 @@ extends Synth {
     }
 
     public ImprovedNoise(Random random) {
+        setSeed(random);
+    }
+
+    public void setSeed(Random random){
         int i;
         for (i = 0; i < 256; ++i) {
             this.p[i] = i;

@@ -1,8 +1,8 @@
 package com.sunrisestudio.cubecraft.world.entity.humanoid;
 
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.util.math.AABB;
 import com.sunrisestudio.util.math.HitBox;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
 import org.joml.Vector3d;
 
@@ -27,7 +27,7 @@ public abstract class Humanoid extends Entity {
         return new AABB(-0.3,0,-0.3,0.3,1.8,0.3);
     }
 
-    public Humanoid(IWorldAccess world) {
+    public Humanoid(World world) {
         super(world);
     }
 

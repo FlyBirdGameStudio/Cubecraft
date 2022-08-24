@@ -3,7 +3,7 @@ package com.sunrisestudio.cubecraft.world;
 import java.util.HashSet;
 
 public class Level {
-    public HashSet<IWorldAccess> dims=new HashSet<>();
+    public HashSet<World> dims=new HashSet<>();
     private String name;
     private long createTime;
 

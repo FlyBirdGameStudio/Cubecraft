@@ -1,6 +1,6 @@
 package com.sunrisestudio.cubecraft.client.gui.screen;
 
-import com.sunrisestudio.cubecraft.client.CubeCraft;
+import com.sunrisestudio.cubecraft.client.Cubecraft;
 import com.sunrisestudio.cubecraft.client.gui.DisplayScreenInfo;
 import com.sunrisestudio.cubecraft.GameSetting;
 import com.sunrisestudio.cubecraft.client.gui.component.Component;
@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public abstract class Screen {
-    protected CubeCraft platform;
+    protected Cubecraft platform;
     protected HashMap<String,Component> components=new HashMap<>();
 
     //init
@@ -41,7 +41,7 @@ public abstract class Screen {
      * system call-init
      * @param cubeCraft
      */
-    public void init(CubeCraft cubeCraft) {
+    public void init(Cubecraft cubeCraft) {
         this.platform = cubeCraft;
         this.init();
         InputHandler.registerGlobalKeyboardCallback("cubecraft:scr_callback_default",this.getKeyboardCallback());

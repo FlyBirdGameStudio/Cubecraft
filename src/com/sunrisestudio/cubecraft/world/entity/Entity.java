@@ -10,7 +10,6 @@ import com.sunrisestudio.util.file.nbt.tag.NBTTagCompound;
 import com.sunrisestudio.util.math.*;
 
 import com.sunrisestudio.cubecraft.world.HittableObject;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.entity.item.Item;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +25,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
 
     @Nullable
     public HitResult hitResult;
-    public IWorldAccess world;
+    public World world;
     public boolean runningMode;
     public boolean flyingMode = false;
 
@@ -54,7 +53,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
     public boolean onGround = false;
     public boolean horizontalCollision = false;
 
-    public Entity(IWorldAccess world) {
+    public Entity(World world) {
         this.world = world;
         this.resetPos();
         this.uuid = UUID.nameUUIDFromBytes(String.valueOf(System.currentTimeMillis()^this.hashCode()).getBytes(StandardCharsets.UTF_8)).toString();
@@ -266,7 +265,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
         this.hitResult=null;
         Vector3d from=new Vector3d(x,y+1.62,z);
 
-        this.hitResult= RayTest.rayTrace(world.getSelectionBox(this),from,getHitTargetPos());
+        this.hitResult= RayTest.rayTrace(world.getSelectionBox(from,getHitTargetPos()),from,getHitTargetPos());
     }
 
     public Vector3d getHitTargetPos(){
@@ -361,12 +360,12 @@ public abstract class Entity implements HittableObject, NBTDataIO {
     }
 
     @Override
-    public void onHit(Entity from, IWorldAccess world, HitResult hr) {
+    public void onHit(Entity from, World world, HitResult hr) {
 
     }
 
     @Override
-    public void onInteract(Entity from, IWorldAccess world, HitResult hr) {
+    public void onInteract(Entity from, World world, HitResult hr) {
 
     }
 

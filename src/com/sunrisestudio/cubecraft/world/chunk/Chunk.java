@@ -1,9 +1,9 @@
 package com.sunrisestudio.cubecraft.world.chunk;
 
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.util.container.keyMap.KeyGetter;
 import com.sunrisestudio.cubecraft.world.block.BlockState;
 import com.sunrisestudio.cubecraft.world.block.BlockFacing;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
 import com.sunrisestudio.util.file.nbt.NBTDataIO;
 import com.sunrisestudio.util.file.nbt.tag.NBTTagCompound;
@@ -12,10 +12,10 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
     private final long x,y,z;
     public static final int WIDTH=16;
     private final BlockState[][][] blockStates;
-    public IWorldAccess dimension;
+    public World dimension;
     public ChunkLoadTicket ticket=new ChunkLoadTicket(ChunkLoadLevel.None_TICKING,256);
 
-    public Chunk(IWorldAccess dimension, ChunkPos p){
+    public Chunk(World dimension, ChunkPos p){
         this.blockStates =new BlockState[WIDTH][WIDTH][WIDTH];
         this.x=p.x();
         this.z=p.z();
@@ -54,23 +54,7 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
     }
 
     public void tick(){
-        if(this.ticket.getTime()>0){
-            if(this.ticket.getChunkLoadLevel().containsLevel(ChunkLoadLevel.Block_TICKING)){
-                for (int xd = 0; xd < WIDTH; xd++) {
-                    for (int yd = 0; yd < WIDTH;yd++) {
-                        for (int zd = 0; zd < WIDTH; zd++) {
-                            if(blockStates[xd][yd][zd].getBlock().isBlockEntity()){
-                                blockStates[xd][yd][zd].getBlock().onBlockUpdate(this.dimension,xd+x*16,yd+y*16,zd+z*16);
-                            }else if(blockStates[xd][yd][zd].needTick()){
-                                blockStates[xd][yd][zd].getBlock().onBlockUpdate(this.dimension,xd+x*16,yd+y*16,zd+z*16);
-                                blockStates[xd][yd][zd].setTicking(false);
-                            }
-                        }
-                    }
-                }
-            }
-            ticket.tickTime();
-        }
+
     }
 
     @Override

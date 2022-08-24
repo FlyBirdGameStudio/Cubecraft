@@ -1,7 +1,7 @@
 package com.sunrisestudio.cubecraft.client.render.renderer;
 
 import com.sunrisestudio.cubecraft.registery.Registry;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.entity.humanoid.Player;
 import com.sunrisestudio.grass3d.render.Camera;
 import com.sunrisestudio.util.container.CollectionUtil;
@@ -14,12 +14,12 @@ import java.util.HashMap;
 public class LevelRenderer {
 
     public HashMap<String, IWorldRenderer>renderers;
-    public IWorldAccess world;
+    public World world;
     public Player player;
     public Camera camera=new Camera();
     private EnvironmentRenderer environmentRenderer;
 
-    public LevelRenderer(IWorldAccess w, Player p){
+    public LevelRenderer(World w, Player p){
         this.world=w;
         this.player=p;
         this.renderers= (HashMap<String, IWorldRenderer>) Registry.getWorldRenderers().createAll(world,player,camera);

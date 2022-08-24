@@ -1,14 +1,12 @@
 package com.sunrisestudio.cubecraft.registery;
 
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
-import com.sunrisestudio.cubecraft.world.block.material.OverwrittenBlock;
-import com.sunrisestudio.util.container.namespace.GetterDepend;
+import com.sunrisestudio.cubecraft.world.World;
+import com.sunrisestudio.cubecraft.world.block.material.Block;
 import com.sunrisestudio.util.math.AABB;
 import com.sunrisestudio.cubecraft.world.block.BlockFacing;
-import com.sunrisestudio.cubecraft.world.block.material.Block;
 import com.sunrisestudio.util.container.namespace.NameSpaceItemGetter;
 
-public class BlockBehaviors{
+public class BlockBehaviorRegistery {
     @NameSpaceItemGetter(id = "block",namespace="cubecraft")
     public Block block(){
         return new Block() {
@@ -192,7 +190,7 @@ public class BlockBehaviors{
             }
 
             @Override
-            public boolean shouldRender(IWorldAccess world, long x, long y, long z) {
+            public boolean shouldRender(World world, long x, long y, long z) {
                 return false;
             }
         };

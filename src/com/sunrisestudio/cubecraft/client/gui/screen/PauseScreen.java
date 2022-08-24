@@ -12,7 +12,7 @@ public class PauseScreen extends Screen {
     @Override
     public void init() {
         this.components.clear();
-        this.components.putAll(ScreenLoader.load("/resource/gui/pausescreen.json"));
+        this.components.putAll(ScreenLoader.load("/resource/ui/pausescreen.json"));
 
         ((Button)this.components.get("button_back")).setListener(() -> {
             this.platform.setScreen(new HUDScreen());

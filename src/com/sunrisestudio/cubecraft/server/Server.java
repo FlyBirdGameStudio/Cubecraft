@@ -1,11 +1,11 @@
 package com.sunrisestudio.cubecraft.server;
 
 import com.sunrisestudio.cubecraft.net.ServerIO;
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.util.LogHandler;
 import com.sunrisestudio.util.LoopTickingApplication;
 import com.sunrisestudio.util.container.options.Option;
 import com.sunrisestudio.util.timer.Timer;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.Level;
 
 import java.util.concurrent.ExecutorService;
@@ -39,7 +39,7 @@ public class Server extends LoopTickingApplication {
 
     @Override
     public void longTick() {
-        for (IWorldAccess dim:this.world.dims) {
+        for (World dim:this.world.dims) {
             worldTickingService.submit(dim::tick);
         }
     }

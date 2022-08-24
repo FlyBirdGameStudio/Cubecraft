@@ -1,6 +1,7 @@
 package com.sunrisestudio.util.math;
 
 import com.sunrisestudio.cubecraft.world.block.BlockFacing;
+import org.jetbrains.annotations.Contract;
 import org.joml.Vector3d;
 
 public class AABB {
@@ -226,5 +227,13 @@ public class AABB {
     @Override
     public String toString() {
         return "%f/%f/%f - %f/%f/%f".formatted(x0,y0,z0,x1,y1,z1);
+    }
+
+    public double getMaxWidth() {
+        return Math.max(Math.max(x1-x0,y1-y0),z1-z0);
+    }
+
+    public double getMinWidth() {
+        return Math.min(Math.min(x1-x0,y1-y0),z1-z0);
     }
 }

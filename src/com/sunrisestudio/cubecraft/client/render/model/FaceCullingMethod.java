@@ -1,6 +1,6 @@
 package com.sunrisestudio.cubecraft.client.render.model;
 
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.block.BlockFacing;
 import com.sunrisestudio.util.math.Vector3;
 
@@ -22,7 +22,7 @@ public enum FaceCullingMethod {
         };
     }
 
-    public static boolean shouldRender(IWorldAccess world, long x, long y, long z, String id, BlockFacing absFacing, FaceCullingMethod culling){
+    public static boolean shouldRender(World world, long x, long y, long z, String id, BlockFacing absFacing, FaceCullingMethod culling){
         Vector3<Long> pos=absFacing.findNear(x,y,z,1);
         return switch (culling){
             case EQUALS-> Objects.equals(world.getBlock(pos.x(), pos.y(), pos.z()).getId(), id);

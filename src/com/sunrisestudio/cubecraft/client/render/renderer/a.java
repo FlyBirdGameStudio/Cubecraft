@@ -111,58 +111,7 @@ public class LevelRenderer {
         GL11.glEnable(2896);
     }
 }
-/*
-    private void setupPickCamera(float a, int x, int y,int width,int height) {
-        GL11.glMatrixMode(5889);
-        GL11.glLoadIdentity();
-        this.viewportBuffer.clear();
-        GL11.glGetInteger(2978, this.viewportBuffer);
-        this.viewportBuffer.flip();
-        this.viewportBuffer.limit(16);
-        GLU.gluPickMatrix(x, y, 5.0f, 5.0f, this.viewportBuffer);
-        GLU.gluPerspective(70.0f, (float)width / (float)height, 0.05f, 1024.0f);
-        GL11.glMatrixMode(5888);
-        GL11.glLoadIdentity();
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glLoadIdentity();
-        GLU.gluPerspective(70.0f, (float) width / (float) height, 0.05f, 1024.0f);
-        GL11.glMatrixMode(5888);
-        GL11.glLoadIdentity();
-
-        GL11.glTranslatef(0.0f, 0.0f, -0.3f);
-        GL11.glRotatef(this.target.xRot, 1.0f, 0.0f, 0.0f);
-        GL11.glRotatef(this.target.yRot, 0.0f, 1.0f, 0.0f);
 
 
-        double xc = MathHelper.linear_interpolate(this.target.xo, this.target.x, a);
-        double yc = MathHelper.linear_interpolate(this.target.yo, this.target.y, a);
-        double zc = MathHelper.linear_interpolate(this.target.zo, this.target.z, a);
-        GL11.glTranslated(-xc, -yc, -zc);
-    }
+ */
 
-    private void pick(float a,int width,int height) {
-        this.selectBuffer.clear();
-        GL11.glSelectBuffer(this.selectBuffer);
-        GL11.glRenderMode(7170);
-        this.setupPickCamera(a, width / 2, height / 2,width,height);
-        this.pick();
-        int hits = GL11.glRenderMode(7168);
-        this.selectBuffer.flip();
-        this.selectBuffer.limit(this.selectBuffer.capacity());
-        int[] names = new int[10];
-        HitResult bestResult = null;
-        for (int i = 0; i < hits; ++i) {
-            int nameCount = this.selectBuffer.get();
-            this.selectBuffer.get();
-            this.selectBuffer.get();
-            for (int j = 0; j < nameCount; ++j) {
-                names[j] = this.selectBuffer.get();
-            }
-            this.target.hitResult = new HitResult(names[0], names[1], names[2], names[3], names[4]);
-            if (bestResult != null && !this.target.hitResult.isCloserThan((Player) this.target, bestResult,0)) continue;
-            bestResult = this.target.hitResult;
-        }
-        this.target.hitResult = bestResult;
-    }
-
-*/

@@ -1,7 +1,7 @@
 package com.sunrisestudio.cubecraft.client.gui.screen;
 
 import com.sunrisestudio.cubecraft.client.gui.DisplayScreenInfo;
-import com.sunrisestudio.cubecraft.client.CubeCraft;
+import com.sunrisestudio.cubecraft.client.Cubecraft;
 import com.sunrisestudio.cubecraft.client.gui.FontAlignment;
 import com.sunrisestudio.grass3d.platform.Display;
 import com.sunrisestudio.grass3d.platform.input.Keyboard;
@@ -50,7 +50,7 @@ public class HUDScreen extends Screen {
             format.applyPattern("0.000");
             if (this.debugScreen) {
                 int r0_l=2;
-                FontRenderer.renderShadow("CubeCraft-" + CubeCraft.VERSION,
+                FontRenderer.renderShadow("CubeCraft-" + Cubecraft.VERSION,
                         2, r0_l+0, 16777215, 8, FontAlignment.LEFT);
 
                 FontRenderer.renderShadow("帧率:" + this.platform.getTimingInfo().shortTickTPS() + "/单帧时间:" + this.platform.getTimingInfo().shortTickMSPT(),
@@ -77,7 +77,7 @@ public class HUDScreen extends Screen {
                 FontRenderer.renderShadow("系统:%s-%s".formatted(SystemInfo.getOSName(),SystemInfo.getOSVersion()),
                         info.scrWidth() - 2, 2, 16777215, 8, FontAlignment.RIGHT);
 
-                FontRenderer.renderShadow("内存(已使用/总量)：" + SystemInfo.getUsedMemory() + "/" + SystemInfo.getTotalMemory(),
+                FontRenderer.renderShadow("内存(已使用/总量)：" + SystemInfo.getUsedMemory() + "/" + SystemInfo.getTotalMemory()+"(%s)".formatted(SystemInfo.getUsage()),
                         info.scrWidth() - 2, 12, 0xFFFFFF, 8, FontAlignment.RIGHT);
 
                 FontRenderer.renderShadow("JVM：" + SystemInfo.getJavaName() + "/" + SystemInfo.getJavaVersion(),

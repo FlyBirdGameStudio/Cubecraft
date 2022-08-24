@@ -1,8 +1,6 @@
 package com.sunrisestudio.util.math;
 
 import com.sunrisestudio.cubecraft.world.HittableObject;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
-import com.sunrisestudio.cubecraft.world.entity.Entity;
 import org.joml.Vector3d;
 
 public class HitBox extends AABB {

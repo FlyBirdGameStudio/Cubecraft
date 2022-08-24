@@ -18,7 +18,7 @@
 
 ---------------  S U M M A R Y ------------
 
-Command Line: -javaagent:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2022.1.1\lib\idea_rt.jar=65243:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2022.1.1\bin -Dfile.encoding=UTF-8 com.sunrisestudio.cubecraft.client.Start -Xms512m -Xmx768m
+Command Line: -javaagent:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2022.1.1\lib\idea_rt.jar=65243:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2022.1.1\bin -Dfile.encoding=UTF-8 com.sunrisestudio.cubecraft.Start -Xms512m -Xmx768m
 
 Host: Intel(R) Core(TM) i7-4600U CPU @ 2.10GHz, 4 cores, 7G,  Windows 10 , 64 bit Build 19041 (10.0.19041.1806)
 Time: Sat Jul 23 17:23:35 2022  Windows 10 , 64 bit Build 19041 (10.0.19041.1806) elapsed time: 14.591557 seconds (0d 0h 0m 14s)
@@ -41,7 +41,7 @@ j  com.sunrisestudio.cubecraft.client.render.renderer.LevelRenderer.lambda$rende
 j  com.sunrisestudio.cubecraft.client.render.renderer.LevelRenderer$$Lambda$93+0x0000000800d0dcd8.action(Ljava/lang/Object;Ljava/lang/Object;)V+12
 J 2160 c1 com.sunrisestudio.util.container.CollectionUtil.iterateMap(Ljava/util/Map;Lcom/sunrisestudio/util/container/CollectionUtil$MapIterationAction;)V (51 bytes) @ 0x0000015aacfa3214 [0x0000015aacfa2e20+0x00000000000003f4]
 j  com.sunrisestudio.cubecraft.client.render.renderer.LevelRenderer.render(FII)V+173
-J 2137 c1 com.sunrisestudio.cubecraft.client.CubeCraft.shortTick()V (184 bytes) @ 0x0000015aacf97bf4 [0x0000015aacf97840+0x00000000000003b4]
+J 2137 c1 com.sunrisestudio.cubecraft.client.Cubecraft.shortTick()V (184 bytes) @ 0x0000015aacf97bf4 [0x0000015aacf97840+0x00000000000003b4]
 j  com.sunrisestudio.util.LoopTickingApplication.run()V+43
 j  java.lang.Thread.run()V+11 java.base@16.0.2
 v  ~StubRoutines::call_stub
@@ -1942,7 +1942,7 @@ symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;C:\Us
 
 VM Arguments:
 jvm_args: -javaagent:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2022.1.1\lib\idea_rt.jar=65243:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2022.1.1\bin -Dfile.encoding=UTF-8 
-java_command: com.sunrisestudio.cubecraft.client.Start -Xms512m -Xmx768m
+java_command: com.sunrisestudio.cubecraft.Start -Xms512m -Xmx768m
 java_class_path (initial): F:\Java\��Ŀ\CubeCraft\out\production\CubeCraft;F:\Java\��Ŀ\CubeCraft\libraries\lwjgl.jar;F:\Java\��Ŀ\CubeCraft\libraries\jinput.jar;F:\Java\��Ŀ\CubeCraft\libraries\disruptor.jar;F:\Java\��Ŀ\CubeCraft\libraries\lwjgl-stb.jar;F:\Java\��Ŀ\CubeCraft\libraries\gson-2.2.4.jar;F:\Java\��Ŀ\CubeCraft\libraries\lwjgl-glfw.jar;F:\Java\��Ŀ\CubeCraft\libraries\lwjgl_util.jar;F:\Java\��Ŀ\CubeCraft\libraries\joml-1.10.4.jar;F:\Java\��Ŀ\CubeCraft\libraries\lwjgl-openal.jar;F:\Java\��Ŀ\CubeCraft\libraries\lwjgl-opengl.jar;F:\Java\��Ŀ\CubeCraft\libraries\j-ogg-all-1.0.0.jar;F:\Java\��Ŀ\CubeCraft\libraries\netty-all-4.1.25.Final.jar;C:\Users\GrassBlock2022\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-jdk8\1.6.10\kotlin-stdlib-jdk8-1.6.10.jar;C:\Users\GrassBlock2022\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib\1.6.10\kotlin-stdlib-1.6.10.jar;C:\Users\GrassBlock2022\.m2\repository\org\jetbrains\annotations\13.0\annotations-13.0.jar;C:\Users\GrassBlock2022\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-common\1.6.10\kotlin-stdlib-common-1.6.10.jar;C:\Users\GrassBlock2022\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-jdk7\1.6.10\kotlin-stdlib-jdk7-1.6.10.jar
 Launcher Type: SUN_STANDARD
 

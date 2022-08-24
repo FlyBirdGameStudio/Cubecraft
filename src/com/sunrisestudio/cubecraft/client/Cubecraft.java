@@ -12,6 +12,8 @@
 package com.sunrisestudio.cubecraft.client;
 
 import com.sunrisestudio.cubecraft.GameSetting;
+import com.sunrisestudio.cubecraft.Start;
+import com.sunrisestudio.cubecraft.net.packet.Packet;
 import com.sunrisestudio.cubecraft.registery.Registry;
 import com.sunrisestudio.cubecraft.client.gui.DisplayScreenInfo;
 import com.sunrisestudio.cubecraft.client.gui.FontRenderer;
@@ -22,7 +24,6 @@ import com.sunrisestudio.cubecraft.extansion.ExtansionRunningTarget;
 import com.sunrisestudio.cubecraft.extansion.ModManager;
 import com.sunrisestudio.cubecraft.extansion.PlatformClient;
 import com.sunrisestudio.cubecraft.net.ClientIO;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
 import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.entity.humanoid.Player;
 import com.sunrisestudio.grass3d.audio.Audio;
@@ -36,6 +37,7 @@ import com.sunrisestudio.util.LoadTask;
 import com.sunrisestudio.util.LogHandler;
 import com.sunrisestudio.util.LoopTickingApplication;
 import com.sunrisestudio.util.file.lang.Language;
+import com.sunrisestudio.util.net.UDPSocket;
 import com.sunrisestudio.util.timer.Timer;
 import org.lwjgl.opengl.GL11;
 
@@ -46,24 +48,28 @@ import java.io.File;
 //todo:add inventory support
 
 
-public class CubeCraft extends LoopTickingApplication {
+public class Cubecraft extends LoopTickingApplication {
     public static final String VERSION = "alpha-0.2.5";
 
     private DisplayScreenInfo screenInfo;
     public LevelRenderer levelRenderer;
     private Screen screen;
 
-    private final ClientIO clientIO = new ClientIO();
-    public IWorldAccess clientWorld = null;
+    private final ClientIO _clientIO = new ClientIO();
+    public World clientWorld = null;
     public Player player = new Player(null);
     public final PlayerController controller=new PlayerController(this.player);
-
+    public final UDPSocket clientIO=new UDPSocket(
+            Registry.getPacketEncoderMap(),
+            Registry.getPacketDecoderMap(),
+            "127.0.0.1",11451
+    );
 
     //world
 
     public void joinWorld(World world){
         this.clientWorld=world;
-        player.setPos(400,20,0);
+        player.setPos(0,20,0);
         this.levelRenderer = new LevelRenderer(this.clientWorld, this.player);
         this.clientWorld.addEntity(this.player);
     }
@@ -92,12 +98,17 @@ public class CubeCraft extends LoopTickingApplication {
                     Display.setFullscreen(!Display.isFullscreen());
                 }
                 if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
-                    if (CubeCraft.this.screen.getParentScreen() != null) {
-                        CubeCraft.this.setScreen(CubeCraft.this.screen.getParentScreen());
+                    if (Cubecraft.this.screen.getParentScreen() != null) {
+                        Cubecraft.this.setScreen(Cubecraft.this.screen.getParentScreen());
                     }
                 }
             }
         });
+        new Thread(() -> {
+            while (true){
+                Cubecraft.this.clientIO.tick();
+            }
+        },"client_io").start();
     }
 
     private void loadGameContent() {
@@ -115,7 +126,7 @@ public class CubeCraft extends LoopTickingApplication {
             if (mods != null) {
                 new LoadTask(mods.length, 0.2f, 0.5f, count ->
                         ModManager.loadMod(mods[count].getAbsolutePath(), null,
-                                CubeCraft.this.getPlatformClient(),
+                                Cubecraft.this.getPlatformClient(),
                                 ExtansionRunningTarget.CLIENT)
                 );
             } else {

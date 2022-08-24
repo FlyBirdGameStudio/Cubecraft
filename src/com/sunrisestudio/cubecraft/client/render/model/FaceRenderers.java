@@ -1,9 +1,5 @@
-package com.sunrisestudio.cubecraft.registery;
+package com.sunrisestudio.cubecraft.client.render.model;
 
-import com.sunrisestudio.cubecraft.client.render.model.FaceTypeAdapterRenderer;
-import com.sunrisestudio.cubecraft.client.render.model.object.ModelObject;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
-import com.sunrisestudio.grass3d.render.draw.IVertexArrayBuilder;
 import com.sunrisestudio.util.container.namespace.NameSpaceItemGetter;
 
 public class FaceRenderers {

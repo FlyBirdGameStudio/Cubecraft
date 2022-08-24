@@ -1,17 +1,15 @@
 package com.sunrisestudio.cubecraft.client.render.renderer;
 
 import com.sunrisestudio.cubecraft.GameSetting;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.entity.humanoid.Player;
 import com.sunrisestudio.grass3d.render.Camera;
 import com.sunrisestudio.grass3d.render.draw.ChanneledVertexArrayBuilder;
-import com.sunrisestudio.grass3d.render.draw.VertexArrayUploader;
 import com.sunrisestudio.util.ColorUtil;
 import com.sunrisestudio.util.container.BufferBuilder;
 import com.sunrisestudio.grass3d.render.GLUtil;
 import com.sunrisestudio.grass3d.render.draw.IVertexArrayUploader;
 import com.sunrisestudio.cubecraft.world.worldGen.noiseGenerator.PerlinNoise;
-import org.joml.Vector3d;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
@@ -24,7 +22,7 @@ public class EnvironmentRenderer extends IWorldRenderer {
     private final int cloudList=GL11.glGenLists(5);
     private final PerlinNoise noise=new PerlinNoise(new Random(world.getSeed()),12);
 
-    public EnvironmentRenderer(IWorldAccess w, Player p, Camera c) {
+    public EnvironmentRenderer(World w, Player p, Camera c) {
         super(w,p,c);
         updateSky();
         updateCloud();

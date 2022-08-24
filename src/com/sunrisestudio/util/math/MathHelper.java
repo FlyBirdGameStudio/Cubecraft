@@ -151,4 +151,10 @@ public class MathHelper {
     public static double pow2(double a){
         return a*a;
     }
+
+    public static double linear_interpolate2d(double _00,double _01,double _10,double _11,double xt,double yt){
+        double _0z=linear_interpolate(_00,_01,xt);
+        double _1z=linear_interpolate(_10,_11,xt);
+        return linear_interpolate(_0z,_1z,yt);
+    }
 }

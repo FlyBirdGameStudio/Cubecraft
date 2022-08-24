@@ -1,7 +1,7 @@
 package com.sunrisestudio.cubecraft.client.render.model.object;
 
 import com.sunrisestudio.cubecraft.registery.Registry;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.grass3d.render.draw.IVertexArrayBuilder;
 
 import java.util.Objects;
@@ -21,7 +21,7 @@ public class Face {
         this.id = id;
     }
 
-    public void render(IWorldAccess worldAccess, IVertexArrayBuilder builder, ModelObject modelObject, double renderX, double renderY, double renderZ, long worldX, long worldY, long worldZ, String renderType) {
+    public void render(World worldAccess, IVertexArrayBuilder builder, ModelObject modelObject, double renderX, double renderY, double renderZ, long worldX, long worldY, long worldZ, String renderType) {
         double x0 = renderX + modelObject.x0;
         double x1 = renderX + modelObject.x1;
         double z0 = renderZ + modelObject.z0;

@@ -30,7 +30,7 @@ public class SettingScreen extends Screen {
     @Override
     public void init() {
         this.components.clear();
-        this.components.putAll(ScreenLoader.load("/resource/gui/settingscreen.json"));
+        this.components.putAll(ScreenLoader.load("/resource/ui/settingscreen.json"));
 
         ((Button)this.components.get("button_confirm")).setListener(() -> {
             this.platform.setScreen(getParentScreen());

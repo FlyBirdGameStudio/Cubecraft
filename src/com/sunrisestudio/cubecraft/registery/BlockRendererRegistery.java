@@ -1,8 +1,10 @@
-package com.sunrisestudio.cubecraft.client.render.worldObjectRenderer;
+package com.sunrisestudio.cubecraft.registery;
 
+import com.sunrisestudio.cubecraft.client.render.worldObjectRenderer.BlockModelRenderer;
+import com.sunrisestudio.cubecraft.client.render.worldObjectRenderer.IBlockRenderer;
 import com.sunrisestudio.util.container.namespace.NameSpaceItemGetter;
 
-public class BlockRenderers {
+public class BlockRendererRegistery {
     @NameSpaceItemGetter(id = "grass_block",namespace="cubecraft")
     public IBlockRenderer grass_block(){
         return new BlockModelRenderer();

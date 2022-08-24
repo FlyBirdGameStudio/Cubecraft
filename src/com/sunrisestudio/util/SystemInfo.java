@@ -31,6 +31,6 @@ public class SystemInfo {
 
     public static String getUsage(){
         Runtime runtime=Runtime.getRuntime();
-        return 100-(runtime.freeMemory()/ runtime.totalMemory())*100+"%";
+        return (int)(100-(runtime.freeMemory()/ (float)runtime.totalMemory())*100)+"%";
     }
 }

@@ -63,4 +63,8 @@ public class Texture2DArray extends Texture{
     public int getLayer(String texture) {
         return this.textureMapping.get(texture);
     }
+
+    public boolean contains(String s) {
+        return this.textureMapping.containsKey(s);
+    }
 }

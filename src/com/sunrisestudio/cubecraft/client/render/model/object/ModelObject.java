@@ -1,6 +1,6 @@
 package com.sunrisestudio.cubecraft.client.render.model.object;
 
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.grass3d.render.draw.IVertexArrayBuilder;
 
 public abstract class ModelObject {
@@ -20,7 +20,7 @@ public abstract class ModelObject {
     }
 
     public void render(
-            IWorldAccess worldAccess, IVertexArrayBuilder builder,String renderType,
+            World worldAccess, IVertexArrayBuilder builder, String renderType,
             double renderX, double renderY, double renderZ,
             long worldX, long worldY, long worldZ
     ){

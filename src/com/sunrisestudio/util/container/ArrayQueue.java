@@ -77,6 +77,10 @@ public class ArrayQueue <E> {
         this.items.removeIf(ePriorityAdapter -> tester.If(ePriorityAdapter.e));
     }
 
+    public void remove(E e) {
+        this.items.remove(e);
+    }
+
     public interface Prediction<E>{
         boolean If(E e);
     }

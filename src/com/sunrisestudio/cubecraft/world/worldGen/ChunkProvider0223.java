@@ -1,6 +1,6 @@
 package com.sunrisestudio.cubecraft.world.worldGen;
 
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.block.BlockFacing;
 import com.sunrisestudio.cubecraft.world.chunk.Chunk;
 import com.sunrisestudio.cubecraft.world.worldGen.noise.NoiseGeneratorCombined;
@@ -26,8 +26,8 @@ public class ChunkProvider0223 extends ChunkProvider {
     private Random rand = new Random("notch sb!".charAt(0));
 
 
-    private IWorldAccess world;
-    public ChunkProvider0223(IWorldAccess world) {
+    private World world;
+    public ChunkProvider0223(World world) {
         this.world=world;
     }
 

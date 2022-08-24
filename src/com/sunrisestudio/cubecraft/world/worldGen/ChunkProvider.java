@@ -1,9 +1,9 @@
 package com.sunrisestudio.cubecraft.world.worldGen;
 
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.util.container.options.Option;
 import com.sunrisestudio.cubecraft.world.chunk.Chunk;
 import com.sunrisestudio.cubecraft.world.chunk.ChunkPos;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
 
 import java.util.concurrent.Callable;
 
@@ -11,7 +11,7 @@ public abstract class ChunkProvider implements Callable<Chunk> {
     private ChunkPos pos;
     private long seed;
     private Option worldProviderSetting;
-    public IWorldAccess dimension;
+    public World dimension;
 
 
 

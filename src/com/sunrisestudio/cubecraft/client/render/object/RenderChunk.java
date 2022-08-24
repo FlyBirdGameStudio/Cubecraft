@@ -1,6 +1,6 @@
 package com.sunrisestudio.cubecraft.client.render.object;
 
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.chunk.ChunkLoadLevel;
 import com.sunrisestudio.cubecraft.world.chunk.ChunkLoadTicket;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
@@ -14,11 +14,11 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderChunk implements KeyGetter<RenderChunkPos>,IRenderObject{
     public long x,y,z;
-    public IWorldAccess world;
+    public World world;
     private final int renderList_terrain =GL11.glGenLists(1);
     private final int renderList_transparent=GL11.glGenLists(1);
 
-    public RenderChunk(IWorldAccess w, long x, long y, long z){
+    public RenderChunk(World w, long x, long y, long z){
         this.world=w;
         this.x=x;
         this.y=y;

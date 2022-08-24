@@ -1,6 +1,6 @@
 package com.sunrisestudio.cubecraft.client.render.model.object;
 
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.grass3d.render.draw.IVertexArrayBuilder;
 
 public class Cross extends ModelObject{
@@ -9,7 +9,7 @@ public class Cross extends ModelObject{
     }
 
     @Override
-    public void render(IWorldAccess worldAccess, IVertexArrayBuilder builder,String renderType, double renderX, double renderY, double renderZ, long worldX, long worldY, long worldZ) {
+    public void render(World worldAccess, IVertexArrayBuilder builder, String renderType, double renderX, double renderY, double renderZ, long worldX, long worldY, long worldZ) {
 
     }
 }

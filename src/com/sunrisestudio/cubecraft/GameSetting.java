@@ -1,6 +1,5 @@
 package com.sunrisestudio.cubecraft;
 
-import com.sunrisestudio.cubecraft.client.Start;
 import com.sunrisestudio.util.container.CollectionUtil;
 
 import java.io.*;

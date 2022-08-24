@@ -1,6 +1,6 @@
 package com.sunrisestudio.cubecraft.world.block.material;
 
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.block.BlockFacing;
 import com.sunrisestudio.cubecraft.world.block.BlockState;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
@@ -63,7 +63,7 @@ public abstract class Block {
      * @param y         happened position
      * @param z         happened position
      */
-    public void onBlockUpdate(IWorldAccess dimension, long x, long y, long z) {
+    public void onBlockUpdate(World dimension, long x, long y, long z) {
         //do nth
     }
 
@@ -75,7 +75,7 @@ public abstract class Block {
      * @param y         happened position
      * @param z         happened position
      */
-    public void onBlockRandomTick(IWorldAccess dimension, long x, long y, long z) {
+    public void onBlockRandomTick(World dimension, long x, long y, long z) {
         //do nth
     }
 
@@ -98,7 +98,7 @@ public abstract class Block {
      */
     public abstract boolean isBlockEntity();
 
-    public Item[] getDrop(IWorldAccess world, long x, long y, long z, Entity from) {
+    public Item[] getDrop(World world, long x, long y, long z, Entity from) {
         return new Item[0];
     }
 
@@ -113,7 +113,7 @@ public abstract class Block {
         return aabbs;
     }
 
-    public HitBox[] getSelectionBox(IWorldAccess world, long x, long y, long z, BlockState bs) {
+    public HitBox[] getSelectionBox(World world, long x, long y, long z, BlockState bs) {
         HitBox[] hits = new HitBox[getSelectionBoxSizes().length];
         for (int i = 0; i < getSelectionBoxSizes().length; i++) {
             AABB aabb = getCollisionBoxSizes()[i];
@@ -122,7 +122,7 @@ public abstract class Block {
         return hits;
     }
 
-    public void render(IWorldAccess world, long x, long y, long z, long renderX, long renderY, long renderZ, BlockFacing facing, IVertexArrayBuilder builder) {
+    public void render(World world, long x, long y, long z, long renderX, long renderY, long renderZ, BlockFacing facing, IVertexArrayBuilder builder) {
         //Registry.getBlockModelManager().get(this.id).render(builder,world,renderX,renderY,renderZ,x,y,z,facing);
 
         byte c1 = -1;
@@ -155,7 +155,7 @@ public abstract class Block {
         }
     }
 
-    public boolean shouldRender(IWorldAccess world, long x, long y, long z) {
+    public boolean shouldRender(World world, long x, long y, long z) {
         return !world.getBlock(x, y, z).getBlock().isSolid();
     }
 
@@ -220,14 +220,14 @@ public abstract class Block {
         }
     }
 
-    public void onInteract(Entity from, IWorldAccess world, long x, long y, long z, byte f) {
+    public void onInteract(Entity from, World world, long x, long y, long z, byte f) {
         Vector3<Long> pos = BlockFacing.findNear(x, y, z, 1, f);
         if (world.isfree(world.getBlock(pos.x(), pos.y(), pos.z()).getCollisionBox(pos.x(), pos.y(), pos.z()))) {
             world.setBlock(pos.x(), pos.y(), pos.z(), "cubecraft:stone", BlockFacing.Up);
         }
     }
 
-    public void onHit(Entity from, IWorldAccess world, long x, long y, long z, byte f) {
+    public void onHit(Entity from, World world, long x, long y, long z, byte f) {
         world.setBlock(x,y,z,"cubecraft:air",BlockFacing.Up);
     }
 }

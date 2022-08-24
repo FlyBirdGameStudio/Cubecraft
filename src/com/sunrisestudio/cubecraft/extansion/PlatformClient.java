@@ -1,19 +1,20 @@
 package com.sunrisestudio.cubecraft.extansion;
 
-import com.sunrisestudio.cubecraft.client.CubeCraft;
+import com.sunrisestudio.cubecraft.client.Cubecraft;
 import com.sunrisestudio.cubecraft.client.gui.DisplayScreenInfo;
 import com.sunrisestudio.cubecraft.client.gui.screen.Screen;
 import com.sunrisestudio.cubecraft.net.ClientIO;
-import com.sunrisestudio.cubecraft.world.IWorldAccess;
 
+import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.entity.humanoid.Player;
+import com.sunrisestudio.util.net.UDPSocket;
 
 public record PlatformClient(
-        CubeCraft platform,
-        ClientIO clientNettyChannel,
+        Cubecraft platform,
+        UDPSocket clientNettyChannel,
         Screen currentScreen,
         DisplayScreenInfo displayInfo,
-        IWorldAccess worldAccess,
+        World worldAccess,
         Player player
 ) {
 }
