@@ -8,7 +8,7 @@ import java.net.URL;
 public class HTTPUtil {
     private static final String USER_AGENT = "Mozilla/5.0";
 
-    public static String get(String url){
+    public static String get(String url) throws IOException {
         String str="";
         try {
             HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
@@ -20,7 +20,7 @@ public class HTTPUtil {
             str = new String(in.readAllBytes());
             in.close();
         }catch (IOException e){
-            e.printStackTrace();
+            throw e;
         }
         return str;
     }

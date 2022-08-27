@@ -13,21 +13,24 @@ import com.sunrisestudio.cubecraft.client.render.model.serilize.EntityModelSeria
 import com.sunrisestudio.cubecraft.client.render.model.serilize.FaceSerializer;
 import com.sunrisestudio.cubecraft.client.render.renderer.ChunkRenderer;
 import com.sunrisestudio.cubecraft.client.render.renderer.EntityRenderer;
+import com.sunrisestudio.cubecraft.client.render.renderer.HUDRenderer;
 import com.sunrisestudio.cubecraft.client.render.renderer.IWorldRenderer;
 import com.sunrisestudio.cubecraft.client.render.worldObjectRenderer.IBlockRenderer;
 import com.sunrisestudio.cubecraft.client.render.worldObjectRenderer.IEntityRenderer;
+import com.sunrisestudio.cubecraft.client.resources.ResourceManager;
 import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.biome.BiomeMap;
 import com.sunrisestudio.cubecraft.world.block.material.Block;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
 import com.sunrisestudio.cubecraft.world.entity.humanoid.Player;
+import com.sunrisestudio.cubecraft.world.item.Item;
 import com.sunrisestudio.cubecraft.world.worldGen.pipeline.ChunkGeneratorPipeline;
-import com.sunrisestudio.cubecraft.world.worldGen.pipeline.object.BiomeBuilderOverWorld;
 import com.sunrisestudio.cubecraft.world.worldGen.pipeline.object.ChunkGeneratorOverWorld;
 import com.sunrisestudio.grass3d.render.Camera;
 import com.sunrisestudio.grass3d.render.textures.TextureManager;
 import com.sunrisestudio.util.container.namespace.NameSpacedConstructingMap;
 import com.sunrisestudio.util.container.namespace.NameSpacedRegisterMap;
+import com.sunrisestudio.util.file.lang.Language;
 import com.sunrisestudio.util.net.PacketDecoder;
 import com.sunrisestudio.util.net.PacketEncoder;
 
@@ -41,6 +44,7 @@ public class Registry {
     private static final NameSpacedConstructingMap<Entity> entityMap=new NameSpacedConstructingMap<>(World.class);
     private static final NameSpacedRegisterMap<ChunkGeneratorPipeline,?> worldGeneratorMap=new NameSpacedRegisterMap<>(null);
     private static final BiomeMap biomeMap=new BiomeMap();
+    private static final NameSpacedRegisterMap<Item,?> itemMap=new NameSpacedRegisterMap<>(null);
 
     public static NameSpacedRegisterMap<Block, ?> getBlockBehaviorMap() {
         return blockBehaviorMap;
@@ -57,7 +61,9 @@ public class Registry {
     public static BiomeMap getBiomeMap() {
         return biomeMap;
     }
-
+    public static NameSpacedRegisterMap<Item, ?> getItemMap() {
+        return itemMap;
+    }
 
     //model&texture
     private static final ModelManager<BlockModel> blockModelManager= new ModelManager<>("/resource/fallback/block_model.json", BlockModel.class);
@@ -117,7 +123,7 @@ public class Registry {
         //block
         getBlockBehaviorMap().registerGetter(BlockBehaviorRegistery.class);
         getBlockMap().registerGetter(BlockRegistery.class);
-        getBiomeMap().registerGetter(BiomeRegistery.class);
+        getBiomeMap().registerGetter(BiomesRegistry.class);
 
 
         //entity
@@ -126,14 +132,28 @@ public class Registry {
 
         getWorldRenderers().registerItem("cubecraft:chunk_renderer", ChunkRenderer.class);
         getWorldRenderers().registerItem("cubecraft:entity_renderer", EntityRenderer.class);
+        getWorldRenderers().registerItem("cubecraft:hud_renderer", HUDRenderer.class);
 
         getFaceTypeAdapterRendererMap().registerGetter(FaceRenderers.class);
 
-        getWorldGeneratorMap().registerItem("cubecraft:overworld",
-                new ChunkGeneratorPipeline()
-                        .addLast(new BiomeBuilderOverWorld())
-                        .addLast(new ChunkGeneratorOverWorld())
-        );
+        getWorldGeneratorMap().registerItem("cubecraft:overworld", new ChunkGeneratorPipeline()./*addLast(new BiomeBuilderOverWorld()).*/addLast(new ChunkGeneratorOverWorld()));
+
+
+        registerLanguage();
     }
+
+    public static void registerLanguage(){
+        Language.create(Language.LanguageType.ZH_CN);
+        Language.selectInstance(Language.LanguageType.ZH_CN).attachTranslationFile(ResourceManager.instance.getResource(
+                "/resource/text/language/zh_cn.lang",
+                "/resource/text/language/blank.lang"
+        ));
+        Language.create(Language.LanguageType.EN_US);
+        Language.selectInstance(Language.LanguageType.EN_US).attachTranslationFile(ResourceManager.instance.getResource(
+                "/resource/text/language/en_us.lang",
+                "/resource/text/language/blank.lang"
+        ));
+    }
+
 
 }

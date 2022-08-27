@@ -3,6 +3,7 @@ package com.sunrisestudio.cubecraft.client.gui.screen;
 import com.sunrisestudio.cubecraft.client.Cubecraft;
 import com.sunrisestudio.cubecraft.client.gui.DisplayScreenInfo;
 import com.sunrisestudio.cubecraft.GameSetting;
+import com.sunrisestudio.cubecraft.client.gui.FontAlignment;
 import com.sunrisestudio.cubecraft.client.gui.component.Component;
 import com.sunrisestudio.cubecraft.client.gui.component.Popup;
 import com.sunrisestudio.cubecraft.client.resources.ResourceManager;
@@ -13,6 +14,7 @@ import com.sunrisestudio.grass3d.platform.input.Mouse;
 import com.sunrisestudio.grass3d.platform.input.InputHandler;
 import com.sunrisestudio.grass3d.platform.input.KeyboardCallback;
 import com.sunrisestudio.grass3d.platform.input.MouseCallBack;
+import com.sunrisestudio.grass3d.render.GLUtil;
 import com.sunrisestudio.grass3d.render.ShapeRenderer;
 import com.sunrisestudio.grass3d.render.textures.Texture2D;
 import com.sunrisestudio.util.container.CollectionUtil;
@@ -25,7 +27,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public abstract class Screen {
-    protected Cubecraft platform;
+    private Cubecraft platform;
     protected HashMap<String,Component> components=new HashMap<>();
 
     //init
@@ -37,10 +39,6 @@ public abstract class Screen {
      */
     public void init(){}
 
-    /**
-     * system call-init
-     * @param cubeCraft
-     */
     public void init(Cubecraft cubeCraft) {
         this.platform = cubeCraft;
         this.init();
@@ -63,27 +61,20 @@ public abstract class Screen {
         });
         InputHandler.registerGlobalMouseCallback("cubecraft:scr_callback_base",new MouseCallBack(){
             @Override
-            public void onLeftClick() {
-                int scale=GameSetting.instance.getValueAsInt("client.gui.scale",2);
-                CollectionUtil.iterateMap(Screen.this.components, (key, item) -> item.onClicked(Mouse.getX()/ scale,(-Mouse.getY()+Display.getHeight())/scale));
+            public void onButtonClicked(int eventButton) {
+                if(eventButton==0){
+                    int scale=GameSetting.instance.getValueAsInt("client.gui.scale",2);
+                    CollectionUtil.iterateMap(Screen.this.components, (key, item) -> item.onClicked(Mouse.getX()/ scale,(-Mouse.getY()+Display.getHeight())/scale));
+                }
             }
         });
     }
 
-    /**
-     * <h3>this method will invoke every frame in client rendering.</h3>
-     * You can do anything here,but if you put any {@link Component} here than you have to call super.render();
-     * @param info display info
-     */
     public void render(DisplayScreenInfo info,float interpolationTime) {
         CollectionUtil.iterateMap(this.components, (key, item) -> item.render());
         renderPopup(info,interpolationTime);
     }
 
-    /**
-     * <h3>this method invoke within every tick of client. </h3>
-     * You can update everything here,but if you put any {@link Component} here than you have to call super.tick();
-     */
     public void tick() {
         CollectionUtil.iterateMap(this.components, (key, item)-> {
             int scale=GameSetting.instance.getValueAsInt("client.gui.scale",2);
@@ -93,64 +84,41 @@ public abstract class Screen {
         tickPopup();
     }
 
-    /**
-     * <h3>this boolean declared whether level render will work or not during screen render.</h3>
-     * if true:level renderer will work and output
-     * if false:level renderer will stop rendering to lower GPU usage
-     */
     public boolean isInGameGUI(){
         return false;
     }
 
-    /**
-     * <h3>screen destroy function.</h3>
-     * trigger when screen destroyed.
-     * you have to call super.destroy() when overwriting this method.
-     */
     public void destroy(){
 
     }
 
-
-    /**
-     * <h3>get a mouse callback for this screen. </h3>
-     * This method need to overwrite.
-     * @return callback
-     */
     public MouseCallBack getMouseCallback(){
-        return new MouseCallBack();
+        return new MouseCallBack(){};
     }
 
-    /**
-     * <h3>get a keyboard callback for this screen.</h3>
-     * This method need to overwrite.
-     * @return callback
-     */
     public KeyboardCallback getKeyboardCallback(){
-        return new KeyboardCallback();
+        return new KeyboardCallback() {};
     }
 
-    /**
-     * overriding this returning to set parent screen for this.
-     * @return screen
-     */
     public Screen getParentScreen() {
         return null;
     }
 
-    /**
-     * offer a component.
-     * @param component
-     */
     protected void addComponent(Component component) {
         this.components.put(component.toString(),component);
     }
 
+    public Cubecraft getPlatform() {
+        return platform;
+    }
 
+
+    //fast render
     private static Texture2D bg;
     public static void initBGRenderer(){
         Registry.getTextureManager().create2DTexture("/resource/textures/gui/bg.png",false,false);
         Registry.getTextureManager().create2DTexture("/resource/textures/gui/controls/popup.png",false,false);
+        Registry.getTextureManager().create2DTexture("/resource/textures/font/unicode_page_00.png",false,false);
     }
 
     public static void renderPictureBackground(){
@@ -167,8 +135,6 @@ public abstract class Screen {
         ShapeRenderer.setColor(0,0,0,127);
         ShapeRenderer.drawRect(0,Display.getWidth()/ scale,0,Display.getHeight()/scale,-1,-1);
     }
-
-
 
     private static ArrayList<Popup> popupList=new ArrayList<>();
 
@@ -196,6 +162,56 @@ public abstract class Screen {
             p.render(info);
             GL11.glPopMatrix();
             yPop+=50;
+        }
+    }
+
+    public static void drawFontASCII(String s, int x, int y, int color, int size, FontAlignment alignment){
+        if(s==null){
+            return;
+        }
+        GLUtil.enableBlend();
+        char[] rawData = s.toCharArray();
+        int contWidth = 0;
+        for (char c : rawData) {
+            int pageCode = (int) Math.floor(c / 256.0f);
+            String s2 = Integer.toHexString(pageCode);
+            if (c == ' ') {
+                contWidth += size;
+            } else if (s2.equals("0")) {
+                contWidth += size / 2;
+            } else {
+                contWidth += size;
+            }
+        }
+        int charPos_scr = 0;
+        switch (alignment) {
+            case LEFT -> charPos_scr = x;
+            case MIDDLE -> charPos_scr = (int) (x - contWidth / 2.0f);
+            case RIGHT -> charPos_scr = x - contWidth;
+        }
+        for (char c : rawData) {
+            int pageCode = (int) Math.floor(c / 256.0f);
+            int charPos_Page = c % 256;
+            String s2 = Integer.toHexString(pageCode);
+            int charPos_V = charPos_Page / 16;
+            int charPos_H = charPos_Page % 16;
+            if (c == 0x0020) {
+                charPos_scr += size * 0.75;
+            }
+            else if (c == 0x000d) {
+                charPos_scr = 0;
+            }
+            else {
+                float x0 = charPos_scr, x1 = charPos_scr + size,
+                        y0 = y, y1 = y + size,
+                        u0 = charPos_H / 16.0f, u1 = charPos_H / 16f + 0.0625f,
+                        v0 = charPos_V / 16.0f, v1 = charPos_V / 16f + 0.0625f;
+                Registry.getTextureManager().bind2dTexture("/resource/textures/font/unicode_page_00.png");
+                ShapeRenderer.setColor(color);
+                ShapeRenderer.drawRectUV(x0, x1, y0, y1, 0, 0,u0,u1,v0,v1);
+                Registry.getTextureManager().unBind2dTexture("/resource/textures/font/unicode_page_00.png");
+                charPos_scr += size*0.5f;
+            }
         }
     }
 }

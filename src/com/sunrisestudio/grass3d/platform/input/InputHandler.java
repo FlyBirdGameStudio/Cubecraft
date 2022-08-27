@@ -14,8 +14,6 @@ public class InputHandler {
     static boolean keyDownStatus = true;
     static int keyDownCount=0;
     static long lastTime;
-
-    private static final LogHandler logHandler=LogHandler.create("input","client");
     private static final HashMap<String, KeyboardCallback> keyboardCallbacks =new HashMap<>();
     private static final Map<String, MouseCallBack> mouseCallbacks=new HashMap<>();
 
@@ -29,16 +27,6 @@ public class InputHandler {
         keyboardCallbacks.put(id,cb);
     }
 
-
-
-    /**
-     * release a keyboard callback.
-     * @param id id
-     */
-    public static void releaseGlobalKeyboardCallback(String id){
-        keyboardCallbacks.remove(id);
-    }
-
     /**
      * register a callback for mouse,fail with id conflict.
      * @param id id
@@ -48,20 +36,10 @@ public class InputHandler {
         mouseCallbacks.put(id,cb);
     }
 
-
-    /**
-     * release a mouse callback.
-     * @param id id
-     */
-    public static void releaseGlobalMouseCallback(String id){
-        mouseCallbacks.remove(id);
-    }
-
     /**
      * tick the input and holding all callbacks.
      */
     public static void tick(){
-
         HashMap<String,KeyboardCallback> kb=keyboardCallbacks;
         while (Keyboard.next()){
             CollectionUtil.iterateMap(kb, (key, item) -> {
@@ -75,25 +53,11 @@ public class InputHandler {
         }
 
         HashMap<String,MouseCallBack> m= (HashMap<String, MouseCallBack>) mouseCallbacks;
-        //CollectionUtil.iterateMap(mouseCallbacks,((key, item) -> m.put(key,item)));
         while (Mouse.next()){
-            CollectionUtil.iterateMap(m, (key, item) -> {
-                item.onMouseEventNext();
-            });
-
-            if(Mouse.isButtonDown(0)){
-                CollectionUtil.iterateMap(m, (key, item) -> {
-                    item.onLeftClick();
-                });
-            }
-            if(Mouse.isButtonDown(1)){
-                CollectionUtil.iterateMap(m, (key, item) -> {
-                    item.onRightClick();
-                });
-            }
-            if(Mouse.isButtonDown(2)){
-                CollectionUtil.iterateMap(m, (key, item) -> {
-                    item.onMidClick();
+            if(Mouse.getEventButtonState()){
+                int btn=Mouse.getEventButton();
+                CollectionUtil.iterateMap(m,(key,item)->{
+                    item.onButtonClicked(btn);
                 });
             }
         }

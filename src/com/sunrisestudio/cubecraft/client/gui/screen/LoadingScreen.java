@@ -1,13 +1,9 @@
 package com.sunrisestudio.cubecraft.client.gui.screen;
 
 import com.sunrisestudio.cubecraft.client.gui.DisplayScreenInfo;
-import com.sunrisestudio.cubecraft.GameSetting;
 import com.sunrisestudio.cubecraft.client.gui.LoadingScreenTask;
 import com.sunrisestudio.cubecraft.client.gui.component.Button;
 import com.sunrisestudio.cubecraft.client.gui.component.ProgressBar;
-import com.sunrisestudio.grass3d.platform.Display;
-import com.sunrisestudio.grass3d.render.textures.Texture2D;
-import com.sunrisestudio.grass3d.render.ShapeRenderer;
 import com.sunrisestudio.cubecraft.client.gui.layout.OriginLayout;
 import com.sunrisestudio.util.file.lang.Language;
 
@@ -46,10 +42,10 @@ public class LoadingScreen extends Screen{
         this.progressBar.setStatus(this.task.getStatus());
         //this.label.text=this.task.getText();
         if(this.task.getStatus()>=100){
-            this.platform.setScreen(this.onFinished);
+            this.getPlatform().setScreen(this.onFinished);
         }
         if(this.task.isCancelled()){
-            this.platform.setScreen(this.onCancelled);
+            this.getPlatform().setScreen(this.onCancelled);
         }
     }
 

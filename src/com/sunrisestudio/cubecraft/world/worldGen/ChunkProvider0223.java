@@ -171,7 +171,7 @@ public class ChunkProvider0223 extends ChunkProvider {
                          */
 
 
-                        if (primer.getBlock(x, ((int) heightMap[x][z]), z).getId() == "cubecraft:air") {
+                        if (primer.getBlockState(x, ((int) heightMap[x][z]), z).getId() == "cubecraft:air") {
                             String id = "cubecraft:air";
                             if (n <= n20 && b) {
                                 id = "cubecraft:sand";
@@ -179,7 +179,7 @@ public class ChunkProvider0223 extends ChunkProvider {
                                     id = "cubecraft:grass_block";
                                 }
                             }
-                            if (primer.getBlock(x, (int) heightMap[x][z], z).getId() != "cubecraft:air") {
+                            if (primer.getBlockState(x, (int) heightMap[x][z], z).getId() != "cubecraft:air") {
                                 primer.setBlock(x, (int) heightMap[x][z], z, id, BlockFacing.Up);
                             }
                         }
@@ -389,7 +389,7 @@ public class ChunkProvider0223 extends ChunkProvider {
         for (int i = 0; i < this.width; ++i) {
             for (int j = 0; j < this.height; ++j) {
                 for (int k = 0; k < this.depth; ++k) {
-                    if (chunk.getBlock(i, j, k).getId() == "cubecraft:dirt"&&world.getBlock(
+                    if (chunk.getBlockState(i, j, k).getId() == "cubecraft:dirt"&&world.getBlockState(
                             i+chunk.getKey().x()*16,j+chunk.getKey().y()*16+1,k+chunk.getKey().z()*16
                     ).getId()=="cubecraft:air") {
                         chunk.setBlock(i, j, k, "cubecraft:grass_block", BlockFacing.Up);
@@ -518,7 +518,7 @@ public class ChunkProvider0223 extends ChunkProvider {
             final int x = this.rand.nextInt(16);
             final int y = this.rand.nextInt(16);
             final int z = this.rand.nextInt(16);
-            if (primer.getBlock(x, y, z).getId() == "cubecraft:air") {
+            if (primer.getBlockState(x, y, z).getId() == "cubecraft:air") {
                 final long flood;
                 if ((flood = this.flood(x, y, z, 0, "?")) > 0L && flood < 640L) {
                     this.flood(x, y, z, 255, id);

@@ -113,7 +113,7 @@ public abstract class Block {
         return aabbs;
     }
 
-    public HitBox[] getSelectionBox(World world, long x, long y, long z, BlockState bs) {
+    public HitBox[] getSelectionBox(long x, long y, long z, BlockState bs) {
         HitBox[] hits = new HitBox[getSelectionBoxSizes().length];
         for (int i = 0; i < getSelectionBoxSizes().length; i++) {
             AABB aabb = getCollisionBoxSizes()[i];
@@ -156,7 +156,7 @@ public abstract class Block {
     }
 
     public boolean shouldRender(World world, long x, long y, long z) {
-        return !world.getBlock(x, y, z).getBlock().isSolid();
+        return !world.getBlockState(x, y, z).getBlock().isSolid();
     }
 
     public int getTexture(int face) {
@@ -222,7 +222,7 @@ public abstract class Block {
 
     public void onInteract(Entity from, World world, long x, long y, long z, byte f) {
         Vector3<Long> pos = BlockFacing.findNear(x, y, z, 1, f);
-        if (world.isfree(world.getBlock(pos.x(), pos.y(), pos.z()).getCollisionBox(pos.x(), pos.y(), pos.z()))) {
+        if (world.isfree(world.getBlockState(pos.x(), pos.y(), pos.z()).getCollisionBox(pos.x(), pos.y(), pos.z()))) {
             world.setBlock(pos.x(), pos.y(), pos.z(), "cubecraft:stone", BlockFacing.Up);
         }
     }

@@ -236,4 +236,8 @@ public class AABB {
     public double getMinWidth() {
         return Math.min(Math.min(x1-x0,y1-y0),z1-z0);
     }
+
+    public Vector3d minPos() {
+        return new Vector3d(x0,y0,z0);
+    }
 }

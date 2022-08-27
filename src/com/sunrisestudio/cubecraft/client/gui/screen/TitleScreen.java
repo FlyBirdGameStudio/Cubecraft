@@ -37,7 +37,7 @@ public class TitleScreen extends Screen {
         this.components.putAll(ScreenLoader.load("/resource/ui/titlescreen.json"));
 
         ((Button) components.get("button_singleplayer")).setListener(() -> {
-            this.platform.setScreen(new LoadingScreen(new TitleScreen(), new HUDScreen(), new LoadingScreenTask() {
+            this.getPlatform().setScreen(new LoadingScreen(new TitleScreen(), new HUDScreen(), new LoadingScreenTask() {
                 @Override
                 public void run() {
                     for (int i = 0; i < 101; i++) {
@@ -51,15 +51,15 @@ public class TitleScreen extends Screen {
                     }
                 }
             }));//actullyJoinTheGame
-            this.platform.joinWorld(new World(new LevelInfo("NULL", "NULL", 0, new Date(), false, "NULL", null)));
+            this.getPlatform().joinWorld(new World(new LevelInfo("NULL", "NULL", 0, new Date(), false, "NULL", null)));
         });
         ((Button) components.get("button_multiplayer")).setListener(() -> {
             Screen.createPopup("?","function not implmented!",60, Popup.WARNING);
         });
         ((Button) components.get("button_option")).setListener(() -> {
-            this.platform.setScreen(new SettingScreen(this));
+            this.getPlatform().setScreen(new SettingScreen(this));
         });
-        ((Button) components.get("button_quit")).setListener(() -> TitleScreen.this.platform.stop());
+        ((Button) components.get("button_quit")).setListener(() -> TitleScreen.this.getPlatform().stop());
         {
             String[] splash;
             try {
@@ -71,7 +71,7 @@ public class TitleScreen extends Screen {
         }//splash
 
 
-        ((Label) components.get("version_string")).text= Language.getInstance().getFormattedMessage(
+        ((Label) components.get("version_string")).text= Language.getFormattedMessage(
                 "titlescreen.version", Cubecraft.VERSION, ModManager.getLoadedMods().size(), PluginManager.getLoadedPlugins().size()
         );
 
@@ -86,10 +86,10 @@ public class TitleScreen extends Screen {
         ShapeRenderer.setColor(0xFFFFFF);
         super.render(info,interpolationTime);
         GL11.glPushMatrix();
-        GL11.glTranslatef(info.centerX()+95,info.centerY()-72,0);
+        GL11.glTranslatef(info.centerX()+115,info.centerY()-72,0);
         double sin=Math.sin(System.currentTimeMillis()/300d)*0.1+1.1;
         GL11.glScaled(sin,sin,sin);
-        GL11.glRotatef(-30,0,0,1);
+        GL11.glRotatef(-20,0,0,1);
         FontRenderer.renderShadow(splashText,0,0,0xefff00,12,FontAlignment.MIDDLE);
         GL11.glPopMatrix();
 

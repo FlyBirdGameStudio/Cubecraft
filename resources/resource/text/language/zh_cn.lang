@@ -2,16 +2,16 @@
 button.confirm=确认
 button.back=返回
 
-# mainscreen
+# main screen
 titlescreen.button.singleplayer=单人游戏
 titlescreen.button.multiplayer=多人游戏
-titlescreen.button.setting=设置
+titlescreen.button.setting=选项
 titlescreen.button.quit=退出
 titlescreen.version=CubeCraft-%s(模组:%d个,插件:%d个)
 titlescreen.auth=""
 
 
-# pausescreen
+# pause screen
 pausescreen.title=游戏暂停
 pausescreen.button.backtogame=回到游戏
 pausescreen.button.option=选项
@@ -19,6 +19,7 @@ pausescreen.button.achievement=成就
 pausescreen.button.opentonet=对局域网开放
 pausescreen.button.saveandquit=退出
 
+#option screen
 option.title=选项
 option.button.video=视频...
 option.button.controls=控制...
@@ -28,12 +29,15 @@ option.button.resourcepacks=资源包...
 option.button.about=关于...
 option.button.chat=聊天设置...
 option.button.language=语言...
+option.button.mods=模组...
+option.button.plugins=插件...
 
-
-
-
-
-
+versioncheck.exception.title=无法检查更新
+versioncheck.exception.subtitle=请联网后尝试重启游戏...
+versioncheck.latest.title=你的游戏目前处于最新版本
+versioncheck.latest.subtitle=当前版本：%s
+versioncheck.require.title=需要更新
+versioncheck.require.subtitle=当前版本：%s，最新版本:%s
 
 
 # world selection

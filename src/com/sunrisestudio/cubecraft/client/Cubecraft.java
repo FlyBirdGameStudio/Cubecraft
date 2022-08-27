@@ -11,65 +11,57 @@
  */
 package com.sunrisestudio.cubecraft.client;
 
+import com.google.gson.GsonBuilder;
 import com.sunrisestudio.cubecraft.GameSetting;
 import com.sunrisestudio.cubecraft.Start;
-import com.sunrisestudio.cubecraft.net.packet.Packet;
+import com.sunrisestudio.cubecraft.client.gui.component.Popup;
 import com.sunrisestudio.cubecraft.registery.Registry;
 import com.sunrisestudio.cubecraft.client.gui.DisplayScreenInfo;
 import com.sunrisestudio.cubecraft.client.gui.FontRenderer;
 import com.sunrisestudio.cubecraft.client.gui.screen.*;
 import com.sunrisestudio.cubecraft.client.render.renderer.LevelRenderer;
 import com.sunrisestudio.cubecraft.client.resources.ResourceManager;
-import com.sunrisestudio.cubecraft.extansion.ExtansionRunningTarget;
-import com.sunrisestudio.cubecraft.extansion.ModManager;
 import com.sunrisestudio.cubecraft.extansion.PlatformClient;
-import com.sunrisestudio.cubecraft.net.ClientIO;
 import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.entity.humanoid.Player;
 import com.sunrisestudio.grass3d.audio.Audio;
 import com.sunrisestudio.grass3d.platform.Display;
-import com.sunrisestudio.grass3d.platform.input.Keyboard;
 import com.sunrisestudio.grass3d.platform.input.InputHandler;
-import com.sunrisestudio.grass3d.platform.input.KeyboardCallback;
 import com.sunrisestudio.grass3d.render.GLUtil;
 import com.sunrisestudio.grass3d.render.textures.Texture2D;
-import com.sunrisestudio.util.LoadTask;
+import com.sunrisestudio.util.HTTPUtil;
 import com.sunrisestudio.util.LogHandler;
 import com.sunrisestudio.util.LoopTickingApplication;
 import com.sunrisestudio.util.file.lang.Language;
 import com.sunrisestudio.util.net.UDPSocket;
+import com.sunrisestudio.util.net.UDPSocketThread;
+import com.sunrisestudio.util.task.TaskProgressUpdateListener;
 import com.sunrisestudio.util.timer.Timer;
 import org.lwjgl.opengl.GL11;
 
-import java.io.File;
+import java.io.IOException;
 
 //todo:add server net support
 //todo:add resource support
 //todo:add inventory support
 
 
-public class Cubecraft extends LoopTickingApplication {
+public class Cubecraft extends LoopTickingApplication implements TaskProgressUpdateListener {
     public static final String VERSION = "alpha-0.2.5";
-
     private DisplayScreenInfo screenInfo;
     public LevelRenderer levelRenderer;
     private Screen screen;
-
-    private final ClientIO _clientIO = new ClientIO();
+    private LogoLoadingScreen logoLoadingScreen = new LogoLoadingScreen();
+    private ClientInputHandler clientInputHandler=new ClientInputHandler(this);
     public World clientWorld = null;
-    public Player player = new Player(null);
+    private Player player = new Player(null);
     public final PlayerController controller=new PlayerController(this.player);
-    public final UDPSocket clientIO=new UDPSocket(
-            Registry.getPacketEncoderMap(),
-            Registry.getPacketDecoderMap(),
-            "127.0.0.1",11451
-    );
+    public final UDPSocket clientIO=new UDPSocket(Registry.getPacketEncoderMap(), Registry.getPacketDecoderMap(), "127.0.0.1",11451);
 
     //world
-
     public void joinWorld(World world){
         this.clientWorld=world;
-        player.setPos(0,20,0);
+        player.setPos(33554432,20,0);
         this.levelRenderer = new LevelRenderer(this.clientWorld, this.player);
         this.clientWorld.addEntity(this.player);
     }
@@ -81,83 +73,26 @@ public class Cubecraft extends LoopTickingApplication {
 
 
     //init and stop
-
     @Override
     public void init() {
+        Timer.startTiming();
         GameSetting.instance.read();
         this.timer = new Timer(20);
         this.logHandler = LogHandler.create("main", "client");
         this.initDisplay();
-        this.loadGameContent();
-
-        this.setScreen(new TitleScreen());
-        InputHandler.registerGlobalKeyboardCallback("cubecraft:main", new KeyboardCallback() {
-            @Override
-            public void onKeyEventPressed() {
-                if (Keyboard.getEventKey() == Keyboard.KEY_F11) {
-                    Display.setFullscreen(!Display.isFullscreen());
-                }
-                if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
-                    if (Cubecraft.this.screen.getParentScreen() != null) {
-                        Cubecraft.this.setScreen(Cubecraft.this.screen.getParentScreen());
-                    }
-                }
-            }
-        });
-        new Thread(() -> {
-            while (true){
-                Cubecraft.this.clientIO.tick();
-            }
-        },"client_io").start();
-    }
-
-    private void loadGameContent() {
-        LogoLoadingScreen logoLoadingScreen = new LogoLoadingScreen();
+        InputHandler.registerGlobalKeyboardCallback("cubecraft:main",this.clientInputHandler);
         this.setScreen(logoLoadingScreen);
         Screen.initBGRenderer();
-
-
-
-        //register blocks
-        logHandler.info("constructing...");
+        logHandler.info("registering vanilla contents...");
         Registry.registerVanillaContent();
-        File[] mods = new File(Start.getGamePath() + "/mods").listFiles();
-        if(new File(Start.getGamePath() + "/mods").exists()) {
-            if (mods != null) {
-                new LoadTask(mods.length, 0.2f, 0.5f, count ->
-                        ModManager.loadMod(mods[count].getAbsolutePath(), null,
-                                Cubecraft.this.getPlatformClient(),
-                                ExtansionRunningTarget.CLIENT)
-                );
-            } else {
-                throw new RuntimeException("null or invalid mod path");
-            }
-        }
-
-
         this.logHandler.info("loading resources...");
-        this.logHandler.checkGLError("pre_font_load");
-        for (int i = 0; i < 256; i++) {
-            if (i >= 241 && i <= 248 || i >= 216 && i <= 239 || i == 8||i==0xf0) {
-                continue;
-            }
-            FontRenderer.textures[i] = new Texture2D(false, false);
-            FontRenderer.textures[i].generateTexture();
-            String s2 = Integer.toHexString(i);
-            if (s2.length() == 1) {
-                s2 = "0" + Integer.toHexString(i);
-            }
-
-            FontRenderer.textures[i].load("/resource/textures/font/unicode_page_" + s2 + ".png");
-            logoLoadingScreen.updateProgress(0.3f + (i / 255f) * 0.7f);
-        }
-        this.logHandler.checkGLError("post_font_load");
-
-        Language.create(Language.LanguageType.ZH_CN);
-        Language.selectInstance(Language.LanguageType.ZH_CN).attachTranslationFile(ResourceManager.instance.getResource(
-                "/resource/text/language/zh_cn.lang",
-                "/resource/text/language/zh_cn.lang"
-        ));
+        ResourceManager.instance.reload(this);
+        Language.selectInstance(Language.LanguageType.valueOf((String) GameSetting.instance.getValue("client.language","ZH_CN")));
+        this.setScreen(new TitleScreen());
+        this.logHandler.info("starting client io thread...");
+        new Thread(new UDPSocketThread(this.clientIO,128.0f),"client_io").start();
+        this.checkVersion();
+        this.logHandler.info("client initialization done,in%dms".formatted(Timer.endTiming()));
     }
 
     @Override
@@ -171,7 +106,6 @@ public class Cubecraft extends LoopTickingApplication {
 
 
     //loop
-
     @Override
     public void on1sec() {
         if(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory()>512*1024*1024)
@@ -230,7 +164,7 @@ public class Cubecraft extends LoopTickingApplication {
             this.logHandler.checkGLError("post_screen_render");
             GLUtil.disableBlend();
         }
-        Display.sync(120);
+        Display.sync(GameSetting.instance.getValueAsInt("client.render.maxFPS",60));
         Display.update();
         this.logHandler.checkGLError("post_render");
     }
@@ -265,4 +199,43 @@ public class Cubecraft extends LoopTickingApplication {
                 this.player);
     }
 
+    public Screen getScreen() {
+        return this.screen;
+    }
+
+    public void checkVersion(){
+        this.logHandler.info("checking for updates...");
+        new Thread(() -> {
+            try {
+                String request = HTTPUtil.get("http://api.sunrisestudio.top/update_check?product=cubecraft_client");
+            }catch (IOException e){
+                Screen.createPopup(
+                        Language.get("versioncheck.exception.title"),
+                        Language.get("versioncheck.exception.subtitle"),
+                        60, Popup.ERROR
+                );
+            }
+        },"client_update_check").start();
+    }
+
+
+    //progress
+    @Override
+    public void onProgressChange(int prog) {
+        this.logoLoadingScreen.updateProgress(prog/100f);
+    }
+
+    @Override
+    public void onProgressStageChanged(String newStage) {
+        this.logoLoadingScreen.setText(newStage);
+    }
+
+    @Override
+    public void refreshScreen() {
+        this.shortTick();
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
 }

@@ -1,10 +1,15 @@
 package com.sunrisestudio.cubecraft.extansion;
 
+import com.sunrisestudio.cubecraft.Start;
+import com.sunrisestudio.cubecraft.client.Cubecraft;
+import com.sunrisestudio.util.task.LoadTask;
 import com.sunrisestudio.util.ReflectHelper;
+import com.sunrisestudio.util.task.Task;
+import com.sunrisestudio.util.task.TaskProgressUpdateListener;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
@@ -33,5 +38,19 @@ public class ModManager {
 
     public static HashMap<String, Mod> getLoadedMods() {
         return mods;
+    }
+
+    public static void loadMod(Cubecraft client){
+        File[] mods = new File(Start.getGamePath() + "/mods").listFiles();
+        if(new File(Start.getGamePath() + "/mods").exists()) {
+            if (mods != null) {
+                new LoadTask(mods.length, 0.2f, 0.5f, count ->
+                        ModManager.loadMod(mods[count].getAbsolutePath(), null,
+                                client.getPlatformClient(),
+                                ExtansionRunningTarget.CLIENT),client);
+            } else {
+                throw new RuntimeException("null or invalid mod path");
+            }
+        }
     }
 }

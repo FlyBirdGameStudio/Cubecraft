@@ -4,6 +4,7 @@ import com.sunrisestudio.cubecraft.registery.Registry;
 import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.entity.humanoid.Player;
 import com.sunrisestudio.grass3d.render.Camera;
+import com.sunrisestudio.util.ColorUtil;
 import com.sunrisestudio.util.container.CollectionUtil;
 import com.sunrisestudio.grass3d.render.GLUtil;
 import com.sunrisestudio.util.math.MathHelper;
@@ -27,6 +28,8 @@ public class LevelRenderer {
     }
 
     public void render(float interpolationTime) {
+        float[] col= ColorUtil.int1Float1ToFloat4(world.getWorldInfo().fogColor(),1.0f);
+        GL11.glClearColor(col[0],col[1],col[2],col[3]);
         //update camera position
         this.camera.setPos(
                 MathHelper.linear_interpolate(this.player.xo, this.player.x,interpolationTime)+this.player.getCameraPosition().x,

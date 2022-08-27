@@ -1,6 +1,7 @@
 package com.sunrisestudio.grass3d.render;
 
 import com.sunrisestudio.grass3d.render.GLUtil;
+import com.sunrisestudio.util.math.AABB;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -175,32 +176,42 @@ public class ShapeRenderer {
     public static void renderAABB(double x0,double y0,double z0,double x1,double y1,double z1,int col) {
         GLUtil.assertRenderThread();
         GL11.glEnable(3042);
+        GL11.glDisable(3553);
         GL11.glBlendFunc(770, 771);
         GL11.glColor4f(0.0f, 0.0f, 0.0f, 0.4f);
-        GL11.glBegin(GL11.GL_LINE_STRIP);
-        GL11.glVertex3d( x0,  y0,  z0);
-        GL11.glVertex3d( x1,  y0,  z0);
-        GL11.glVertex3d( x1,  y0,  z1);
-        GL11.glVertex3d( x0,  y0,  z1 + 1.0f);
-        GL11.glVertex3d( x0,  y0,  z0);
-        GL11.glEnd();
-        GL11.glBegin(GL11.GL_LINE_STRIP);
-        GL11.glVertex3d( x0,  y1,  z0);
-        GL11.glVertex3d( x1,  y1,  z0);
-        GL11.glVertex3d( x1,  y1,  z1);
-        GL11.glVertex3d( x0,  y0,  z1);
-        GL11.glVertex3d( x0,  y0,  z0);
-        GL11.glEnd();
         GL11.glBegin(GL11.GL_LINES);
-        GL11.glVertex3d( x0,  y0,  z0);
-        GL11.glVertex3d( x0,  y0,  z0);
-        GL11.glVertex3d( x1,  y0,  z0);
-        GL11.glVertex3d( x1,  y0,  z0);
-        GL11.glVertex3d( x1,  y0,  z0);
-        GL11.glVertex3d( x1,  y0,  z0);
-        GL11.glVertex3d( x0,  y0,  z0);
-        GL11.glVertex3d( x0,  y0,  z0);
+        GL11.glVertex3d(x0,y0,z0);
+        GL11.glVertex3d(x1,y0,z0);
+        GL11.glVertex3d(x0,y1,z0);
+        GL11.glVertex3d(x1,y1,z0);
+        GL11.glVertex3d(x0,y0,z1);
+        GL11.glVertex3d(x1,y0,z1);
+        GL11.glVertex3d(x0,y1,z1);
+        GL11.glVertex3d(x1,y1,z1);
+
+        GL11.glVertex3d(x0,y0,z0);
+        GL11.glVertex3d(x0,y1,z0);
+        GL11.glVertex3d(x1,y0,z0);
+        GL11.glVertex3d(x1,y1,z0);
+        GL11.glVertex3d(x0,y0,z1);
+        GL11.glVertex3d(x0,y1,z1);
+        GL11.glVertex3d(x1,y0,z1);
+        GL11.glVertex3d(x1,y1,z1);
+
+        GL11.glVertex3d(x0,y0,z0);
+        GL11.glVertex3d(x0,y0,z1);
+        GL11.glVertex3d(x1,y0,z0);
+        GL11.glVertex3d(x1,y0,z1);
+        GL11.glVertex3d(x0,y1,z0);
+        GL11.glVertex3d(x0,y1,z1);
+        GL11.glVertex3d(x1,y1,z0);
+        GL11.glVertex3d(x1,y1,z1);
         GL11.glEnd();
         GL11.glDisable(3042);
+        GL11.glEnable(3553);
+    }
+
+    public static void renderAABB(AABB aabb,int col){
+        renderAABB(aabb.x0,aabb.y0, aabb.z0, aabb.x1, aabb.y1, aabb.z1,col);
     }
 }

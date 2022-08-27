@@ -1,5 +1,6 @@
 package com.sunrisestudio.cubecraft.client.render.object;
 
+import com.sunrisestudio.cubecraft.client.render.model.RenderType;
 import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.chunk.ChunkLoadLevel;
 import com.sunrisestudio.cubecraft.world.chunk.ChunkLoadTicket;
@@ -17,6 +18,7 @@ public class RenderChunk implements KeyGetter<RenderChunkPos>,IRenderObject{
     public World world;
     private final int renderList_terrain =GL11.glGenLists(1);
     private final int renderList_transparent=GL11.glGenLists(1);
+    private boolean empty;
 
     public RenderChunk(World w, long x, long y, long z){
         this.world=w;
@@ -41,7 +43,6 @@ public class RenderChunk implements KeyGetter<RenderChunkPos>,IRenderObject{
     //-----update-----
     @Override
     public void render(){
-
         GL11.glCallList(this.renderList_terrain);
         GL11.glDepthMask(false);
         GL11.glCallList(this.renderList_transparent);
@@ -50,18 +51,35 @@ public class RenderChunk implements KeyGetter<RenderChunkPos>,IRenderObject{
 
     @Override
     public DrawCompile[] compile() {
-        world.loadChunkAndNear(this.x,this.y,this.z,new ChunkLoadTicket(ChunkLoadLevel.None_TICKING,1));
+        world.loadChunkAndNear(this.x,this.y,this.z,new ChunkLoadTicket(ChunkLoadLevel.None_TICKING,10));
         IVertexArrayBuilder builder=new ChanneledVertexArrayBuilder(131072);
         builder.begin();
+        this.empty=true;
         for (long cx = 0; cx < 16; ++cx) {
             for (long cy = 0; cy <16; ++cy) {
                 for (long cz = 0; cz < 16; ++cz) {
-                    world.getBlock(cx+x*16,cy+y*16,cz+z*16).render(world,cx+x*16,cy+y*16,cz+z*16,cx,cy,cz,builder);
+                    if(world.getBlockState(cx+x*16,cy+y*16,cz+z*16).getId()!="cubecraft:air"){
+                        this.empty=false;
+                    }
+                    world.getBlockState(cx+x*16,cy+y*16,cz+z*16).render(world,cx+x*16,cy+y*16,cz+z*16,cx,cy,cz,builder, RenderType.ALPHA);
                 }
             }
         }
         builder.end();
-        return new DrawCompile[]{new DrawCompile(renderList_terrain,builder)};
+        IVertexArrayBuilder builder2=new ChanneledVertexArrayBuilder(131072);
+        builder2.begin();
+        for (long cx = 0; cx < 16; ++cx) {
+            for (long cy = 0; cy <16; ++cy) {
+                for (long cz = 0; cz < 16; ++cz) {
+                    world.getBlockState(cx+x*16,cy+y*16,cz+z*16).render(world,cx+x*16,cy+y*16,cz+z*16,cx,cy,cz,builder, RenderType.TRANSPARENT);
+                }
+            }
+        }
+        builder2.end();
+        return new DrawCompile[]{
+                new DrawCompile(renderList_terrain,builder),
+                new DrawCompile(renderList_transparent,builder2),
+        };
     }
 
 
@@ -83,6 +101,11 @@ public class RenderChunk implements KeyGetter<RenderChunkPos>,IRenderObject{
     }
 
     public void destroy() {
-        GL11.glDeleteLists(renderList_terrain,1);
+        GL11.glDeleteLists(this.renderList_terrain,1);
+        GL11.glDeleteLists(this.renderList_transparent,1);
+    }
+
+    public boolean isNotEmpty() {
+        return !empty;
     }
 }

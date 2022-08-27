@@ -25,8 +25,8 @@ public enum FaceCullingMethod {
     public static boolean shouldRender(World world, long x, long y, long z, String id, BlockFacing absFacing, FaceCullingMethod culling){
         Vector3<Long> pos=absFacing.findNear(x,y,z,1);
         return switch (culling){
-            case EQUALS-> Objects.equals(world.getBlock(pos.x(), pos.y(), pos.z()).getId(), id);
-            case SOLID -> world.getBlock(pos.x(), pos.y(), pos.z()).getBlock().isSolid();
+            case EQUALS-> Objects.equals(world.getBlockState(pos.x(), pos.y(), pos.z()).getId(), id);
+            case SOLID -> world.getBlockState(pos.x(), pos.y(), pos.z()).getBlock().isSolid();
             case ALWAYS -> true;
             case NEVER -> false;
         };

@@ -1,11 +1,17 @@
 package com.sunrisestudio.cubecraft.client.gui;
 
 
+import com.sunrisestudio.cubecraft.registery.Registry;
 import com.sunrisestudio.grass3d.render.GLUtil;
 import com.sunrisestudio.grass3d.render.ShapeRenderer;
 import com.sunrisestudio.grass3d.render.draw.ChanneledVertexArrayBuilder;
 import com.sunrisestudio.grass3d.render.textures.Texture2D;
+import com.sunrisestudio.grass3d.render.textures.TextureLoadingConfig;
 import com.sunrisestudio.util.math.MathHelper;
+import com.sunrisestudio.util.task.TaskProgressUpdateListener;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class FontRenderer {
    // public static Texture2DArray fontTexture = new Texture2DArray(false, false, 256, 256, 256);
@@ -69,5 +75,20 @@ public class FontRenderer {
     public static void renderShadow(String s, int x, int y, int color, int size, FontAlignment alignment) {
         render(s, (int) (x + 0.125 * size), (int) (y + 0.125 * size), (int) MathHelper.clamp(color - 0xbbbbbb, 0xFFFFFF, 0), size, alignment);
         render(s, x, y, color, size, alignment);
+    }
+
+    public static void loadTextures(TaskProgressUpdateListener listener) {
+        TextureLoadingConfig[] configs=new TextureLoadingConfig[256];
+        for (int i = 0; i < 256; i++) {
+            if (i >= 241 && i <= 248 || i >= 216 && i <= 239 || i == 8||i==0xf0) {
+                continue;
+            }
+            String s2 = Integer.toHexString(i);
+            if (s2.length() == 1) {
+                s2 = "0" + Integer.toHexString(i);
+            }
+            configs[i]=new TextureLoadingConfig("/resource/textures/font/unicode_page_" + s2 + ".png",false,false,0);
+        }
+        textures=Registry.getTextureManager().loadBatch(configs,1,listener,10,90);
     }
 }

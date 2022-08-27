@@ -98,13 +98,41 @@
     "text_alignment": "middle"
   },
   {
+    "id": "button_mod",
+    "type": "button",
+    "text": "option.button.mods",
+    "text_color": 16777215,
+    "layout": {
+      "type": "origin",
+      "layout": [-100,-10,200,30],
+      "meta": "middle_middle",
+      "layer": 0
+    },
+    "border": [0,4,4,4],
+    "text_alignment": "middle"
+  },
+  {
+    "id": "button_plugins",
+    "type": "button",
+    "text": "option.button.plugins",
+    "text_color": 16777215,
+    "layout": {
+      "type": "origin",
+      "layout": [100,-10,200,30],
+      "meta": "middle_middle",
+      "layer": 0
+    },
+    "border": [4,4,4,4],
+    "text_alignment": "middle"
+  },
+  {
     "id": "button_others",
     "type": "button",
     "text": "option.button.other",
     "text_color": 16777215,
     "layout": {
       "type": "origin",
-      "layout": [-100,-10,200,30],
+      "layout": [-100,20,200,30],
       "meta": "middle_middle",
       "layer": 0
     },
@@ -118,7 +146,7 @@
     "text_color": 16777215,
     "layout": {
       "type": "origin",
-      "layout": [100,-10,200,30],
+      "layout": [100,20,200,30],
       "meta": "middle_middle",
       "layer": 0
     },
@@ -132,7 +160,7 @@
     "text_color": 16777215,
     "layout": {
       "type": "origin",
-      "layout": [0,50,250,30],
+      "layout": [0,90,250,30],
       "meta": "middle_middle",
       "layer": 0
     },

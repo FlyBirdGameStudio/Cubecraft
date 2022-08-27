@@ -29,32 +29,34 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
         }
     }
 
+    public void addTicket(ChunkLoadTicket ticket) {
+        if(ticket.getChunkLoadLevel().containsLevel(this.ticket.getChunkLoadLevel())){
+            this.ticket.setChunkLoadLevel(ticket.getChunkLoadLevel());
+        }
+        if(ticket.getTime()>this.ticket.getTime()){
+            this.ticket.setTime(ticket.getTime());
+        }
+
+    }
+
     public void setBlock(int x, int y, int z, String id, BlockFacing f){
         if(x>=0&&y>=0&&z>=0&&x<WIDTH&&y<WIDTH&&z<WIDTH) {
             blockStates[x][y][z].setId(id);
             blockStates[x][y][z].setFacing(f);
-        }else{
-            throw new IllegalArgumentException("position not in range!");
         }
     }
 
-    public BlockState getBlock(int x, int y, int z) {
+    public BlockState getBlockState(int x, int y, int z) {
         if(x>=0&&y>=0&&z>=0&&x<WIDTH&&y<WIDTH&&z<WIDTH) {
             return blockStates[x][y][z];
         }else{
-            //throw new IllegalArgumentException("position not in range!");
             return new BlockState("cubecraft:air");
         }
     }
 
-
     @Override
     public ChunkPos getKey() {
         return new ChunkPos(x,y,z);
-    }
-
-    public void tick(){
-
     }
 
     @Override
@@ -90,15 +92,5 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
                 }
             }
         }
-    }
-
-    public void addTicket(ChunkLoadTicket ticket) {
-        if(ticket.getChunkLoadLevel().containsLevel(this.ticket.getChunkLoadLevel())){
-            this.ticket.setChunkLoadLevel(ticket.getChunkLoadLevel());
-        }
-        if(ticket.getTime()>this.ticket.getTime()){
-            this.ticket.setTime(ticket.getTime());
-        }
-
     }
 }

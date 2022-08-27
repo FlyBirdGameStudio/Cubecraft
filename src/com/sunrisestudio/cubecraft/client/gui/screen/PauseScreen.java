@@ -15,15 +15,15 @@ public class PauseScreen extends Screen {
         this.components.putAll(ScreenLoader.load("/resource/ui/pausescreen.json"));
 
         ((Button)this.components.get("button_back")).setListener(() -> {
-            this.platform.setScreen(new HUDScreen());
+            this.getPlatform().setScreen(new HUDScreen());
         });
 
         ((Button)this.components.get("button_option")).setListener(() -> {
-            this.platform.setScreen(new SettingScreen(this));
+            this.getPlatform().setScreen(new SettingScreen(this));
         });
 
         ((Button)this.components.get("button_save_and_quit")).setListener(() -> {
-            this.platform.setScreen(new TitleScreen());
+            this.getPlatform().setScreen(new TitleScreen());
         });
     }
 
@@ -41,8 +41,8 @@ public class PauseScreen extends Screen {
     @Override
     public void render(DisplayScreenInfo info, float interpolationTime) {
         GLUtil.enableBlend();
-        super.render(info, interpolationTime);
         renderMask();
+        super.render(info, interpolationTime);
         GLUtil.disableBlend();
     }
 }

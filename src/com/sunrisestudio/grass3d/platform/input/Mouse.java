@@ -121,10 +121,6 @@ public class Mouse {
         return buttonEventStates[queue.getCurrentPos()];
     }
 
-    public static int getEventDWheel() {
-        return 0;
-    }
-
     public static int getX() {
         return x;
     }
@@ -160,12 +156,12 @@ public class Mouse {
     }
 
     public static void initCallbacks() {
-        com.sunrisestudio.grass3d.platform.Callbacks.cursorPosCallback = new GLFWCursorPosCallback() {
+        Callbacks.cursorPosCallback = new GLFWCursorPosCallback() {
             public void invoke(long window, double xpos, double ypos) {
                 Mouse.addMoveEvent(xpos, ypos);
             }
         };
-        com.sunrisestudio.grass3d.platform.Callbacks.mouseButtonCallback = new GLFWMouseButtonCallback() {
+        Callbacks.mouseButtonCallback = new GLFWMouseButtonCallback() {
             public void invoke(long window, int button, int action, int mods) {
                 Mouse.addButtonEvent(button, action == 1);
             }

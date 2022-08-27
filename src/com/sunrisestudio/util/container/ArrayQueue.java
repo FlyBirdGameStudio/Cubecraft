@@ -19,11 +19,6 @@ public class ArrayQueue <E> {
         return this.e.contains(e.hashCode());
     }
 
-    //operation
-    //public Iterator<E> iterator() {
-        //return this.items.iterator();
-    //}
-
     public <T> T[] toArray(T[] a) {
         return this.items.toArray(a);
     }
@@ -43,7 +38,8 @@ public class ArrayQueue <E> {
 
     public E poll(){
         if(items.size()>0) {
-            return this.items.poll().e;
+            PriorityAdapter<E> item=this.items.poll();
+            return item==null?null:item.e;
         }else{
             return null;
         }
@@ -51,7 +47,11 @@ public class ArrayQueue <E> {
     public List<E> pollAll(int count){
         ArrayList<E> returns=new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            returns.add(this.poll());
+            E e=this.poll();
+            if(e!=null){
+                returns.add(e);
+            }
+
         }
         return returns;
     }

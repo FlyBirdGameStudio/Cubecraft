@@ -1,6 +1,8 @@
 package com.sunrisestudio.cubecraft.client.resources;
 
 import com.sunrisestudio.cubecraft.Start;
+import com.sunrisestudio.cubecraft.client.Cubecraft;
+import com.sunrisestudio.cubecraft.client.gui.FontRenderer;
 import com.sunrisestudio.util.LogHandler;
 
 import javax.imageio.ImageIO;
@@ -14,6 +16,12 @@ public class ResourceManager {
     public static ResourceManager instance=new ResourceManager();
     public ArrayList<ResourcePack> resourcePacks=new ArrayList<>();
     public LogHandler logHandler=LogHandler.create("resouceLoader","client");
+
+    public void reload(Cubecraft client) {
+        this.logHandler.checkGLError("pre_font_load");
+        FontRenderer.loadTextures(client);
+        this.logHandler.checkGLError("post_font_load");
+    }
 
 
     public InputStream getResource(String path,String fallback){

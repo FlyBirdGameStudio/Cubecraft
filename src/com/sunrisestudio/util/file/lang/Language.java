@@ -83,7 +83,7 @@ public class Language {
         }
     }
 
-    public String getFormattedMessage(String path,Object... args){
+    public static String getFormattedMessage(String path,Object... args){
         return selectedLanguage.map.getOrDefault(path,path).formatted(args);
     }
 }

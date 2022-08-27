@@ -1,16 +1,16 @@
 package com.sunrisestudio.cubecraft.world.biome;
 
-public class Biome {
+import com.sunrisestudio.cubecraft.world.chunk.Chunk;
+
+public abstract class Biome {
     private final double continental, temperature,humidity,erosion,altitude;
     private final String id;
-    private final String[] surfaceBlock;
     private final String basicBlock;
 
     public Biome(
             double continental, double temperature, double humidity, double erosion, double altitude,
             String id,
-            String basicBlock,
-            String[] surfaceBlock
+            String basicBlock
     ) {
         this.continental = continental;
         this.temperature = temperature;
@@ -19,7 +19,6 @@ public class Biome {
         this.altitude = altitude;
         this.id = id;
         this.basicBlock=basicBlock;
-        this.surfaceBlock=surfaceBlock;
     }
 
     public double match(double continental, double temperature, double humidity, double erosion, double altitude){
@@ -60,7 +59,5 @@ public class Biome {
         return basicBlock;
     }
 
-    public String[] getSurfaceBlock() {
-        return surfaceBlock;
-    }
+    public abstract void buildSurface(Chunk primer, int x, int z, double height, long seed);
 }

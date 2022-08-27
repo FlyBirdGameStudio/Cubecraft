@@ -40,7 +40,7 @@ public class World {
         for (long i = (long) box.x0 - 4; i < (long) box.x1 + 4; i++) {
             for (long j = (long) box.y0 - 4; j < (long) box.y1 + 4; j++) {
                 for (long k = (long) box.z0 - 4; k < (long) box.z1 + 4; k++) {
-                    AABB[] collisionBoxes = this.getBlock(i, j, k).getCollisionBox(i, j, k);
+                    AABB[] collisionBoxes = this.getBlockState(i, j, k).getCollisionBox(i, j, k);
                     if (collisionBoxes != null) {
                         result.addAll(CollectionUtil.pack(collisionBoxes));
                     }
@@ -60,7 +60,7 @@ public class World {
         for (long x = (long) Math.min(from.x, dest.x)-2; x < Math.max(from.x, dest.x)+2; x++) {
             for (long y = (long) Math.min(from.y, dest.y)-2; y < Math.max(from.y, dest.y+2)+2; y++) {
                 for (long z = (long) Math.min(from.z, dest.z)-2; z < Math.max(from.z, dest.z)+2; z++) {
-                    result.addAll(CollectionUtil.pack(getBlock(x,y,z).getSelectionBox(this,x,y,z)));
+                    result.addAll(CollectionUtil.pack(getBlockState(x,y,z).getSelectionBox(x,y,z)));
                 }
             }
         }
@@ -84,7 +84,7 @@ public class World {
 
     //info
     public String getID() {
-        return "cubecraft:over_world";
+        return "cubecraft:overworld";
     }
 
     public Level getLevel() {
@@ -147,13 +147,13 @@ public class World {
 
 
     //block
-    public BlockState getBlock(long x, long y, long z) {
+    public BlockState getBlockState(long x, long y, long z) {
         ChunkPos chunkPos = ChunkPos.fromWorldPos(x, y, z);
         if (getChunk(chunkPos) == null) {
             return new BlockState("cubecraft:air");
         }
 
-        return getChunk(chunkPos).getBlock(
+        return getChunk(chunkPos).getBlockState(
                 (int) MathHelper.getRelativePosInChunk(x, 16),
                 (int) MathHelper.getRelativePosInChunk(y, 16),
                 (int) MathHelper.getRelativePosInChunk(z, 16)
@@ -319,7 +319,7 @@ public class World {
             if (item > 0) {
                 this.scheduledTickEvents.put(key, item - 1);
             } else {
-                getBlock(key.x(), key.y(), key.z()).getBlock().onBlockUpdate(this, key.x(), key.y(), key.z());
+                getBlockState(key.x(), key.y(), key.z()).getBlock().onBlockUpdate(this, key.x(), key.y(), key.z());
                 this.scheduledTickEvents.remove(key);
             }
         });

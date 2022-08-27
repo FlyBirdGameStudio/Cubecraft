@@ -1,6 +1,7 @@
 package com.sunrisestudio.cubecraft.client.gui.screen;
 
 import com.sunrisestudio.cubecraft.client.gui.DisplayScreenInfo;
+import com.sunrisestudio.cubecraft.client.gui.FontAlignment;
 import com.sunrisestudio.grass3d.render.textures.Texture2D;
 import com.sunrisestudio.grass3d.render.GLUtil;
 import com.sunrisestudio.grass3d.render.ShapeRenderer;
@@ -13,6 +14,7 @@ public class LogoLoadingScreen extends Screen {
     public static final int BG_COLOR=0x303030;
 
     private Texture2D logoTex;
+    private String text;
 
     @Override
     public void init() {
@@ -67,10 +69,15 @@ public class LogoLoadingScreen extends Screen {
 
         builder.end();
         IVertexArrayUploader.createNewPointedUploader().upload(builder);
+
+        Screen.drawFontASCII("Loading-"+text+"("+(int)(prog*100)+"%)", xc-250, yc+65,16777215,8, FontAlignment.LEFT);
     }
 
     public void updateProgress(float prog) {
         this.prog=prog;
-        this.platform.shortTick();
+    }
+
+    public void setText(String newStage) {
+        this.text=newStage;
     }
 }

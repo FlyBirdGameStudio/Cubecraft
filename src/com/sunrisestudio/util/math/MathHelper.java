@@ -17,8 +17,15 @@ public class MathHelper {
 
 
     public static double smooth_interpolate(double x,double y,double t){
-        double a= clamp((t-x)/(y-x),0,1);
-        return t*t*(3-2*t);
+        return smoothstep(x,y,t);
+    }
+
+    static double smoothstep(double t1, double t2, double x) {
+        // Scale, bias and saturate x to 0..1 range
+        // 还记得么？在remap算法中接触过
+        x = clamp((x - t1) / (t2 - t1), 0.0, 1.0);
+        // Evaluate polynomial
+        return x * x * (3 - 2 * x);
     }
 
     public static double clamp(double x, double max, double min){
@@ -52,7 +59,7 @@ public class MathHelper {
     }
 
     public static double scale(double x, double outputMin, double outputMax, double inputMin, double inputMax){
-        return (x- inputMax)/(inputMax - inputMin)*(outputMax - outputMin)+ outputMin;
+        return (x- inputMin)/(inputMax - inputMin)*(outputMax - outputMin)+ outputMin;
     }
 
     public static long getChunkPos(long world,long aspect){

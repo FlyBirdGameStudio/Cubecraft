@@ -1,5 +1,6 @@
 package com.sunrisestudio.cubecraft.world.block;
 
+import com.sunrisestudio.cubecraft.client.render.model.RenderType;
 import com.sunrisestudio.cubecraft.registery.Registry;
 import com.sunrisestudio.cubecraft.world.HittableObject;
 import com.sunrisestudio.cubecraft.world.World;
@@ -62,8 +63,8 @@ public class BlockState implements NBTDataIO, HittableObject {
         return this.getBlock().getCollisionBox(x, y, z);
     }
 
-    public HitBox[] getSelectionBox(World world, long x, long y, long z) {
-        return this.getBlock().getSelectionBox(world, x, y, z, this);
+    public HitBox[] getSelectionBox(long x, long y, long z) {
+        return this.getBlock().getSelectionBox( x, y, z, this);
     }
 
     /**
@@ -91,8 +92,8 @@ public class BlockState implements NBTDataIO, HittableObject {
         this.blockMeta = compound.getCompoundTag("meta");
     }
 
-    public void render(World world, long x, long y, long z, long renderX, long renderY, long renderZ, IVertexArrayBuilder builder) {
-        getBlock().render(world, x, y, z, renderX, renderY, renderZ, getFacing(), builder);
+    public void render(World world, long x, long y, long z, long renderX, long renderY, long renderZ, IVertexArrayBuilder builder, RenderType renderType) {
+        this.getBlock().render(world, x, y, z, renderX, renderY, renderZ, getFacing(), builder);
     }
 
     //test

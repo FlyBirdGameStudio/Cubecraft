@@ -2,9 +2,12 @@ package com.sunrisestudio.cubecraft.world.entity.item;
 
 import com.sunrisestudio.cubecraft.world.World;
 import com.sunrisestudio.cubecraft.world.entity.Entity;
+import com.sunrisestudio.cubecraft.world.item.ItemStack;
 import org.joml.Vector3d;
 
 public abstract class Item extends Entity {
+    public ItemStack stack;
+
     public Item(World world) {
         super(world);
     }

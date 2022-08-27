@@ -4,6 +4,7 @@ import com.sunrisestudio.cubecraft.registery.Registry;
 import com.sunrisestudio.cubecraft.world.World;
 
 
+import com.sunrisestudio.cubecraft.world.item.Inventory;
 import com.sunrisestudio.util.file.nbt.NBTDataIO;
 
 import com.sunrisestudio.util.file.nbt.tag.NBTTagCompound;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public abstract class Entity implements HittableObject, NBTDataIO {
+    private Inventory inventory;
     public boolean sneak=false;
     private String uuid;
 
@@ -379,5 +381,9 @@ public abstract class Entity implements HittableObject, NBTDataIO {
         if(this.hitResult!=null){
             this.hitResult.interact(world,this);
         }
+    }
+
+    public Inventory getInventory() {
+        return inventory;
     }
 }

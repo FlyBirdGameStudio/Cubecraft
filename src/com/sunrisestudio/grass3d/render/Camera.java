@@ -91,4 +91,8 @@ public class Camera {
                 (this.getRotation().y)!=this.lastRotY||
                 (this.getRotation().z)!=this.lastRotZ;
     }
+
+    public void setupGlobalTranslate() {
+        GL11.glTranslated(-this.getPosition().x,-this.getPosition().y,-this.getPosition().z);
+    }
 }
