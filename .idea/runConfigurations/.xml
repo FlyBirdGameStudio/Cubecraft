@@ -5,7 +5,7 @@
     <envs>
       <env name="lang" value="EN_US" />
     </envs>
-    <option name="MAIN_CLASS_NAME" value="com.sunrisestudio.cubecraft.Start" />
+    <option name="MAIN_CLASS_NAME" value="com.flybirdstudio.cubecraft.Start" />
     <module name="CubeCraft" />
     <option name="PROGRAM_PARAMETERS" value="-Xms512m -Xmx768m" />
     <method v="2">

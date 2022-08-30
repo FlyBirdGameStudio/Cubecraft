@@ -18,7 +18,7 @@
 
 ---------------  S U M M A R Y ------------
 
-Command Line: -javaagent:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2022.1.1\lib\idea_rt.jar=65243:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2022.1.1\bin -Dfile.encoding=UTF-8 com.sunrisestudio.cubecraft.Start -Xms512m -Xmx768m
+Command Line: -javaagent:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2022.1.1\lib\idea_rt.jar=65243:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2022.1.1\bin -Dfile.encoding=UTF-8 com.flybirdstudio.cubecraft.Start -Xms512m -Xmx768m
 
 Host: Intel(R) Core(TM) i7-4600U CPU @ 2.10GHz, 4 cores, 7G,  Windows 10 , 64 bit Build 19041 (10.0.19041.1806)
 Time: Sat Jul 23 17:23:35 2022  Windows 10 , 64 bit Build 19041 (10.0.19041.1806) elapsed time: 14.591557 seconds (0d 0h 0m 14s)
@@ -33,16 +33,16 @@ C  [ig75icd64.dll+0x422a76]
 
 Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
 J 2061  org.lwjgl.opengl.GL11C.glDrawArrays(III)V (0 bytes) @ 0x0000015ab42372f9 [0x0000015ab42372a0+0x0000000000000059]
-J 2468 c1 com.sunrisestudio.grass3d.render.draw.VertexPointerUploader.upload(Lcom/sunrisestudio/grass3d/render/draw/IVertexArrayBuilder;)V (160 bytes) @ 0x0000015aad038d24 [0x0000015aad036dc0+0x0000000000001f64]
-j  com.sunrisestudio.grass3d.render.multiThread.DrawCompile.draw()V+23
-j  com.sunrisestudio.cubecraft.client.render.renderer.ChunkRenderer.updateChunks()V+151
-J 2504 c1 com.sunrisestudio.cubecraft.client.render.renderer.ChunkRenderer.render(F)V (488 bytes) @ 0x0000015aad046c2c [0x0000015aad046360+0x00000000000008cc]
-j  com.sunrisestudio.cubecraft.client.render.renderer.LevelRenderer.lambda$render$1(FLjava/lang/String;Lcom/sunrisestudio/cubecraft/render/renderer/IRenderer;)V+5
-j  com.sunrisestudio.cubecraft.client.render.renderer.LevelRenderer$$Lambda$93+0x0000000800d0dcd8.action(Ljava/lang/Object;Ljava/lang/Object;)V+12
-J 2160 c1 com.sunrisestudio.util.container.CollectionUtil.iterateMap(Ljava/util/Map;Lcom/sunrisestudio/util/container/CollectionUtil$MapIterationAction;)V (51 bytes) @ 0x0000015aacfa3214 [0x0000015aacfa2e20+0x00000000000003f4]
-j  com.sunrisestudio.cubecraft.client.render.renderer.LevelRenderer.render(FII)V+173
-J 2137 c1 com.sunrisestudio.cubecraft.client.Cubecraft.shortTick()V (184 bytes) @ 0x0000015aacf97bf4 [0x0000015aacf97840+0x00000000000003b4]
-j  com.sunrisestudio.util.LoopTickingApplication.run()V+43
+J 2468 c1 com.flybirdstudio.starfish3d.render.draw.VertexPointerUploader.upload(Lcom/sunrisestudio/grass3d/render/draw/IVertexArrayBuilder;)V (160 bytes) @ 0x0000015aad038d24 [0x0000015aad036dc0+0x0000000000001f64]
+j  com.flybirdstudio.starfish3d.render.multiThread.DrawCompile.draw()V+23
+j  com.flybirdstudio.cubecraft.client.render.renderer.ChunkRenderer.updateChunks()V+151
+J 2504 c1 com.flybirdstudio.cubecraft.client.render.renderer.ChunkRenderer.render(F)V (488 bytes) @ 0x0000015aad046c2c [0x0000015aad046360+0x00000000000008cc]
+j  com.flybirdstudio.cubecraft.client.render.renderer.LevelRenderer.lambda$render$1(FLjava/lang/String;Lcom/sunrisestudio/cubecraft/render/renderer/IRenderer;)V+5
+j  com.flybirdstudio.cubecraft.client.render.renderer.LevelRenderer$$Lambda$93+0x0000000800d0dcd8.action(Ljava/lang/Object;Ljava/lang/Object;)V+12
+J 2160 c1 com.flybirdstudio.util.container.CollectionUtil.iterateMap(Ljava/util/Map;Lcom/sunrisestudio/util/container/CollectionUtil$MapIterationAction;)V (51 bytes) @ 0x0000015aacfa3214 [0x0000015aacfa2e20+0x00000000000003f4]
+j  com.flybirdstudio.cubecraft.client.render.renderer.LevelRenderer.render(FII)V+173
+J 2137 c1 com.flybirdstudio.cubecraft.client.Cubecraft.shortTick()V (184 bytes) @ 0x0000015aacf97bf4 [0x0000015aacf97840+0x00000000000003b4]
+j  com.flybirdstudio.util.LoopTickingApplication.run()V+43
 j  java.lang.Thread.run()V+11 java.base@16.0.2
 v  ~StubRoutines::call_stub
 
@@ -1585,7 +1585,7 @@ Event: 14.129 Thread 0x0000015ac243bf00 2626       3       java.util.concurrent.
 Event: 14.129 Thread 0x0000015ac243bf00 nmethod 2626 0x0000015aad078d90 code [0x0000015aad078f60, 0x0000015aad0792c8]
 Event: 14.246 Thread 0x0000015ac243bf00 2627       3       java.lang.StringLatin1$CharsSpliterator::<init> (10 bytes)
 Event: 14.247 Thread 0x0000015ac243bf00 nmethod 2627 0x0000015aad079410 code [0x0000015aad0795c0, 0x0000015aad079708]
-Event: 14.257 Thread 0x0000015ac243bf00 2628       3       com.sunrisestudio.util.container.ArrayQueue::poll (14 bytes)
+Event: 14.257 Thread 0x0000015ac243bf00 2628       3       com.flybirdstudio.util.container.ArrayQueue::poll (14 bytes)
 Event: 14.258 Thread 0x0000015ac243bf00 nmethod 2628 0x0000015aad079810 code [0x0000015aad0799c0, 0x0000015aad079c28]
 Event: 14.258 Thread 0x0000015ac243bf00 2629       3       java.util.PriorityQueue::poll (81 bytes)
 Event: 14.258 Thread 0x0000015ac243bf00 nmethod 2629 0x0000015aad079d10 code [0x0000015aad079ee0, 0x0000015aad07a338]
@@ -1736,7 +1736,7 @@ Event: 14.577 GC heap after
 
 Deoptimization events (20 events):
 Event: 10.970 Thread 0x0000015ac3342260 Uncommon trap: trap_request=0xffffff45 fr.pc=0x0000015ab42becb4 relative=0x00000000000000f4
-Event: 10.970 Thread 0x0000015ac3342260 Uncommon trap: reason=unstable_if action=reinterpret pc=0x0000015ab42becb4 method=com.sunrisestudio.cubecraft.client.render.renderer.ChunkRenderer.lambda$updateChunks$0(Lcom/sunrisestudio/cubecraft/render/object/RenderChunkPos;)Z @ 51 c2
+Event: 10.970 Thread 0x0000015ac3342260 Uncommon trap: reason=unstable_if action=reinterpret pc=0x0000015ab42becb4 method=com.flybirdstudio.cubecraft.client.render.renderer.ChunkRenderer.lambda$updateChunks$0(Lcom/sunrisestudio/cubecraft/render/object/RenderChunkPos;)Z @ 51 c2
 Event: 10.970 Thread 0x0000015ac3342260 DEOPT PACKING pc=0x0000015ab42becb4 sp=0x00000036b46feb10
 Event: 10.970 Thread 0x0000015ac3342260 DEOPT UNPACKING pc=0x0000015aac6ad72e sp=0x00000036b46feab0 mode 2
 Event: 11.050 Thread 0x0000015ac3342260 DEOPT PACKING pc=0x0000015aacfdd9e5 sp=0x00000036b46fe900
@@ -1942,7 +1942,7 @@ symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;C:\Us
 
 VM Arguments:
 jvm_args: -javaagent:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2022.1.1\lib\idea_rt.jar=65243:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2022.1.1\bin -Dfile.encoding=UTF-8 
-java_command: com.sunrisestudio.cubecraft.Start -Xms512m -Xmx768m
+java_command: com.flybirdstudio.cubecraft.Start -Xms512m -Xmx768m
 java_class_path (initial): F:\Java\��Ŀ\CubeCraft\out\production\CubeCraft;F:\Java\��Ŀ\CubeCraft\libraries\lwjgl.jar;F:\Java\��Ŀ\CubeCraft\libraries\jinput.jar;F:\Java\��Ŀ\CubeCraft\libraries\disruptor.jar;F:\Java\��Ŀ\CubeCraft\libraries\lwjgl-stb.jar;F:\Java\��Ŀ\CubeCraft\libraries\gson-2.2.4.jar;F:\Java\��Ŀ\CubeCraft\libraries\lwjgl-glfw.jar;F:\Java\��Ŀ\CubeCraft\libraries\lwjgl_util.jar;F:\Java\��Ŀ\CubeCraft\libraries\joml-1.10.4.jar;F:\Java\��Ŀ\CubeCraft\libraries\lwjgl-openal.jar;F:\Java\��Ŀ\CubeCraft\libraries\lwjgl-opengl.jar;F:\Java\��Ŀ\CubeCraft\libraries\j-ogg-all-1.0.0.jar;F:\Java\��Ŀ\CubeCraft\libraries\netty-all-4.1.25.Final.jar;C:\Users\GrassBlock2022\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-jdk8\1.6.10\kotlin-stdlib-jdk8-1.6.10.jar;C:\Users\GrassBlock2022\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib\1.6.10\kotlin-stdlib-1.6.10.jar;C:\Users\GrassBlock2022\.m2\repository\org\jetbrains\annotations\13.0\annotations-13.0.jar;C:\Users\GrassBlock2022\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-common\1.6.10\kotlin-stdlib-common-1.6.10.jar;C:\Users\GrassBlock2022\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-jdk7\1.6.10\kotlin-stdlib-jdk7-1.6.10.jar
 Launcher Type: SUN_STANDARD
 
