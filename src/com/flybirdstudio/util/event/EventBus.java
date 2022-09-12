@@ -1,12 +1,15 @@
 package com.flybirdstudio.util.event;
 
+import com.flybirdstudio.util.container.ArrayQueue;
+import com.flybirdstudio.util.net.Packet;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class EventBus {
-    private final ArrayList<EventListener> listeners = new ArrayList<>();
+    protected final ArrayList<EventListener> listeners = new ArrayList<>();
 
     public void callEvent(Event event) {
         for (EventListener el : this.listeners) {

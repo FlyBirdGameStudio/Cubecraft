@@ -24,7 +24,7 @@ public abstract class Humanoid extends Entity {
 
     @Override
     public AABB getCollisionBoxSize() {
-        return new AABB(-0.3,0,-0.3,0.3,1.8,0.3);
+        return new AABB(-0.3,0,-0.3,0.3,1.75,0.3);
     }
 
     public Humanoid(IWorld world) {

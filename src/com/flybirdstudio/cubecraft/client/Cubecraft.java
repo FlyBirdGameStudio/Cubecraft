@@ -88,7 +88,7 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
         Language.selectInstance(Language.LanguageType.valueOf((String) GameSetting.instance.getValue("client.language","ZH_CN")));
         this.setScreen(new TitleScreen());
         this.logHandler.info("starting client io thread...");
-        new Thread(new UDPSocketThread(this.clientIO,128.0f),"client_io").start();
+        //new Thread(new UDPSocketThread(this.clientIO,128.0f),"client_io").start();
         this.checkVersion();
         this.logHandler.info("client initialization done,in%dms".formatted(Timer.endTiming()));
     }

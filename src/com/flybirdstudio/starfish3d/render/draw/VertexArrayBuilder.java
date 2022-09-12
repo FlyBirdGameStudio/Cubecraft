@@ -1,8 +1,11 @@
 package com.flybirdstudio.starfish3d.render.draw;
 
+import com.flybirdstudio.util.ColorUtil;
 import com.flybirdstudio.util.container.ArrayUtil;
 import org.joml.Vector2f;
 import org.joml.Vector3d;
+
+import java.nio.ByteOrder;
 
 /**
  * this builder grouped any type of attribute in to channel.
@@ -36,10 +39,10 @@ public class VertexArrayBuilder {
     private float l = 1.0f;
 
     public VertexArrayBuilder(int size) {
-        color = new double[size*4];
-        normal = new double[size*3];
-        tc = new double[size*3];
-        vertex = new double[size*3];
+        color = new double[size * 4];
+        normal = new double[size * 3];
+        tc = new double[size * 3];
+        vertex = new double[size * 3];
     }
 
     public void clear() {
@@ -47,24 +50,24 @@ public class VertexArrayBuilder {
     }
 
     public void end() {
-        this.raw=new double[vertexCount*13];
-        for (int i=0;i<vertexCount;i++){
-            raw[i*13]=tc[i*3];
-            raw[i*13+1]=tc[i*3+1];
-            raw[i*13+2]=tc[i*3+2];
+        this.raw = new double[vertexCount * 13];
+        for (int i = 0; i < vertexCount; i++) {
+            raw[i * 13] = tc[i * 3];
+            raw[i * 13 + 1] = tc[i * 3 + 1];
+            raw[i * 13 + 2] = tc[i * 3 + 2];
 
-            raw[i*13+3]=color[i*4];
-            raw[i*13+4]=color[i*4+1];
-            raw[i*13+5]=color[i*4+2];
-            raw[i*13+6]=color[i*4+3];
+            raw[i * 13 + 3] = color[i * 4];
+            raw[i * 13 + 4] = color[i * 4 + 1];
+            raw[i * 13 + 5] = color[i * 4 + 2];
+            raw[i * 13 + 6] = color[i * 4 + 3];
 
-            raw[i*13+7]=normal[i*3];
-            raw[i*13+8]=normal[i*3+1];
-            raw[i*13+9]=normal[i*3+2];
+            raw[i * 13 + 7] = normal[i * 3];
+            raw[i * 13 + 8] = normal[i * 3 + 1];
+            raw[i * 13 + 9] = normal[i * 3 + 2];
 
-            raw[i*13+10]=vertex[i*3];
-            raw[i*13+11]=vertex[i*3+1];
-            raw[i*13+12]=vertex[i*3+2];
+            raw[i * 13 + 10] = vertex[i * 3];
+            raw[i * 13 + 11] = vertex[i * 3 + 1];
+            raw[i * 13 + 12] = vertex[i * 3 + 2];
         }
     }
 
@@ -150,26 +153,61 @@ public class VertexArrayBuilder {
     }
 
     public double[] getRawArray() {
-        return ArrayUtil.copySub(0,vertexCount*13,this.raw);
+        return ArrayUtil.copySub(0, vertexCount * 13, this.raw);
     }
 
     public double[] getVertexArray() {
-        return ArrayUtil.copySub(0,vertexCount*3,vertex);
+        return ArrayUtil.copySub(0, vertexCount * 3, vertex);
     }
 
     public double[] getNormalArray() {
-        return ArrayUtil.copySub(0,vertexCount*3,normal);
+        return ArrayUtil.copySub(0, vertexCount * 3, normal);
     }
 
     public double[] getColorArray() {
-        return ArrayUtil.copySub(0,vertexCount*4,color);
+        return ArrayUtil.copySub(0, vertexCount * 4, color);
     }
 
     public double[] getTexCoordArray() {
-        return ArrayUtil.copySub(0,vertexCount*3,tc);
+        return ArrayUtil.copySub(0, vertexCount * 3, tc);
     }
 
-    public void vertexUV(Vector3d xyz, Vector2f uv, int layer){
-        vertexUV(xyz.x,xyz.y,xyz.z,uv.x,uv.y,layer);
+    public void vertexUV(Vector3d xyz, Vector2f uv, int layer) {
+        vertexUV(xyz.x, xyz.y, xyz.z, uv.x, uv.y, layer);
+    }
+
+    public void multColor(float red, float green, float blue) {
+        int j = ColorUtil.float3toInt1(this.r,this.g,this.b);
+        System.out.println(j);
+        if (ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN) {
+            int k = (int) ((float) (j & 255) * red);
+            int l = (int) ((float) (j >> 8 & 255) * green);
+            int i1 = (int) ((float) (j >> 16 & 255) * blue);
+            j = j & -16777216;
+            j = j | i1 << 16 | l << 8 | k;
+        } else {
+            int j1 = (int) ((float) (j >> 24 & 255) * red);
+            int k1 = (int) ((float) (j >> 16 & 255) * green);
+            int l1 = (int) ((float) (j >> 8 & 255) * blue);
+            j = j & 255;
+            j = j | j1 << 24 | k1 << 16 | l1 << 8;
+        }
+        this.r = ColorUtil.int1ToByte3(j)[0];
+        this.g = ColorUtil.int1ToByte3(j)[0];
+        this.b = ColorUtil.int1ToByte3(j)[0];
+    }
+
+    public void multColor(int col){
+        multColor(ColorUtil.int1ToFloat3(col)[0],ColorUtil.int1ToFloat3(col)[1],ColorUtil.int1ToFloat3(col)[2]);
+    }
+
+    public void multColorB(byte r, byte g, byte b) {
+        float r2 = (r & 0xFF) / 255.0f;
+        float g2 = (g & 0xFF) / 255.0f;
+        float b2 = (b & 0xFF) / 255.0f;
+
+        this.r*=r2;
+        this.g*=g2;
+        this.b*=b2;
     }
 }

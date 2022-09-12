@@ -46,7 +46,8 @@ public class ChunkGeneratorOverWorld extends IChunkGenerator {
         ChunkPos p=chunk.getKey();
         for (int x=0;x<16;x++){
             for (int z=0;z<16;z++){
-                    heightMap[x][z]=Math.max(altitudeFinal.getValue(p.toWorldPosX(x),p.toWorldPosZ(z)),-100000
+                    heightMap[x][z]=
+                            Math.max(altitudeFinal.getValue(p.toWorldPosX(x),p.toWorldPosZ(z)),-100000
                             //flatness.getValue(p.toWorldPosX(x),p.toWorldPosZ(z)>1.0f? peaks.getValue(p.toWorldPosX(x),p.toWorldPosZ(z)) : -1145141919810L)
                             )+continental.getValue(
                         p.toWorldPosX(x)/setting.getValueOrDefaultAsDouble("overworld.biome.continental.scale",512d),

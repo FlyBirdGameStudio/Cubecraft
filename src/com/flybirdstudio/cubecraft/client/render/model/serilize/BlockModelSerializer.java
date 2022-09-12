@@ -15,10 +15,7 @@ public class BlockModelSerializer implements JsonDeserializer<BlockModel>{
 
         JsonArray used_textures=root.get("used_textures").getAsJsonArray();
         for (int i=0;i< used_textures.size();i++){
-            Texture2DArray tex= Registery.getTextureManager().get2DArrayTexture("cubecraft:terrain");
-            if(!tex.contains(used_textures.get(i).getAsString())){
-                tex.load(used_textures.get(i).getAsString());
-            }
+
         }
 
 

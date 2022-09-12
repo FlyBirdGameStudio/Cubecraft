@@ -1,6 +1,7 @@
 package com.flybirdstudio.starfish3d.render.textures;
 
 
+import com.flybirdstudio.cubecraft.Start;
 import com.flybirdstudio.cubecraft.client.resources.ImageUtil;
 import com.flybirdstudio.cubecraft.client.resources.ResourceManager;
 import com.flybirdstudio.util.container.ArrayQueue;
@@ -12,63 +13,37 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class TextureManager {
-    private HashMap<String, Texture2D> texture2d = new HashMap<>();
+    private TextureContainer<Texture2D> texture2DContainer=new TextureContainer<>();
+    private TextureContainer<Texture2DTileMap> texture2DTileMapContainer=new TextureContainer<>();
 
-    public Texture2D create2DTexture(String path, boolean multiSample, boolean mipmap) {
-        if (!this.texture2d.containsKey(path)) {
-            Texture2D object = new Texture2D(multiSample, mipmap);
-            object.generateTexture();
-            object.load(path);
-            this.texture2d.put(path, object);
-            return object;
-        }
-        return this.texture2d.get(path);
+    public TextureContainer<Texture2D> getTexture2DContainer() {
+        return texture2DContainer;
     }
 
-    public Texture2D get2DTexture(String path) {
-        return this.texture2d.get(path);
+    public TextureContainer<Texture2DTileMap> getTexture2DTileMapContainer() {
+        return texture2DTileMapContainer;
     }
 
-    public void bind2dTexture(String path) {
-        texture2d.get(path).bind();
+    public Texture2D createTexture2D(String path, boolean ms, boolean mip) {
+        Texture2D texture=new Texture2D(ms,mip);
+        texture.generateTexture();
+        texture.load(path);
+        this.getTexture2DContainer().set(path,texture);
+        return texture;
     }
 
-    public void unBind2dTexture(String path) {
-        this.texture2d.get(path).unbind();
+    public Texture2DTileMap createTexture2DTileMap(String id,boolean ms,boolean mip,int tileSize,String... names) {
+        Texture2DTileMap texture2DTileMap=new Texture2DTileMap(ms,mip,tileSize,names);
+        texture2DTileMap.generateTexture();
+        texture2DTileMap.load(Start.getGamePath()+"/data/cache/"+id.replace(":","_")+".png");
+        this.getTexture2DTileMapContainer().set(id,texture2DTileMap);
+        return texture2DTileMap;
     }
-
-
-    private HashMap<String, Texture2DArray> textureArray2d = new HashMap<>();
-
-    public Texture2DArray create2DTextureArray(String id, boolean multiSample, boolean mipmap) {
-        if (!this.texture2d.containsKey(id)) {
-            Texture2DArray object = new Texture2DArray(multiSample, mipmap, 256, 16, 16);
-            object.generateTexture();
-            object.load(id);
-            this.textureArray2d.put(id, object);
-            return object;
-        }
-        return this.textureArray2d.get(id);
-    }
-
-    public Texture2DArray get2DArrayTexture(String path) {
-        return this.textureArray2d.get(path);
-    }
-
-    public void bind2DArrayTexture(String path) {
-        textureArray2d.get(path).bind();
-    }
-
-    public void unBind2DArrayTexture(String path) {
-        this.texture2d.get(path).unbind();
-    }
-
 
     public Texture2D[] loadBatch(TextureLoadingConfig[] cfgs, int threads, TaskProgressUpdateListener listener, int loadStart, int loadEnd) {
         ExecutorService service = Executors.newFixedThreadPool(threads);

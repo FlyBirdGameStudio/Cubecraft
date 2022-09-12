@@ -1,6 +1,6 @@
-package com.flybirdstudio.cubecraft.client.net.netHandler.handlers;
+package com.flybirdstudio.cubecraft._net.netHandler.handlers;
 
-import com.flybirdstudio.cubecraft.client.net.ServerChannelHandler;
+
 import com.flybirdstudio.util.container.ArrayUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

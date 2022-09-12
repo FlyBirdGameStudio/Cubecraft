@@ -26,7 +26,7 @@ public class Texture2DArray extends Texture{
         super.generateTexture();
         this.bind();
         GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-        GL12.glTexImage3D(this.getType(),1,GL11.GL_RGBA,width,height,count,0,GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE, (ByteBuffer) null);
+        GL12.glTexImage3D(this.getBindingType(),1,GL11.GL_RGBA,width,height,count,0,GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE, (ByteBuffer) null);
         logHandler.checkGLError("generate_texture");
     }
 
@@ -36,7 +36,7 @@ public class Texture2DArray extends Texture{
         int width=img.getWidth();
         int height=img.getHeight();
         this.bind();
-        GL12.glTexSubImage3D(getType(),1,0,0,prevLayer,width,height,1,GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE,ImageUtil.getByteFromBufferedImage_RGBA(img));
+        GL12.glTexSubImage3D(getBindingType(),1,0,0,prevLayer,width,height,1,GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE,ImageUtil.getByteFromBufferedImage_RGBA(img));
         this.textureMapping.put(path,prevLayer);
         this.unbind();
         logHandler.checkGLError("load");
@@ -44,17 +44,12 @@ public class Texture2DArray extends Texture{
     }
 
     @Override
-    public int getType() {
+    public int getBindingType() {
         if(this.multiSample){
             return GL32.GL_TEXTURE_2D_MULTISAMPLE_ARRAY;
         }else{
             return GL30.GL_TEXTURE_2D_ARRAY;
         }
-    }
-
-    @Override
-    public int getBindingType() {
-        return GL30.GL_TEXTURE_2D_ARRAY;
     }
 
     public int getLayer(String texture) {

@@ -42,7 +42,7 @@ public class NettyChannelHandler extends ChannelInboundHandlerAdapter {
         byte headSize = data[0];
         String type = new String(ArrayUtil.copySub(1, headSize, data), StandardCharsets.UTF_8);
         Packet pkt = this.packetDecoderRegistry.get(type).decode(data);
-        Registery.getNetworkEventBus().callEvent(pkt);
+        Registery.getNetworkEventBus().callEvent(pkt,sending);
         for (EventListener netHandler:Registery.getNetworkEventBus().getHandlers()){
             ((INetHandler) netHandler).setSendQueue(this.sending);
         }
@@ -63,7 +63,7 @@ public class NettyChannelHandler extends ChannelInboundHandlerAdapter {
                         ctx.writeAndFlush(BufferBuilder.wrap(finalData));
                     }
                     ctx.pipeline().fireUserEventTriggered(new ChannelTimingEvent());
-                    Registery.getNetworkEventBus().callEvent(new ChannelTimingEvent());
+                    Registery.getNetworkEventBus().callEvent(new ChannelTimingEvent(),this.sending);
                 }, sendingspeed, TimeUnit.MILLISECONDS);
     }
 }

@@ -3,6 +3,7 @@ package com.flybirdstudio.cubecraft.client.render.renderer;
 import com.flybirdstudio.cubecraft.GameSetting;
 import com.flybirdstudio.cubecraft.client.render.object.RenderChunk;
 import com.flybirdstudio.cubecraft.client.render.object.RenderChunkPos;
+import com.flybirdstudio.cubecraft.registery.Registery;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.cubecraft.world.entity.humanoid.Player;
 import com.flybirdstudio.starfish3d.render.Camera;
@@ -11,6 +12,9 @@ import com.flybirdstudio.starfish3d.render.culling.ProjectionMatrixFrustum;
 import com.flybirdstudio.starfish3d.render.multiThread.DrawCompile;
 import com.flybirdstudio.starfish3d.render.multiThread.MultiRenderCompileService;
 import com.flybirdstudio.starfish3d.render.textures.Texture2D;
+import com.flybirdstudio.starfish3d.render.textures.Texture2DArray;
+import com.flybirdstudio.starfish3d.render.textures.Texture2DTileMap;
+import com.flybirdstudio.starfish3d.render.textures.TextureStateManager;
 import com.flybirdstudio.util.ColorUtil;
 import com.flybirdstudio.util.LogHandler;
 import com.flybirdstudio.util.container.ArrayQueue;
@@ -26,7 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ChunkRenderer extends IWorldRenderer {
-    public Texture2D terrain = new Texture2D(false, false);
+    public Texture2D terrain = new Texture2D(false, true);
     public LogHandler logHandler = LogHandler.create("ChunkRenderer", "client");
     private final ProjectionMatrixFrustum frustum = new ProjectionMatrixFrustum(this.camera);
     public HashMapSet<RenderChunkPos, RenderChunk> chunks = new HashMapSet<>();
@@ -37,7 +41,8 @@ public class ChunkRenderer extends IWorldRenderer {
         super(w, p, c);
         terrain.generateTexture();
         terrain.load("/resource/textures/blocks/terrain.png");
-       // terrain.buildMipmap();
+        TextureStateManager.setTextureMipMap(terrain,true);
+        TextureStateManager.setTextureClamp(terrain,true);
     }
 
     public int allCount;
@@ -67,11 +72,10 @@ public class ChunkRenderer extends IWorldRenderer {
     private void drawChunks() {
         GLUtil.enableBlend();
         GLUtil.enableAA();
-        int d=GameSetting.instance.getValueAsInt("client.render.chunk.renderDistance", 4);
+        int d=GameSetting.instance.getValueAsInt("client.render.chunk.renderDistance", 114514);
         GLUtil.setupFog(d*d, BufferBuilder.from(ColorUtil.int1Float1ToFloat4(world.getWorldInfo().fogColor(),1)));
         GL11.glEnable(GL11.GL_FOG);
-        this.terrain.bind();
-
+        Registery.getTextureManager().getTexture2DTileMapContainer().bind("cubecraft:terrain");
         CollectionUtil.iterateMap(this.chunks.map, (key, item) -> {
             if (item.visible) {
                 GL11.glPushMatrix();
@@ -82,9 +86,8 @@ public class ChunkRenderer extends IWorldRenderer {
             }
             allCount++;
         });
-
+        Registery.getTextureManager().getTexture2DTileMapContainer().unbind("cubecraft:terrain");
         this.logHandler.checkGLError("draw_chunks");
-        this.terrain.unbind();
         GL11.glDisable(GL11.GL_FOG);
     }
 

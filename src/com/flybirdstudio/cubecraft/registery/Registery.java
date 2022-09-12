@@ -16,6 +16,7 @@ import com.flybirdstudio.cubecraft.client.render.renderer.IWorldRenderer;
 import com.flybirdstudio.cubecraft.client.render.worldObjectRenderer.IBlockRenderer;
 import com.flybirdstudio.cubecraft.client.render.worldObjectRenderer.IEntityRenderer;
 import com.flybirdstudio.cubecraft.client.resources.ResourceManager;
+import com.flybirdstudio.cubecraft.net.NetWorkEventBus;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.cubecraft.world.biome.BiomeMap;
 import com.flybirdstudio.cubecraft.world.block.material.Block;
@@ -127,7 +128,7 @@ public class Registery {
     //network
     private static final NameSpacedRegisterMap<? extends PacketEncoder, ?> packetEncoderMap = new NameSpacedRegisterMap(null);
     private static final NameSpacedRegisterMap<? extends PacketDecoder, ?> packetDecoderMap = new NameSpacedRegisterMap(null);
-    private static final EventBus networkEventBus = new EventBus();
+    private static final NetWorkEventBus networkEventBus = new NetWorkEventBus();
 
     public static NameSpacedRegisterMap<? extends PacketDecoder, ?> getPacketDecoderMap() {
         return packetDecoderMap;
@@ -137,7 +138,7 @@ public class Registery {
         return packetEncoderMap;
     }
 
-    public static EventBus getNetworkEventBus() {
+    public static NetWorkEventBus getNetworkEventBus() {
         return networkEventBus;
     }
 

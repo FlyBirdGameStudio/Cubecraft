@@ -19,7 +19,7 @@ public abstract class Texture {
     //operation
     public void bind() {
         GL11.glEnable(this.getBindingType());
-        GL11.glBindTexture(this.getType(),this.glId);
+        GL11.glBindTexture(this.getBindingType(),this.glId);
         logHandler.checkGLError("texture_binding");
     }
 
@@ -30,36 +30,23 @@ public abstract class Texture {
 
     public abstract int getBindingType();
 
-    public void createMipMap() {
-        this.bind();
-        GL30.glGenerateMipmap(this.getType());
-        logHandler.checkGLError("create_mipmap");
-    }
-
     //load
     public void generateTexture(){
         this.glId=GL11.glGenTextures();
         this.bind();
         if(mipMap) {
-            GL11.glTexParameteri(this.getType(), GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+            GL11.glTexParameteri(this.getBindingType(), GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
         }else{
-            GL11.glTexParameteri(this.getType(), GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+            GL11.glTexParameteri(this.getBindingType(), GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
         }
-        GL11.glTexParameteri(this.getType(), GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+        GL11.glTexParameteri(this.getBindingType(), GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
         logHandler.checkGLError("generate_texture");
     }
 
     public abstract void load(String path);
 
-    public void buildMipmap(){
-        if(this.mipMap){
-            this.bind();
-            GL30.glGenerateMipmap(this.getType());
-        }
-    }
-
     //meta
-    public abstract int getType();
+    //public abstract int getType();
 
     public int getHeight() {
         return height;

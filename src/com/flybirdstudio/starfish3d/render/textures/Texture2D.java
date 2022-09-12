@@ -18,21 +18,16 @@ public class Texture2D extends Texture {
         this.width = img.getWidth();
         this.height = img.getHeight();
         this.bind();
-        GL11.glTexImage2D(this.getType(),0,GL11.GL_RGBA,width,height,0,GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE, ImageUtil.getByteFromBufferedImage_RGBA(img));
+        GL11.glTexImage2D(this.getBindingType(),0,GL11.GL_RGBA,width,height,0,GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE, ImageUtil.getByteFromBufferedImage_RGBA(img));
         logHandler.checkGLError("load");
     }
 
     @Override
-    public int getType() {
+    public int getBindingType() {
         if (this.multiSample) {
             return GL32.GL_TEXTURE_2D_MULTISAMPLE;
         } else {
             return GL11.GL_TEXTURE_2D;
         }
-    }
-
-    @Override
-    public int getBindingType() {
-        return getType();
     }
 }

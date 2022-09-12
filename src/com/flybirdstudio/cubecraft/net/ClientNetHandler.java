@@ -10,6 +10,8 @@ import com.flybirdstudio.cubecraft.net.clientPacket.*;
 import com.flybirdstudio.cubecraft.net.serverPacket.ServerPacketBlockChange;
 import com.flybirdstudio.cubecraft.net.serverPacket.ServerPacketChunkGetResponse;
 import com.flybirdstudio.cubecraft.world.IWorld;
+import com.flybirdstudio.util.container.ArrayQueue;
+import com.flybirdstudio.util.net.Packet;
 
 public class ClientNetHandler extends INetHandler{
     final Cubecraft client;
@@ -19,12 +21,12 @@ public class ClientNetHandler extends INetHandler{
     }
 
     @EventHandler
-    public void onPacketChunkLoadResponse(ServerPacketChunkGetResponse packet){
+    public void onPacketChunkLoadResponse(ServerPacketChunkGetResponse packet, ArrayQueue<Packet> sendQueue){
         this.world.setChunk(packet.chunk());
     }
 
     @EventHandler
-    public void onPacketBlockChanged(ServerPacketBlockChange packet){
+    public void onPacketBlockChanged(ServerPacketBlockChange packet, ArrayQueue<Packet> sendQueue){
         this.world.setBlockState(packet.x(),packet.y(), packet.z(),packet.bs());
     }
 

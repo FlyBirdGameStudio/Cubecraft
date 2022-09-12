@@ -76,4 +76,21 @@ public class ColorUtil {
         float b2 = (b & 0xFF) / 255.0f;
         return new float[]{r2,g2,b2,alpha};
     }
+
+    public static int float3toInt1(float r, float g, float b) {
+        byte r2= (byte) (r*255);
+        byte g2= (byte) (g*255);
+        byte b2= (byte) (b*255);
+        return (b2 & 0xFF) | ((g2 & 0xFF) << 8) | ((r2 & 0xFF) << 16);
+    }
+
+    public static float[] int1ToFloat3(int c) {
+        byte r = (byte) (c >> 16);
+        byte g = (byte) (c >> 8);
+        byte b = (byte) c;
+        float r2 = (r & 0xFF) / 255.0f;
+        float g2 = (g & 0xFF) / 255.0f;
+        float b2 = (b & 0xFF) / 255.0f;
+        return new float[]{r2, g2, b2};
+    }
 }

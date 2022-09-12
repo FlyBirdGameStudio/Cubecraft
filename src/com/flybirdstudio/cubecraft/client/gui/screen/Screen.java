@@ -111,18 +111,18 @@ public abstract class Screen {
     //fast render
     private static Texture2D bg;
     public static void initBGRenderer(){
-        Registery.getTextureManager().create2DTexture("/resource/textures/gui/bg.png",false,false);
-        Registery.getTextureManager().create2DTexture("/resource/textures/gui/controls/popup.png",false,false);
-        Registery.getTextureManager().create2DTexture("/resource/textures/font/unicode_page_00.png",false,false);
+        Registery.getTextureManager().createTexture2D("/resource/textures/gui/bg.png",false,false);
+        Registery.getTextureManager().createTexture2D("/resource/textures/gui/controls/popup.png",false,false);
+        Registery.getTextureManager().createTexture2D("/resource/textures/font/unicode_page_00.png",false,false);
     }
 
     public static void renderPictureBackground(){
         int scale=GameSetting.instance.getValueAsInt("client.gui.scale",2);
-        Registery.getTextureManager().bind2dTexture("/resource/textures/gui/bg.png");
+        Registery.getTextureManager().getTexture2DContainer().bind("/resource/textures/gui/bg.png");
         ShapeRenderer.begin();
         ShapeRenderer.drawRectUV(0, Display.getWidth()/ scale,0,Display.getHeight()/scale,-1,-1,0,1,0,1);
         ShapeRenderer.end();
-        Registery.getTextureManager().unBind2dTexture("/resource/textures/gui/bg.png");
+        Registery.getTextureManager().getTexture2DContainer().unbind("/resource/textures/gui/bg.png");
     }
 
     public static void renderMask(){
@@ -149,7 +149,7 @@ public abstract class Screen {
     }
 
     public static void renderPopup(DisplayScreenInfo info,float interpolationTime){
-        Registery.getTextureManager().bind2dTexture("/resource/textures/gui/controls/popup.png");
+        Registery.getTextureManager().getTexture2DContainer().bind("/resource/textures/gui/controls/popup.png");
         int yPop=0;
         for (Popup p:popupList){
             GL11.glPushMatrix();
@@ -201,10 +201,10 @@ public abstract class Screen {
                         y0 = y, y1 = y + size,
                         u0 = charPos_H / 16.0f, u1 = charPos_H / 16f + 0.0625f,
                         v0 = charPos_V / 16.0f, v1 = charPos_V / 16f + 0.0625f;
-                Registery.getTextureManager().bind2dTexture("/resource/textures/font/unicode_page_00.png");
+                Registery.getTextureManager().getTexture2DContainer().bind("/resource/textures/font/unicode_page_00.png");
                 ShapeRenderer.setColor(color);
                 ShapeRenderer.drawRectUV(x0, x1, y0, y1, 0, 0,u0,u1,v0,v1);
-                Registery.getTextureManager().unBind2dTexture("/resource/textures/font/unicode_page_00.png");
+                Registery.getTextureManager().getTexture2DContainer().unbind("/resource/textures/font/unicode_page_00.png");
                 charPos_scr += size*0.5f;
             }
         }

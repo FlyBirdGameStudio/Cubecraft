@@ -6,12 +6,12 @@
       <sourceFolder url="file://$MODULE_DIR$/natives" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/STS2022" isTestSource="false" packagePrefix="tcgstudio2022" />
-      <sourceFolder url="file://$MODULE_DIR$/libraries" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/native" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/serlizers" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/resources" type="java-resource" />
       <excludeFolder url="file://$MODULE_DIR$/logs" />
       <excludeFolder url="file://$MODULE_DIR$/src/org/lwjglx/input" />
+      <excludeFolder url="file://$MODULE_DIR$/src/com/flybirdstudio/cubecraft/_net" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

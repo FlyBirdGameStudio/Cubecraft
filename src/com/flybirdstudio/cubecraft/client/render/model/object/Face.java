@@ -3,6 +3,7 @@ package com.flybirdstudio.cubecraft.client.render.model.object;
 import com.flybirdstudio.cubecraft.registery.Registery;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.starfish3d.render.draw.VertexArrayBuilder;
+import com.flybirdstudio.starfish3d.render.textures.Texture2DTileMap;
 
 import java.util.Objects;
 
@@ -28,12 +29,11 @@ public class Face {
         double z1 = renderZ + modelObject.z1;
         double y0 = renderY + modelObject.y0;
         double y1 = renderY + modelObject.y1;
-        int l = Registery.getTextureManager().get2DArrayTexture("cubecraft:terrain").getLayer(this.texture);
         if (Objects.equals(renderType, this.renderType)) {
             Registery.getFaceTypeAdapterRendererMap().get(this.id).render(
                     worldAccess, builder, modelObject,
                     x0,x1,y0,y1,z0,z1,
-                    u0,u1,v0,v1,l,
+                    u0,u1,v0,v1,0,
                     worldX, worldY, worldZ
             );
         }

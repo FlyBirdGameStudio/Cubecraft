@@ -23,7 +23,7 @@ public class Button extends Component {
 
     private void render(int x, int y, int w, int h, int layer) {
         FontRenderer.render(text, x + w / 2, y + 8, textColor, 8, FontAlignment.MIDDLE);
-        Registery.getTextureManager().bind2dTexture("/resource/textures/gui/controls/button.png");
+        Registery.getTextureManager().getTexture2DContainer().bind("/resource/textures/gui/controls/button.png");
 
         int texturePosition;
         if (this.enabled) {
@@ -87,6 +87,6 @@ public class Button extends Component {
     }
 
     static {
-        Registery.getTextureManager().create2DTexture("/resource/textures/gui/controls/button.png", false, false);
+        Registery.getTextureManager().createTexture2D("/resource/textures/gui/controls/button.png", false, false);
     }
 }

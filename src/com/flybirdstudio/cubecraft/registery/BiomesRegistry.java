@@ -13,7 +13,7 @@ import java.util.Random;
 public class BiomesRegistry {
     @NameSpaceItemGetter(id = "plains", namespace = "cubecraft")
     public Biome plains(){
-        return new Biome(0.3, 0.5, 0.4, 0, 0.03,"cubecraft:plains", "cubecraft:stone"){
+        return new Biome(0.3, 0.5, 0.4, 0, 0.03,"cubecraft:plains", "cubecraft:stone", 0x91bd59){
             @Override
             public void buildSurface(Chunk primer,int x, int z, double height, long seed) {
                 ChunkPos p=primer.getKey();

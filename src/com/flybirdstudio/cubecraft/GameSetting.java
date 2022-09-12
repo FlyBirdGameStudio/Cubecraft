@@ -26,10 +26,12 @@ public class GameSetting {
     }
 
     public int getValueAsInt(String path, int i){
-        return Integer.valueOf((String) this.properties.getOrDefault(path,String.valueOf(i)));
+        return Integer.parseInt((String) this.properties.getOrDefault(path,String.valueOf(i)));
     }
 
-
+    public boolean getValueAsBoolean(String path,boolean b) {
+        return Boolean.parseBoolean((String) this.properties.getOrDefault(path,String.valueOf(b)));
+    }
 
     public void setValue(String path,Object data){
         buffer.put(path, data);
