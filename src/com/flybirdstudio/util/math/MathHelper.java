@@ -164,4 +164,52 @@ public class MathHelper {
         double _1z=linear_interpolate(_10,_11,xt);
         return linear_interpolate(_0z,_1z,yt);
     }
+
+    public static double reflect(double y, double v) {
+        return v-(y-v);
+    }
+
+    public static int getHexValue(char ch){
+        if(ch >= '0' && ch <= '9'){
+            return Integer.parseInt(String.valueOf(ch));
+        }
+        if ( (ch >= 'a'  && ch <= 'f') || (ch >= 'A' && ch <= 'F')) {
+            switch (ch) {
+                case 'a':
+                case 'A':
+                    //这里不用break是因为执行了return以后就不会再往下执行了
+                    return 10;
+                case 'b':
+                case 'B':
+                    return 11;
+                case 'c':
+                case 'C':
+                    return 12;
+                case 'd':
+                case 'D':
+                    return 13;
+                case 'e':
+                case 'E':
+                    return 14;
+                case 'f':
+                case 'F':
+                    return 15;
+            }
+        }
+        return -1;
+    }
+
+    public static int hex2Int(String str) {
+        int result = 0;
+        char[] hex = str.toCharArray();
+        for(int i = 0; i < hex.length; i++){
+            if(getHexValue(hex[i]) != -1){
+                result += getHexValue(hex[i]) * Math.pow(16, hex.length-i-1);
+            }
+            else {
+                return -1;
+            }
+        }
+        return result;
+    }
 }

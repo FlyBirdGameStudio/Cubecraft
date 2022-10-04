@@ -9,7 +9,7 @@
       <item index="4" class="java.lang.String" itemvalue="com.sunrisestudio.util.container.namespace.NameSpaceItemGetter" />
     </list>
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="14" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_16" project-jdk-name="corretto-16" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="SuppressKotlinCodeStyleNotification">

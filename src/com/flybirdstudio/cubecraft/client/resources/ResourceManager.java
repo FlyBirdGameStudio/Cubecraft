@@ -2,11 +2,7 @@ package com.flybirdstudio.cubecraft.client.resources;
 
 import com.flybirdstudio.cubecraft.Start;
 import com.flybirdstudio.cubecraft.client.Cubecraft;
-import com.flybirdstudio.cubecraft.client.gui.FontRenderer;
-import com.flybirdstudio.cubecraft.registery.Registery;
-import com.flybirdstudio.starfish3d.render.textures.Texture2DTileMap;
-import com.flybirdstudio.starfish3d.render.textures.TextureManager;
-import com.flybirdstudio.starfish3d.render.textures.TextureStateManager;
+import com.flybirdstudio.cubecraft.client.event.ClientResourceReloadEvent;
 import com.flybirdstudio.util.LogHandler;
 
 import javax.imageio.ImageIO;
@@ -15,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ResourceManager {
     public static ResourceManager instance=new ResourceManager();
@@ -23,21 +18,8 @@ public class ResourceManager {
     public LogHandler logHandler=LogHandler.create("resouceLoader","client");
 
     public void reload(Cubecraft client) {
-        this.logHandler.checkGLError("pre_font_load");
-        FontRenderer.loadTextures(client);
-        this.logHandler.checkGLError("post_font_load");
-
-        File f[]=new File(Start.getGamePath()+"/resources/resource/textures/block").listFiles();
-        String[] name=new String[f.length];
-        int i=0;
-        for (File f2:f){
-            name[i]="/resource/textures/block/"+f2.getName();
-            i++;
-        }
-        Texture2DTileMap terrain=Registery.getTextureManager().createTexture2DTileMap("cubecraft:terrain",false,true,16,name);
-        TextureStateManager.setTextureMipMap(terrain,true);
+        client.getClientEventBus().callEvent(new ClientResourceReloadEvent(client,this));
     }
-
 
     public InputStream getResource(String path,String fallback){
         InputStream inputStream=null;

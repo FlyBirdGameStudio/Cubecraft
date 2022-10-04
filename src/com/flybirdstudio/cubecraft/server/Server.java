@@ -1,6 +1,6 @@
 package com.flybirdstudio.cubecraft.server;
 
-import com.flybirdstudio.cubecraft.registery.Registery;
+import com.flybirdstudio.cubecraft.registery.Registry;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.util.LogHandler;
 import com.flybirdstudio.util.LoopTickingApplication;
@@ -25,13 +25,13 @@ public class Server extends LoopTickingApplication {
 
         this.logHandler= LogHandler.create("main","server");
         this.timer=new Timer(20);
-        this.world=new Level((String) StartServer.getArgs("world name","world"));
+        this.world=new Level(StartServer.getArgs().getValueAsString("level","world"));
 
         logHandler.info("starting server on"+this.option.get("server.port"));
         try {
             this.UDPSocket =new UDPSocket(
-                    Registery.getPacketEncoderMap(),
-                    Registery.getPacketDecoderMap(),
+                    Registry.getPacketEncoderMap(),
+                    Registry.getPacketDecoderMap(),
                     "127.0.0.1",
                     (int)this.option.getOrDefault("server.port",11451)
             );
@@ -44,7 +44,7 @@ public class Server extends LoopTickingApplication {
     }
 
     @Override
-    public void longTick() {
+    public void tick() {
         for (IWorld dim:this.world.dims) {
             worldTickingService.submit(dim::tick);
         }

@@ -3,7 +3,7 @@ package com.flybirdstudio.cubecraft.world.chunk;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.util.container.keyMap.KeyGetter;
 import com.flybirdstudio.cubecraft.world.block.BlockState;
-import com.flybirdstudio.cubecraft.world.block.BlockFacing;
+import com.flybirdstudio.cubecraft.world.block.EnumFacing;
 import com.flybirdstudio.cubecraft.world.entity.Entity;
 import com.flybirdstudio.util.file.nbt.NBTDataIO;
 import com.flybirdstudio.util.file.nbt.tag.NBTTagCompound;
@@ -39,7 +39,7 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
 
     }
 
-    public void setBlock(int x, int y, int z, String id, BlockFacing f){
+    public void setBlock(int x, int y, int z, String id, EnumFacing f){
         if(x>=0&&y>=0&&z>=0&&x<WIDTH&&y<WIDTH&&z<WIDTH) {
             blockStates[x][y][z].setId(id);
             blockStates[x][y][z].setFacing(f);

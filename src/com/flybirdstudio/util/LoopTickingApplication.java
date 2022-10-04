@@ -9,8 +9,8 @@ public abstract class LoopTickingApplication implements Runnable{
     private TimingInfo timingInfo;
 
     public void init()throws Exception {}
-    public void shortTick() {}
-    public void longTick(){}
+    public void render() {}
+    public void tick(){}
     public void stop(){}
     public void on1sec(){}
 
@@ -34,14 +34,14 @@ public abstract class LoopTickingApplication implements Runnable{
         try {
             while (this.running) {
                 long last_0=System.currentTimeMillis();
-                this.shortTick();
+                this.render();
                 shortTickDuration= (int) (System.currentTimeMillis()-last_0);
 
                 timer.advanceTime();
                 shortTicks++;
                 for (int i = 0; i < timer.ticks; ++i) {
                     long last_1=System.currentTimeMillis();
-                    this.longTick();
+                    this.tick();
                     longTickDuration= (int) (System.currentTimeMillis()-last_1);
                     longTicks++;
                 }

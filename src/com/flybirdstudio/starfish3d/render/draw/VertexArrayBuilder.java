@@ -4,6 +4,7 @@ import com.flybirdstudio.util.ColorUtil;
 import com.flybirdstudio.util.container.ArrayUtil;
 import org.joml.Vector2f;
 import org.joml.Vector3d;
+import org.lwjgl.opengl.GL11;
 
 import java.nio.ByteOrder;
 
@@ -13,6 +14,7 @@ import java.nio.ByteOrder;
  * it is still compatible with any type of {@link IVertexArrayUploader},but it will not working well.
  */
 public class VertexArrayBuilder {
+    int drawMode;
 
     //data
     public int vertexCount = 0;
@@ -38,11 +40,16 @@ public class VertexArrayBuilder {
     private float f = 1.0f;
     private float l = 1.0f;
 
-    public VertexArrayBuilder(int size) {
+    public VertexArrayBuilder(int size,int mode) {
         color = new double[size * 4];
         normal = new double[size * 3];
         tc = new double[size * 3];
         vertex = new double[size * 3];
+        this.drawMode=mode;
+    }
+
+    public VertexArrayBuilder(int size){
+        this(size, GL11.GL_QUADS);
     }
 
     public void clear() {
@@ -209,5 +216,9 @@ public class VertexArrayBuilder {
         this.r*=r2;
         this.g*=g2;
         this.b*=b2;
+    }
+
+    public int getDrawMode() {
+        return this.drawMode;
     }
 }

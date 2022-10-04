@@ -1,17 +1,17 @@
 package com.flybirdstudio.cubecraft.client.gui;
 
 
-import com.flybirdstudio.cubecraft.registery.Registery;
+import com.flybirdstudio.cubecraft.registery.Registry;
 import com.flybirdstudio.starfish3d.render.GLUtil;
 import com.flybirdstudio.starfish3d.render.ShapeRenderer;
 import com.flybirdstudio.starfish3d.render.draw.VertexArrayBuilder;
+import com.flybirdstudio.starfish3d.render.draw.VertexArrayUploader;
 import com.flybirdstudio.starfish3d.render.textures.Texture2D;
 import com.flybirdstudio.starfish3d.render.textures.TextureLoadingConfig;
 import com.flybirdstudio.util.math.MathHelper;
 import com.flybirdstudio.util.task.TaskProgressUpdateListener;
 
 public class FontRenderer {
-   // public static Texture2DArray fontTexture = new Texture2DArray(false, false, 256, 256, 256);
     public static Texture2D[] textures = new Texture2D[256];
 
     public static void render(String s, int x, int y, int color, int size, FontAlignment alignment) {
@@ -57,8 +57,11 @@ public class FontRenderer {
                         u0 = charPos_H / 16.0f, u1 = charPos_H / 16f + 0.0625f,
                         v0 = charPos_V / 16.0f, v1 = charPos_V / 16f + 0.0625f;
                 textures[pageCode].bind();
-                ShapeRenderer.setColor(color);
-                ShapeRenderer.drawRectUV(x0, x1, y0, y1, 0, 0, u0, u1, v0, v1);
+                builder.begin();
+                builder.color(color);
+                ShapeRenderer.drawRectUV(builder,x0, x1, y0, y1, 0, 0, u0, u1, v0, v1);
+                builder.end();
+                VertexArrayUploader.uploadPointer(builder);
                 textures[pageCode].unbind();
                 if (s2.equals("0")) {
                     charPos_scr += size / 2;
@@ -74,18 +77,5 @@ public class FontRenderer {
         render(s, x, y, color, size, alignment);
     }
 
-    public static void loadTextures(TaskProgressUpdateListener listener) {
-        TextureLoadingConfig[] configs=new TextureLoadingConfig[256];
-        for (int i = 0; i < 256; i++) {
-            if (i >= 241 && i <= 248 || i >= 216 && i <= 239 || i == 8||i==0xf0) {
-                continue;
-            }
-            String s2 = Integer.toHexString(i);
-            if (s2.length() == 1) {
-                s2 = "0" + Integer.toHexString(i);
-            }
-            configs[i]=new TextureLoadingConfig("/resource/textures/font/unicode_page_" + s2 + ".png",false,false,0);
-        }
-        textures= Registery.getTextureManager().loadBatch(configs,1,listener,10,90);
-    }
+
 }

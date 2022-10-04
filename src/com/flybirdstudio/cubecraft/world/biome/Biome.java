@@ -6,13 +6,13 @@ public abstract class Biome {
     private final double continental, temperature,humidity,erosion,altitude;
     private final String id;
     private final String basicBlock;
-    private final int grassColor;
+    private final int grassColor,leavesColor;
 
     public Biome(
             double continental, double temperature, double humidity, double erosion, double altitude,
             String id,
             String basicBlock,
-            int grassColor) {
+            int grassColor,int leavesColor) {
         this.continental = continental;
         this.temperature = temperature;
         this.humidity = humidity;
@@ -21,6 +21,7 @@ public abstract class Biome {
         this.id = id;
         this.basicBlock=basicBlock;
         this.grassColor = grassColor;
+        this.leavesColor= leavesColor;
     }
 
     public double match(double continental, double temperature, double humidity, double erosion, double altitude){
@@ -65,5 +66,9 @@ public abstract class Biome {
 
     public int getGrassColor() {
         return this.grassColor;
+    }
+
+    public int getLeavesColor() {
+        return this.leavesColor;
     }
 }

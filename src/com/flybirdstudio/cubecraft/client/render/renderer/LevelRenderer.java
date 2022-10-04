@@ -1,6 +1,6 @@
 package com.flybirdstudio.cubecraft.client.render.renderer;
 
-import com.flybirdstudio.cubecraft.registery.Registery;
+import com.flybirdstudio.cubecraft.registery.Registry;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.cubecraft.world.entity.humanoid.Player;
 import com.flybirdstudio.starfish3d.render.Camera;
@@ -23,7 +23,7 @@ public class LevelRenderer {
     public LevelRenderer(IWorld w, Player p){
         this.world=w;
         this.player=p;
-        this.renderers= (HashMap<String, IWorldRenderer>) Registery.getWorldRenderers().createAll(world,player,camera);
+        this.renderers= (HashMap<String, IWorldRenderer>) Registry.getWorldRenderers().createAll(world,player,camera);
         this.environmentRenderer=new EnvironmentRenderer(world,player,camera);
     }
 

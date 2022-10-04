@@ -1,7 +1,7 @@
 package com.flybirdstudio.cubecraft.world.block.material;
 
 import com.flybirdstudio.util.math.AABB;
-import com.flybirdstudio.cubecraft.world.block.BlockFacing;
+import com.flybirdstudio.cubecraft.world.block.EnumFacing;
 
 public class OverwrittenBlock extends Block {
 
@@ -16,7 +16,7 @@ public class OverwrittenBlock extends Block {
     }
 
     @Override
-    public BlockFacing[] getEnabledFacings() {
+    public EnumFacing[] getEnabledFacings() {
         return behavior.getEnabledFacings();
     }
 

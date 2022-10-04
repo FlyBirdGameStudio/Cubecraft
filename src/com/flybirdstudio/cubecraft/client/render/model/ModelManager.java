@@ -2,7 +2,7 @@ package com.flybirdstudio.cubecraft.client.render.model;
 
 import com.flybirdstudio.cubecraft.client.render.model.object.Model;
 import com.flybirdstudio.cubecraft.client.resources.ResourceManager;
-import com.flybirdstudio.cubecraft.registery.Registery;
+import com.flybirdstudio.cubecraft.registery.Registry;
 import com.flybirdstudio.util.container.namespace.NameSpaceMap;
 
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class ModelManager <I extends Model>{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        I model = Registery.getJsonReader().fromJson(json, clazz);
+        I model = Registry.getJsonReader().fromJson(json, clazz);
         this.models.set(model.getID(),model.getNameSpace(),model);
     }
 }

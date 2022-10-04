@@ -4,6 +4,7 @@ import com.flybirdstudio.cubecraft.client.Cubecraft;
 import com.flybirdstudio.cubecraft.client.gui.DisplayScreenInfo;
 import com.flybirdstudio.cubecraft.client.gui.FontAlignment;
 import com.flybirdstudio.cubecraft.client.gui.FontRenderer;
+import com.flybirdstudio.cubecraft.client.gui.ScreenLoader;
 import com.flybirdstudio.cubecraft.client.render.renderer.ChunkRenderer;
 import com.flybirdstudio.cubecraft.world.HittableObject;
 import com.flybirdstudio.cubecraft.world.block.BlockState;
@@ -34,7 +35,7 @@ public class HUDScreen extends Screen {
     private boolean showGUI = true;
 
     public HUDScreen() {
-        super();
+        super("cubecraft:hud_screen", ScreenType.EMPTY);
         this.actionBar.generateTexture();
         this.actionBar.load("/resource/textures/gui/containers/actionbar.png");
         this.pointer.generateTexture();
@@ -138,12 +139,13 @@ public class HUDScreen extends Screen {
 
     @Override
     public Screen getParentScreen() {
-        return new PauseScreen();
+        return ScreenLoader.loadByExtName("/resource/ui/pause_screen.xml");
     }
 
     @Override
     public void tick() {
         getPlatform().controller.tick();
+        getPlatform().controller.setSelectedSlot(slot);
         this.updateDebugInfo();
         super.tick();
     }
@@ -155,7 +157,7 @@ public class HUDScreen extends Screen {
                 VertexArrayUploader.getUploadedCount()
         );
         this.debugInfoLeft[2] = "本地客户端tps：" + this.getPlatform().getTimingInfo().longTickTPS() + "/MSPT:" + this.getPlatform().getTimingInfo().longTickMSPT();
-        this.debugInfoLeft[3] = "本地区块缓存:%d".formatted(this.getPlatform().clientWorld.getChunkCache().size());
+        this.debugInfoLeft[3] = "本地区块缓存:%d".formatted(this.getPlatform().getClientWorld().getChunkCache().size());
         ChunkRenderer cr = (ChunkRenderer) this.getPlatform().levelRenderer.renderers.get("cubecraft:chunk_renderer");
         if(cr!=null) {
             this.debugInfoLeft[5] = "地形渲染(总数/可见/更新):%d,%d,%d".formatted(cr.allCount, cr.visibleCount, cr.updateCount);
@@ -179,7 +181,7 @@ public class HUDScreen extends Screen {
     }
 
     private void initDebugInfo(){
-        this.debugInfoLeft[0] = "CubeCraft-" + Cubecraft.VERSION;
+        this.debugInfoLeft[0] = "Cubecraft-" + Cubecraft.VERSION;
 
 
         this.debugInfoRight[0] = "JVM：" + JVMInfo.getJavaName() + "/" + JVMInfo.getJavaVersion();

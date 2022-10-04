@@ -32,7 +32,7 @@ public class EnvironmentRenderer extends IWorldRenderer {
     @Override
     public void render(float interpolationTime) {
         GLUtil.enableBlend();
-        int d = GameSetting.instance.getValueAsInt("client.render.chunk.renderDistance", 4) * 16 + 1024;
+        int d = GameSetting.instance.getValueAsInt("client.render.terrain.renderDistance", 4) * 16 + 1024;
 
         GLUtil.setupFog(d / 6, BufferBuilder.from(ColorUtil.int1Float1ToFloat4(world.getWorldInfo().fogColor(), 1.0f)));
         GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -74,7 +74,7 @@ public class EnvironmentRenderer extends IWorldRenderer {
     }
 
     public void updateSky() {
-        int d2 = GameSetting.instance.getValueAsInt("client.render.chunk.renderDistance", 4);
+        int d2 = GameSetting.instance.getValueAsInt("client.render.terrain.renderDistance", 4);
         int vLength = d2 * 16;
         int hLength = d2 * 16 + 1024;
         VertexArrayBuilder v = new VertexArrayBuilder(1048576);

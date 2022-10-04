@@ -94,4 +94,27 @@ public class PlayerController {
     public void releaseAllKeys() {
         Arrays.fill(this.keys, false);
     }
+
+
+    public static final String[] list=new String[]{
+            "cubecraft:stone",
+            "cubecraft:dirt",
+            "cubecraft:grass_block",
+            "cubecraft:oak_leaves",
+            "cubecraft:dark_oak_leaves",
+            "cubecraft:spruce_leaves",
+            "cubecraft:birch_leaves",
+            "cubecraft:acacia_leaves",
+
+            "cubecraft:stone",
+            "cubecraft:dirt",
+            "cubecraft:grass_block",
+            "cubecraft:oak_leaves",
+            "cubecraft:dark_oak_leaves",
+            "cubecraft:spruce_leaves",
+            "cubecraft:birch_leaves",
+    };
+    public void setSelectedSlot(int slot){
+        this.entity.selectedBlockID=list[slot];
+    }
 }

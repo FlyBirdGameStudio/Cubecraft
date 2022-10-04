@@ -51,7 +51,6 @@ public class ArrayQueue <E> {
             if(e!=null){
                 returns.add(e);
             }
-
         }
         return returns;
     }

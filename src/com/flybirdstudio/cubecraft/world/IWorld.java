@@ -1,7 +1,7 @@
 package com.flybirdstudio.cubecraft.world;
 
-import com.flybirdstudio.cubecraft.registery.Registery;
-import com.flybirdstudio.cubecraft.world.block.BlockFacing;
+import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.world.block.EnumFacing;
 import com.flybirdstudio.cubecraft.world.block.BlockState;
 import com.flybirdstudio.cubecraft.world.chunk.Chunk;
 import com.flybirdstudio.cubecraft.world.chunk.ChunkLoadLevel;
@@ -10,6 +10,7 @@ import com.flybirdstudio.cubecraft.world.chunk.ChunkPos;
 import com.flybirdstudio.cubecraft.world.entity.Entity;
 import com.flybirdstudio.util.container.CollectionUtil;
 import com.flybirdstudio.util.container.HashMapSet;
+import com.flybirdstudio.util.event.EventBus;
 import com.flybirdstudio.util.math.AABB;
 import com.flybirdstudio.util.math.HitBox;
 import com.flybirdstudio.util.math.MathHelper;
@@ -19,6 +20,7 @@ import org.joml.Vector3d;
 import java.util.*;
 
 public class IWorld {
+    private final EventBus eventBus=new EventBus();
     public HashMap<Vector3<Long>, Integer> scheduledTickEvents = new HashMap<>();//event,remaining time
     public HashMapSet<ChunkPos, Chunk> chunks = new HashMapSet<>();//position,chunk
     public HashMap<String, Entity> entities = new HashMap<>();//uuid,entity
@@ -30,6 +32,9 @@ public class IWorld {
         this.levelInfo = levelInfo;
     }
 
+    public EventBus getEventBus() {
+        return eventBus;
+    }
 
     //physics
     public ArrayList<AABB> getCollisionBox(AABB box) {
@@ -112,7 +117,7 @@ public class IWorld {
 
     //entity
     public void spawnEntity(String id, double x, double y, double z) {
-        Entity e = Registery.getEntityMap().create(id, this);
+        Entity e = Registry.getEntityMap().create(id, this);
         e.setPos(x, y, z);
         this.addEntity(e);
     }
@@ -145,6 +150,10 @@ public class IWorld {
 
 
     //block
+    public BlockState getBlockState(Vector3<Long> vec){
+        return getBlockState(vec.x(), vec.y(), vec.z());
+    }
+
     public BlockState getBlockState(long x, long y, long z) {
         ChunkPos chunkPos = ChunkPos.fromWorldPos(x, y, z);
         if (getChunk(chunkPos) == null) {
@@ -158,13 +167,13 @@ public class IWorld {
         );
     }
 
-    public void setBlock(long x, long y, long z, String id, BlockFacing facing) {
+    public void setBlock(long x, long y, long z, String id, EnumFacing facing) {
         setBlockNoUpdate(x, y, z, id, facing);
         setTick(x, y, z);
         setNeighborTick(x, y, z);
     }
 
-    public void setBlockNoUpdate(long x, long y, long z, String id, BlockFacing facing) {
+    public void setBlockNoUpdate(long x, long y, long z, String id, EnumFacing facing) {
         ChunkPos chunkPos = ChunkPos.fromWorldPos(x, y, z);
         if (getChunk(chunkPos) == null) {
             return;

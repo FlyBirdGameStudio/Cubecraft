@@ -1,7 +1,7 @@
 package com.flybirdstudio.cubecraft.world.worldGen;
 
 import com.flybirdstudio.cubecraft.world.IWorld;
-import com.flybirdstudio.cubecraft.world.block.BlockFacing;
+import com.flybirdstudio.cubecraft.world.block.EnumFacing;
 import com.flybirdstudio.cubecraft.world.chunk.Chunk;
 import com.flybirdstudio.cubecraft.world.worldGen.noise.NoiseGeneratorCombined;
 import com.flybirdstudio.cubecraft.world.worldGen.noise.NoiseGeneratorOctaves;
@@ -133,7 +133,7 @@ public class ChunkProvider0223 extends ChunkProvider {
                             if (this.floatingGen && y+primer.getKey().y()*16 < height3) {
                                 blockID = "cubecraft:air";
                             }
-                            primer.setBlock(x, (int) y, z, blockID, BlockFacing.Up);
+                            primer.setBlock(x, (int) y, z, blockID, EnumFacing.Up);
                         }
                     }
                 }
@@ -180,7 +180,7 @@ public class ChunkProvider0223 extends ChunkProvider {
                                 }
                             }
                             if (primer.getBlockState(x, (int) heightMap[x][z], z).getId() != "cubecraft:air") {
-                                primer.setBlock(x, (int) heightMap[x][z], z, id, BlockFacing.Up);
+                                primer.setBlock(x, (int) heightMap[x][z], z, id, EnumFacing.Up);
                             }
                         }
                     }
@@ -392,7 +392,7 @@ public class ChunkProvider0223 extends ChunkProvider {
                     if (chunk.getBlockState(i, j, k).getId() == "cubecraft:dirt"&&world.getBlockState(
                             i+chunk.getKey().x()*16,j+chunk.getKey().y()*16+1,k+chunk.getKey().z()*16
                     ).getId()=="cubecraft:air") {
-                        chunk.setBlock(i, j, k, "cubecraft:grass_block", BlockFacing.Up);
+                        chunk.setBlock(i, j, k, "cubecraft:grass_block", EnumFacing.Up);
                     }
                 }
             }

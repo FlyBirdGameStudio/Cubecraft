@@ -50,7 +50,7 @@ public class LogHandler {
                 logArrays.get(s).sort(Comparator.comparingLong(o -> o.time));
                 for (Log e : logArrays.get(s)) {
                     try {
-                        writer.write(e.getFormattedMassage() + "\n");
+                        writer.write(e.getOutputMessage() + "\n");
                     } catch (IOException ex) {
                         System.out.println("can not write log:" + e);
                     }
@@ -117,6 +117,14 @@ public class LogHandler {
                     "[" + err.name + "]" +
                     "[" + source + "]" + ColorUtil.WHITE+
                     message;
+        }
+
+        public String getOutputMessage(){
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+            Date date = new Date(System.currentTimeMillis());
+            return "[" + formatter.format(date) + "]" +
+                    "[" + err.name + "]" +
+                    "[" + source + "]" + message;
         }
     }
 

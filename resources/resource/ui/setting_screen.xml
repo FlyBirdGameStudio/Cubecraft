@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<faml ext="cubecraft_ui">
+    <meta>
+        <type>image-bg</type>
+        <id>cubecraft:setting_screen</id>
+    </meta>
+    <elements>
+        <button id="video">
+            <layout>{
+                "type": "origin", "layout": [-100,-80,200,30],
+                "meta": "middle_middle", "layer": 0,"border":[0,4,4,4]
+                }
+            </layout>
+            <text type="lang" color="ffffff" align="middle">option.button.video</text>
+        </button>
+        <button id="audio">
+            <layout>{
+                "type": "origin", "layout": [100,-80,200,30],
+                "meta": "middle_middle", "layer": 0,"border":[4,0,4,4]
+                }
+            </layout>
+            <text type="lang" color="ffffff" align="middle">option.button.audio</text>
+        </button>
+        <button id="control">
+            <layout>{
+                "type": "origin", "layout": [-100,-50,200,30],
+                "meta": "middle_middle", "layer": 0,"border":[0,4,4,4]
+                }
+            </layout>
+            <text type="lang" color="ffffff" align="middle">option.button.control</text>
+        </button>
+        <button id="chat">
+            <layout>{
+                "type": "origin", "layout": [100,-50,200,30],
+                "meta": "middle_middle", "layer": 0,"border":[4,0,4,4]
+                }
+            </layout>
+            <text type="lang" color="ffffff" align="middle">option.button.chat</text>
+        </button>
+        <button id="resource_pack">
+            <layout>{
+                "type": "origin", "layout": [-100,-20,200,30],
+                "meta": "middle_middle", "layer": 0,"border":[0,4,4,4]
+                }
+            </layout>
+            <text type="lang" color="ffffff" align="middle">option.button.resource_pack</text>
+        </button>
+        <button id="language">
+            <layout>{
+                "type": "origin", "layout": [100,-20,200,30],
+                "meta": "middle_middle", "layer": 0,"border":[4,0,4,4]
+                }
+            </layout>
+            <text type="lang" color="ffffff" align="middle">option.button.language</text>
+        </button>
+        <button id="mod">
+            <layout>{
+                "type": "origin", "layout": [-100,10,200,30],
+                "meta": "middle_middle", "layer": 0,"border":[0,4,4,4]
+                }
+            </layout>
+            <text type="lang" color="ffffff" align="middle">option.button.mod</text>
+        </button>
+        <button id="about">
+            <layout>{
+                "type": "origin", "layout": [100,10,200,30],
+                "meta": "middle_middle", "layer": 0,"border":[4,0,4,4]
+                }
+            </layout>
+            <text type="lang" color="ffffff" align="middle">option.button.about</text>
+        </button>
+        <label id="title">
+            <layout>{
+                "type": "origin", "layout": [0,-145,0,16],
+                "meta": "middle_middle", "layer": 0
+                }
+            </layout>
+            <text type="lang" color="ffffff" align="middle">option.title</text>
+        </label>
+        <button id="confirm">
+            <layout>{
+                "type": "origin", "layout": [0,90,250,30],
+                "meta": "middle_middle", "layer": 0,"border":[0,0,4,4]
+                }
+            </layout>
+            <text type="lang" color="ffffff" align="middle">button.confirm</text>
+        </button>
+    </elements>
+</faml>

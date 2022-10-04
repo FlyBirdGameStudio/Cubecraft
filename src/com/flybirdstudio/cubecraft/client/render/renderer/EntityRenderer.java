@@ -1,6 +1,6 @@
 package com.flybirdstudio.cubecraft.client.render.renderer;
 
-import com.flybirdstudio.cubecraft.registery.Registery;
+import com.flybirdstudio.cubecraft.registery.Registry;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.cubecraft.world.entity.Entity;
 import com.flybirdstudio.cubecraft.world.entity.humanoid.Player;
@@ -15,7 +15,7 @@ public class EntityRenderer extends IWorldRenderer {
     public void render(float interpolationTime) {
         for (Entity e:this.world.getAllEntities()){
             try {
-                Registery.getEntityRendererMap().get(e.getID()).render(e);
+                Registry.getEntityRendererMap().get(e.getID()).render(e);
             }catch (Exception ignored){}
         }
     }

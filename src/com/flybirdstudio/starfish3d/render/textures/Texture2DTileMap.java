@@ -3,6 +3,8 @@ package com.flybirdstudio.starfish3d.render.textures;
 import com.flybirdstudio.cubecraft.client.resources.ImageUtil;
 import com.flybirdstudio.cubecraft.client.resources.ResourceManager;
 import com.flybirdstudio.util.container.CollectionUtil;
+import com.flybirdstudio.util.math.MathHelper;
+import com.flybirdstudio.util.task.TaskProgressUpdateListener;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL32;
 
@@ -10,8 +12,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Texture2DTileMap extends Texture2D {
     public static final int MAX_SUPPORTED_COUNT = 1048576;
@@ -47,31 +50,7 @@ public class Texture2DTileMap extends Texture2D {
     }
 
     public void load(String cacheLoc){
-        this.bind();
-        int w = ROWS * tileSize*3;
-        int h = this.count / ROWS * tileSize*3;
-        BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        CollectionUtil.iterateMap(this.mapping, (key, item) -> {
-            BufferedImage img2=ResourceManager.instance.getImage(key);
-            if (img2 != null) {
-                if(img2.getWidth()==tileSize&&img2.getHeight()==tileSize){
-                    img.getGraphics().drawImage(img2, getTextureXPos(key), getTextureYPos(key), null);
-                    img.getGraphics().drawImage(img2, getTextureXPos(key)+tileSize, getTextureYPos(key), null);
-                    img.getGraphics().drawImage(img2, getTextureXPos(key)-tileSize, getTextureYPos(key), null);
-                    img.getGraphics().drawImage(img2, getTextureXPos(key), getTextureYPos(key)+tileSize, null);
-                    img.getGraphics().drawImage(img2, getTextureXPos(key), getTextureYPos(key)-tileSize, null);
-                }
-            }
-        });
-        GL11.glTexImage2D(this.getBindingType(), 0, GL11.GL_RGBA, w, h, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, ImageUtil.getByteFromBufferedImage_RGBA(img));
-        logHandler.checkGLError("load");
-        File f=new File(cacheLoc);
-        try {
-            f.createNewFile();
-            ImageIO.write(img,"png",f);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
     }
 
     public void reload(String name) {
@@ -137,5 +116,36 @@ public class Texture2DTileMap extends Texture2D {
         } else {
             return relative;
         }
+    }
+
+    public void load(TaskProgressUpdateListener listener,int loadStart,int loadEnd) {
+        int w = ROWS * tileSize*3;
+        int h = this.count / ROWS * tileSize*3;
+        BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        AtomicLong last= new AtomicLong(System.currentTimeMillis());
+        AtomicInteger i= new AtomicInteger();
+        CollectionUtil.iterateMap(this.mapping, (key, item) -> {
+            BufferedImage img2=ResourceManager.instance.getImage(key);
+            if (img2 != null) {
+                if(img2.getWidth()==tileSize&&img2.getHeight()==tileSize){
+                    if(System.currentTimeMillis()- last.get() >40){
+                        last.set(System.currentTimeMillis());
+                        listener.refreshScreen();
+                        int prog = (int) MathHelper.scale(i.get(), loadStart, loadEnd, 0, this.mapping.size());
+                        listener.onProgressChange(prog);
+                        listener.onProgressStageChanged("combiningTileMap:%s(%d/%d)".formatted(key,i.get(),this.mapping.size()));
+                    }
+                    img.getGraphics().drawImage(img2, getTextureXPos(key), getTextureYPos(key), null);
+                    img.getGraphics().drawImage(img2, getTextureXPos(key)+tileSize, getTextureYPos(key), null);
+                    img.getGraphics().drawImage(img2, getTextureXPos(key)-tileSize, getTextureYPos(key), null);
+                    img.getGraphics().drawImage(img2, getTextureXPos(key), getTextureYPos(key)+tileSize, null);
+                    img.getGraphics().drawImage(img2, getTextureXPos(key), getTextureYPos(key)-tileSize, null);
+                    i.getAndIncrement();
+                }
+            }
+        });
+        this.bind();
+        GL11.glTexImage2D(this.getBindingType(), 0, GL11.GL_RGBA, w, h, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, ImageUtil.getByteFromBufferedImage_RGBA(img));
+        logHandler.checkGLError("load");
     }
 }

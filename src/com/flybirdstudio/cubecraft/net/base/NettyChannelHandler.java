@@ -2,7 +2,7 @@ package com.flybirdstudio.cubecraft.net.base;
 
 import com.flybirdstudio.cubecraft.net.ChannelTimingEvent;
 import com.flybirdstudio.cubecraft.net.INetHandler;
-import com.flybirdstudio.cubecraft.registery.Registery;
+import com.flybirdstudio.cubecraft.registery.Registry;
 import com.flybirdstudio.util.container.ArrayQueue;
 import com.flybirdstudio.util.container.ArrayUtil;
 import com.flybirdstudio.util.container.BufferBuilder;
@@ -42,8 +42,8 @@ public class NettyChannelHandler extends ChannelInboundHandlerAdapter {
         byte headSize = data[0];
         String type = new String(ArrayUtil.copySub(1, headSize, data), StandardCharsets.UTF_8);
         Packet pkt = this.packetDecoderRegistry.get(type).decode(data);
-        Registery.getNetworkEventBus().callEvent(pkt,sending);
-        for (EventListener netHandler:Registery.getNetworkEventBus().getHandlers()){
+        Registry.getNetworkEventBus().callEvent(pkt,sending);
+        for (EventListener netHandler: Registry.getNetworkEventBus().getHandlers()){
             ((INetHandler) netHandler).setSendQueue(this.sending);
         }
         ctx.fireChannelRead(msg);
@@ -63,7 +63,7 @@ public class NettyChannelHandler extends ChannelInboundHandlerAdapter {
                         ctx.writeAndFlush(BufferBuilder.wrap(finalData));
                     }
                     ctx.pipeline().fireUserEventTriggered(new ChannelTimingEvent());
-                    Registery.getNetworkEventBus().callEvent(new ChannelTimingEvent(),this.sending);
+                    Registry.getNetworkEventBus().callEvent(new ChannelTimingEvent(),this.sending);
                 }, sendingspeed, TimeUnit.MILLISECONDS);
     }
 }

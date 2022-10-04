@@ -10,7 +10,7 @@ public class StartServer {
         LogHandler logHandler=LogHandler.create("start","server");
         //init game runtime
         startArguments =new StartArguments(args);
-        gamePath= (String) getArgs("path",System.getProperty("user.dir"));
+        gamePath= startArguments.getValueAsString("path",System.getProperty("user.dir"));
 
         //start thread
         if(server!=null&&server.isRunning()){
@@ -33,7 +33,7 @@ public class StartServer {
 
     private static StartArguments startArguments;
 
-    public static Object getArgs(String id,Object ifNull){
-        return startArguments.getValue(id,ifNull);
+    public static StartArguments getArgs() {
+        return startArguments;
     }
 }

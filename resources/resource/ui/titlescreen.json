@@ -1,90 +1,110 @@
-[
-  {
-    "id": "version_string",
-    "type": "label",
-    "text": "titlescreen.version",
-    "text_color": 16777215,
-    "layout": {
-      "type": "origin",
-      "layout": [2,-2,0,8],
-      "meta": "left_bottom",
-      "layer": 0
-    },
-    "border": [0,0,0,0],
-    "text_alignment": "left"
+{
+  "meta": {
+    "type": "image-bg",
+    "id":"cubecraft:title_screen"
   },
-  {
-    "id": "copyright_string",
-    "type": "label",
-    "text": "titlescreen.copyright",
-    "text_color": 16777215,
-    "layout": {
-      "type": "origin",
-      "layout": [-2,-2,0,8],
-      "meta": "right_bottom",
-      "layer": 0
+  "elements": [
+    {
+      "id": "version_string",
+      "type": "label",
+      "text": {
+        "src": "titlescreen.version",
+        "type": "lang",
+        "color": 16777215,
+        "align": "left"
+      },
+      "layout": {
+        "type": "origin",
+        "layout": [2, -2, 0, 8],
+        "meta": "left_bottom",
+        "layer": 0,
+        "border": [0, 0, 0, 0]
+      }
     },
-    "border": [0,0,0,0],
-    "text_alignment": "right"
-  },
-
-
-
-
-  {
-    "id": "button_singleplayer",
-    "type": "button",
-    "text": "titlescreen.button.singleplayer",
-    "text_color": 16777215,
-    "layout": {
-      "type": "origin",
-      "layout": [0,-10,300,30],
-      "meta": "middle_middle",
-      "layer": 0
+    {
+      "id": "copyright_string",
+      "type": "label",
+      "text": {
+        "src": "titlescreen.copyright",
+        "type": "lang",
+        "color": 16777215,
+        "align": "right"
+      },
+      "layout": {
+        "type": "origin",
+        "layout": [-2, -2, 0, 8],
+        "meta": "right_bottom",
+        "layer": 0,
+        "border": [0, 0, 0, 0]
+      }
     },
-    "border": [0,0,4,4],
-    "text_alignment": "middle"
-  },
-  {
-    "id": "button_multiplayer",
-    "type": "button",
-    "text": "titlescreen.button.multiplayer",
-    "text_color": 16777215,
-    "layout": {
-      "type": "origin",
-      "layout": [0,20,300,30],
-      "meta": "middle_middle",
-      "layer": 0
+    {
+      "id": "button_singleplayer",
+      "type": "button",
+      "text": {
+        "src": "titlescreen.button.singleplayer",
+        "type": "lang",
+        "color": 16777215,
+        "align": "middle"
+      },
+      "layout": {
+        "type": "origin",
+        "layout": [0, -10, 300, 30],
+        "meta": "middle_middle",
+        "layer": 0,
+        "border": [0, 0, 4, 4]
+      }
     },
-    "border": [0,0,4,4],
-    "text_alignment": "middle"
-  },
-  {
-    "id": "button_option",
-    "type": "button",
-    "text": "titlescreen.button.setting",
-    "text_color": 16777215,
-    "layout": {
-      "type": "origin",
-      "layout": [-75,50,150,30],
-      "meta": "middle_middle",
-      "layer": 0
+    {
+      "id": "button_multiplayer",
+      "type": "button",
+      "text": {
+        "src":"titlescreen.button.multiplayer",
+        "color": 16777215,
+        "type": "lang",
+        "align": "middle"
+      },
+      "layout": {
+        "type": "origin",
+        "layout": [0, 20, 300, 30],
+        "meta": "middle_middle",
+        "layer": 0,
+        "border": [0, 0, 4, 4]
+      }
     },
-    "border": [0,4,4,4],
-    "text_alignment": "middle"
-  },
-  {
-    "id": "button_quit",
-    "type": "button",
-    "text": "titlescreen.button.quit",
-    "text_color": 16777215,
-    "layout": {
-      "type": "origin",
-      "layout": [75,50,150,30],
-      "meta": "middle_middle",
-      "layer": 0
+    {
+      "id": "button_option",
+      "type": "button",
+      "text": {
+        "src":"titlescreen.button.setting",
+        "color": 16777215,
+        "type": "lang",
+        "align": "middle"
+      },
+      "layout": {
+        "type": "origin",
+        "layout": [-75, 50, 150, 30],
+        "meta": "middle_middle",
+        "layer": 0,
+        "border": [0, 4, 4, 4]
+      }
     },
-    "border": [4,4,4,4],
-    "text_alignment": "middle"
-  }
-]
+    {
+      "id": "button_quit",
+      "type": "button",
+      "text": {
+        "src": "titlescreen.button.quit",
+        "color": 16777215,
+        "type": "lang",
+        "align": "middle"
+      },
+      "layout": {
+        "type": "origin",
+        "layout": [75, 50, 150, 30],
+        "meta": "middle_middle",
+        "layer": 0,
+        "border": [4, 4, 4, 4]
+      }
+    }
+  ]
+}

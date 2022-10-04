@@ -3,34 +3,40 @@ package com.flybirdstudio.cubecraft.client.gui.screen;
 import com.flybirdstudio.cubecraft.client.Cubecraft;
 import com.flybirdstudio.cubecraft.client.gui.DisplayScreenInfo;
 import com.flybirdstudio.cubecraft.GameSetting;
-import com.flybirdstudio.cubecraft.client.gui.FontAlignment;
+import com.flybirdstudio.cubecraft.client.gui.ScreenUtil;
 import com.flybirdstudio.cubecraft.client.gui.component.Component;
-import com.flybirdstudio.cubecraft.client.gui.component.Popup;
+import com.flybirdstudio.cubecraft.client.gui.Popup;
 import com.flybirdstudio.cubecraft.client.resources.ResourceManager;
-import com.flybirdstudio.cubecraft.registery.Registery;
 import com.flybirdstudio.starfish3d.platform.Display;
 import com.flybirdstudio.starfish3d.platform.input.Keyboard;
 import com.flybirdstudio.starfish3d.platform.input.Mouse;
 import com.flybirdstudio.starfish3d.platform.input.InputHandler;
 import com.flybirdstudio.starfish3d.platform.input.KeyboardCallback;
 import com.flybirdstudio.starfish3d.platform.input.MouseCallBack;
-import com.flybirdstudio.starfish3d.render.GLUtil;
-import com.flybirdstudio.starfish3d.render.ShapeRenderer;
-import com.flybirdstudio.starfish3d.render.textures.Texture2D;
 import com.flybirdstudio.util.container.CollectionUtil;
+import com.flybirdstudio.util.container.MultiMap;
+import com.flybirdstudio.util.file.faml.FAMLDeserializer;
+import com.flybirdstudio.util.file.faml.XmlReader;
+import com.google.gson.*;
 import org.lwjgl.opengl.GL11;
+import org.w3c.dom.Element;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 
-public abstract class Screen {
+import java.lang.reflect.Type;
+
+public class Screen {
+    public final String id;
+    public final ScreenType type;
     private Cubecraft platform;
-    protected HashMap<String,Component> components=new HashMap<>();
+    protected MultiMap<String,Component> components=new MultiMap<>();
+    private Screen parent;
 
     //init
-    public Screen(){}
+    public Screen(String id, ScreenType type){
+        this.id = id;
+        this.type = type;
+    }
 
     /**<h3>init a screen here,runs when screen initialize.</h3>
      * This method need to overwrite.
@@ -47,10 +53,10 @@ public abstract class Screen {
             @Override
             public void onKeyEventPressed() {
                 if(Keyboard.getEventKey()==Keyboard.KEY_F9){
-                    createPopup("reloading...","reloading...",40,Popup.INFO);
+                    ScreenUtil.createPopup("reloading...","reloading...",40,Popup.INFO);
                     ResourceManager.instance.reload(cubeCraft);
                     Screen.this.init();
-                    createPopup("reload success","fully reloaded.",40,Popup.SUCCESS);
+                    ScreenUtil.createPopup("reload success","fully reloaded.",40,Popup.SUCCESS);
                 }
             }
         });
@@ -66,8 +72,18 @@ public abstract class Screen {
     }
 
     public void render(DisplayScreenInfo info,float interpolationTime) {
-        CollectionUtil.iterateMap(this.components, (key, item) -> item.render());
-        renderPopup(info,interpolationTime);
+        switch (this.type){
+            case IMAGE_BACKGROUND -> ScreenUtil.renderPictureBackground();
+            case TILE_BACKGROUND -> ScreenUtil.renderTileBackground();
+            case IN_GAME -> ScreenUtil.renderMask();
+        }
+
+        CollectionUtil.iterateMap(this.components, (key, item) -> {
+            GL11.glPushMatrix();
+            item.render();
+            GL11.glPopMatrix();
+        });
+        ScreenUtil.renderPopup(info,interpolationTime);
     }
 
     public void tick() {
@@ -76,15 +92,11 @@ public abstract class Screen {
             item.resize(Display.getWidth()/ scale,Display.getHeight()/scale);
             item.tick(Mouse.getX()/ scale,(-Mouse.getY()+Display.getHeight())/scale);
         });
-        tickPopup();
+        ScreenUtil.tickPopup();
     }
 
     public boolean isInGameGUI(){
-        return false;
-    }
-
-    public void destroy(){
-
+        return type==ScreenType.IN_GAME;
     }
 
     public MouseCallBack getMouseCallback(){
@@ -96,7 +108,7 @@ public abstract class Screen {
     }
 
     public Screen getParentScreen() {
-        return null;
+        return this.parent;
     }
 
     protected void addComponent(Component component) {
@@ -107,106 +119,81 @@ public abstract class Screen {
         return platform;
     }
 
-
-    //fast render
-    private static Texture2D bg;
-    public static void initBGRenderer(){
-        Registery.getTextureManager().createTexture2D("/resource/textures/gui/bg.png",false,false);
-        Registery.getTextureManager().createTexture2D("/resource/textures/gui/controls/popup.png",false,false);
-        Registery.getTextureManager().createTexture2D("/resource/textures/font/unicode_page_00.png",false,false);
+    public String getID() {
+        return id;
     }
 
-    public static void renderPictureBackground(){
-        int scale=GameSetting.instance.getValueAsInt("client.gui.scale",2);
-        Registery.getTextureManager().getTexture2DContainer().bind("/resource/textures/gui/bg.png");
-        ShapeRenderer.begin();
-        ShapeRenderer.drawRectUV(0, Display.getWidth()/ scale,0,Display.getHeight()/scale,-1,-1,0,1,0,1);
-        ShapeRenderer.end();
-        Registery.getTextureManager().getTexture2DContainer().unbind("/resource/textures/gui/bg.png");
+    public MultiMap<String,Component> getComponents() {
+        return this.components;
     }
 
-    public static void renderMask(){
-        int scale= GameSetting.instance.getValueAsInt("client.gui.scale",2);
-        ShapeRenderer.setColor(0,0,0,127);
-        ShapeRenderer.drawRect(0,Display.getWidth()/ scale,0,Display.getHeight()/scale,-1,-1);
+    public void setParentScreen(Screen scr) {
+        this.parent=scr;
     }
 
-    private static ArrayList<Popup> popupList=new ArrayList<>();
+    public static class XMLDeserializer implements FAMLDeserializer<Screen> {
+        @Override
+        public Screen deserialize(Element element, XmlReader famlLoadingContext) {
+            Element meta = (Element) element.getElementsByTagName("meta").item(0);
 
-    public static void createPopup(String title,String subTitle,int time,int type){
-        popupList.add(new Popup("",title,subTitle,time,type));
-    }
+            String id=meta.getElementsByTagName("id").item(0).getTextContent();
+            String type=meta.getElementsByTagName("type").item(0).getTextContent();
+            Screen screen = new Screen(id,ScreenType.from(type));
 
-    public static void tickPopup(){
-        Iterator<Popup> p= popupList.iterator();
-        while (p.hasNext()){
-            Popup pop=p.next();
-            pop.tick();
-            if(pop.remaining<=0){
-                p.remove();
+            this.deserializeComponentByType("button",element,screen,famlLoadingContext);
+            this.deserializeComponentByType("label",element,screen,famlLoadingContext);
+            this.deserializeComponentByType("image",element,screen,famlLoadingContext);
+            this.deserializeComponentByType("splash",element,screen,famlLoadingContext);
+            return screen;
+        }
+
+        void deserializeComponentByType(String type,Element element,Screen target,XmlReader ctx){
+            for (int i = 0; i < element.getElementsByTagName(type).getLength(); i++) {
+                Element comp = (Element) element.getElementsByTagName(type).item(i);
+                Component component = ctx.deserialize(comp, Component.getClass(type));
+                target.components.put(comp.getAttribute("id"), component);
+                component.setParent(target);
             }
         }
     }
 
-    public static void renderPopup(DisplayScreenInfo info,float interpolationTime){
-        Registery.getTextureManager().getTexture2DContainer().bind("/resource/textures/gui/controls/popup.png");
-        int yPop=0;
-        for (Popup p:popupList){
-            GL11.glPushMatrix();
-            GL11.glTranslated(info.scrWidth()-200-16+p.getPos(interpolationTime),yPop,0);
-            p.render(info);
-            GL11.glPopMatrix();
-            yPop+=50;
+    public static class JDeserializer implements JsonDeserializer<Screen>{
+        @Override
+        public Screen deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            JsonObject scr=jsonElement.getAsJsonObject();
+            JsonObject meta=scr.get("meta").getAsJsonObject();
+            Screen screen= new Screen(
+                    meta.get("id").getAsString(),
+                    ScreenType.from(meta.get("type").getAsString())
+            );
+            JsonArray elements=scr.get("elements").getAsJsonArray();
+            for (int i = 0; i < elements.size(); i++) {
+                screen.getComponents().put(
+                        elements.get(i).getAsJsonObject().get("id").getAsString(),
+                        jsonDeserializationContext.deserialize(
+                                elements.get(i),
+                                Component.getClass(elements.get(i).getAsJsonObject().get("type").getAsString())
+                        )
+                );
+            }
+            return screen;
         }
     }
 
-    public static void drawFontASCII(String s, int x, int y, int color, int size, FontAlignment alignment){
-        if(s==null){
-            return;
-        }
-        GLUtil.enableBlend();
-        char[] rawData = s.toCharArray();
-        int contWidth = 0;
-        for (char c : rawData) {
-            int pageCode = (int) Math.floor(c / 256.0f);
-            String s2 = Integer.toHexString(pageCode);
-            if (c == ' ') {
-                contWidth += size;
-            } else if (s2.equals("0")) {
-                contWidth += size / 2;
-            } else {
-                contWidth += size;
-            }
-        }
-        int charPos_scr = 0;
-        switch (alignment) {
-            case LEFT -> charPos_scr = x;
-            case MIDDLE -> charPos_scr = (int) (x - contWidth / 2.0f);
-            case RIGHT -> charPos_scr = x - contWidth;
-        }
-        for (char c : rawData) {
-            int pageCode = (int) Math.floor(c / 256.0f);
-            int charPos_Page = c % 256;
-            String s2 = Integer.toHexString(pageCode);
-            int charPos_V = charPos_Page / 16;
-            int charPos_H = charPos_Page % 16;
-            if (c == 0x0020) {
-                charPos_scr += size * 0.75;
-            }
-            else if (c == 0x000d) {
-                charPos_scr = 0;
-            }
-            else {
-                float x0 = charPos_scr, x1 = charPos_scr + size,
-                        y0 = y, y1 = y + size,
-                        u0 = charPos_H / 16.0f, u1 = charPos_H / 16f + 0.0625f,
-                        v0 = charPos_V / 16.0f, v1 = charPos_V / 16f + 0.0625f;
-                Registery.getTextureManager().getTexture2DContainer().bind("/resource/textures/font/unicode_page_00.png");
-                ShapeRenderer.setColor(color);
-                ShapeRenderer.drawRectUV(x0, x1, y0, y1, 0, 0,u0,u1,v0,v1);
-                Registery.getTextureManager().getTexture2DContainer().unbind("/resource/textures/font/unicode_page_00.png");
-                charPos_scr += size*0.5f;
-            }
+    public enum ScreenType{
+        EMPTY,
+        IN_GAME,
+        IMAGE_BACKGROUND,
+        TILE_BACKGROUND;
+
+        public static ScreenType from(String id) {
+            return switch (id){
+                case "in-game"->IN_GAME;
+                case "image-bg"->IMAGE_BACKGROUND;
+                case "tile-bg"->TILE_BACKGROUND;
+                case "empty"->EMPTY;
+                default -> throw new IllegalArgumentException("no matched constant named %s".formatted(id));
+            };
         }
     }
 }

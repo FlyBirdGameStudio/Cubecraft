@@ -3,7 +3,7 @@ package com.flybirdstudio.cubecraft.world.worldGen;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.util.container.options.Option;
 import com.flybirdstudio.util.container.options.Options;
-import com.flybirdstudio.cubecraft.world.block.BlockFacing;
+import com.flybirdstudio.cubecraft.world.block.EnumFacing;
 import com.flybirdstudio.cubecraft.world.chunk.Chunk;
 import com.flybirdstudio.cubecraft.world.chunk.ChunkPos;
 import com.flybirdstudio.cubecraft.world.worldGen.noiseGenerator.ImprovedNoise;
@@ -37,7 +37,7 @@ public class ChunkProviderOverworld extends ChunkProvider{
                 if (land[x][z]<0){
                     for (int y=0;y<16;y++){
                         if(cy+y<(long)providerSetting.get("worldGen.overWorld.seaLevel")) {
-                            primer.setBlock(x, y, z, "water", BlockFacing.Up);
+                            primer.setBlock(x, y, z, "water", EnumFacing.Up);
                         }
                     }
                 }

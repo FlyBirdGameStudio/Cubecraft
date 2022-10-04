@@ -3,34 +3,33 @@ button.confirm=确认
 button.back=返回
 
 # main screen
-titlescreen.button.singleplayer=单人游戏
-titlescreen.button.multiplayer=多人游戏
-titlescreen.button.setting=选项
-titlescreen.button.quit=退出
-titlescreen.version=CubeCraft-%s(模组:%d个,插件:%d个)
-titlescreen.auth=""
+title_screen.button.singleplayer=单人游戏
+title_screen.button.multiplayer=多人游戏
+title_screen.button.setting=选项
+title_screen.button.quit=退出
+title_screen.version=Cubecraft-%s(模组:%d个,插件:%d个)
+title_screen.auth=当前账号：%s
 
 
 # pause screen
-pausescreen.title=游戏暂停
-pausescreen.button.backtogame=回到游戏
-pausescreen.button.option=选项
-pausescreen.button.achievement=成就
-pausescreen.button.opentonet=对局域网开放
-pausescreen.button.saveandquit=退出
+pause_screen.title=游戏暂停
+pause_screen.button.back_to_game=回到游戏
+pause_screen.button.option=选项
+pause_screen.button.achievement=成就
+pause_screen.button.open_to_net=对局域网开放
+pause_screen.button.save_and_quit=退出
 
 #option screen
 option.title=选项
 option.button.video=视频...
-option.button.controls=控制...
+option.button.control=控制...
 option.button.other=其他...
 option.button.audio=声音...
-option.button.resourcepacks=资源包...
+option.button.resource_pack=资源包...
 option.button.about=关于...
 option.button.chat=聊天设置...
 option.button.language=语言...
-option.button.mods=模组...
-option.button.plugins=插件...
+option.button.mod=模组...
 
 versioncheck.exception.title=无法检查更新
 versioncheck.exception.subtitle=请联网后尝试重启游戏...

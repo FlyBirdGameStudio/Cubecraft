@@ -93,4 +93,11 @@ public class ColorUtil {
         float b2 = (b & 0xFF) / 255.0f;
         return new float[]{r2, g2, b2};
     }
+
+    public static byte[] int1Byte1ToByte4(int c, byte alpha) {
+        byte r = (byte) (c >> 16);
+        byte g = (byte) (c >> 8);
+        byte b = (byte) c;
+        return new byte[]{r, g, b,alpha};
+    }
 }

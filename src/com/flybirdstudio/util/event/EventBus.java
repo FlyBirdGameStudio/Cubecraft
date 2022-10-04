@@ -1,22 +1,34 @@
 package com.flybirdstudio.util.event;
 
-import com.flybirdstudio.util.container.ArrayQueue;
-import com.flybirdstudio.util.net.Packet;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class EventBus {
     protected final ArrayList<EventListener> listeners = new ArrayList<>();
 
-    public void callEvent(Event event) {
+    private final ArrayList<Class<?>> params=new ArrayList<>();
+
+    public EventBus (Class<?>... params){
+        this.params.addAll(List.of(params));
+    }
+
+    public void callEvent(Event event,Object... param) {
         for (EventListener el : this.listeners) {
             Method[] ms = el.getClass().getMethods();
             for (Method m : ms) {
                 if (Arrays.stream(m.getAnnotations()).anyMatch(annotation -> annotation instanceof EventHandler)) {
-                    if (m.getParameterCount() == 1 && m.getParameters()[1].getType() == event.getClass()) {
+                    boolean equals=true;
+                    for (int i=0;i< params.size();i++){
+                        if(m.getParameters()[i+1].getType()!=params.get(i)){
+                            equals=false;
+                        }
+                    }
+
+                    if (m.getParameters()[0].getType() == event.getClass()&&equals) {
                         try {
                             m.invoke(el, event);
                         } catch (IllegalAccessException | InvocationTargetException e) {
@@ -29,9 +41,7 @@ public class EventBus {
     }
 
     public void registerEventListener(EventListener el){
-        if(this.listeners.contains(el)) {
-            this.listeners.add(el);
-        }
+        this.listeners.add(el);
     }
 
     public void unregisterEventListener(EventListener el){

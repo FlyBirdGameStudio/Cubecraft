@@ -7,7 +7,7 @@ titlescreen.button.singleplayer=SinglePlayer
 titlescreen.button.multiplayer=MultiPlayer
 titlescreen.button.setting=Options
 titlescreen.button.quit=Quit
-titlescreen.version=CubeCraft-%s(%dMods,%dPlugins)
+titlescreen.version=Cubecraft-%s(%dMods,%dPlugins)
 titlescreen.auth=""
 
 

@@ -1,23 +1,21 @@
 package com.flybirdstudio.cubecraft.client.gui.component;
 
 
+import com.flybirdstudio.cubecraft.client.gui.layout.LayoutManager;
+import com.flybirdstudio.starfish3d.render.GLUtil;
 import com.flybirdstudio.starfish3d.render.ShapeRenderer;
 import com.flybirdstudio.starfish3d.render.textures.Texture2D;
+import com.flybirdstudio.util.file.faml.FAMLDeserializer;
+import com.flybirdstudio.util.file.faml.XmlReader;
+import com.google.gson.*;
+import org.lwjgl.opengl.GL11;
+import org.w3c.dom.Element;
+
+import java.lang.reflect.Type;
 
 public class ImageRenderer extends Component {
     private final Texture2D texture=new Texture2D(false,false);
     private String file;
-
-    public enum VerticalClipping{
-        UP,
-        MIDDLE,
-        DOWN
-    }
-    public enum HorizontalClipping {
-        LEFT,
-        MIDDLE,
-        RIGHT
-    }
     public HorizontalClipping hClip;
     public VerticalClipping vClip;
     public ImageRenderer(String file,HorizontalClipping hClip,VerticalClipping vClip) {
@@ -63,11 +61,70 @@ public class ImageRenderer extends Component {
         }
         ShapeRenderer.setColor(0xFFFFFF);
         ShapeRenderer.begin();
+
         ShapeRenderer.drawRectUV(layoutManager.ax,
                 layoutManager.ax+layoutManager.width,
                 layoutManager.ay,
                 layoutManager.ay+layoutManager.height,
                 layer,layer,u0,u1,v0,v1);
         ShapeRenderer.end();
+    }
+
+    public static class XMLDeserializer implements FAMLDeserializer<ImageRenderer> {
+        @Override
+        public ImageRenderer deserialize(Element element, XmlReader famlLoadingContext) {
+            ImageRenderer imageRenderer=new ImageRenderer(
+                    element.getAttribute("img"),
+                    HorizontalClipping.from(element.getAttribute("h-clip")),
+                    VerticalClipping.from(element.getAttribute("v-clip"))
+            );
+            imageRenderer.setLayout(famlLoadingContext.deserialize((Element) element.getElementsByTagName("layout").item(0), LayoutManager.class));
+            return imageRenderer;
+        }
+    }
+
+    public static class JDeserializer implements JsonDeserializer<ImageRenderer>{
+        @Override
+        public ImageRenderer deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            JsonObject node=jsonElement.getAsJsonObject();
+            ImageRenderer imageRenderer=new ImageRenderer(
+                    node.get("image").getAsString(),
+                    HorizontalClipping.from(node.get("h-clip").getAsString()),
+                    VerticalClipping.from(node.get("v-clip").getAsString())
+            );
+            imageRenderer.setLayout(jsonDeserializationContext.deserialize(node.get("layout"),LayoutManager.class));
+            return imageRenderer;
+        }
+    }
+
+    public enum VerticalClipping{
+        UP,
+        MIDDLE,
+        DOWN;
+
+        public static VerticalClipping from(String attribute) {
+            return switch (attribute){
+                case "up"->UP;
+                case "middle"->MIDDLE;
+                case  "down"->DOWN;
+                default -> throw new IllegalArgumentException("no matched constant named %s".formatted(attribute));
+            };
+        }
+    }
+
+    public enum HorizontalClipping {
+        LEFT,
+        MIDDLE,
+        RIGHT;
+
+        public static HorizontalClipping from(String attribute) {
+            return switch (attribute){
+                case "left"->LEFT;
+                case "middle"->MIDDLE;
+                case  "right"->RIGHT;
+                default -> throw new IllegalArgumentException("no matched constant named %s".formatted(attribute));
+            };
+        }
+
     }
 }

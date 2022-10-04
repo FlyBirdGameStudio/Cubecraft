@@ -11,8 +11,8 @@ public class Start {
         SystemInfoHelper.init();
         //init game runtime
         startArguments =new StartArguments(args);
-        gamePath= (String) startArguments.getValue("path", System.getProperty("user.dir"));
-        System.setProperty("java.library.path", (String) startArguments.getValue("native",gamePath+"native"));
+        gamePath= startArguments.getValueAsString("path", System.getProperty("user.dir"));
+        System.setProperty("java.library.path", startArguments.getValueAsString("native",gamePath+"native"));
         LogHandler.setLogPath(getGamePath()+"/data/logs/");
         ResourceManager.createResourceFolder();
 

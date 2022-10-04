@@ -3,7 +3,7 @@ package com.flybirdstudio.util.container;
 import java.util.HashMap;
 
 public class StartArguments {
-    public HashMap<String,Object> dispatchedArgs=new HashMap<>();
+    public HashMap<String,String> dispatchedArgs=new HashMap<>();
 
     public StartArguments(String[] args){
         for (String arg:args){
@@ -23,7 +23,16 @@ public class StartArguments {
         }
     }
 
-    public Object getValue(String id, Object ifNull) {
-        return dispatchedArgs.getOrDefault(id,ifNull);
+
+    public int getValueAsInt(String id, int fallback) {
+        return Integer.parseInt(dispatchedArgs.getOrDefault(id, String.valueOf(fallback)));
+    }
+
+    public boolean getValueAsBoolean(String id,boolean fallback){
+        return Boolean.parseBoolean(dispatchedArgs.getOrDefault(id, String.valueOf(fallback)));
+    }
+
+    public String getValueAsString(String id, String fallback) {
+        return dispatchedArgs.getOrDefault(id,fallback);
     }
 }

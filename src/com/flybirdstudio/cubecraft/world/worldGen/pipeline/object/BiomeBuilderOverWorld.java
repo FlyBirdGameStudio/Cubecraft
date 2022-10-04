@@ -1,6 +1,6 @@
 package com.flybirdstudio.cubecraft.world.worldGen.pipeline.object;
 
-import com.flybirdstudio.cubecraft.registery.Registery;
+import com.flybirdstudio.cubecraft.registery.Registry;
 import com.flybirdstudio.cubecraft.world.chunk.Chunk;
 import com.flybirdstudio.cubecraft.world.chunk.ChunkPos;
 import com.flybirdstudio.cubecraft.world.worldGen.noiseGenerator.PerlinNoise;
@@ -30,7 +30,7 @@ public class BiomeBuilderOverWorld extends IChunkGenerator {
             for (int z=0;z<16;z++){
                 for (int y=0;y<16;y++){
                     ChunkPos p=chunk.getKey();
-                    chunk.getBlockState(x,y,z).setBiome(Registery.getBiomeMap().match(
+                    chunk.getBlockState(x,y,z).setBiome(Registry.getBiomeMap().match(
                             continental.getValue(
                                     p.toWorldPosX(x)/setting.getValueOrDefaultAsDouble("overworld.biome.continental.scale",128d),
                                     p.toWorldPosZ(z)/setting.getValueOrDefaultAsDouble("overworld.biome.continental.scale",128d)

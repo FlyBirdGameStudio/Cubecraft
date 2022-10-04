@@ -1,6 +1,6 @@
 package com.flybirdstudio.cubecraft.world.block;
 
-import com.flybirdstudio.cubecraft.registery.Registery;
+import com.flybirdstudio.cubecraft.registery.Registry;
 import com.flybirdstudio.cubecraft.world.HittableObject;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.cubecraft.world.block.material.Block;
@@ -31,7 +31,7 @@ public class BlockState implements NBTDataIO, HittableObject {
         return this;
     }
 
-    public BlockState setFacing(BlockFacing f) {
+    public BlockState setFacing(EnumFacing f) {
         this.facing = f.numID;
         return this;
     }
@@ -41,12 +41,12 @@ public class BlockState implements NBTDataIO, HittableObject {
         return this;
     }
 
-    public BlockFacing getFacing() {
-        return BlockFacing.fromId(this.facing);
+    public EnumFacing getFacing() {
+        return EnumFacing.fromId(this.facing);
     }
 
     public Block getBlock() {
-        return Registery.getBlockMap().get(this.id);
+        return Registry.getBlockMap().get(this.id);
     }
 
     public NBTTagCompound getBlockMeta() {

@@ -3,7 +3,7 @@ package com.flybirdstudio.cubecraft.client.render.renderer;
 import com.flybirdstudio.cubecraft.GameSetting;
 import com.flybirdstudio.cubecraft.client.render.object.RenderChunk;
 import com.flybirdstudio.cubecraft.client.render.object.RenderChunkPos;
-import com.flybirdstudio.cubecraft.registery.Registery;
+import com.flybirdstudio.cubecraft.registery.Registry;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.cubecraft.world.entity.humanoid.Player;
 import com.flybirdstudio.starfish3d.render.Camera;
@@ -12,8 +12,6 @@ import com.flybirdstudio.starfish3d.render.culling.ProjectionMatrixFrustum;
 import com.flybirdstudio.starfish3d.render.multiThread.DrawCompile;
 import com.flybirdstudio.starfish3d.render.multiThread.MultiRenderCompileService;
 import com.flybirdstudio.starfish3d.render.textures.Texture2D;
-import com.flybirdstudio.starfish3d.render.textures.Texture2DArray;
-import com.flybirdstudio.starfish3d.render.textures.Texture2DTileMap;
 import com.flybirdstudio.starfish3d.render.textures.TextureStateManager;
 import com.flybirdstudio.util.ColorUtil;
 import com.flybirdstudio.util.LogHandler;
@@ -62,7 +60,7 @@ public class ChunkRenderer extends IWorldRenderer {
         if (this.camera.isPositionChanged() || this.camera.isRotationChanged()) {
             this.checkForChunkAdd();
             CollectionUtil.iterateMap(this.chunks.map, (key, item) -> {
-                item.visible=ChunkRenderer.this.camera.objectDistanceSmallerThan(new Vector3d(item.x * 16, item.y * 16, item.z * 16), GameSetting.instance.getValueAsInt("client.render.chunk.renderDistance", 4) * 16) && this.frustum.aabbVisible(RenderChunk.getAABBFromPos(item.getKey(), camera))&&item.isNotEmpty();
+                item.visible=ChunkRenderer.this.camera.objectDistanceSmallerThan(new Vector3d(item.x * 16, item.y * 16, item.z * 16), GameSetting.instance.getValueAsInt("client.render.terrain.renderDistance", 4) * 16) && this.frustum.aabbVisible(RenderChunk.getAABBFromPos(item.getKey(), camera))&&item.isNotEmpty();
             });
         }
         this.drawChunks();
@@ -72,10 +70,10 @@ public class ChunkRenderer extends IWorldRenderer {
     private void drawChunks() {
         GLUtil.enableBlend();
         GLUtil.enableAA();
-        int d=GameSetting.instance.getValueAsInt("client.render.chunk.renderDistance", 114514);
+        int d=GameSetting.instance.getValueAsInt("client.render.terrain.renderDistance", 114514);
         GLUtil.setupFog(d*d, BufferBuilder.from(ColorUtil.int1Float1ToFloat4(world.getWorldInfo().fogColor(),1)));
         GL11.glEnable(GL11.GL_FOG);
-        Registery.getTextureManager().getTexture2DTileMapContainer().bind("cubecraft:terrain");
+        Registry.getTextureManager().getTexture2DTileMapContainer().bind("cubecraft:terrain");
         CollectionUtil.iterateMap(this.chunks.map, (key, item) -> {
             if (item.visible) {
                 GL11.glPushMatrix();
@@ -86,14 +84,14 @@ public class ChunkRenderer extends IWorldRenderer {
             }
             allCount++;
         });
-        Registery.getTextureManager().getTexture2DTileMapContainer().unbind("cubecraft:terrain");
+        Registry.getTextureManager().getTexture2DTileMapContainer().unbind("cubecraft:terrain");
         this.logHandler.checkGLError("draw_chunks");
         GL11.glDisable(GL11.GL_FOG);
     }
 
     private void updateChunks() {
         this.updateQueue.removeIf(
-                c -> !this.camera.objectDistanceSmallerThan(new Vector3d(c.x() * 16, c.y() * 16, c.z() * 16), GameSetting.instance.getValueAsInt("client.render.chunk.renderDistance", 4) * 16)
+                c -> !this.camera.objectDistanceSmallerThan(new Vector3d(c.x() * 16, c.y() * 16, c.z() * 16), GameSetting.instance.getValueAsInt("client.render.terrain.renderDistance", 4) * 16)
                         && !this.frustum.aabbVisible(RenderChunk.getAABBFromPos(c, this.camera))
         );
 
@@ -128,7 +126,7 @@ public class ChunkRenderer extends IWorldRenderer {
 
     //try to add chunk in distance but not exist
     public void checkForChunkAdd() {
-        int d = GameSetting.instance.getValueAsInt("client.render.chunk.renderDistance", 4);
+        int d = GameSetting.instance.getValueAsInt("client.render.terrain.renderDistance", 4);
         ArrayList<RenderChunkPos> adds = new ArrayList<>();
         long playerCX = (long) (this.camera.getPosition().x / 16);
         long playerCZ = (long) (this.camera.getPosition().z / 16);

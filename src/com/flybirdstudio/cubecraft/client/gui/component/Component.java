@@ -1,14 +1,15 @@
 package com.flybirdstudio.cubecraft.client.gui.component;
 
 import com.flybirdstudio.cubecraft.GameSetting;
+import com.flybirdstudio.cubecraft.client.gui.layout.Border;
 import com.flybirdstudio.cubecraft.client.gui.layout.LayoutManager;
 import com.flybirdstudio.cubecraft.client.gui.screen.Screen;
-import com.flybirdstudio.cubecraft.client.gui.layout.Border;
 import com.flybirdstudio.starfish3d.platform.Display;
 
 
 public abstract class Component {
-    public Screen parent;
+    protected Screen parent;
+
 
 
     public LayoutManager layoutManager;
@@ -41,6 +42,7 @@ public abstract class Component {
         this.layoutManager=layoutManager;
     }
 
+    @Deprecated()//move to layout manager
     public void setScaleEnabled(boolean l,boolean r,boolean t,boolean b){
         this.scaleEnabled[0]=l;
         this.scaleEnabled[1]=r;
@@ -48,9 +50,32 @@ public abstract class Component {
         this.scaleEnabled[3]=t;
     }
 
+    @Deprecated
     public void setBorder(Border border) {
         this.layoutManager.border=border;
     }
 
     public void onClicked(int xm,int ym) {}
+
+    public static Class<? extends Component> getClass(String name){
+        return switch (name){
+            case "button"->Button.class;
+            case "label"->Label.class;
+            case "image"->ImageRenderer.class;
+            case "splash"->SplashText.class;
+            default -> throw new IllegalArgumentException("no matched constant named %s".formatted(name));
+        };
+    }
+
+    public Screen getParent() {
+        return parent;
+    }
+
+    public void setParent(Screen parent) {
+        this.parent = parent;
+    }
+
+    public String getID() {
+        return this.getParent().getComponents().of(this);
+    }
 }

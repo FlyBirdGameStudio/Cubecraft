@@ -3,8 +3,7 @@ package com.flybirdstudio.starfish3d.render.draw;
 import com.flybirdstudio.util.LogHandler;
 import com.flybirdstudio.util.container.BufferBuilder;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.DoubleBuffer;
@@ -57,7 +56,7 @@ public class VertexArrayUploader {
         uploadedCount+=arr.vertexCount;
         BufferBuilder.fillBuffer(raw, arr.getRawArray());
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, raw, vbo);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, raw, 35044);
     }
 
     public static int getUploadedCount() {

@@ -1,11 +1,10 @@
 package com.flybirdstudio.cubecraft.world.block.material;
 
 import com.flybirdstudio.cubecraft.world.IWorld;
-import com.flybirdstudio.cubecraft.world.block.BlockFacing;
+import com.flybirdstudio.cubecraft.world.block.EnumFacing;
 import com.flybirdstudio.cubecraft.world.block.BlockState;
 import com.flybirdstudio.cubecraft.world.entity.Entity;
 import com.flybirdstudio.cubecraft.world.entity.item.Item;
-import com.flybirdstudio.starfish3d.render.draw.VertexArrayBuilder;
 import com.flybirdstudio.util.math.AABB;
 import com.flybirdstudio.util.math.HitBox;
 import com.flybirdstudio.util.math.Vector3;
@@ -23,7 +22,7 @@ public abstract class Block {
      *
      * @return facings
      */
-    public abstract BlockFacing[] getEnabledFacings();
+    public abstract EnumFacing[] getEnabledFacings();
 
     /**
      * defines collision boxes(relative)
@@ -131,13 +130,13 @@ public abstract class Block {
     }
 
     public void onInteract(Entity from, IWorld world, long x, long y, long z, byte f) {
-        Vector3<Long> pos = BlockFacing.findNear(x, y, z, 1, f);
+        Vector3<Long> pos = EnumFacing.findNear(x, y, z, 1, f);
         if (world.isfree(world.getBlockState(pos.x(), pos.y(), pos.z()).getCollisionBox(pos.x(), pos.y(), pos.z()))) {
-            world.setBlock(pos.x(), pos.y(), pos.z(), "cubecraft:grass_block", BlockFacing.Up);
+            world.setBlock(pos.x(), pos.y(), pos.z(), from.getSelectBlock(), EnumFacing.fromId(f));
         }
     }
 
     public void onHit(Entity from, IWorld world, long x, long y, long z, byte f) {
-        world.setBlock(x,y,z,"cubecraft:air",BlockFacing.Up);
+        world.setBlock(x,y,z,"cubecraft:air", EnumFacing.Up);
     }
 }

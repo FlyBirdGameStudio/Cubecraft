@@ -1,7 +1,7 @@
 package com.flybirdstudio.cubecraft.net.base;
 
 import com.flybirdstudio.cubecraft.GameSetting;
-import com.flybirdstudio.cubecraft.registery.Registery;
+import com.flybirdstudio.cubecraft.registery.Registry;
 import com.flybirdstudio.util.LogHandler;
 
 import io.netty.bootstrap.Bootstrap;
@@ -35,8 +35,8 @@ public class ClientNettyPipeline {
                             protected void initChannel(SocketChannel ch){
                                 //添加客户端通道的处理器
                                 ch.pipeline().addLast("cubecraft:default",new NettyChannelHandler(
-                                        Registery.getPacketEncoderMap(),
-                                        Registery.getPacketDecoderMap(),
+                                        Registry.getPacketEncoderMap(),
+                                        Registry.getPacketDecoderMap(),
                                         GameSetting.instance.getValueAsInt("client.net.maxsending",16),
                                         GameSetting.instance.getValueAsInt("client.net.speed",16)
                                 ));

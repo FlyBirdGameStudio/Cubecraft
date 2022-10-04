@@ -1,6 +1,6 @@
 package com.flybirdstudio.cubecraft.world.worldGen.pipeline.object;
 
-import com.flybirdstudio.cubecraft.registery.Registery;
+import com.flybirdstudio.cubecraft.registery.Registry;
 import com.flybirdstudio.cubecraft.world.block.BlockState;
 import com.flybirdstudio.cubecraft.world.chunk.Chunk;
 import com.flybirdstudio.cubecraft.world.chunk.ChunkPos;
@@ -57,10 +57,10 @@ public class ChunkGeneratorOverWorld extends IChunkGenerator {
                 for (int y=0;y<16;y++){
                     if(chunk.getKey().toWorldPosY(y)<=heightMap[x][z]) {
                         BlockState bs = chunk.getBlockState(x, y, z);
-                        bs.setId(Registery.getBiomeMap().get(bs.getBiome()).getBasicBlock());
+                        bs.setId(Registry.getBiomeMap().get(bs.getBiome()).getBasicBlock());
                     }
                 }
-                Registery.getBiomeMap().get(chunk.getBlockState(x,h,z).getBiome()).buildSurface(chunk,x,z,heightMap[x][z],setting.seed());
+                Registry.getBiomeMap().get(chunk.getBlockState(x,h,z).getBiome()).buildSurface(chunk,x,z,heightMap[x][z],setting.seed());
             }
         }
     }

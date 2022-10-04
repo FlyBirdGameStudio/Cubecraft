@@ -4,6 +4,7 @@ package com.flybirdstudio.cubecraft.client.gui.screen.options;
 import com.flybirdstudio.cubecraft.GameSetting;
 import com.flybirdstudio.cubecraft.client.gui.DisplayScreenInfo;
 import com.flybirdstudio.cubecraft.client.gui.ScreenLoader;
+import com.flybirdstudio.cubecraft.client.gui.ScreenUtil;
 import com.flybirdstudio.cubecraft.client.gui.component.Button;
 import com.flybirdstudio.cubecraft.client.gui.screen.Screen;
 
@@ -11,6 +12,7 @@ public class SettingScreen extends Screen {
     public Screen parent;
 
     public SettingScreen(Screen parent){
+        super("cubecraft:setting",ScreenType.IN_GAME);
         this.parent=parent;
     }
 
@@ -27,8 +29,6 @@ public class SettingScreen extends Screen {
     @Override
     public void init() {
         this.components.clear();
-        this.components.putAll(ScreenLoader.load("/resource/ui/settingscreen.json"));
-
         ((Button)this.components.get("button_confirm")).setListener(() -> {
             this.getPlatform().setScreen(getParentScreen());
             GameSetting.instance.flush();
@@ -39,9 +39,9 @@ public class SettingScreen extends Screen {
     @Override
     public void render(DisplayScreenInfo info,float interpolationTime) {
         if(!this.isInGameGUI()){
-            Screen.renderPictureBackground();
+            ScreenUtil.renderPictureBackground();
         }else{
-            renderMask();
+            ScreenUtil.renderMask();
         }
         super.render(info,interpolationTime);
     }

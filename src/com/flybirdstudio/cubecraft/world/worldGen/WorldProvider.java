@@ -1,7 +1,7 @@
 package com.flybirdstudio.cubecraft.world.worldGen;
 
 import com.flybirdstudio.cubecraft.Start;
-import com.flybirdstudio.cubecraft.registery.Registery;
+import com.flybirdstudio.cubecraft.registery.Registry;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.cubecraft.world.chunk.Chunk;
 import com.flybirdstudio.cubecraft.world.chunk.ChunkPos;
@@ -27,7 +27,7 @@ public class WorldProvider {
     public WorldProvider(IWorld world) {
         this.world = world;
         this.test= new Scale(new PerlinNoise(new Random(world.getSeed()), 3),1,1);
-        this.pipeline= Registery.getWorldGeneratorMap().get(this.world.getID());
+        this.pipeline= Registry.getWorldGeneratorMap().get(this.world.getID());
     }
 
     public static WorldProvider getProvider(IWorld world) {

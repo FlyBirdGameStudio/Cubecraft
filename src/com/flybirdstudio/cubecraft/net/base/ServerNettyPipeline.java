@@ -1,7 +1,7 @@
 package com.flybirdstudio.cubecraft.net.base;
 
 import com.flybirdstudio.cubecraft.GameSetting;
-import com.flybirdstudio.cubecraft.registery.Registery;
+import com.flybirdstudio.cubecraft.registery.Registry;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -23,8 +23,8 @@ public class ServerNettyPipeline {
                             @Override
                             protected void initChannel(SocketChannel socketChannel) {
                                 socketChannel.pipeline().addLast(new NettyChannelHandler(
-                                        Registery.getPacketEncoderMap(),
-                                        Registery.getPacketDecoderMap(),
+                                        Registry.getPacketEncoderMap(),
+                                        Registry.getPacketDecoderMap(),
                                         GameSetting.instance.getValueAsInt("server.net.maxsending",16),
                                         GameSetting.instance.getValueAsInt("server.net.speed",16)
                                 ));

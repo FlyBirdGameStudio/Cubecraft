@@ -1,5 +1,6 @@
 package com.flybirdstudio.cubecraft.registery;
 
+import com.flybirdstudio.cubecraft.client.Cubecraft;
 import com.flybirdstudio.cubecraft.client.render.model.FaceRenderers;
 import com.flybirdstudio.cubecraft.client.render.model.FaceTypeAdapterRenderer;
 import com.flybirdstudio.cubecraft.client.render.model.ModelManager;
@@ -15,8 +16,9 @@ import com.flybirdstudio.cubecraft.client.render.renderer.HUDRenderer;
 import com.flybirdstudio.cubecraft.client.render.renderer.IWorldRenderer;
 import com.flybirdstudio.cubecraft.client.render.worldObjectRenderer.IBlockRenderer;
 import com.flybirdstudio.cubecraft.client.render.worldObjectRenderer.IEntityRenderer;
-import com.flybirdstudio.cubecraft.client.resources.ResourceManager;
 import com.flybirdstudio.cubecraft.net.NetWorkEventBus;
+import com.flybirdstudio.cubecraft.registery.block.*;
+import com.flybirdstudio.cubecraft.server.Server;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.cubecraft.world.biome.BiomeMap;
 import com.flybirdstudio.cubecraft.world.block.material.Block;
@@ -29,8 +31,6 @@ import com.flybirdstudio.starfish3d.render.Camera;
 import com.flybirdstudio.starfish3d.render.textures.TextureManager;
 import com.flybirdstudio.util.container.namespace.NameSpacedConstructingMap;
 import com.flybirdstudio.util.container.namespace.NameSpacedRegisterMap;
-import com.flybirdstudio.util.event.EventBus;
-import com.flybirdstudio.util.file.lang.Language;
 import com.flybirdstudio.util.net.PacketDecoder;
 import com.flybirdstudio.util.net.PacketEncoder;
 import com.google.gson.Gson;
@@ -39,11 +39,29 @@ import com.google.gson.GsonBuilder;
 /**
  * simple register entry set...
  */
-public class Registery {
-    private Registery() {
+public class Registry {
+    private Registry() {
         throw new RuntimeException("you should not create instance of this!");
     }
 
+    private static Cubecraft client;
+    private static Server server;
+
+    public static void setClient(Cubecraft client) {
+        Registry.client = client;
+    }
+
+    public static Cubecraft getClient() {
+        return client;
+    }
+
+    public static void setServer(Server server) {
+        Registry.server = server;
+    }
+
+    public static Server getServer() {
+        return server;
+    }
 
     //game content
     private static final NameSpacedRegisterMap<Block, ?> blockBehaviorMap = new NameSpacedRegisterMap<>(null);
@@ -52,8 +70,6 @@ public class Registery {
     private static final NameSpacedRegisterMap<ChunkGeneratorPipeline, ?> worldGeneratorMap = new NameSpacedRegisterMap<>(null);
     private static final BiomeMap biomeMap = new BiomeMap();
     private static final NameSpacedRegisterMap<Item, ?> itemMap = new NameSpacedRegisterMap<>(null);
-    private static final EventBus serverWorldEventBus = new EventBus();
-    private static final EventBus clientWorldEventBus=new EventBus();
 
     public static NameSpacedRegisterMap<Block, ?> getBlockBehaviorMap() {
         return blockBehaviorMap;
@@ -77,14 +93,6 @@ public class Registery {
 
     public static NameSpacedRegisterMap<Item, ?> getItemMap() {
         return itemMap;
-    }
-
-    public static EventBus getServerWorldEventBus() {
-        return serverWorldEventBus;
-    }
-
-    public static EventBus getClientWorldEventBus() {
-        return clientWorldEventBus;
     }
 
     //render
@@ -126,15 +134,15 @@ public class Registery {
 
 
     //network
-    private static final NameSpacedRegisterMap<? extends PacketEncoder, ?> packetEncoderMap = new NameSpacedRegisterMap(null);
-    private static final NameSpacedRegisterMap<? extends PacketDecoder, ?> packetDecoderMap = new NameSpacedRegisterMap(null);
+    private static final NameSpacedRegisterMap<? extends PacketEncoder<?>, ?> packetEncoderMap = new NameSpacedRegisterMap<>(null);
+    private static final NameSpacedRegisterMap<? extends PacketDecoder<?>, ?> packetDecoderMap = new NameSpacedRegisterMap<>(null);
     private static final NetWorkEventBus networkEventBus = new NetWorkEventBus();
 
-    public static NameSpacedRegisterMap<? extends PacketDecoder, ?> getPacketDecoderMap() {
+    public static NameSpacedRegisterMap<? extends PacketDecoder<?>, ?> getPacketDecoderMap() {
         return packetDecoderMap;
     }
 
-    public static NameSpacedRegisterMap<? extends PacketEncoder, ?> getPacketEncoderMap() {
+    public static NameSpacedRegisterMap<? extends PacketEncoder<?>, ?> getPacketEncoderMap() {
         return packetEncoderMap;
     }
 
@@ -158,11 +166,13 @@ public class Registery {
         //block
         getBlockBehaviorMap().registerGetter(BlockBehaviorRegistery.class);
         getBlockMap().registerGetter(BlockRegistery.class);
-        getBiomeMap().registerGetter(BiomesRegistry.class);
+        getBlockRendererMap().registerGetter(BlockRendererRegistry.class);
 
+        getBlockMap().registerGetter(BlockRegistryTree.class);
+        getBlockRendererMap().registerGetter(BlockRendererRegistryTree.class);
 
         //entity
-        getBlockRendererMap().registerGetter(BlockRendererRegistry.class);
+        getBiomeMap().registerGetter(BiomesRegistry.class);
         getEntityRendererMap().registerGetter(EntityRendererRegistery.class);
 
         getWorldRenderers().registerItem("cubecraft:chunk_renderer", ChunkRenderer.class);
@@ -172,23 +182,5 @@ public class Registery {
         getFaceTypeAdapterRendererMap().registerGetter(FaceRenderers.class);
 
         getWorldGeneratorMap().registerItem("cubecraft:overworld", new ChunkGeneratorPipeline()./*addLast(new BiomeBuilderOverWorld()).*/addLast(new ChunkGeneratorOverWorld()));
-
-
-        registerLanguage();
     }
-
-    public static void registerLanguage() {
-        Language.create(Language.LanguageType.ZH_CN);
-        Language.selectInstance(Language.LanguageType.ZH_CN).attachTranslationFile(ResourceManager.instance.getResource(
-                "/resource/text/language/zh_cn.lang",
-                "/resource/text/language/blank.lang"
-        ));
-        Language.create(Language.LanguageType.EN_US);
-        Language.selectInstance(Language.LanguageType.EN_US).attachTranslationFile(ResourceManager.instance.getResource(
-                "/resource/text/language/en_us.lang",
-                "/resource/text/language/blank.lang"
-        ));
-    }
-
-
 }

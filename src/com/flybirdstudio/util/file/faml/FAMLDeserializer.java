@@ -1,7 +1,7 @@
 package com.flybirdstudio.util.file.faml;
 
-import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public interface FAMLDeserializer<T> {
-    T deserialize(Document d,FAMLLoader famlLoadingContext);
+    T deserialize(Element element, XmlReader famlLoadingContext);
 }

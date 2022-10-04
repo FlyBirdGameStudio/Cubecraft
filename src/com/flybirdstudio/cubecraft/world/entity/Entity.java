@@ -1,18 +1,14 @@
 package com.flybirdstudio.cubecraft.world.entity;
-
-import com.flybirdstudio.cubecraft.registery.Registery;
+import com.flybirdstudio.cubecraft.registery.Registry;
 import com.flybirdstudio.cubecraft.world.IWorld;
-
-
 import com.flybirdstudio.cubecraft.world.item.Inventory;
 import com.flybirdstudio.util.file.nbt.NBTDataIO;
-
 import com.flybirdstudio.util.file.nbt.tag.NBTTagCompound;
 import com.flybirdstudio.util.math.*;
 
 import com.flybirdstudio.cubecraft.world.HittableObject;
 import com.flybirdstudio.cubecraft.world.entity.item.Item;
-import org.jetbrains.annotations.Nullable;
+
 
 import org.joml.Vector3d;
 
@@ -21,11 +17,13 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public abstract class Entity implements HittableObject, NBTDataIO {
+
+
     private Inventory inventory;
     public boolean sneak=false;
     private String uuid;
 
-    @Nullable
+
     public HitResult hitResult;
     public IWorld world;
     public boolean runningMode;
@@ -43,7 +41,6 @@ public abstract class Entity implements HittableObject, NBTDataIO {
     public double xd;
     public double yd;
     public double zd;
-
 
     //rotation
     public float yRot;
@@ -288,7 +285,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
 
 
     public void render(float interpolationTime){
-        Registery.getEntityModelManager().get(this.getID()).render(this);
+        Registry.getEntityModelManager().get(this.getID()).render(this);
     }
 
 
@@ -385,5 +382,12 @@ public abstract class Entity implements HittableObject, NBTDataIO {
 
     public Inventory getInventory() {
         return inventory;
+    }
+
+
+    public String selectedBlockID="cubecraft:air";
+    @Deprecated
+    public String getSelectBlock() {
+        return selectedBlockID;
     }
 }

@@ -13,7 +13,7 @@ public class UDPSocketThread extends LoopTickingApplication {
     }
 
     @Override
-    public void longTick() {
+    public void tick() {
         this.socket.tick();
     }
 }

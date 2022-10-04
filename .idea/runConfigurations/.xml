@@ -2,12 +2,10 @@
   <configuration default="false" name="测试" type="Application" factoryName="Application">
     <option name="ALTERNATIVE_JRE_PATH" value="14" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-    <envs>
-      <env name="lang" value="EN_US" />
-    </envs>
     <option name="MAIN_CLASS_NAME" value="com.flybirdstudio.cubecraft.Start" />
     <module name="CubeCraft" />
-    <option name="PROGRAM_PARAMETERS" value="-Xms512m -Xmx768m" />
+    <option name="PROGRAM_PARAMETERS" value="lang=ZH_CN" />
+    <option name="VM_PARAMETERS" value="-Xms512m -Xmx768m" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

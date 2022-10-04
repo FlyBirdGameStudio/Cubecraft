@@ -1,5 +1,7 @@
 package com.flybirdstudio.starfish3d.render;
 
+import com.flybirdstudio.starfish3d.render.draw.VertexArrayBuilder;
+import com.flybirdstudio.starfish3d.render.draw.VertexArrayUploader;
 import com.flybirdstudio.util.math.AABB;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -39,6 +41,20 @@ public class ShapeRenderer {
     }
     public static void end(){
         t.end();
+    }
+
+    public static void drawRect(VertexArrayBuilder builder,double x0, double x1, double y0, double y1, double z0,double z1) {
+        builder.vertex((float)x0, (float)y1, (float)z1);
+        builder.vertex((float)x1, (float)y1, (float)z0);
+        builder.vertex((float)x1, (float)y0, (float)z0);
+        builder.vertex((float)x0, (float)y0, (float)z1);
+    }
+
+    public static void drawRectUV(VertexArrayBuilder builder, double x0,double x1,double y0,double y1,double z0,double z1,double u0,double u1,double v0,double v1) {
+        builder.vertexUV(x1, y0, z0, (float)u1, (float)v0);
+        builder.vertexUV(x0, y0, z0, (float)u0, (float)v0);
+        builder.vertexUV(x0, y1, z0, (float)u0, (float)v1);
+        builder.vertexUV(x1, y1, z0, (float)u1, (float)v1);
     }
 
     public static class Tesselator {
