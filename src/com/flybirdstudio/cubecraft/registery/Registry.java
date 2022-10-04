@@ -1,15 +1,9 @@
 package com.flybirdstudio.cubecraft.registery;
 
 import com.flybirdstudio.cubecraft.client.Cubecraft;
-import com.flybirdstudio.cubecraft.client.render.model.FaceRenderers;
-import com.flybirdstudio.cubecraft.client.render.model.FaceTypeAdapterRenderer;
 import com.flybirdstudio.cubecraft.client.render.model.ModelManager;
-import com.flybirdstudio.cubecraft.client.render.model.object.BlockModel;
+import com.flybirdstudio.cubecraft.client.render.model.block.BlockModel;
 import com.flybirdstudio.cubecraft.client.render.model.object.EntityModel;
-import com.flybirdstudio.cubecraft.client.render.model.object.Face;
-import com.flybirdstudio.cubecraft.client.render.model.serilize.BlockModelSerializer;
-import com.flybirdstudio.cubecraft.client.render.model.serilize.EntityModelSerializer;
-import com.flybirdstudio.cubecraft.client.render.model.serilize.FaceSerializer;
 import com.flybirdstudio.cubecraft.client.render.renderer.ChunkRenderer;
 import com.flybirdstudio.cubecraft.client.render.renderer.EntityRenderer;
 import com.flybirdstudio.cubecraft.client.render.renderer.HUDRenderer;
@@ -102,7 +96,7 @@ public class Registry {
     private static final ModelManager<BlockModel> blockModelManager = new ModelManager<>("/resource/fallback/block_model.json", BlockModel.class);
     private static final ModelManager<EntityModel> entityModelManager = new ModelManager<>("/resource/fallback/entity_model.json", EntityModel.class);
     private static final TextureManager textureManager = new TextureManager();
-    public static NameSpacedRegisterMap<FaceTypeAdapterRenderer, ?> faceTypeAdapterRendererMap = new NameSpacedRegisterMap<>(null);
+
 
     public static ModelManager<BlockModel> getBlockModelManager() {
         return blockModelManager;
@@ -110,10 +104,6 @@ public class Registry {
 
     public static ModelManager<EntityModel> getEntityModelManager() {
         return entityModelManager;
-    }
-
-    public static NameSpacedRegisterMap<FaceTypeAdapterRenderer, ?> getFaceTypeAdapterRendererMap() {
-        return faceTypeAdapterRendererMap;
     }
 
     public static TextureManager getTextureManager() {
@@ -151,10 +141,7 @@ public class Registry {
     }
 
     //reader
-    private static final Gson gson = new GsonBuilder()
-            .registerTypeAdapter(BlockModel.class, new BlockModelSerializer())
-            .registerTypeAdapter(EntityModel.class, new EntityModelSerializer())
-            .registerTypeAdapter(Face.class, new FaceSerializer()).create();
+    private static final Gson gson = new GsonBuilder().create();
 
     public static Gson getJsonReader() {
         return gson;
@@ -179,7 +166,6 @@ public class Registry {
         getWorldRenderers().registerItem("cubecraft:entity_renderer", EntityRenderer.class);
         getWorldRenderers().registerItem("cubecraft:hud_renderer", HUDRenderer.class);
 
-        getFaceTypeAdapterRendererMap().registerGetter(FaceRenderers.class);
 
         getWorldGeneratorMap().registerItem("cubecraft:overworld", new ChunkGeneratorPipeline()./*addLast(new BiomeBuilderOverWorld()).*/addLast(new ChunkGeneratorOverWorld()));
     }

@@ -227,4 +227,8 @@ public class ShapeRenderer {
     public static void renderAABB(AABB aabb,int col){
         renderAABB(aabb.x0,aabb.y0, aabb.z0, aabb.x1, aabb.y1, aabb.z1,col);
     }
+
+    public static void drawFace0(boolean flipVertexOrder){
+
+    }
 }

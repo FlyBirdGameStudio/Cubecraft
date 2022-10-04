@@ -212,4 +212,12 @@ public class MathHelper {
         }
         return result;
     }
+
+    public static double min3(double d0,double d1,double d2) {
+        return Math.min(d0,Math.min(d1,d2));
+    }
+
+    public static double max3(double d0, double d1, double d2) {
+        return Math.max(d0,Math.max(d1,d2));
+    }
 }

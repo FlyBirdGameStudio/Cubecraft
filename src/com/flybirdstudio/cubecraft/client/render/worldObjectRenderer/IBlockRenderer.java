@@ -5,6 +5,7 @@ import com.flybirdstudio.cubecraft.world.block.BlockState;
 import com.flybirdstudio.starfish3d.render.draw.VertexArrayBuilder;
 
 public interface IBlockRenderer {
+
     void render(
             BlockState currentBlockState, IWorld world,
             double renderX, double renderY, double renderZ,

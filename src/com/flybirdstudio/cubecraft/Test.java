@@ -11,6 +11,6 @@ import java.util.Scanner;
 
 public class Test {
     public static void main(String args[]) throws Exception {
-
+        System.out.println((-103 & 0xFF) / 255.0f);
     }
 }

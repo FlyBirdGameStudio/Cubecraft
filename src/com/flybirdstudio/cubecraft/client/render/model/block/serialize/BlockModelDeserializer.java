@@ -15,6 +15,6 @@ public class BlockModelDeserializer implements JsonDeserializer<BlockModel> {
         for (int i = 0; i < comp.size(); i++) {
             jsonDeserializationContext.deserialize(comp.get(i),IBlockModelComponent.class);
         }
-        return new BlockModel(component);
+        return new BlockModel("id", "namespace", component);
     }
 }

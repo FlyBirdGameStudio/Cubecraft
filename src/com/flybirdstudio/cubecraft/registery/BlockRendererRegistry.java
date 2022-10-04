@@ -23,101 +23,42 @@ public class BlockRendererRegistry {
                     return "/resource/textures/block/grass_block_top.png";
                 } else if (face == 1) {
                     return "/resource/textures/block/dirt.png";
-                } else {
-                    if (!GameSetting.instance.getValueAsBoolean("client.render.textures.high_quality_grass", false)) {
-                        return "/resource/textures/block/grass_block_side.png";
-                    }
-                    if (face == 2) {
-                        if (Objects.equals(world.getBlockState(x, y - 1, z - 1).getId(), "cubecraft:grass_block")) {
-                            return "/resource/textures/block/grass_block_top.png";
-                        }
-                    }
-                    if (face == 3) {
-                        if (Objects.equals(world.getBlockState(x, y - 1, z + 1).getId(), "cubecraft:grass_block")) {
-                            return "/resource/textures/block/grass_block_top.png";
-                        }
-                    }
-                    if (face == 4) {
-                        if (Objects.equals(world.getBlockState(x - 1, y - 1, z).getId(), "cubecraft:grass_block")) {
-                            return "/resource/textures/block/grass_block_top.png";
-                        }
-                    }
-                    if (face == 5) {
-                        if (Objects.equals(world.getBlockState(x + 1, y - 1, z).getId(), "cubecraft:grass_block")) {
-                            return "/resource/textures/block/grass_block_top.png";
-                        }
-                    }
+                }else if(face>1&&face<6){
                     return "/resource/textures/block/grass_block_side.png";
+                }else{
+                    return "/resource/textures/block/grass_block_side_overlay.png";
                 }
             }
 
             @Override
             public int getFaceColor(IWorld world, BlockState bs, long x, long y, long z, int face) {
-                if (face == 0) {
-                    return Registry.getBiomeMap().get(bs.getBiome()).getGrassColor();
-                } else if (face == 1) {
+                if (face>1&&face<6) {
                     return 0xFFFFFF;
-                } else if(face==6||face==7||face==8||face==9){
-                    return Registry.getBiomeMap().get(bs.getBiome()).getGrassColor();
-                }else{
-                    if (!GameSetting.instance.getValueAsBoolean("client.render.textures.high_quality_grass", false)) {
-                        return 0xFFFFFF;
-                    }
-                    if (face == 2) {
-                        if (Objects.equals(world.getBlockState(x, y - 1, z - 1).getId(), "cubecraft:grass_block")) {
-                            return Registry.getBiomeMap().get(bs.getBiome()).getGrassColor();
-                        }
-                    }
-                    if (face == 3) {
-                        if (Objects.equals(world.getBlockState(x, y - 1, z + 1).getId(), "cubecraft:grass_block")) {
-                            return Registry.getBiomeMap().get(bs.getBiome()).getGrassColor();
-                        }
-                    }
-                    if (face == 4) {
-                        if (Objects.equals(world.getBlockState(x - 1, y - 1, z).getId(), "cubecraft:grass_block")) {
-                            return Registry.getBiomeMap().get(bs.getBiome()).getGrassColor();
-                        }
-                    }
-                    if (face == 5) {
-                        if (Objects.equals(world.getBlockState(x + 1, y - 1, z).getId(), "cubecraft:grass_block")) {
-                            return Registry.getBiomeMap().get(bs.getBiome()).getGrassColor();
-                        }
-                    }
+                } else if(face==1){
                     return 0xFFFFFF;
+                }else {
+                    return Registry.getBiomeMap().get(bs.getBiome()).getGrassColor();
                 }
             }
 
-            @Override
-            public void render(IWorld world, BlockState bs, long x, long y, long z, long renderX, long renderY, long renderZ, EnumFacing facing, VertexArrayBuilder builder) {
-                super.render(world, bs, x, y, z, renderX, renderY, renderZ, facing, builder);
 
-                if(!GameSetting.instance.getValueAsBoolean("client.render.textures.high_quality_grass", false)) {
-                    byte c2 = -52;
-                    byte c3 = -103;
-                    if (this.shouldRender(2,facing,world, x, y, z)) {
-                        builder.color(getFaceColor(world, bs, x, y, z, 0));
-                        builder.multColorB(c2, c2, c2);
-                        this.renderFaceWithTextureId("/resource/textures/block/grass_block_side_overlay.png", 2,
-                                builder, world, bs, x, y, z, renderX, renderY, renderZ);
-                    }
-                    if (this.shouldRender(3,facing,world, x, y, z)) {
-                        builder.color(getFaceColor(world, bs, x, y, z, 0));
-                        builder.multColorB(c2, c2, c2);
-                        this.renderFaceWithTextureId("/resource/textures/block/grass_block_side_overlay.png", 3,
-                                builder, world, bs, x, y, z, renderX, renderY, renderZ);
-                    }
-                    if (this.shouldRender(4,facing,world, x, y, z)) {
-                        builder.color(getFaceColor(world, bs, x, y, z, 0));
-                        builder.multColorB(c3, c3, c3);
-                        this.renderFaceWithTextureId("/resource/textures/block/grass_block_side_overlay.png", 4,
-                                builder, world, bs, x, y, z, renderX, renderY, renderZ);
-                    }
-                    if (this.shouldRender(5,facing,world, x, y, z)) {
-                        builder.color(getFaceColor(world, bs, x, y, z, 0));
-                        builder.multColorB(c3, c3, c3);
-                        this.renderFaceWithTextureId("/resource/textures/block/grass_block_side_overlay.png", 5,
-                                builder, world, bs, x, y, z, renderX, renderY, renderZ);
-                    }
+            @Override
+            public void render(BlockState bs, IWorld world, RenderType renderType, double renderX, double renderY, double renderZ, long x, long y, long z, VertexArrayBuilder builder) {
+                this.render(world,bs, x, y, z,renderX, renderY, renderZ,bs.getFacing(), builder);
+                EnumFacing facing=bs.getFacing();
+                int c=getFaceColor(world,bs,x,y,z,0);
+                String tex = "/resource/textures/block/grass_block_side_overlay.png";
+                if (this.shouldRender(2, facing, world, x, y, z)) {
+                    this.renderFaceWithColor(tex,c,2,builder, world, bs, x, y, z, renderX, renderY, renderZ-0.001);
+                }
+                if (this.shouldRender(3, facing, world, x, y, z)) {
+                    this.renderFaceWithColor(tex,c,3,builder, world, bs, x, y, z, renderX, renderY, renderZ+0.001);
+                }
+                if (this.shouldRender(4, facing, world, x, y, z)) {
+                    this.renderFaceWithColor(tex,c,4,builder, world, bs, x, y, z, renderX, renderY, renderZ);
+                }
+                if (this.shouldRender(5, facing, world, x, y, z)) {
+                    this.renderFaceWithColor(tex,c,5,builder, world, bs, x, y, z, renderX+0.001, renderY, renderZ);
                 }
             }
         };

@@ -2,8 +2,10 @@ package com.flybirdstudio.starfish3d.render.draw;
 
 import com.flybirdstudio.util.ColorUtil;
 import com.flybirdstudio.util.container.ArrayUtil;
+import org.joml.Vector2d;
 import org.joml.Vector2f;
 import org.joml.Vector3d;
+import org.joml.Vector4d;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.ByteOrder;
@@ -118,6 +120,10 @@ public class VertexArrayBuilder {
         this.vertexUV(x, y, z, u, v, 0.0f);
     }
 
+    public void vertexUV(Vector3d vec, float u, float v) {
+        this.vertexUV(vec.x,vec.y,vec.z, u, v, 0.0f);
+    }
+
     public void vertexUV(double x, double y, double z, float u, float v, float layer) {
         this.tex(u, v, layer);
         this.vertex(x, y, z);
@@ -127,6 +133,11 @@ public class VertexArrayBuilder {
         this.u = u;
         this.v = v;
         this.layer = layer;
+    }
+
+    public void tex(float u, float v) {
+        this.u = u;
+        this.v = v;
     }
 
     public void vertex(double x, double y, double z) {
@@ -147,6 +158,23 @@ public class VertexArrayBuilder {
         vertex[this.vertexCount * 3 + 1] = (float) y;
         vertex[this.vertexCount * 3 + 2] = (float) z;
         ++this.vertexCount;
+    }
+
+
+    public void vertex(Vector3d v){
+        this.vertex(v.x,v.y,v.z);
+    }
+
+    public void normal(Vector3d v) {
+        normal((float) v.x, (float) v.y, (float) v.z);
+    }
+
+    public void tex(Vector2d v) {
+        tex((float) v.x, (float) v.y,0);
+    }
+
+    public void color(Vector4d v){
+        this.color((float) v.x,(float)v.y,(float)v.z,(float)v.w);
     }
 
     public void normal(float n, float f, float l) {

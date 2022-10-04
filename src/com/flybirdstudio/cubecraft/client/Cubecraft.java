@@ -44,6 +44,9 @@ import org.lwjgl.opengl.GL11;
 
 //todo:add server net support
 //todo:add inventory support
+//todo:add block model
+//todo:serialize screen into xml
+//todo:fix smooth light engine
 
 public class Cubecraft extends LoopTickingApplication implements TaskProgressUpdateListener {
 

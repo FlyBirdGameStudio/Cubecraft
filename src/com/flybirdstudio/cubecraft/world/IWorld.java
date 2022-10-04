@@ -290,4 +290,12 @@ public class IWorld {
     public void setChunk(Chunk chunk) {
         this.chunks.forceAdd(chunk);
     }
+
+    public int getLight(long x, long y, long z) {
+        if(getBlockState(x,y,z).getBlock().isSolid()){
+            return 0;
+        }else{
+            return 127;
+        }
+    }
 }
