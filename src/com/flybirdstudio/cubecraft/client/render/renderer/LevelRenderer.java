@@ -1,6 +1,6 @@
 package com.flybirdstudio.cubecraft.client.render.renderer;
 
-import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.Registry;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.cubecraft.world.entity.humanoid.Player;
 import com.flybirdstudio.starfish3d.render.Camera;

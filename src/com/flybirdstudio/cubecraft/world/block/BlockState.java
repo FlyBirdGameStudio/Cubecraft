@@ -1,6 +1,6 @@
 package com.flybirdstudio.cubecraft.world.block;
 
-import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.Registry;
 import com.flybirdstudio.cubecraft.world.HittableObject;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.cubecraft.world.block.material.Block;

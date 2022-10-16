@@ -1,7 +1,7 @@
 package com.flybirdstudio.cubecraft.world.worldGen;
 
 import com.flybirdstudio.cubecraft.Start;
-import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.Registry;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.cubecraft.world.chunk.Chunk;
 import com.flybirdstudio.cubecraft.world.chunk.ChunkPos;

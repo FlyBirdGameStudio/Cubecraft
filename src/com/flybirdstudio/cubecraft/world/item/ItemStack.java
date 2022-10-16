@@ -1,6 +1,6 @@
 package com.flybirdstudio.cubecraft.world.item;
 
-import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.Registry;
 import com.flybirdstudio.util.file.nbt.tag.NBTTagCompound;
 import com.flybirdstudio.util.math.MathHelper;
 

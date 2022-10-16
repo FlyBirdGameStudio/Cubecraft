@@ -63,4 +63,12 @@ public class ResourceManager {
         new File(Start.getGamePath()+"/data/configs").mkdirs();
         new File(Start.getGamePath()+"/data/cache").mkdirs();
     }
+
+    public String getResourceAsText(String path) {
+        try {
+            return new String(ResourceManager.instance.getResource(path,null).readAllBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

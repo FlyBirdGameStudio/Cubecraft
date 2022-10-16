@@ -3,6 +3,9 @@ package com.flybirdstudio.cubecraft.client.render;
 import com.flybirdstudio.cubecraft.GameSetting;
 import com.flybirdstudio.cubecraft.client.render.model.object.Vertex;
 import com.flybirdstudio.cubecraft.world.IWorld;
+import com.flybirdstudio.cubecraft.world.block.EnumFacing;
+import com.flybirdstudio.util.math.MathHelper;
+import com.flybirdstudio.util.math.Vector3;
 import org.joml.Vector3d;
 
 
@@ -12,17 +15,30 @@ public class BlockRenderUtil {
     public static final double CLASSIC_LIGHT_3=0.6;
 
     public static double getSmoothedLight(IWorld world, long x, long y, long z, Vector3d relativePos){
-        return 1;
+        double _000=MathHelper.avg(MathHelper.minRange(2, world.getLight(x-1,y,z), world.getLight(x,y-1,z), world.getLight(x,y,z-1)));
+        double _100=MathHelper.avg(MathHelper.minRange(2, world.getLight(x+1,y,z), world.getLight(x,y-1,z), world.getLight(x,y,z-1)));
+        double _010=MathHelper.avg(MathHelper.minRange(2, world.getLight(x-1,y,z), world.getLight(x,y+1,z), world.getLight(x,y,z-1)));
+        double _110=MathHelper.avg(MathHelper.minRange(2, world.getLight(x+1,y,z), world.getLight(x,y+1,z), world.getLight(x,y,z-1)));
+
+        double _001=MathHelper.avg(MathHelper.minRange(2, world.getLight(x-1,y,z), world.getLight(x,y-1,z), world.getLight(x,y,z+1)));
+        double _101=MathHelper.avg(MathHelper.minRange(2, world.getLight(x+1,y,z), world.getLight(x,y-1,z), world.getLight(x,y,z+1)));
+        double _011=MathHelper.avg(MathHelper.minRange(2, world.getLight(x-1,y,z), world.getLight(x,y+1,z), world.getLight(x,y,z+1)));
+        double _111=MathHelper.avg(MathHelper.minRange(2, world.getLight(x+1,y,z), world.getLight(x,y+1,z), world.getLight(x,y,z+1)));
+
+
+        return MathHelper.linear_interpolate3d(_000,_001,_010,_011,_100,_101,_110,_111,relativePos);
+        //_000,_001,_010,_011,_100,_101,_110,_111
         //todo:smooth light
     }
 
     public static Vertex bakeVertex(Vertex v,Vector3d pos,IWorld w,long x,long y,long z,int face){
         if(GameSetting.instance.getValueAsBoolean("client.render.terrain.use_smooth_lighting", true)){
-            v.multiplyColor(BlockRenderUtil.getSmoothedLight(w,x,y,z,pos));
+            v.multiplyColor(BlockRenderUtil.getSmoothedLight(w,x,y,z,pos)/128d);
         }else{
-            v.multiplyColor(w.getLight(x,y+1,z)/128d);
+            Vector3<Long> v2=EnumFacing.fromId(face).findNear(x,y,z,1);
+            v.multiplyColor(w.getLight(v2.x(),v2.y(),v2.z())/128d);
         }
-        if(GameSetting.instance.getValueAsBoolean("client.render.terrain.use_smooth_lighting", true)){
+        if(GameSetting.instance.getValueAsBoolean("client.render.terrain.use_classic_lighting", true)){
             v.multiplyColor(getClassicLight(face));
         }
         return v;

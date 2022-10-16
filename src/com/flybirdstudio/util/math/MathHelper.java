@@ -2,6 +2,8 @@ package com.flybirdstudio.util.math;
 
 import org.joml.Vector3d;
 
+import java.util.Arrays;
+
 public class MathHelper {
     public static double linear_interpolate(double x,double y,double t){
         return x + (y - x) * t;
@@ -219,5 +221,50 @@ public class MathHelper {
 
     public static double max3(double d0, double d1, double d2) {
         return Math.max(d0,Math.max(d1,d2));
+    }
+
+    public static double linear_interpolate3d(double _000,double _001,double _010,double _011,
+                                            double _100,double _101,double _110,double _111,
+                                            double xt,double yt,double zt
+                                            ) {
+        double v000_v001=MathHelper.linear_interpolate(_000,_001,zt);
+        double v010_v011=MathHelper.linear_interpolate(_010,_011,zt);
+        double v100_v101=MathHelper.linear_interpolate(_100,_101,zt);
+        double v110_v111=MathHelper.linear_interpolate(_110,_111,zt);
+        double x0=MathHelper.linear_interpolate(v000_v001,v010_v011,yt);
+        double x1=MathHelper.linear_interpolate(v100_v101,v110_v111,yt);
+        return MathHelper.linear_interpolate(x0,x1,xt);
+    }
+
+    public static double avg(double... data){
+        double result = 0;
+        for (double d:data){
+            result +=d;
+        }
+        return result/data.length;
+    }
+
+
+
+    public static double[] maxRange(int nums, double... data){
+        double [] result=new double[nums];
+        Arrays.sort(data);
+        for (int i=0;i<nums;i++){
+            result[i]=data[data.length-nums+i];
+        }
+        return result;
+    }
+
+    public static double linear_interpolate3d(double v, double v1, double v2, double v3, double v4, double v5, double v6, double v7, Vector3d t) {
+        return linear_interpolate3d(v,v1,v2,v3,v4,v5,v6,v7,t.x,t.y,t.z);
+    }
+
+    public static double[] minRange(int nums,double... data) {
+        double [] result=new double[nums];
+        Arrays.sort(data);
+        for (int i=0;i<nums;i++){
+            result[i]=data[nums];
+        }
+        return result;
     }
 }

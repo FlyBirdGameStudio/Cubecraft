@@ -8,6 +8,8 @@ import com.flybirdstudio.starfish3d.render.Camera;
 import com.flybirdstudio.starfish3d.render.GLUtil;
 import com.flybirdstudio.starfish3d.render.draw.VertexArrayBuilder;
 import com.flybirdstudio.starfish3d.render.draw.VertexArrayUploader;
+import com.flybirdstudio.starfish3d.render.drawcall.IRenderCall;
+import com.flybirdstudio.starfish3d.render.drawcall.ListRenderCall;
 import com.flybirdstudio.util.ColorUtil;
 import com.flybirdstudio.util.container.BufferBuilder;
 import org.joml.Vector3d;
@@ -19,12 +21,13 @@ public class EnvironmentRenderer extends IWorldRenderer {
     public static final int SKY_SIZE = 256;
     private static final int CLOUD_SIZE = 96;
     private static final double CLOUD_HEIGHT = 384;
-    private final int skyList = GL11.glGenLists(1);
+    private final IRenderCall sky=new ListRenderCall();
     private final int cloudList = GL11.glGenLists(5);
     private final PerlinNoise noise = new PerlinNoise(new Random(world.getSeed()), 12);
 
     public EnvironmentRenderer(IWorld w, Player p, Camera c) {
         super(w, p, c);
+        this.sky.allocate();
         updateSky();
         updateCloud();
     }
@@ -38,7 +41,11 @@ public class EnvironmentRenderer extends IWorldRenderer {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         this.camera.setUpGlobalCamera();
         GL11.glDisable(GL11.GL_CULL_FACE);
-        GL11.glCallList(this.skyList);
+
+        GL11.glDisable(GL11.GL_FOG);
+        this.sky.call();
+        GL11.glEnable(GL11.GL_FOG);
+
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         int d2 = d * 2;
@@ -75,58 +82,29 @@ public class EnvironmentRenderer extends IWorldRenderer {
 
     public void updateSky() {
         int d2 = GameSetting.instance.getValueAsInt("client.render.terrain.renderDistance", 4);
-        int vLength = d2 * 16;
-        int hLength = d2 * 16 + 1024;
-        VertexArrayBuilder v = new VertexArrayBuilder(1048576);
-
+        VertexArrayBuilder v = new VertexArrayBuilder(1048576,GL11.GL_TRIANGLES);
         v.begin();
-        for (int i = -hLength; i < hLength; i += SKY_SIZE) {
-            for (int j = -hLength; j < hLength; j += SKY_SIZE) {
-                v.color(world.getWorldInfo().skyColor());
-                v.vertex(i, vLength, j + SKY_SIZE);
-                v.vertex(i + SKY_SIZE, vLength, j + SKY_SIZE);
-                v.vertex(i + SKY_SIZE, vLength, j);
-                v.vertex(i, vLength, j);
-                v.color(world.getWorldInfo().voidColor());
-                v.vertex(i + SKY_SIZE, -vLength, j + SKY_SIZE);
-                v.vertex(i, -vLength, j + SKY_SIZE);
-                v.vertex(i, -vLength, j);
-                v.vertex(i + SKY_SIZE, -vLength, j);
-            }
-        }
+        v.color(world.getWorldInfo().skyColor());
 
-        v.color(world.getWorldInfo().fogColor());
-        for (int i = -vLength; i < vLength; i += SKY_SIZE) {
-            for (int j = -hLength; j < hLength; j += SKY_SIZE) {
+        float   cx  =   0;
+        float   cy  =   d2*16;
+        float   cz  =   0;
+        float   r   =   d2*16*32;
 
-                v.vertex(hLength, i + SKY_SIZE, j + SKY_SIZE);
-                v.vertex(hLength, i + SKY_SIZE, j);
-                v.vertex(hLength, i, j);
-                v.vertex(hLength, i, j + SKY_SIZE);
+        for(int i = 0; i < 360; ++i) {
+            float x     =  (float)Math.cos((double)i * Math.PI / 180) * r + cx;
+            float y     =  (float)Math.sin((double)i * Math.PI / 180) * r + cy;
 
-                v.vertex(-hLength, i + SKY_SIZE, j + SKY_SIZE);
-                v.vertex(-hLength, i + SKY_SIZE, j);
-                v.vertex(-hLength, i, j);
-                v.vertex(-hLength, i, j + SKY_SIZE);
-            }
-        }
-        for (int i = -hLength; i < hLength; i += SKY_SIZE) {
-            for (int j = -vLength; j < vLength; j += SKY_SIZE) {
-                v.vertex(i, j + SKY_SIZE, hLength);
-                v.vertex(i + SKY_SIZE, j + SKY_SIZE, hLength);
-                v.vertex(i + SKY_SIZE, j, hLength);
-                v.vertex(i, j, hLength);
-
-                v.vertex(i, j + SKY_SIZE, -hLength);
-                v.vertex(i + SKY_SIZE, j + SKY_SIZE, -hLength);
-                v.vertex(i + SKY_SIZE, j, -hLength);
-                v.vertex(i, j, -hLength);
-            }
+            float x1    =  (float)Math.cos((double)(i + 1) * Math.PI / 180) * r + cx;
+            float y1    =  (float)Math.sin((double)(i + 1) * Math.PI / 180) * r + cy;
+            v.color(world.getWorldInfo().skyColor());
+            v.vertex(cx, cy+d2*64, cz);
+            v.color(world.getWorldInfo().fogColor());
+            v.vertex(x, cy, y);
+            v.vertex(x1, cy, y1);
         }
         v.end();
-        GL11.glNewList(this.skyList, GL11.GL_COMPILE_AND_EXECUTE);
-        VertexArrayUploader.uploadPointer(v);
-        GL11.glEndList();
+        this.sky.upload(v);
     }
 
 
@@ -198,4 +176,7 @@ public class EnvironmentRenderer extends IWorldRenderer {
         VertexArrayUploader.uploadPointer(vertexBuilder);
         GL11.glEndList();
     }
+
+
+
 }

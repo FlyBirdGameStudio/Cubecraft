@@ -1,0 +1,3 @@
+package com.flybirdstudio.cubecraftcontent.renderer
+
+class EntityRendererRegistery 

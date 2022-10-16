@@ -1,15 +1,12 @@
 package com.flybirdstudio.cubecraft.client.gui;
 
 
-import com.flybirdstudio.cubecraft.registery.Registry;
 import com.flybirdstudio.starfish3d.render.GLUtil;
 import com.flybirdstudio.starfish3d.render.ShapeRenderer;
 import com.flybirdstudio.starfish3d.render.draw.VertexArrayBuilder;
 import com.flybirdstudio.starfish3d.render.draw.VertexArrayUploader;
 import com.flybirdstudio.starfish3d.render.textures.Texture2D;
-import com.flybirdstudio.starfish3d.render.textures.TextureLoadingConfig;
 import com.flybirdstudio.util.math.MathHelper;
-import com.flybirdstudio.util.task.TaskProgressUpdateListener;
 
 public class FontRenderer {
     public static Texture2D[] textures = new Texture2D[256];

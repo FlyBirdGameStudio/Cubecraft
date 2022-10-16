@@ -1,7 +1,7 @@
 package com.flybirdstudio.cubecraft.client.render.model.block;
 
 import com.flybirdstudio.cubecraft.client.render.model.RenderType;
-import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.Registry;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.cubecraft.world.block.EnumFacing;
 import com.flybirdstudio.cubecraft.world.block.BlockState;

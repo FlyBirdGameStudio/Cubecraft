@@ -64,7 +64,7 @@ public class Screen {
             @Override
             public void onButtonClicked(int eventButton) {
                 if(eventButton==0){
-                    int scale=GameSetting.instance.getValueAsInt("client.gui.scale",2);
+                    int scale=GameSetting.instance.getValueAsInt("client.render.gui.scale",2);
                     CollectionUtil.iterateMap(Screen.this.components, (key, item) -> item.onClicked(Mouse.getX()/ scale,(-Mouse.getY()+Display.getHeight())/scale));
                 }
             }
@@ -88,7 +88,7 @@ public class Screen {
 
     public void tick() {
         CollectionUtil.iterateMap(this.components, (key, item)-> {
-            int scale=GameSetting.instance.getValueAsInt("client.gui.scale",2);
+            int scale=GameSetting.instance.getValueAsInt("client.render.gui.scale",2);
             item.resize(Display.getWidth()/ scale,Display.getHeight()/scale);
             item.tick(Mouse.getX()/ scale,(-Mouse.getY()+Display.getHeight())/scale);
         });

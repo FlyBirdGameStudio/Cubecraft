@@ -1,7 +1,7 @@
 package com.flybirdstudio.cubecraft.client.gui;
 
 import com.flybirdstudio.cubecraft.GameSetting;
-import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.Registry;
 import com.flybirdstudio.starfish3d.platform.Display;
 import com.flybirdstudio.starfish3d.render.GLUtil;
 import com.flybirdstudio.starfish3d.render.ShapeRenderer;
@@ -23,7 +23,7 @@ public class ScreenUtil {
     }
 
     public static void renderPictureBackground(){
-        int scale= GameSetting.instance.getValueAsInt("client.gui.scale",2);
+        int scale= GameSetting.instance.getValueAsInt("client.render.gui.scale",2);
         Registry.getTextureManager().getTexture2DContainer().bind("/resource/textures/gui/bg.png");
         ShapeRenderer.begin();
         ShapeRenderer.drawRectUV(0, Display.getWidth()/ scale,0,Display.getHeight()/scale,-1,-1,0,1,0,1);
@@ -32,7 +32,7 @@ public class ScreenUtil {
     }
 
     public static void renderMask(){
-        int scale= GameSetting.instance.getValueAsInt("client.gui.scale",2);
+        int scale= GameSetting.instance.getValueAsInt("client.render.gui.scale",2);
         ShapeRenderer.setColor(0,0,0,127);
         ShapeRenderer.drawRect(0,Display.getWidth()/ scale,0,Display.getHeight()/scale,-1,-1);
     }

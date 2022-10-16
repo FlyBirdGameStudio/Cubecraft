@@ -29,4 +29,8 @@ public class HashMapSet<K extends KeyComparable<K>,V extends KeyGetter<K>> {
     public void forceAdd(V v){
         map.put(v.getKey().hashCode(),v);
     }
+
+    public void clear() {
+        this.map.clear();
+    }
 }

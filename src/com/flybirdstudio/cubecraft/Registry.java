@@ -1,4 +1,4 @@
-package com.flybirdstudio.cubecraft.registery;
+package com.flybirdstudio.cubecraft;
 
 import com.flybirdstudio.cubecraft.client.Cubecraft;
 import com.flybirdstudio.cubecraft.client.render.model.ModelManager;
@@ -11,7 +11,6 @@ import com.flybirdstudio.cubecraft.client.render.renderer.IWorldRenderer;
 import com.flybirdstudio.cubecraft.client.render.worldObjectRenderer.IBlockRenderer;
 import com.flybirdstudio.cubecraft.client.render.worldObjectRenderer.IEntityRenderer;
 import com.flybirdstudio.cubecraft.net.NetWorkEventBus;
-import com.flybirdstudio.cubecraft.registery.block.*;
 import com.flybirdstudio.cubecraft.server.Server;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.cubecraft.world.biome.BiomeMap;
@@ -150,23 +149,9 @@ public class Registry {
 
     //initialize
     public static void registerVanillaContent() {
-        //block
-        getBlockBehaviorMap().registerGetter(BlockBehaviorRegistery.class);
-        getBlockMap().registerGetter(BlockRegistery.class);
-        getBlockRendererMap().registerGetter(BlockRendererRegistry.class);
-
-        getBlockMap().registerGetter(BlockRegistryTree.class);
-        getBlockRendererMap().registerGetter(BlockRendererRegistryTree.class);
-
-        //entity
-        getBiomeMap().registerGetter(BiomesRegistry.class);
-        getEntityRendererMap().registerGetter(EntityRendererRegistery.class);
-
         getWorldRenderers().registerItem("cubecraft:chunk_renderer", ChunkRenderer.class);
         getWorldRenderers().registerItem("cubecraft:entity_renderer", EntityRenderer.class);
         getWorldRenderers().registerItem("cubecraft:hud_renderer", HUDRenderer.class);
-
-
         getWorldGeneratorMap().registerItem("cubecraft:overworld", new ChunkGeneratorPipeline()./*addLast(new BiomeBuilderOverWorld()).*/addLast(new ChunkGeneratorOverWorld()));
     }
 }

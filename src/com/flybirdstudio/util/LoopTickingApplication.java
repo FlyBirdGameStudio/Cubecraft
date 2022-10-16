@@ -82,6 +82,6 @@ public abstract class LoopTickingApplication implements Runnable{
     public record TimingInfo(int shortTickTPS, int shortTickMSPT, int longTickTPS, int longTickMSPT){}
 
     public TimingInfo getTimingInfo() {
-        return timingInfo;
+        return timingInfo!=null?timingInfo:new TimingInfo(0,0,0,0);
     }
 }

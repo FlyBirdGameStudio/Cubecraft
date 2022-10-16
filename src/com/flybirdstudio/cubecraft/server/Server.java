@@ -1,6 +1,6 @@
 package com.flybirdstudio.cubecraft.server;
 
-import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.Registry;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.util.LogHandler;
 import com.flybirdstudio.util.LoopTickingApplication;

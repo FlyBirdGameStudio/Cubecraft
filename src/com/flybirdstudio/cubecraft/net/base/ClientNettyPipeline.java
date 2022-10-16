@@ -1,7 +1,7 @@
 package com.flybirdstudio.cubecraft.net.base;
 
 import com.flybirdstudio.cubecraft.GameSetting;
-import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.Registry;
 import com.flybirdstudio.util.LogHandler;
 
 import io.netty.bootstrap.Bootstrap;

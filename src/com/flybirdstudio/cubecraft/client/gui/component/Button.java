@@ -5,18 +5,35 @@ import com.flybirdstudio.cubecraft.client.gui.FontAlignment;
 import com.flybirdstudio.cubecraft.client.gui.FontRenderer;
 import com.flybirdstudio.cubecraft.client.gui.Text;
 import com.flybirdstudio.cubecraft.client.gui.layout.LayoutManager;
-import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.Registry;
+import com.flybirdstudio.cubecraft.client.resources.ResourceManager;
 import com.flybirdstudio.starfish3d.render.ShapeRenderer;
 import com.flybirdstudio.util.event.Event;
 import com.flybirdstudio.util.file.faml.FAMLDeserializer;
 import com.flybirdstudio.util.file.faml.XmlReader;
 import com.google.gson.*;
-import com.sun.org.apache.xerces.internal.dom.DeepNodeListImpl;
 import org.w3c.dom.Element;
 
 import java.lang.reflect.Type;
 
 public class Button extends Component {
+    static int offsetNormal,offsetPressed, offsetDisabled;
+
+    static {
+        initRenderController();
+    }
+
+    static void initRenderController(){
+        Gson gson=new GsonBuilder().registerTypeAdapter(Button.class, (JsonDeserializer) (jsonElement, type, jsonDeserializationContext) -> {
+            offsetNormal=jsonElement.getAsJsonObject().get("text_offset").getAsJsonObject().get("normal").getAsInt();
+            offsetPressed=jsonElement.getAsJsonObject().get("text_offset").getAsJsonObject().get("pressed").getAsInt();
+            offsetDisabled =jsonElement.getAsJsonObject().get("text_offset").getAsJsonObject().get("disabled").getAsInt();
+            return null;
+        }).create();
+        gson.fromJson(ResourceManager.instance.getResourceAsText("/resource/ui/component/button_render_controller.json"),Button.class);
+    }
+
+
     private Listener listener;
 
     private Text text;
@@ -33,7 +50,7 @@ public class Button extends Component {
     public boolean hovered = false;
 
     private void render(int x, int y, int w, int h, int layer) {
-        FontRenderer.render(this.text.getText(), x + w / 2, y + 8, this.text.getColor(), 8, this.text.getAlignment());
+        FontRenderer.renderShadow(this.text.getText(), x + w / 2, y + 8-(this.enabled?(this.hovered?offsetPressed:offsetNormal): offsetDisabled), this.text.getColor(), 8, this.text.getAlignment());
         Registry.getTextureManager().getTexture2DContainer().bind("/resource/textures/gui/controls/button.png");
 
         int texturePosition;

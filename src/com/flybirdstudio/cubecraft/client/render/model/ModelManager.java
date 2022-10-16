@@ -2,7 +2,7 @@ package com.flybirdstudio.cubecraft.client.render.model;
 
 import com.flybirdstudio.cubecraft.client.render.model.object.Model;
 import com.flybirdstudio.cubecraft.client.resources.ResourceManager;
-import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.Registry;
 import com.flybirdstudio.util.container.namespace.NameSpaceMap;
 
 import java.io.IOException;

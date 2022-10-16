@@ -1,5 +1,5 @@
 package com.flybirdstudio.cubecraft.world.entity;
-import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.Registry;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.cubecraft.world.item.Inventory;
 import com.flybirdstudio.util.file.nbt.NBTDataIO;

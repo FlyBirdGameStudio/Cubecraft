@@ -1,9 +1,6 @@
 package com.flybirdstudio.cubecraft.client.gui;
 
-import com.flybirdstudio.cubecraft.client.gui.DisplayScreenInfo;
-import com.flybirdstudio.cubecraft.client.gui.FontAlignment;
-import com.flybirdstudio.cubecraft.client.gui.FontRenderer;
-import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.Registry;
 import com.flybirdstudio.starfish3d.render.GLUtil;
 import com.flybirdstudio.starfish3d.render.ShapeRenderer;
 import com.flybirdstudio.util.math.MathHelper;

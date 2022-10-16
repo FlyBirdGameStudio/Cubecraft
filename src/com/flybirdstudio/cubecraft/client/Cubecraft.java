@@ -24,10 +24,13 @@ import com.flybirdstudio.cubecraft.client.gui.screen.Screen;
 import com.flybirdstudio.cubecraft.client.render.renderer.LevelRenderer;
 import com.flybirdstudio.cubecraft.client.resources.ResourceLoader;
 import com.flybirdstudio.cubecraft.client.resources.ResourceManager;
+import com.flybirdstudio.cubecraft.extansion.ExtansionRunningTarget;
+import com.flybirdstudio.cubecraft.extansion.ModManager;
 import com.flybirdstudio.cubecraft.extansion.PlatformClient;
-import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.Registry;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.cubecraft.world.entity.humanoid.Player;
+import com.flybirdstudio.cubecraftcontent.CubecraftContentPack;
 import com.flybirdstudio.starfish3d.audio.Audio;
 import com.flybirdstudio.starfish3d.platform.Display;
 import com.flybirdstudio.starfish3d.platform.input.InputHandler;
@@ -41,6 +44,30 @@ import com.flybirdstudio.util.net.UDPSocket;
 import com.flybirdstudio.util.task.TaskProgressUpdateListener;
 import com.flybirdstudio.util.timer.Timer;
 import org.lwjgl.opengl.GL11;
+
+////////////////////////////////////////////////////////////////////
+//                          _ooOoo_                               //
+//                         o8888888o                              //
+//                         88" . "88                              //
+//                         (| ^_^ |)                              //
+//                         O\  =  /O                              //
+//                      ____/`---'\____                           //
+//                    .'  \\|     |//  `.                         //
+//                   /  \\|||  :  |||//  \                        //
+//                  /  _||||| -:- |||||-  \                       //
+//                  |   | \\\  -  /// |   |                       //
+//                  | \_|  ''\---/''  |   |                       //
+//                  \  .-\__  `-`  ___/-. /                       //
+//                ___`. .'  /--.--\  `. . ___                     //
+//              ."" '<  `.___\_<|>_/___.'  >'"".                  //
+//            | | :  `- \`.;`\ _ /`;.`/ - ` : | |                 //
+//            \  \ `-.   \_ __\ /__ _/   .-` /  /                 //
+//      ========`-.____`-.___\_____/___.-`____.-'========         //
+//                           `=---='                              //
+//      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^        //
+//            佛祖保佑       永不内存泄漏     永无BUG                 //
+////////////////////////////////////////////////////////////////////
+
 
 //todo:add server net support
 //todo:add inventory support
@@ -119,7 +146,7 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
         ScreenUtil.initBGRenderer();
 
         //load content
-
+        ModManager.loadMod(CubecraftContentPack.class,null,getPlatformClient(), ExtansionRunningTarget.CLIENT);
         this.clientEventBus.callEvent(new ClientInitializeEvent(this));
         this.setScreen(logoLoadingScreen);
         this.logoLoadingScreen.display();
@@ -220,7 +247,7 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
     }
 
     private DisplayScreenInfo getDisplaySize() {
-        int scale = GameSetting.instance.getValueAsInt("client.gui.scale", 2);
+        int scale = GameSetting.instance.getValueAsInt("client.render.gui.scale", 2);
         return new DisplayScreenInfo(
                 scale,
                 Math.max(Display.getWidth() / scale, 1),

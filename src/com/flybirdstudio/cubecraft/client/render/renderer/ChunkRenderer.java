@@ -3,13 +3,12 @@ package com.flybirdstudio.cubecraft.client.render.renderer;
 import com.flybirdstudio.cubecraft.GameSetting;
 import com.flybirdstudio.cubecraft.client.render.object.RenderChunk;
 import com.flybirdstudio.cubecraft.client.render.object.RenderChunkPos;
-import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.Registry;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.cubecraft.world.entity.humanoid.Player;
 import com.flybirdstudio.starfish3d.render.Camera;
 import com.flybirdstudio.starfish3d.render.GLUtil;
 import com.flybirdstudio.starfish3d.render.culling.ProjectionMatrixFrustum;
-import com.flybirdstudio.starfish3d.render.multiThread.DrawCompile;
 import com.flybirdstudio.starfish3d.render.multiThread.MultiRenderCompileService;
 import com.flybirdstudio.starfish3d.render.textures.Texture2D;
 import com.flybirdstudio.starfish3d.render.textures.TextureStateManager;
@@ -33,7 +32,7 @@ public class ChunkRenderer extends IWorldRenderer {
     private final ProjectionMatrixFrustum frustum = new ProjectionMatrixFrustum(this.camera);
     public HashMapSet<RenderChunkPos, RenderChunk> chunks = new HashMapSet<>();
     public ArrayQueue<RenderChunkPos> updateQueue = new ArrayQueue<>();
-    public MultiRenderCompileService<RenderChunk> updateService = new MultiRenderCompileService<>(GameSetting.instance.getValueAsInt("client.render.chunk.drawThread", 1));
+    public MultiRenderCompileService<RenderChunk> updateService = new MultiRenderCompileService<>("cubecraft:client_chunk",GameSetting.instance.getValueAsInt("client.render.chunk.drawThread", 1));
 
     public ChunkRenderer(IWorld w, Player p, Camera c) {
         super(w, p, c);
@@ -60,7 +59,7 @@ public class ChunkRenderer extends IWorldRenderer {
         if (this.camera.isPositionChanged() || this.camera.isRotationChanged()) {
             this.checkForChunkAdd();
             CollectionUtil.iterateMap(this.chunks.map, (key, item) -> {
-                item.visible=ChunkRenderer.this.camera.objectDistanceSmallerThan(new Vector3d(item.x * 16, item.y * 16, item.z * 16), GameSetting.instance.getValueAsInt("client.render.terrain.renderDistance", 4) * 16) && this.frustum.aabbVisible(RenderChunk.getAABBFromPos(item.getKey(), camera))&&item.isNotEmpty();
+                item.visible=ChunkRenderer.this.camera.objectDistanceSmallerThan(new Vector3d(item.x * 16, item.y * 16, item.z * 16), GameSetting.instance.getValueAsInt("client.render.terrain.renderDistance", 4) * 16) && this.frustum.aabbVisible(RenderChunk.getAABBFromPos(item.getKey(), camera));
             });
         }
         this.drawChunks();
@@ -98,8 +97,8 @@ public class ChunkRenderer extends IWorldRenderer {
         int maxUPD = GameSetting.instance.getValueAsInt("client.render.chunk.maxUpdate", 2);
 
         //offer update
-        if (updateQueue.size() >= maxUPD) {
-            List<RenderChunkPos> updatePositionList = this.updateQueue.pollAll(maxUPD);
+        if (updateQueue.size() >0) {
+            List<RenderChunkPos> updatePositionList = this.updateQueue.pollAll(this.updateQueue.size());
             for (RenderChunkPos pos : updatePositionList) {
                 RenderChunk chunk = this.chunks.get(pos);
                 if (chunk == null) {
@@ -113,15 +112,13 @@ public class ChunkRenderer extends IWorldRenderer {
         //receive chunk update and draw
 
         logHandler.checkGLError("pre_draw");
-        if (this.updateService.getResultSize() > 0) {
-            for (DrawCompile d : this.updateService.get()) {
-                if (d != null) {
-                    d.draw();
-                }
+        int size=this.updateService.getResultSize();
+        if (this.updateService.getResultSize() > maxUPD) {
+            for (int i=0;i<(size>maxUPD?maxUPD:size);i++) {
+                this.updateService.get().draw();
             }
         }
         logHandler.checkGLError("post_draw");
-
     }
 
     //try to add chunk in distance but not exist
@@ -215,6 +212,11 @@ public class ChunkRenderer extends IWorldRenderer {
                 MathHelper.getChunkPos(y, 16),
                 MathHelper.getChunkPos(z, 16)
         );
+    }
+
+    public void refresh(){
+        this.chunks.clear();
+        this.checkForChunkAdd();
     }
 }
 

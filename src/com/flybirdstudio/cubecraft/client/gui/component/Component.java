@@ -18,7 +18,7 @@ public abstract class Component {
     //layout
 
     public void resize(int width,int height){
-        int scale=GameSetting.instance.getValueAsInt("client.gui.scale",2);
+        int scale=GameSetting.instance.getValueAsInt("client.render.gui.scale",2);
         this.layoutManager.resize(width,height);
         this.layer=layoutManager.layer;
         if(scaleEnabled[0]){//left

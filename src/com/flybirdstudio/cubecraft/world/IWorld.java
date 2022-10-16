@@ -1,6 +1,6 @@
 package com.flybirdstudio.cubecraft.world;
 
-import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.Registry;
 import com.flybirdstudio.cubecraft.world.block.EnumFacing;
 import com.flybirdstudio.cubecraft.world.block.BlockState;
 import com.flybirdstudio.cubecraft.world.chunk.Chunk;
@@ -292,7 +292,7 @@ public class IWorld {
     }
 
     public int getLight(long x, long y, long z) {
-        if(getBlockState(x,y,z).getBlock().isSolid()){
+        if(!Objects.equals(getBlockState(x, y, z).getId(), "cubecraft:air")){
             return 0;
         }else{
             return 127;

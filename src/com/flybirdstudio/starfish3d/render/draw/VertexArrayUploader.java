@@ -42,7 +42,7 @@ public class VertexArrayUploader {
         GL11.glNormalPointer(GL11.GL_DOUBLE, 0, MemoryUtil.memAddress(normal));
         GL11.glVertexPointer(3, GL11.GL_DOUBLE, 0, MemoryUtil.memAddress(vertex));
 
-        GL11.glDrawArrays(GL11.GL_QUADS, 0, arr.getVertexCount());
+        GL11.glDrawArrays(arr.getDrawMode(), 0, arr.getVertexCount());
 
         GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
         GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);

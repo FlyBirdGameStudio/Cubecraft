@@ -1,10 +1,9 @@
 package com.flybirdstudio.cubecraft.client.render.worldObjectRenderer;
 
-import com.flybirdstudio.cubecraft.GameSetting;
 import com.flybirdstudio.cubecraft.client.render.BlockRenderUtil;
 import com.flybirdstudio.cubecraft.client.render.model.RenderType;
 import com.flybirdstudio.cubecraft.client.render.model.object.Vertex;
-import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.Registry;
 import com.flybirdstudio.cubecraft.world.IWorld;
 import com.flybirdstudio.cubecraft.world.block.BlockState;
 import com.flybirdstudio.cubecraft.world.block.EnumFacing;

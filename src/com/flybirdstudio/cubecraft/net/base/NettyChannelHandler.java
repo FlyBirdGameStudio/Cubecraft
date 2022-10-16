@@ -2,7 +2,7 @@ package com.flybirdstudio.cubecraft.net.base;
 
 import com.flybirdstudio.cubecraft.net.ChannelTimingEvent;
 import com.flybirdstudio.cubecraft.net.INetHandler;
-import com.flybirdstudio.cubecraft.registery.Registry;
+import com.flybirdstudio.cubecraft.Registry;
 import com.flybirdstudio.util.container.ArrayQueue;
 import com.flybirdstudio.util.container.ArrayUtil;
 import com.flybirdstudio.util.container.BufferBuilder;
