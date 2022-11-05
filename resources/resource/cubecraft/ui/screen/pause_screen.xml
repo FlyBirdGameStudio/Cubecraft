@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<faml ext="cubecraft_ui">
+    <meta>
+        <type>in-game</type>
+        <id>cubecraft:pause_screen</id>
+        <parent>cubecraft:hud_screen</parent>
+    </meta>
+    <label id="label">
+        <layout type="origin">
+            <layout>[0,-65,0,8]</layout>
+            <type>middle_middle</type>
+            <border>[0,0,4,4]</border>
+        </layout>
+        <text type="lang" color="ffffff" align="middle">pause_screen.title</text>
+    </label>
+    <button id="button_back">
+        <layout type="origin">
+            <layout>[0,-40,300,30]</layout>
+            <type>middle_middle</type>
+            <border>[0,0,4,4]</border>
+        </layout>
+        <text type="lang" color="ffffff" align="middle">pause_screen.button.back_to_game</text>
+    </button>
+    <button id="button_option">
+        <layout type="origin">
+            <layout>[0,-10,300,30]</layout>
+            <type>middle_middle</type>
+            <border>[0,0,4,4]</border>
+        </layout>
+        <text type="lang" color="ffffff" align="middle">pause_screen.button.option</text>
+    </button>
+    <button id="button_achievement">
+        <layout type="origin">
+            <layout>[-75,20,150,30]</layout>
+            <type>middle_middle</type>
+            <border>[0,4,4,4]</border>
+        </layout>
+        <text type="lang" color="ffffff" align="middle">pause_screen.button.achievement</text>
+    </button>
+    <button id="button_open_to_net">
+        <layout type="origin">
+            <layout>[75,20,150,30]</layout>
+            <type>middle_middle</type>
+            <border>[4,4,4,4]</border>
+        </layout>
+        <text type="lang" color="ffffff" align="middle">pause_screen.button.open_to_net</text>
+    </button>
+    <button id="button_save_and_quit">
+        <layout type="origin">
+            <layout>[0,50,300,30]</layout>
+            <type>middle_middle</type>
+            <border>[0,0,4,4]</border>
+        </layout>
+        <text type="lang" color="ffffff" align="middle">pause_screen.button.save_and_quit</text>
+    </button>
+</faml>

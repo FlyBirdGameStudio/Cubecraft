@@ -12,6 +12,7 @@
       <excludeFolder url="file://$MODULE_DIR$/logs" />
       <excludeFolder url="file://$MODULE_DIR$/src/com/flybirdstudio/cubecraft/_net" />
       <excludeFolder url="file://$MODULE_DIR$/src/org/lwjglx/input" />
+      <excludeFolder url="file://$MODULE_DIR$/src/io/flybird/cubecraft/_net" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

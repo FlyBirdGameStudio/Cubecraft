@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="JavacSettings">
-    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="CubeCraft" options="--add-exports java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED" />
-    </option>
+  <component name="CompilerConfiguration">
+    <option name="USE_RELEASE_OPTION" value="false" />
   </component>
 </project>
