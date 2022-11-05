@@ -1,0 +1,31 @@
+{
+  "cover_json": {
+    "import": "cubecraft:block.json",
+    "replacement": [
+      {
+        "from": "#resistance",
+        "to": 1
+      },
+      {
+        "from": "#density",
+        "to": 3
+      },
+      {
+        "from": "#hardness",
+        "to": 3
+      },
+      {
+        "from": "#solid",
+        "to": true
+      },
+      {
+        "from": "#opacity",
+        "to": 0
+      },
+      {
+        "from": "#light",
+        "to": 0
+      }
+    ]
+  }
+}
