@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="libraries/disruptor.jar"/>
+	<classpathentry kind="lib" path="libraries/gson-2.2.4.jar"/>
+	<classpathentry kind="lib" path="libraries/j-ogg-all-1.0.0.jar"/>
+	<classpathentry kind="lib" path="libraries/jinput.jar"/>
+	<classpathentry kind="lib" path="libraries/joml-1.10.4.jar"/>
+	<classpathentry kind="lib" path="libraries/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="libraries/lwjgl-glfw.jar"/>
+	<classpathentry kind="lib" path="libraries/lwjgl-openal.jar"/>
+	<classpathentry kind="lib" path="libraries/lwjgl-opengl.jar"/>
+	<classpathentry kind="lib" path="libraries/lwjgl-stb.jar"/>
+	<classpathentry kind="lib" path="libraries/lwjgl.jar"/>
+	<classpathentry kind="lib" path="libraries/netty-all-4.1.25.Final.jar"/>
+	<classpathentry kind="lib" path="out/artifacts/CubeCraft_jar/CubeCraft.jar"/>
+	<classpathentry kind="output" path="out/production/CubeCraft"/>
+</classpath>
