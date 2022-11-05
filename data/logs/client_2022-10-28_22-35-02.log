@@ -1,7 +1,0 @@
-[22:36:01][INFO][mod loader]constructing mod:cubecraft content pack-0.1.0
-[22:36:01][WARNING][resouceLoader]can not read path,use fallback:resource/fallback/texture.png
-[22:36:01][WARNING][resouceLoader]can not read textures:/resource/cubecraft/block/texture/dirt.png,because of java.lang.IllegalArgumentException: input == null!
-[22:36:01][WARNING][resouceLoader]can not read path,use fallback:resource/fallback/texture.png
-[22:36:01][WARNING][resouceLoader]can not read textures:/resource/cubecraft/block/texture/stone.png,because of java.lang.IllegalArgumentException: input == null!
-[22:36:01][INFO][main]client initialization done,in6852ms
-[22:36:01][INFO][main]game stopped...
