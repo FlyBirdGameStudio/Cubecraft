@@ -16,9 +16,11 @@ public class ArrayUtil {
     }
 
     public static <T>boolean arrayMatchNone(T t, T[] arr){
-        return Arrays.stream(arr).noneMatch(t2 -> {
-            return Objects.equals(t2, t);
-        });
+        return Arrays.stream(arr).noneMatch(t2 -> Objects.equals(t2, t));
+    }
+
+    public static int calcDispatchPos3d(int w,int h,int d,int x,int y,int z) {
+        return (y * d + z) * w + x;
     }
 
     public interface ArrayIterationAction<E>{

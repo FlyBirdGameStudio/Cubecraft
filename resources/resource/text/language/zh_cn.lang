@@ -7,7 +7,7 @@ title_screen.button.singleplayer=单人游戏
 title_screen.button.multiplayer=多人游戏
 title_screen.button.setting=选项
 title_screen.button.quit=退出
-title_screen.version=Cubecraft-%s(模组:%d个,插件:%d个)
+title_screen.version=Cubecraft-%s(模组:%d个)
 title_screen.auth=当前账号：%s
 
 
@@ -40,11 +40,12 @@ versioncheck.require.subtitle=当前版本：%s，最新版本:%s
 
 
 # world selection
-worldselection.title=世界选择
-worldselection.button.join=进入世界
-worldselection.button.create=创建世界
-worldselection.button.delete=删除世界
-worldselection.button.option=世界选项
+singleplayer.title=单人游戏
+singleplayer.button.join=进入世界
+singleplayer.button.create=创建世界
+singleplayer.button.delete=删除世界
+singleplayer.button.option=世界选项
+singleplayer.search_world=搜索世界...
 
 # server selection
 serverselection.title=服务器选择

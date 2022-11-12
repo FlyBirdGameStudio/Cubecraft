@@ -35,6 +35,7 @@ import io.flybird.cubecraft.world.entity.humanoid.Player;
 import io.flybird.starfish3d.audio.Audio;
 import io.flybird.starfish3d.platform.Display;
 import io.flybird.starfish3d.platform.input.InputHandler;
+import io.flybird.starfish3d.platform.input.Keyboard;
 import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.util.LogHandler;
 import io.flybird.util.LoopTickingApplication;
@@ -77,10 +78,9 @@ import org.lwjgl.opengl.GL11;
 //todo:add json driven block register
 
 public class Cubecraft extends LoopTickingApplication implements TaskProgressUpdateListener {
-
     private final CubecraftServer server=new CubecraftServer();
     private final EventBus clientEventBus = new EventBus();
-
+    public static final String VERSION = "alpha-0.2.6";
 
     //display
     private DisplayScreenInfo screenInfo;
@@ -88,7 +88,7 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
     private Screen screen;
     private final LogoLoadingScreen logoLoadingScreen = new LogoLoadingScreen();
     private final ClientInputHandler clientInputHandler = new ClientInputHandler(this);
-    public static final String VERSION = "alpha-0.2.5";
+
 
     private IWorld clientWorld = null;
     private Player player = new Player(null);
@@ -105,7 +105,6 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
 
     public void leaveWorld() {
         this.clientWorld = null;
-        this.player = null;
     }
 
     public EventBus getClientEventBus() {
@@ -136,17 +135,16 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
     //application
     @Override
     public void init() {
-
         Registry.setClient(this);
         Timer.startTiming();
 
         //init application
 
         this.timer = new Timer(20);
-        this.logHandler = LogHandler.create("main", "client");
+        this.logHandler = LogHandler.create("main", "game");
         this.initDisplay();
 
-        InputHandler.registerGlobalKeyboardCallback("cubecraft:main", this.clientInputHandler);
+        Keyboard.getKeyboardEventBus().registerEventListener(this.clientInputHandler);
         ScreenUtil.initBGRenderer();
 
         //load content
@@ -201,6 +199,7 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
             this.logHandler.checkGLError("pre_screen_render");
             this.screenInfo = this.getDisplaySize();
             this.screen.render(this.screenInfo, this.timer.interpolatedTime);
+
             if (!(this.screen instanceof LogoLoadingScreen)) {
                 this.logoLoadingScreen.render(screenInfo, this.timer.interpolatedTime);
             }
@@ -259,12 +258,12 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
         );
     }
 
-    private void initDisplay() {
+    protected void initDisplay() {
         StartArguments arg = Start.getStartGameArguments();
         Display.create();
         Display.setFXAA(GameSetting.instance.FXAA);
         String instanceName=arg.getValueAsString("instance", " ");
-        Display.setTitle(arg.getValueAsString("title", "Cubecraft-" + VERSION) + instanceName==" "?"":"(%s)".formatted(instanceName));
+        Display.setTitle((arg.getValueAsString("title", "Cubecraft-" + VERSION) + instanceName).equals(" ") ?"":"(%s)".formatted(instanceName));
         Display.setIcon(ResourceManager.instance.getResource("/resource/cubecraft/ui/texture/icons/icon.png").getAsStream());
         Display.setResizable(true);
         Display.setVsyncEnable(false);

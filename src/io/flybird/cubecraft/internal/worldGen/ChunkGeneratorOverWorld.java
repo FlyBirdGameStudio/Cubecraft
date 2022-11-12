@@ -5,7 +5,7 @@ import io.flybird.cubecraft.world.chunk.Chunk;
 import io.flybird.cubecraft.world.chunk.ChunkPos;
 import io.flybird.cubecraft.world.worldGen.noiseGenerator.PerlinNoise;
 import io.flybird.cubecraft.world.worldGen.noiseGenerator.Synth;
-import io.flybird.cubecraft.world.worldGen.pipeline.IChunkGenerator;
+import io.flybird.cubecraft.world.worldGen.pipeline.ChunkGenerator;
 import io.flybird.cubecraft.world.worldGen.templete.Modification;
 import io.flybird.cubecraft.world.worldGen.templete.Scale;
 import io.flybird.cubecraft.world.worldGen.templete.Select;
@@ -13,7 +13,7 @@ import io.flybird.util.math.MathHelper;
 
 import java.util.Random;
 
-public class ChunkGeneratorOverWorld extends IChunkGenerator {
+public class ChunkGeneratorOverWorld extends ChunkGenerator {
 
     private Synth altitudeHigh;
     private Synth altitudeLow;

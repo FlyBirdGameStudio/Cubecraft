@@ -13,18 +13,9 @@ public class InputHandler {
     static boolean keyDownStatus = true;
     static int keyDownCount=0;
     static long lastTime;
-    private static final HashMap<String, KeyboardCallback> keyboardCallbacks =new HashMap<>();
+
     private static final Map<String, MouseCallBack> mouseCallbacks=new HashMap<>();
 
-
-    /**
-     * register a callback for keyboard,fail with id conflict.
-     * @param id id
-     * @param cb callback
-     */
-    public static void registerGlobalKeyboardCallback(String id, KeyboardCallback cb){
-        keyboardCallbacks.put(id,cb);
-    }
 
     /**
      * register a callback for mouse,fail with id conflict.
@@ -39,18 +30,6 @@ public class InputHandler {
      * tick the input and holding all callbacks.
      */
     public static void tick(){
-        HashMap<String,KeyboardCallback> kb=keyboardCallbacks;
-        while (Keyboard.next()){
-            CollectionUtil.iterateMap(kb, (key, item) -> {
-                item.onKeyEventNext();
-            });
-            if(Keyboard.getEventKeyState()){
-                CollectionUtil.iterateMap(kb, (key, item) -> {
-                    item.onKeyEventPressed();
-                });
-            }
-        }
-
         HashMap<String,MouseCallBack> m= (HashMap<String, MouseCallBack>) mouseCallbacks;
         while (Mouse.next()){
             if(Mouse.getEventButtonState()){

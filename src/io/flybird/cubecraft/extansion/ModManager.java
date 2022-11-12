@@ -14,7 +14,7 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 
 public class ModManager {
-    static LogHandler logger=LogHandler.create("mod loader","client");
+    static LogHandler logger=LogHandler.create("mod-loader","game");
     public static HashMap<String,Mod> mods=new HashMap<>();
 
     public static void loadMod(String path,PlatformServer server,PlatformClient client,ExtansionRunningTarget tgt){

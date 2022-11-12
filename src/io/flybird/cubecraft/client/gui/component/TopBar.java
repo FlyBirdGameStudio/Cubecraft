@@ -19,17 +19,7 @@ public class TopBar extends Component {
 
     @Override
     public void render() {
-        int x = layoutManager.ax, y = layoutManager.ay, w = layoutManager.aWidth, h = layoutManager.aHeight;
-        FontRenderer.renderShadow(this.text.getText(), x + w / 2, y + 8, this.text.getColor(), 8, this.text.getAlignment());
-        Registry.getTextureManager().getTexture2DContainer().bind("/resource/cubecraft/ui/texture/controls/topbar.png");
-        ShapeRenderer.begin();
-        ShapeRenderer.drawRectUV(x, x + w, y, y + h, -1, -1, 0,
-                0.1, 0, 1);
-        ShapeRenderer.end();
-    }
-
-    static {
-        Registry.getTextureManager().createTexture2D(ResourceManager.instance.getResource("/resource/cubecraft/ui/texture/controls/topbar.png"), false, false);
+        Registry.getComponentRenderManager().get(this.getClass()).render(this);
     }
 
     public static class XMLDeserializer implements FAMLDeserializer<TopBar> {
@@ -40,5 +30,10 @@ public class TopBar extends Component {
             topBar.setLayout(famlLoadingContext.deserialize((Element) element.getElementsByTagName("layout").item(0), LayoutManager.class));
             return topBar;
         }
+    }
+
+    @Override
+    public Text queryText(String query) {
+        return text;
     }
 }

@@ -3,17 +3,12 @@ package io.flybird.cubecraft;
 import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.resources.ResourceManager;
 import io.flybird.util.LogHandler;
-import io.flybird.util.SystemInfoHelper;
 import io.flybird.util.container.StartArguments;
-import org.iq80.leveldb.impl.Iq80DBFactory;
 
 import java.io.*;
 
 public class Start {
     public static void main(String[] args) throws IOException {
-
-
-        SystemInfoHelper.init();
         //init game runtime
         startArguments =new StartArguments(args);
         gamePath= startArguments.getValueAsString("path", System.getProperty("user.dir"));

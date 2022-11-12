@@ -26,7 +26,7 @@ public class ShapeRenderer {
         t.end();
     }
     public static void setColor(int r,int g,int b,int a){
-        GL11.glColor4ub((byte) r,(byte)g,(byte)b,(byte)a);
+        GL11.glColor4f(r/256f,g/256f,b/256f,a/256f);
     }
     public static void setColor(int color) {
         int r = (color >> 16 & 0xFF) ;

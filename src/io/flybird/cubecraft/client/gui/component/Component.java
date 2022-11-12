@@ -1,7 +1,6 @@
 package io.flybird.cubecraft.client.gui.component;
 
 import io.flybird.cubecraft.client.gui.Node;
-import io.flybird.cubecraft.client.gui.component.control.Button;
 import io.flybird.cubecraft.client.gui.layout.Border;
 import io.flybird.cubecraft.client.gui.layout.LayoutManager;
 import io.flybird.cubecraft.client.gui.screen.Screen;
@@ -9,8 +8,6 @@ import io.flybird.cubecraft.client.gui.screen.Screen;
 
 public abstract class Component extends Node {
     protected Screen parent;
-
-    public LayoutManager layoutManager;
     public boolean[] scaleEnabled={false,false,false,false};
     protected int layer;
     //layout
@@ -42,17 +39,6 @@ public abstract class Component extends Node {
     }
 
     public void onClicked(int xm,int ym) {}
-
-    public static Class<? extends Component> getClass(String name){
-        return switch (name){
-            case "button"-> Button.class;
-            case "label"->Label.class;
-            case "image"->ImageRenderer.class;
-            case "splash"->SplashText.class;
-            case "topbar"->TopBar.class;
-            default -> throw new IllegalArgumentException("no matched constant named %s".formatted(name));
-        };
-    }
 
     public Screen getParent() {
         return parent;

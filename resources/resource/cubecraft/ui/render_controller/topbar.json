@@ -1,0 +1,22 @@
+[
+  {
+    "state": "default",
+    "components": [
+      {
+        "type": "image_all_boarder",
+        "boarderH":8,
+        "boarderV": 8,
+        "loc": "cubecraft:controls/topbar.png",
+        "pos": [0,1,0,1]
+      },
+      {
+        "type": "font",
+        "binding": "topbar:text",
+        "size": 8,
+        "color": 0,
+        "line_offset": -4,
+        "pos": [0.5,0.5]
+      }
+    ]
+  }
+]

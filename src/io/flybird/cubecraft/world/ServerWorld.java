@@ -17,8 +17,8 @@ import java.util.Iterator;
 
 public class ServerWorld extends IWorld{
     public final String id;
-    public ServerWorld(LevelInfo levelInfo, String id) {
-        super(levelInfo);
+    public ServerWorld(String id, LevelInfo levelInfo) {
+        super(id,levelInfo);
         this.id = id;
     }
 

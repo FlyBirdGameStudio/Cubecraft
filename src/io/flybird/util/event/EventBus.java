@@ -17,7 +17,7 @@ public class EventBus {
     }
 
     public void callEvent(Event event,Object... param) {
-        for (EventListener el : this.listeners) {
+        for (EventListener el : ((ArrayList<EventListener>) this.listeners.clone())) {
             Method[] ms = el.getClass().getMethods();
             for (Method m : ms) {
                 if (Arrays.stream(m.getAnnotations()).anyMatch(annotation -> annotation instanceof EventHandler)) {

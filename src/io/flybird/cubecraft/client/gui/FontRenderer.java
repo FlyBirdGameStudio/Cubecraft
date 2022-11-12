@@ -32,7 +32,7 @@ public class FontRenderer {
         int charPos_scr = 0;
         switch (alignment) {
             case LEFT -> charPos_scr = x;
-            case MIDDLE -> charPos_scr = (int) (x - contWidth / 2.0f);
+            case MIDDLE -> charPos_scr = (int) (x - contWidth / 2f);
             case RIGHT -> charPos_scr = x - contWidth;
         }
         VertexArrayBuilder builder = new VertexArrayBuilder(1024);

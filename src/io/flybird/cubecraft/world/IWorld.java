@@ -26,9 +26,11 @@ public class IWorld {
     public HashMap<String, Entity> entities = new HashMap<>();//uuid,entity
     private LevelInfo levelInfo;
     private long time;
+    private final String id;
     private ArrayList<WorldListener> listeners = new ArrayList<>();
 
-    public IWorld(LevelInfo levelInfo) {
+    public IWorld(String id,LevelInfo levelInfo) {
+        this.id=id;
         this.levelInfo = levelInfo;
     }
 
@@ -87,7 +89,7 @@ public class IWorld {
 
     //info
     public String getID() {
-        return "cubecraft:overworld";
+        return this.id;
     }
 
     public Level getLevel() {
@@ -126,7 +128,7 @@ public class IWorld {
         if (!this.entities.containsKey(e.getUID())) {
             this.entities.put(e.getUID(), e);
             e.setWorld(IWorld.this);
-            this.loadChunk((long) e.x / 16, (long) (e.y / Chunk.HEIGHT), (long) (e.z / 16), new ChunkLoadTicket(ChunkLoadLevel.Entity_TICKING, 256));
+            this.loadChunk((long) e.x / Chunk.WIDTH, (long) (e.y / Chunk.HEIGHT), (long) (e.z / Chunk.WIDTH), new ChunkLoadTicket(ChunkLoadLevel.Entity_TICKING, 256));
         } else {
             throw new RuntimeException("conflict entity uuid:" + e.getUID());
         }
@@ -161,9 +163,9 @@ public class IWorld {
         }
 
         return getChunk(chunkPos).getBlockState(
-                (int) MathHelper.getRelativePosInChunk(x, 16),
+                (int) MathHelper.getRelativePosInChunk(x, Chunk.WIDTH),
                 (int) MathHelper.getRelativePosInChunk(y, Chunk.HEIGHT),
-                (int) MathHelper.getRelativePosInChunk(z, 16)
+                (int) MathHelper.getRelativePosInChunk(z, Chunk.WIDTH)
         );
     }
 
@@ -256,9 +258,9 @@ public class IWorld {
             return;
         }
         getChunk(chunkPos).setBlockState(
-                (int) MathHelper.getRelativePosInChunk(x, 16),
+                (int) MathHelper.getRelativePosInChunk(x, Chunk.WIDTH),
                 (int) MathHelper.getRelativePosInChunk(y, Chunk.HEIGHT),
-                (int) MathHelper.getRelativePosInChunk(z, 16),
+                (int) MathHelper.getRelativePosInChunk(z, Chunk.WIDTH),
                 newState
         );
         this.getEventBus().callEvent(new BlockChangeEvent(x,y,z,newState));
@@ -278,33 +280,33 @@ public class IWorld {
 
     public double getTemperature(long x, long y, long z) {
         return getChunk(ChunkPos.fromWorldPos(x, y, z)).getTemperature(
-                (int) MathHelper.getRelativePosInChunk(x, 16),
+                (int) MathHelper.getRelativePosInChunk(x, Chunk.WIDTH),
                 (int) MathHelper.getRelativePosInChunk(y, Chunk.HEIGHT),
-                (int) MathHelper.getRelativePosInChunk(z, 16)
+                (int) MathHelper.getRelativePosInChunk(z, Chunk.WIDTH)
         );
     }
 
     public double getHumidity(long x, long y, long z) {
         return getChunk(ChunkPos.fromWorldPos(x, y, z)).getHumidity(
-                (int) MathHelper.getRelativePosInChunk(x, 16),
+                (int) MathHelper.getRelativePosInChunk(x, Chunk.WIDTH),
                 (int) MathHelper.getRelativePosInChunk(y, Chunk.HEIGHT),
-                (int) MathHelper.getRelativePosInChunk(z, 16)
+                (int) MathHelper.getRelativePosInChunk(z, Chunk.WIDTH)
         );
     }
 
     public void setTemperature(long x, long y, long z,double t) {
         getChunk(ChunkPos.fromWorldPos(x, y, z)).setTemperature(
-                (int) MathHelper.getRelativePosInChunk(x, 16),
+                (int) MathHelper.getRelativePosInChunk(x, Chunk.WIDTH),
                 (int) MathHelper.getRelativePosInChunk(y, Chunk.HEIGHT),
-                (int) MathHelper.getRelativePosInChunk(z, 16),t
+                (int) MathHelper.getRelativePosInChunk(z, Chunk.WIDTH),t
         );
     }
 
     public void setHumidity(long x, long y, long z,double t) {
         getChunk(ChunkPos.fromWorldPos(x, y, z)).setHumidity(
-                (int) MathHelper.getRelativePosInChunk(x, 16),
+                (int) MathHelper.getRelativePosInChunk(x, Chunk.WIDTH),
                 (int) MathHelper.getRelativePosInChunk(y, Chunk.HEIGHT),
-                (int) MathHelper.getRelativePosInChunk(z, 16),t
+                (int) MathHelper.getRelativePosInChunk(z, Chunk.WIDTH),t
         );
     }
 }

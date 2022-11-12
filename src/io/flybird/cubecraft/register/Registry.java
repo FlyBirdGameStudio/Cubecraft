@@ -1,6 +1,7 @@
 package io.flybird.cubecraft.register;
 
 import io.flybird.cubecraft.client.Cubecraft;
+import io.flybird.cubecraft.client.gui.renderer.ComponentRenderManager;
 import io.flybird.cubecraft.client.render.model.ModelManager;
 import io.flybird.cubecraft.client.render.model.block.BlockModel;
 import io.flybird.cubecraft.client.render.model.block.BlockModelFace;
@@ -16,6 +17,7 @@ import io.flybird.cubecraft.client.render.renderer.HUDRenderer;
 import io.flybird.cubecraft.client.render.renderer.IWorldRenderer;
 import io.flybird.cubecraft.client.render.worldObjectRenderer.IBlockRenderer;
 import io.flybird.cubecraft.client.render.worldObjectRenderer.IEntityRenderer;
+import io.flybird.cubecraft.internal.worldGen.WorldGeneratorOverworld;
 import io.flybird.cubecraft.net.NetWorkEventBus;
 import io.flybird.cubecraft.server.CubecraftServer;
 import io.flybird.cubecraft.world.IWorld;
@@ -136,6 +138,12 @@ public class Registry {
     }
 
 
+    private static final ComponentRenderManager componentRenderManager =new ComponentRenderManager();
+
+    public static ComponentRenderManager getComponentRenderManager() {
+        return componentRenderManager;
+    }
+
     //network
     private static final NameSpacedRegisterMap<? extends PacketEncoder<?>, ?> packetEncoderMap = new NameSpacedRegisterMap<>(null);
     private static final NameSpacedRegisterMap<? extends PacketDecoder<?>, ?> packetDecoderMap = new NameSpacedRegisterMap<>(null);
@@ -170,11 +178,7 @@ public class Registry {
         getWorldRenderers().registerItem("cubecraft:chunk_renderer", ChunkRenderer.class);
         getWorldRenderers().registerItem("cubecraft:entity_renderer", EntityRenderer.class);
         getWorldRenderers().registerItem("cubecraft:hud_renderer", HUDRenderer.class);
-        getWorldGeneratorMap().registerItem("cubecraft:overworld", new ChunkGeneratorPipeline()
-                //.addLast(new BiomeBuilderOverWorld())
-                .addLast(new ChunkGeneratorOverWorld()
-                //).addLast(new WorldGeneratorFlat()
-                ));
+
     }
 
     public static ArrayList<String> getWorldIdList() {

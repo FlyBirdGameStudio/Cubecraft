@@ -18,7 +18,7 @@ public class LevelRenderer {
     public IWorld world;
     public Player player;
     public Camera camera=new Camera();
-    private EnvironmentRenderer environmentRenderer;
+    public EnvironmentRenderer environmentRenderer;
 
     public LevelRenderer(IWorld w, Player p){
         this.world=w;

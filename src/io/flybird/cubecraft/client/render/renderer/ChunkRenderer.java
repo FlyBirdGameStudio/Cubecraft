@@ -11,6 +11,7 @@ import io.flybird.starfish3d.render.Camera;
 import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.starfish3d.render.culling.ProjectionMatrixFrustum;
 import io.flybird.starfish3d.render.multiThread.AsyncRenderCompileService;
+import io.flybird.starfish3d.render.multiThread.IDrawCompile;
 import io.flybird.starfish3d.render.multiThread.IDrawService;
 import io.flybird.starfish3d.render.multiThread.MultiRenderCompileService;
 import io.flybird.starfish3d.render.textures.Texture2D;
@@ -30,7 +31,7 @@ import java.util.List;
 
 public class ChunkRenderer extends IWorldRenderer implements EventListener {
     public Texture2D terrain = new Texture2D(false, true);
-    public LogHandler logHandler = LogHandler.create("ChunkRenderer", "client");
+    public LogHandler logHandler = LogHandler.create("chunk-renderer", "game");
     private final ProjectionMatrixFrustum frustum = new ProjectionMatrixFrustum(this.camera);
     public HashMapSet<RenderChunkPos, RenderChunk> chunks = new HashMapSet<>();
     public ArrayQueue<RenderChunkPos> updateQueue = new ArrayQueue<>();
@@ -130,13 +131,16 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
 
         //check all compile and set call list
         while (this.updateService.getAllResultSize() > 0) {
-            RenderChunk chunk = ((RenderChunk) this.updateService.getAllCompile().getObject());
-            if (chunk.isFilled()) {
-                if (!this.callList.contains(chunk)) {
-                    this.callList.add(chunk);
+            IDrawCompile compile=this.updateService.getAllCompile();
+            if(compile!=null) {
+                RenderChunk chunk = ((RenderChunk)compile.getObject());
+                if (chunk.isFilled()) {
+                    if (!this.callList.contains(chunk)) {
+                        this.callList.add(chunk);
+                    }
+                } else {
+                    this.callList.remove(chunk);
                 }
-            } else {
-                this.callList.remove(chunk);
             }
         }
         logHandler.checkGLError("post_draw");

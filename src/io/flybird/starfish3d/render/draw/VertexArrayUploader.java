@@ -7,6 +7,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.DoubleBuffer;
+import java.util.concurrent.Callable;
 
 public class VertexArrayUploader {
     private static final LogHandler logHandler = LogHandler.create("vertex_array_uploader", "grass3D");
@@ -64,5 +65,10 @@ public class VertexArrayUploader {
 
     public static void resetUploadCount(){
         uploadedCount=0;
+    }
+
+    public static void drawArrays(int drawMode, int i, int count) {
+        GL11.glDrawArrays(drawMode, i, count);
+        uploadedCount+=count;
     }
 }

@@ -3,9 +3,9 @@ package io.flybird.cubecraft.internal.worldGen;
 import io.flybird.cubecraft.register.Registry;
 import io.flybird.cubecraft.world.block.BlockState;
 import io.flybird.cubecraft.world.chunk.Chunk;
-import io.flybird.cubecraft.world.worldGen.pipeline.IChunkGenerator;
+import io.flybird.cubecraft.world.worldGen.pipeline.ChunkGenerator;
 
-public class WorldGeneratorFlat extends IChunkGenerator {
+public class WorldGeneratorFlat extends ChunkGenerator {
     @Override
     protected void init() {
 

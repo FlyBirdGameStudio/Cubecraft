@@ -1,9 +1,9 @@
 package io.flybird.cubecraft.internal.worldGen;
 
 import io.flybird.cubecraft.world.chunk.Chunk;
-import io.flybird.cubecraft.world.worldGen.pipeline.IChunkGenerator;
+import io.flybird.cubecraft.world.worldGen.pipeline.ChunkGenerator;
 
-public class BiomeBuilderOverWorld extends IChunkGenerator {
+public class BiomeBuilderOverWorld extends ChunkGenerator {
     @Override
     protected void init() {
 

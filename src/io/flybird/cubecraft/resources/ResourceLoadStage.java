@@ -5,5 +5,5 @@ public enum ResourceLoadStage {
     BLOCK_TEXTURE,
     COLOR_MAP,
     LANGUAGE,
-    FONT_TEXTURE;
+    FONT_TEXTURE, UI_CONTROLLER;
 }

@@ -74,6 +74,6 @@ public class OverwrittenBlock extends Block {
 
     @Override
     public BlockState defaultState() {
-        return new BlockState(this.id, (byte) 0,"");
+        return new BlockState(this.id, (byte) 0,(byte)0);
     }
 }

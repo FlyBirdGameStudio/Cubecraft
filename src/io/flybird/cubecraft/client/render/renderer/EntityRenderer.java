@@ -7,6 +7,8 @@ import io.flybird.cubecraft.world.entity.humanoid.Player;
 import io.flybird.starfish3d.render.Camera;
 
 public class EntityRenderer extends IWorldRenderer {
+    public int visibleCount,allCount;
+
     public EntityRenderer(IWorld w, Player p, Camera c) {
         super(w, p,c);
     }

@@ -12,7 +12,7 @@ public class Level {
 
     public Level(String name) {
         for (String s : Registry.getWorldIdList()) {
-            dims.add(new ServerWorld(levelInfo, s));
+            dims.add(new ServerWorld(s, levelInfo));
         }
         this.name = name;
     }

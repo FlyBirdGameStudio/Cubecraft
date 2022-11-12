@@ -11,7 +11,6 @@ import io.flybird.cubecraft.client.gui.component.SplashText;
 import io.flybird.cubecraft.client.gui.screen.HUDScreen;
 import io.flybird.cubecraft.client.gui.screen.Screen;
 import io.flybird.cubecraft.extansion.ModManager;
-import io.flybird.cubecraft.extansion.PluginManager;
 import io.flybird.cubecraft.world.LevelInfo;
 import io.flybird.cubecraft.world.ServerWorld;
 import io.flybird.util.event.EventHandler;
@@ -28,11 +27,14 @@ public class ScreenController implements EventListener {
     public void onButtonClicked(Button.ActionEvent e) {
         if (Objects.equals(e.component().getParent().getID(), "cubecraft:title_screen")) {
             if (Objects.equals(e.component().getID(), "button_singleplayer")) {
+                Screen screen = ScreenLoader.loadByExtName("cubecraft","single_player_screen.xml");
+                screen.setParentScreen(ScreenLoader.loadByExtName("cubecraft","title_screen.xml"));
+                e.component().getParent().getPlatform().setScreen(screen);
+
+                /*
                 e.component().getParent().getPlatform().setScreen(new HUDScreen());
-                e.component().getParent().getPlatform().joinWorld(new ServerWorld(new LevelInfo("NULL", "NULL", 0, new Date(), false, "NULL", null), "overworld"));
-            }
-            if (Objects.equals(e.component().getID(), "button_multiplayer")) {
-                ScreenUtil.createPopup("?", "function not implemented!", 60, Popup.WARNING);
+                e.component().getParent().getPlatform().joinWorld(new ServerWorld("cubecraft:overworld", new LevelInfo("NULL", "NULL", 0, new Date(), false, "NULL", null)));
+                 */
             }
             if (Objects.equals(e.component().getID(), "button_option")) {
                 Screen screen = ScreenLoader.loadByExtName("cubecraft","setting_screen.xml");
@@ -52,11 +54,8 @@ public class ScreenController implements EventListener {
                 screen.setParentScreen(ScreenLoader.loadByExtName("cubecraft","pause_screen.xml"));
                 e.component().getParent().getPlatform().setScreen(screen);
             }
-            if (Objects.equals(e.component().getID(), "button_open_to_net")) {
-
-            }
             if (Objects.equals(e.component().getID(), "button_achievement")) {
-
+                //todo:achievement screen
             }
             if (Objects.equals(e.component().getID(), "button_save_and_quit")) {
                 e.component().getParent().getPlatform().leaveWorld();
@@ -76,7 +75,7 @@ public class ScreenController implements EventListener {
     public void onScreenInit(ScreenInitializeEvent e) {
         if (Objects.equals(e.screen().getID(), "cubecraft:title_screen")) {
             ((Label) e.screen().getComponents().get("version_string")).text.setText(Language.getFormattedMessage(
-                    "title_screen.version", Cubecraft.VERSION, ModManager.getLoadedMods().size(), PluginManager.getLoadedPlugins().size()
+                    "title_screen.version", Cubecraft.VERSION, ModManager.getLoadedMods().size()
             ));
             ((Label) e.screen().getComponents().get("auth_string")).text.setText(Language.getFormattedMessage(
                     "title_screen.auth", "(NoAuthInfo)"

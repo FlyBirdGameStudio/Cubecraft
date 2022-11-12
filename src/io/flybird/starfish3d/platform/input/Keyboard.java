@@ -5,8 +5,8 @@
 
 package io.flybird.starfish3d.platform.input;
 
-import io.flybird.starfish3d.platform.Callbacks;
-import io.flybird.starfish3d.platform.Display;
+import io.flybird.starfish3d.platform.*;
+import io.flybird.util.event.EventBus;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCharCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
@@ -150,6 +150,8 @@ public class Keyboard {
     public static final int KEY_SLEEP = 223;
     //</editor-fold>
 
+
+
     private static final EventQueue queue = new EventQueue(32);
     private static final int[] keyEvents=new int[queue.getMaxEvents()];
     private static final boolean[] keyEventStates = new boolean[queue.getMaxEvents()];
@@ -206,13 +208,25 @@ public class Keyboard {
                 if (action == 0 || action == 1) {
                     Keyboard.addKeyEvent(key, action == 1);
                 }
-
+                if(action==1) {
+                    getKeyboardEventBus().callEvent(new KeyPressEvent(KeyMapping.toLwjglKey(key)));
+                }
+                if(action==0) {
+                    getKeyboardEventBus().callEvent(new KeyReleaseEvent(KeyMapping.toLwjglKey(key)));
+                }
             }
         };
         Callbacks.charCallback = new GLFWCharCallback() {
             public void invoke(long window, int codepoint) {
                 Keyboard.addCharEvent(latestEventKey, (char) codepoint);
+                getKeyboardEventBus().callEvent(new CharEvent((char) codepoint));
             }
         };
+    }
+
+    private static final EventBus keyboardEventBus=new EventBus();
+
+    public static EventBus getKeyboardEventBus() {
+        return keyboardEventBus;
     }
 }

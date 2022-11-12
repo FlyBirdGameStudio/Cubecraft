@@ -1,40 +1,35 @@
 package io.flybird.cubecraft.client.gui.screen;
 
-import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.client.gui.DisplayScreenInfo;
-import io.flybird.cubecraft.client.gui.FontAlignment;
-import io.flybird.cubecraft.client.gui.FontRenderer;
 import io.flybird.cubecraft.client.gui.ScreenLoader;
 import io.flybird.cubecraft.client.render.renderer.ChunkRenderer;
+import io.flybird.cubecraft.client.render.renderer.EntityRenderer;
+import io.flybird.cubecraft.client.render.renderer.EnvironmentRenderer;
 import io.flybird.cubecraft.resources.ResourceLocation;
 import io.flybird.cubecraft.resources.ResourceManager;
 import io.flybird.cubecraft.world.HittableObject;
 import io.flybird.cubecraft.world.block.BlockState;
 import io.flybird.cubecraft.world.item.Inventory;
+import io.flybird.starfish3d.platform.KeyPressEvent;
 import io.flybird.starfish3d.platform.input.Keyboard;
 import io.flybird.starfish3d.platform.input.KeyboardCallback;
 import io.flybird.starfish3d.platform.input.Mouse;
 import io.flybird.starfish3d.platform.input.MouseCallBack;
 import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.starfish3d.render.ShapeRenderer;
-import io.flybird.starfish3d.render.draw.VertexArrayUploader;
 import io.flybird.starfish3d.render.textures.Texture2D;
 import io.flybird.util.JVMInfo;
-import io.flybird.util.SystemInfoHelper;
+import io.flybird.util.event.EventHandler;
 import io.flybird.util.math.HitResult;
 import org.joml.Vector3d;
-import org.lwjgl.openal.AL11;
 import org.lwjgl.opengl.GL11;
 
 public class HUDScreen extends Screen {
     private final Texture2D actionBar = new Texture2D(false, false);
     private final Texture2D pointer = new Texture2D(false, false);
-    private final String[] debugInfoLeft = new String[64];
-    private final String[] debugInfoRight = new String[64];
-    private int slot;
-    private int vertexUpload;
 
-    private boolean debugScreen;
+    private int slot;
+
     private boolean showGUI = true;
 
     public HUDScreen() {
@@ -48,7 +43,6 @@ public class HUDScreen extends Screen {
     @Override
     public void init() {
         Mouse.setGrabbed(true);
-        this.initDebugInfo();
     }
 
     @Override
@@ -57,9 +51,6 @@ public class HUDScreen extends Screen {
         GLUtil.enableBlend();
         this.getPlatform().controller.tickFast();
         if (showGUI) {
-            if (this.debugScreen) {
-                this.renderDebugInfo(info);
-            }
             this.renderActionBar(info);
             this.pointer.bind();
             GL11.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_DST_COLOR);
@@ -71,8 +62,6 @@ public class HUDScreen extends Screen {
             GLUtil.disableBlend();
 
         }
-        vertexUpload= VertexArrayUploader.getUploadedCount();
-        VertexArrayUploader.resetUploadCount();
     }
 
     @Override
@@ -124,22 +113,14 @@ public class HUDScreen extends Screen {
         };
     }
 
-    @Override
-    public KeyboardCallback getKeyboardCallback() {
-        return new KeyboardCallback() {
-            @Override
-            public void onKeyEventPressed() {
-                if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
-                    Mouse.setGrabbed(false);
-                }
-                if (Keyboard.getEventKey() == Keyboard.KEY_F3) {
-                    HUDScreen.this.debugScreen = !HUDScreen.this.debugScreen;
-                }
-                if (Keyboard.getEventKey() == Keyboard.KEY_F1) {
-                    HUDScreen.this.showGUI = !HUDScreen.this.showGUI;
-                }
-            }
-        };
+    @EventHandler
+    public void onKeyEventPressed(KeyPressEvent event) {
+        if (event.key() == Keyboard.KEY_ESCAPE) {
+            Mouse.setGrabbed(false);
+        }
+        if (event.key() == Keyboard.KEY_F1) {
+            HUDScreen.this.showGUI = !HUDScreen.this.showGUI;
+        }
     }
 
     @Override
@@ -151,65 +132,37 @@ public class HUDScreen extends Screen {
     public void tick() {
         getPlatform().controller.tick();
         getPlatform().controller.setSelectedSlot(slot);
-        this.updateDebugInfo();
         super.tick();
     }
 
-    private void updateDebugInfo() {
-        this.debugInfoLeft[1] = "帧率:%d/单帧时间:%d(%d顶点提交)".formatted(
-                this.getPlatform().getTimingInfo().shortTickTPS(),
-                this.getPlatform().getTimingInfo().shortTickMSPT(),
-                this.vertexUpload
-        );
-        this.debugInfoLeft[2] = "本地客户端tps：" + this.getPlatform().getTimingInfo().longTickTPS() + "/MSPT:" + this.getPlatform().getTimingInfo().longTickMSPT();
-        this.debugInfoLeft[3] = "本地区块缓存:%d".formatted(this.getPlatform().getClientWorld().getChunkCache().size());
+    @Override
+    public void getDebugInfoTick() {
+        this.debugInfoLeft[2] = "ClientTPS：" + this.getPlatform().getTimingInfo().longTickTPS() + "/MSPT:" + this.getPlatform().getTimingInfo().longTickMSPT();
+        this.debugInfoLeft[3] = "LocalChunkCache:%d".formatted(this.getPlatform().getClientWorld().getChunkCache().size());
         ChunkRenderer cr = (ChunkRenderer) this.getPlatform().levelRenderer.renderers.get("cubecraft:chunk_renderer");
         if(cr!=null) {
-            this.debugInfoLeft[5] = "地形渲染(总数/可见/更新):%d,%d,%d".formatted(cr.allCount, cr.visibleCount, cr.updateCount);
+            this.debugInfoLeft[5] = "TerrainRender(All/Visible/Update):%d,%d,%d".formatted(cr.allCount, cr.visibleCount, cr.updateCount);
         }
-        this.debugInfoLeft[6] = "实体渲染(总数/可见):%d/%d".formatted(0,0);
 
-        this.debugInfoLeft[8] = "位置（x/y/z）:%f/%f/%f".formatted(this.getPlatform().getPlayer().x, this.getPlatform().getPlayer().y, this.getPlatform().getPlayer().z);
-        this.debugInfoLeft[9] = "相机角度（x/y/z）:%f/%f/%f".formatted(this.getPlatform().getPlayer().xRot, this.getPlatform().getPlayer().yRot, this.getPlatform().getPlayer().zRot);
+        EntityRenderer er = (EntityRenderer) this.getPlatform().levelRenderer.renderers.get("cubecraft:entity_renderer");
+        this.debugInfoLeft[6] = "EntityRender(All/Visible):%d/%d".formatted(er.allCount,er.visibleCount);
+
+        EnvironmentRenderer evr = this.getPlatform().levelRenderer.environmentRenderer;
+        this.debugInfoLeft[7] = "CloudRender(All/Visible):%d/%d".formatted(evr.allCloudCount,evr.visibleCloudCount);
+
+        this.debugInfoLeft[8] = "Position(X/Y/Z):%f/%f/%f".formatted(this.getPlatform().getPlayer().x, this.getPlatform().getPlayer().y, this.getPlatform().getPlayer().z);
+        this.debugInfoLeft[9] = "CameraAngle(X/Y/Z):%f/%f/%f".formatted(this.getPlatform().getPlayer().xRot, this.getPlatform().getPlayer().yRot, this.getPlatform().getPlayer().zRot);
         HitResult hitResult = this.getPlatform().getPlayer().hitResult;
         if(hitResult!=null) {
             Vector3d pos=hitResult.aabb().getPosition();
-            this.debugInfoLeft[10] = "目标方块：%f/%f/%f:%d=%s".formatted(
+            this.debugInfoLeft[10] = "TargetBlock:%f/%f/%f:%d=%s".formatted(
                 pos.x,pos.y,pos.z,hitResult.facing(),
                     this.getPlatform().getPlayer().world.getBlockState((long) pos.x, (long) pos.y, (long) pos.z).getId()
             );
         }else{
-            this.debugInfoLeft[10] = "目标方块：空";
+            this.debugInfoLeft[10] = "TargetBlock:empty";
         }
-
-        this.debugInfoRight[1] = "内存(jvm)(已使用/总量)：%s/%s(%s)".formatted(JVMInfo.getUsedMemory(), JVMInfo.getTotalMemory(), JVMInfo.getUsage());
-    }
-
-    private void initDebugInfo(){
-        this.debugInfoLeft[0] = "Cubecraft-" + Cubecraft.VERSION;
-
-
-        this.debugInfoRight[0] = "JVM：" + JVMInfo.getJavaName() + "/" + JVMInfo.getJavaVersion();
-        this.debugInfoRight[1]="openGL:"+ GL11.glGetString(GL11.GL_VERSION);
-        this.debugInfoRight[2]="openAL:"+ AL11.alGetString(AL11.AL_VERSION);
-        this.debugInfoRight[3]="内存(系统):"+ SystemInfoHelper.getMemInstalled()/1024/1024/1024+"GB";
-        this.debugInfoRight[4] = "系统:%s-%s".formatted(JVMInfo.getOSName(), JVMInfo.getOSVersion());
-        this.debugInfoRight[5]="CPU:%s/%d核心/%fGHZ".formatted(SystemInfoHelper.getCpuName(),SystemInfoHelper.getCpuCores(),SystemInfoHelper.getCpu().getCurrentFreq()[0]/1024f/1024f/1024f);
-        this.debugInfoRight[6]="GPU:%s/%sGB,%s".formatted(SystemInfoHelper.getGpuName(), SystemInfoHelper.getGpuVRam()/1024/1024/1024, SystemInfoHelper.getGpu().getVersionInfo());
-        this.debugInfoRight[7]="声卡:%s,%s".formatted(SystemInfoHelper.getSoundCardName(),SystemInfoHelper.getSoundCard().getDriverVersion());
-    }
-
-    private void renderDebugInfo(DisplayScreenInfo info){
-        int pos = 2;
-        for (String s : this.debugInfoLeft) {
-            FontRenderer.renderShadow(s, 2, pos, 16777215, 8, FontAlignment.LEFT);
-            pos += 10;
-        }
-        pos=2;
-        for (String s : this.debugInfoRight) {
-            FontRenderer.renderShadow(s, info.scrWidth()-2, pos, 16777215, 8, FontAlignment.RIGHT);
-            pos += 10;
-        }
+        this.debugInfoRight[1] = "Memory(jvm)(Used/All)：%s/%s(%s)".formatted(JVMInfo.getUsedMemory(), JVMInfo.getTotalMemory(), JVMInfo.getUsage());
     }
 
     private void renderActionBar(DisplayScreenInfo info){

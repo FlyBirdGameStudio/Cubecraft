@@ -22,19 +22,19 @@ public record ChunkPos (long x, long y,long z) implements KeyComparable<ChunkPos
 
     public static ChunkPos fromWorldPos(long x, long y, long z){
         return new ChunkPos(
-                MathHelper.getChunkPos(x,16),
-                MathHelper.getChunkPos(y,256),
-                MathHelper.getChunkPos(z,16)
+                MathHelper.getChunkPos(x,Chunk.WIDTH),
+                MathHelper.getChunkPos(y,Chunk.HEIGHT),
+                MathHelper.getChunkPos(z,Chunk.WIDTH)
         );
     }
 
     public long toWorldPosX(int offset){
-        return x*16+offset;
+        return x*Chunk.WIDTH+offset;
     }
     public long toWorldPosY(int offset){
-        return y*256+offset;
+        return y*Chunk.HEIGHT+offset;
     }
     public long toWorldPosZ(int offset){
-        return z*16+offset;
+        return z*Chunk.WIDTH+offset;
     }
 }

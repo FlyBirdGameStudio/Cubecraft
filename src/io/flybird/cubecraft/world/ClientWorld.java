@@ -8,8 +8,9 @@ import io.flybird.cubecraft.world.chunk.ChunkPos;
 public class ClientWorld extends IWorld {
     final Cubecraft client;
 
+    //todo:add remote world id
     public ClientWorld(LevelInfo levelInfo, Cubecraft client) {
-        super(levelInfo);
+        super("az",levelInfo);
         this.client = client;
     }
 

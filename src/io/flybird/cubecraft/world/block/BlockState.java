@@ -13,9 +13,9 @@ import io.flybird.util.math.HitResult;
 public class BlockState implements NBTDataIO, HittableObject {
     private byte facing;
     private String id;
-    private String meta;
+    private byte meta;
 
-    public BlockState(String id,byte facing,String meta) {
+    public BlockState(String id,byte facing,byte meta) {
         this.id = id;
         this.meta=meta;
         this.facing=facing;
@@ -49,7 +49,7 @@ public class BlockState implements NBTDataIO, HittableObject {
         return Registry.getBlockMap().get(this.id);
     }
 
-    public String getMeta() {
+    public byte getMeta() {
         return meta;
     }
 
@@ -79,7 +79,7 @@ public class BlockState implements NBTDataIO, HittableObject {
     public void setData(NBTTagCompound compound) {
         this.facing = compound.getByte("facing");
         this.id = compound.getString("id");
-        this.meta = "";
+        this.meta = 0;
     }
 
 

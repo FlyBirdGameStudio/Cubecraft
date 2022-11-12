@@ -3,10 +3,12 @@ package io.flybird.util;
 import io.flybird.util.timer.Timer;
 
 public abstract class LoopTickingApplication implements Runnable{
-    protected LogHandler logHandler;
+    public boolean isDebug;
+    protected LogHandler logHandler=LogHandler.create("main","game");
     protected Timer timer;
     protected boolean running;
     private TimingInfo timingInfo;
+    long lastTime = System.currentTimeMillis();
 
     public void init()throws Exception {}
     public void render() {}
@@ -15,24 +17,15 @@ public abstract class LoopTickingApplication implements Runnable{
     public void on1sec(){}
 
 
+
     @Override
     public void run() {
         this.running = true;
-
+        int longTicks=0,shortTicks=0,longTickDuration=0,shortTickDuration;
         try {
             this.init();
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.running = false;
-            this.stop();
-        }
-
-        long lastTime = System.currentTimeMillis();
-
-        int longTicks=0,shortTicks=0,longTickDuration=0,shortTickDuration=0;
-
-        try {
             while (this.running) {
+
                 long last_0=System.currentTimeMillis();
                 this.render();
                 shortTickDuration= (int) (System.currentTimeMillis()-last_0);
@@ -65,11 +58,9 @@ public abstract class LoopTickingApplication implements Runnable{
             logHandler.info("find exception!stopping...");
             this.running = false;
             this.stop();
-        } finally {
-            this.running = false;
-            this.stop();
         }
     }
+
 
     public boolean isRunning() {
         return this.running;

@@ -135,7 +135,7 @@ public abstract class Block {
     }
 
     public BlockState defaultState() {
-        return new BlockState(this.getID(), (byte) 0,  "");
+        return new BlockState(this.getID(), (byte) 0, (byte) 0);
     }
 
     public abstract int light();

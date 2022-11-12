@@ -1,5 +1,6 @@
 package io.flybird.cubecraft.internal.block;
 
+import io.flybird.cubecraft.internal.BlockType;
 import io.flybird.cubecraft.register.RegisterUtil;
 import io.flybird.cubecraft.world.block.Block;
 import io.flybird.util.container.namespace.ItemRegisterFunc;
@@ -40,25 +41,25 @@ public class BlockRegistry {
     @ItemRegisterFunc
     public void registerEnvironmentBlock(NameSpacedRegisterMap<Block, Block> blockMap) {
         //behavior:air todo
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:air","cubecraft:air",blockMap);
+        RegisterUtil.registerDefaultOverrideBlock(BlockType.AIR,BlockType.AIR,blockMap);
 
 
         //behavior:dirt todo
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:dirt", "cubecraft:dirt", blockMap);
+        RegisterUtil.registerDefaultOverrideBlock(BlockType.DIRT, "cubecraft:dirt", blockMap);
         //RegisterUtil.registerDefaultOverrideBlock("cubecraft:coarse_dirt", "cubecraft:dirt", blockMap);
         //RegisterUtil.registerDefaultOverrideBlock("cubecraft:coarse_dirt", "cubecraft:dirt", blockMap);
 
         //behavior:grass-block todo
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:grass_block", "cubecraft:grass_block", blockMap);
-        //RegisterUtil.registerDefaultOverrideBlock("cubecraft:podzol", "cubecraft:grass_block", blockMap);
-        //RegisterUtil.registerDefaultOverrideBlock("cubecraft:mycelium", "cubecraft:grass_block", blockMap);
+        RegisterUtil.registerDefaultOverrideBlock(BlockType.GRASS_BLOCK, "cubecraft:grass_block", blockMap);
+        RegisterUtil.registerDefaultOverrideBlock(BlockType.PODZOL, "cubecraft:grass_block", blockMap);
+        RegisterUtil.registerDefaultOverrideBlock(BlockType.MYCELIUM, "cubecraft:grass_block", blockMap);
 
         //behavior:stone
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:stone", "cubecraft:stone", blockMap);
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:andesite", "cubecraft:stone", blockMap);
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:granite", "cubecraft:stone", blockMap);
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:diorite", "cubecraft:stone", blockMap);
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:basalt", "cubecraft:stone", blockMap);
+        RegisterUtil.registerDefaultOverrideBlock(BlockType.STONE, "cubecraft:stone", blockMap);
+        RegisterUtil.registerDefaultOverrideBlock(BlockType.ANDESITE, "cubecraft:stone", blockMap);
+        RegisterUtil.registerDefaultOverrideBlock(BlockType.GRANITE, "cubecraft:stone", blockMap);
+        RegisterUtil.registerDefaultOverrideBlock(BlockType.DIORITE, "cubecraft:stone", blockMap);
+        RegisterUtil.registerDefaultOverrideBlock(BlockType.BASALT, "cubecraft:stone", blockMap);
 
         /*
         //behavior:sand todo

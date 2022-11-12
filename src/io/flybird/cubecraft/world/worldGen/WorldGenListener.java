@@ -8,5 +8,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface WorldGenListener {
-    GenerateStatus stage();
+    GenerateStage stage();
+    String world();
 }

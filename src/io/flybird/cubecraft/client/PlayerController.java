@@ -1,27 +1,30 @@
 package io.flybird.cubecraft.client;
 
 import io.flybird.cubecraft.world.entity.Entity;
+import io.flybird.starfish3d.platform.KeyPressEvent;
 import io.flybird.starfish3d.platform.input.Keyboard;
 import io.flybird.starfish3d.platform.input.KeyboardCallback;
 import io.flybird.starfish3d.platform.input.Mouse;
 import io.flybird.starfish3d.platform.input.InputHandler;
+import io.flybird.util.event.EventHandler;
+import io.flybird.util.event.EventListener;
 
 import java.util.Arrays;
 
-public class PlayerController {
+public class PlayerController implements EventListener {
     private Entity entity;
     public boolean[] keys = new boolean[100];
 
     public PlayerController(Entity e){
         this.entity=e;
-        InputHandler.registerGlobalKeyboardCallback("cubecraft:player_controller",new KeyboardCallback(){
-            @Override
-            public void onKeyEventPressed() {
-                if(Keyboard.getEventKey()==Keyboard.KEY_LCONTROL){
-                    entity.runningMode=!entity.runningMode;
-                }
-            }
-        });
+        Keyboard.getKeyboardEventBus().registerEventListener(this);
+    }
+
+    @EventHandler
+    public void onKeyEventPressed(KeyPressEvent e) {
+        if(e.key()==Keyboard.KEY_LCONTROL){
+            entity.runningMode=!entity.runningMode;
+        }
     }
 
     public void setEntity(Entity entity) {

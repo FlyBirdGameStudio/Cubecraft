@@ -25,6 +25,7 @@ public class ResourceManager {
         this.reloadStage(new ClientResourceReloadEvent(client,this),ResourceLoadStage.COLOR_MAP);
         this.reloadStage(new ClientResourceReloadEvent(client,this),ResourceLoadStage.FONT_TEXTURE);
         this.reloadStage(new ClientResourceReloadEvent(client,this),ResourceLoadStage.LANGUAGE);
+        this.reloadStage(new ClientResourceReloadEvent(client,this),ResourceLoadStage.UI_CONTROLLER);
     }
 
     public Resource getResource(String path){

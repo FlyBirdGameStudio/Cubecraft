@@ -1,6 +1,7 @@
 package io.flybird.starfish3d.render;
 
 import io.flybird.starfish3d.platform.Display;
+import io.flybird.util.math.AABB;
 import org.joml.*;
 import org.lwjgl.opengl.GL11;
 
@@ -94,5 +95,11 @@ public class Camera {
 
     public void setupGlobalTranslate() {
         GL11.glTranslated(-this.getPosition().x,-this.getPosition().y,-this.getPosition().z);
+    }
+
+    public AABB castAABB(AABB aabb) {
+        AABB aabb2=new AABB(aabb);
+        aabb2.move(-this.position.x,-this.position.y,-this.position.z);
+        return aabb2;
     }
 }

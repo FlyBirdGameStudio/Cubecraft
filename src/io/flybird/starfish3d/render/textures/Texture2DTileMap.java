@@ -25,10 +25,18 @@ public class Texture2DTileMap extends Texture2D {
     private final int sectionSizeV;
     private int counter=0;
 
-    public Texture2DTileMap(boolean mipMap, int sectionSizeH, int sectionSizeV) {
+    public final int minStepX,minStepY;
+
+    public Texture2DTileMap(boolean mipMap, int sectionSizeH, int sectionSizeV, int minStepX, int minStepY) {
         super(false, mipMap);
         this.sectionSizeH = sectionSizeH;
         this.sectionSizeV = sectionSizeV;
+        this.minStepX = minStepX;
+        this.minStepY = minStepY;
+    }
+
+    public Texture2DTileMap(boolean mipMap, int sectionSizeH, int sectionSizeV) {
+        this(false, sectionSizeH,sectionSizeV,1,1);
     }
 
     @Override
@@ -191,6 +199,7 @@ public class Texture2DTileMap extends Texture2D {
     public static Texture2DTileMap autoGenerate(ITextureImage[] file, boolean mipMap) {
         int maxSizeH = 1;
         int maxSizeV=1;
+        int minStepX=1000000,minStepY=1000000;
         for (ITextureImage f : file) {
             BufferedImage testImg = f.getAsImage();
             if (testImg != null) {
@@ -198,9 +207,13 @@ public class Texture2DTileMap extends Texture2D {
                 int i2 = testImg.getHeight();
                 if (i > maxSizeH) maxSizeH = i;
                 if (i2 > maxSizeV) maxSizeV = i2;
+                int i3 = testImg.getWidth();
+                int i4 = testImg.getHeight();
+                if (i3 < minStepX) minStepX = i3;
+                if (i4 < minStepY) minStepY = i4;
             }
         }
-        return new Texture2DTileMap(mipMap, maxSizeH,maxSizeV);
+        return new Texture2DTileMap(mipMap, maxSizeH,maxSizeV, minStepX, minStepY);
     }
 
     public void upload() {

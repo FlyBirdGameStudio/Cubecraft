@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<faml ext="cubecraft_ui">
+    <meta>
+        <type>image-bg-blur-mask</type>
+        <id>cubecraft:single_player_screen</id>
+    </meta>
+    <elements>
+        <topbar id="top">
+            <layout type="flow">
+                <type>top</type>
+                <layout>[24,0]</layout>
+                <border>[0,0,0,0]</border>
+            </layout>
+            <text type="lang" color="ffffff" align="left">singleplayer.title</text>
+        </topbar>
+        <button id="create_world" style="ore_ui">
+            <layout type="origin">
+                <layout>[0,-60,176,30]</layout>
+                <type>left_bottom</type>
+                <border>[4,4,4,4]</border>
+            </layout>
+            <text type="lang" color="ffffff" align="center">singleplayer.button.create</text>
+        </button>
+        <button id="delete_world" style="ore_ui">
+            <layout type="origin">
+                <layout>[0,-30,176,30]</layout>
+                <type>left_bottom</type>
+                <border>[4,4,4,4]</border>
+            </layout>
+            <text type="lang" color="ffffff" align="center">singleplayer.button.delete</text>
+        </button>
+        <textbar id="world_search" limit="20">
+            <layout type="origin">
+                <layout>[0,30,176,30]</layout>
+                <type>left_top</type>
+                <border>[4,4,4,4]</border>
+            </layout>
+            <text type="lang" color="aaaaaa" align="left">singleplayer.search_world</text>
+        </textbar>
+        <panel id="world_search_bg">
+            <layout type="origin">
+                <layout>[0,24,180,2147483600]</layout>
+                <type>left_top</type>
+                <border>[0,0,0,0]</border>
+            </layout>
+        </panel>
+    </elements>
+</faml>

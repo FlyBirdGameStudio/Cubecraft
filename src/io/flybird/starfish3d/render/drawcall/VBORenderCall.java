@@ -22,7 +22,7 @@ public class VBORenderCall implements IRenderCall {
             GL11.glVertexPointer(3, GL11.GL_DOUBLE, 13*8,80);
 
             GLUtil.allEnableClientState();
-            GL11.glDrawArrays(drawMode, 0, count);
+            VertexArrayUploader.drawArrays(drawMode, 0, count);
             GLUtil.allDisableClientState();
 
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,0);

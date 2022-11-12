@@ -31,7 +31,7 @@ public class BlockBehaviorRegistry {
     public Block air(){
         return new SimpleBlock(
                 EnumFacing.all(), new AABB[]{}, new AABB[]{},
-                0, 0, 0, 0, false, "cubecraft:air", new String[]{}, 0
+                0, 0, 0, 0, false, "cubecraft:_air", new String[]{}, 0
         );
     }
 
@@ -42,7 +42,7 @@ public class BlockBehaviorRegistry {
                 EnumFacing.all(),
                 new AABB[]{new AABB(0,0,0,1,1,1)},
                 new AABB[]{new AABB(0,0,0,1,1,1)},
-                0, 0, 0, 110, false, "cubecraft:air", new String[]{}, 0
+                0, 0, 0, 110, false, "cubecraft:_leaves", new String[]{}, 0
         );
     }
 
@@ -52,7 +52,7 @@ public class BlockBehaviorRegistry {
                 EnumFacing.all(),
                 new AABB[]{new AABB(0,0,0,1,1,1)},
                 new AABB[]{new AABB(0,0,0,1,1,1)},
-                0, 0, 0, 0, true, "cubecraft:air", new String[]{}, 0
+                0, 0, 0, 0, true, "cubecraft:_log", new String[]{}, 0
         );
     }
 
@@ -63,7 +63,7 @@ public class BlockBehaviorRegistry {
                 EnumFacing.all(),
                 new AABB[]{new AABB(0,0,0,1,1,1)},
                 new AABB[]{new AABB(0,0,0,1,1,1)},
-                0, 1, 1, 0, true, "cubecraft:air", new String[]{}, 0
+                0, 1, 1, 0, true, "cubecraft:_dirt", new String[]{}, 0
         );
     }
 
@@ -73,7 +73,7 @@ public class BlockBehaviorRegistry {
                 EnumFacing.all(),
                 new AABB[]{new AABB(0,0,0,1,1,1)},
                 new AABB[]{new AABB(0,0,0,1,1,1)},
-                0, 1, 1, 0, true, "cubecraft:air", new String[]{}, 0
+                0, 1, 1, 0, true, "cubecraft:_grass_block", new String[]{}, 0
         );
     }
 }

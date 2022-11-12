@@ -1,8 +1,9 @@
 package io.flybird.cubecraft.client.gui;
 
 import io.flybird.cubecraft.client.gui.layout.LayoutManager;
+import io.flybird.util.event.EventListener;
 
-public abstract class Node {
+public abstract class Node implements EventListener {
     protected LayoutManager layoutManager;
     protected Container parent;
 
@@ -32,5 +33,9 @@ public abstract class Node {
 
     public String getStatement() {
         return "default";
+    }
+
+    public Text queryText(String query) {
+        return new Text("",0,FontAlignment.MIDDLE);
     }
 }

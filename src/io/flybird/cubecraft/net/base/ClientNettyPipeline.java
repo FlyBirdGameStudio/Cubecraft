@@ -13,7 +13,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class ClientNettyPipeline {
     private NioEventLoopGroup eventExecutors;
-    private final LogHandler logHandler=LogHandler.create("clientIO","client");
+    private final LogHandler logHandler=LogHandler.create("client-io","game");
 
     /**
      * init netty channel,set netHandler
