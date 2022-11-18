@@ -1,4 +1,4 @@
-package io.flybird.starfish3d.platform;
+package io.flybird.starfish3d.event;
 
 import io.flybird.util.event.Event;
 

@@ -4,6 +4,7 @@ import io.flybird.util.ImageUtil;
 import io.flybird.starfish3d.platform.input.Keyboard;
 import io.flybird.starfish3d.platform.input.Mouse;
 import io.flybird.util.container.BufferUtil;
+import io.flybird.util.event.EventBus;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
@@ -17,10 +18,10 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 public class Display {
+    private static EventBus eventBus=new EventBus();
+
     private static boolean created;
     private static long handle;
-
-
 
     private static boolean visible;
     private static boolean focused;
@@ -96,7 +97,6 @@ public class Display {
         GLFW.glfwSwapBuffers(handle);
         dirty = false;
         GLFW.glfwPollEvents();
-        Keyboard.poll();
         Mouse.poll();
         if (latestResized) {
             latestResized = false;
@@ -302,6 +302,10 @@ public class Display {
 
     public static void clear(){
         GL11.glClear(16640);
+    }
+
+    public static EventBus getEventBus() {
+        return eventBus;
     }
 
     static {

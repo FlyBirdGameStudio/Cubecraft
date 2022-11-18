@@ -6,9 +6,11 @@ import io.flybird.cubecraft.client.gui.Text;
 import io.flybird.cubecraft.client.gui.component.Component;
 import io.flybird.cubecraft.client.gui.layout.LayoutManager;
 import io.flybird.cubecraft.register.Registry;
+import io.flybird.starfish3d.event.MouseClickEvent;
 import io.flybird.starfish3d.platform.Display;
 import io.flybird.starfish3d.platform.input.Mouse;
 import io.flybird.util.event.Event;
+import io.flybird.util.event.EventHandler;
 import io.flybird.util.file.faml.FAMLDeserializer;
 import io.flybird.util.file.faml.XmlReader;
 import com.google.gson.*;
@@ -59,12 +61,14 @@ public class Button extends Component {
         Registry.getComponentRenderManager().get(this.getClass()).render(this);
     }
 
-    @Override
-    public void onClicked(int xm, int ym) {
+    @EventHandler
+    public void onClicked(MouseClickEvent event) {
+        int scale = GameSetting.instance.getValueAsInt("client.render.gui.scale", 2);
         int x0 = this.layoutManager.ax;
         int x1 = x0 + this.layoutManager.aWidth;
         int y0 = this.layoutManager.ay;
         int y1 = y0 + this.layoutManager.aHeight;
+        int xm= event.x()/scale,ym= event.fixedY()/scale;
         if (xm > x0 && xm < x1 && ym > y0 && ym < y1) {
             Registry.getClient().getClientEventBus().callEvent(new ActionEvent(this));
         }

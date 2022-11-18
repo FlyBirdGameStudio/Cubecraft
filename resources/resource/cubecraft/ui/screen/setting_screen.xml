@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <faml ext="cubecraft_ui">
     <meta>
-        <type>image-bg</type>
-        <id>cubecraft:setting_screen</id>
+        <type>image-bg-blur-mask</type>
+        <id>cubecraft:option_screen</id>
     </meta>
     <elements>
         <topbar id="top">
@@ -13,6 +13,38 @@
             </layout>
             <text type="lang" color="ffffff" align="left">option.title</text>
         </topbar>
+        <button id="confirm" style="ore_ui">
+            <layout type="origin">
+                <layout>[0,-34,176,30]</layout>
+                <type>left_bottom</type>
+                <border>[4,4,4,4]</border>
+            </layout>
+            <text type="lang" color="ffffff" align="middle">option.button.confirm</text>
+        </button>
+        <button id="apply" style="ore_ui">
+            <layout type="origin">
+                <layout>[0,-4,88,30]</layout>
+                <type>left_bottom</type>
+                <border>[4,4,4,4]</border>
+            </layout>
+            <text type="lang" color="ffffff" align="middle">option.button.apply</text>
+        </button>
+        <button id="quit" style="ore_ui">
+            <layout type="origin">
+                <layout>[88,-4,88,30]</layout>
+                <type>left_bottom</type>
+                <border>[4,4,4,4]</border>
+            </layout>
+            <text type="lang" color="ffffff" align="middle">option.button.quit</text>
+        </button>
+        <panel id="side_bg">
+            <layout type="origin">
+                <layout>[0,24,180,2147483600]</layout>
+                <type>left_top</type>
+                <border>[0,0,0,0]</border>
+            </layout>
+        </panel>
+
 
 
         <menu id="menu" target="frame">

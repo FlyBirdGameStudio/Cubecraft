@@ -144,7 +144,7 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
         this.logHandler = LogHandler.create("main", "game");
         this.initDisplay();
 
-        Keyboard.getKeyboardEventBus().registerEventListener(this.clientInputHandler);
+        Display.getEventBus().registerEventListener(this.clientInputHandler);
         ScreenUtil.initBGRenderer();
 
         //load content
@@ -199,7 +199,7 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
             this.logHandler.checkGLError("pre_screen_render");
             this.screenInfo = this.getDisplaySize();
             this.screen.render(this.screenInfo, this.timer.interpolatedTime);
-
+            ScreenUtil.renderPopup(this.screenInfo,this.timer.interpolatedTime);
             if (!(this.screen instanceof LogoLoadingScreen)) {
                 this.logoLoadingScreen.render(screenInfo, this.timer.interpolatedTime);
             }
@@ -215,6 +215,7 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
     public void tick() {
         InputHandler.tick();
         this.screen.tick();
+        ScreenUtil.tickPopup();
         if (!(this.screen instanceof LogoLoadingScreen)) {
             this.logoLoadingScreen.tick();
         }

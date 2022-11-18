@@ -8,9 +8,8 @@ import io.flybird.cubecraft.client.gui.component.control.Button;
 import io.flybird.cubecraft.client.gui.component.control.TextBar;
 import io.flybird.cubecraft.resources.ResourceManager;
 import io.flybird.starfish3d.platform.Display;
-import io.flybird.starfish3d.platform.KeyPressEvent;
+import io.flybird.starfish3d.event.KeyPressEvent;
 import io.flybird.starfish3d.platform.input.*;
-import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.starfish3d.render.draw.VertexArrayUploader;
 import io.flybird.util.JVMInfo;
 import io.flybird.util.container.*;
@@ -19,10 +18,6 @@ import io.flybird.util.file.faml.*;
 import org.lwjgl.openal.AL11;
 import org.lwjgl.opengl.GL11;
 import org.w3c.dom.Element;
-
-
-
-import java.lang.reflect.Type;
 
 public class Screen extends Container {
     protected final String[] debugInfoLeft = new String[64];
@@ -52,8 +47,8 @@ public class Screen extends Container {
         this.platform = cubecraft;
         this.init();
         this.initFixedDebugInfo();
-        CollectionUtil.iterateMap(this.components,((key, item) -> Keyboard.getKeyboardEventBus().registerEventListener(item)));
-        Keyboard.getKeyboardEventBus().registerEventListener(this);
+        CollectionUtil.iterateMap(this.components,((key, item) -> Display.getEventBus().registerEventListener(item)));
+        Display.getEventBus().registerEventListener(this);
 
         InputHandler.registerGlobalMouseCallback("cubecraft:scr_callback_default",this.getMouseCallback());
         InputHandler.registerGlobalMouseCallback("cubecraft:scr_callback_base",new MouseCallBack(){
@@ -143,7 +138,7 @@ public class Screen extends Container {
             item.render();
             GL11.glPopMatrix();
         });
-        ScreenUtil.renderPopup(info,interpolationTime);
+
         if(this.getPlatform().isDebug) {
             this.getDebugInfoFrame();
             this.renderDebug(info);
@@ -157,7 +152,7 @@ public class Screen extends Container {
             item.resize(Display.getWidth()/ scale,Display.getHeight()/scale);
             item.tick();
         });
-        ScreenUtil.tickPopup();
+
     }
 
 

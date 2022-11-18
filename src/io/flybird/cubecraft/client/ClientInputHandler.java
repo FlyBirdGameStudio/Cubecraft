@@ -1,6 +1,6 @@
 package io.flybird.cubecraft.client;
 
-import io.flybird.starfish3d.platform.KeyPressEvent;
+import io.flybird.starfish3d.event.KeyPressEvent;
 import io.flybird.cubecraft.client.gui.screen.Screen;
 import io.flybird.cubecraft.resources.ResourceManager;
 import io.flybird.starfish3d.platform.Display;

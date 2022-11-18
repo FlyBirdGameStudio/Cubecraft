@@ -4,13 +4,10 @@ import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.entity.item.Item;
 
 public class Player extends Humanoid {
-
-
     public Player(IWorld world) {
         super(world);
         this.flyingMode=true;
     }
-
 
     @Override
     public void render(float interpolationTime) {

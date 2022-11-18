@@ -5,6 +5,9 @@
 
 package io.flybird.starfish3d.platform.input;
 
+import io.flybird.starfish3d.event.CharEvent;
+import io.flybird.starfish3d.event.KeyPressEvent;
+import io.flybird.starfish3d.event.KeyReleaseEvent;
 import io.flybird.starfish3d.platform.*;
 import io.flybird.util.event.EventBus;
 import org.lwjgl.glfw.GLFW;
@@ -149,84 +152,25 @@ public class Keyboard {
     public static final int KEY_POWER = 222;
     public static final int KEY_SLEEP = 223;
     //</editor-fold>
-
-
-
-    private static final EventQueue queue = new EventQueue(32);
-    private static final int[] keyEvents=new int[queue.getMaxEvents()];
-    private static final boolean[] keyEventStates = new boolean[queue.getMaxEvents()];
-    private static final long[] nanoTimeEvents=new long[queue.getMaxEvents()];
-    private static final char[] keyEventChars= new char[256];
-    private static int latestEventKey;
-
-    public Keyboard() {
-    }
-
-    public static void addKeyEvent(int key, boolean pressed) {
-        keyEvents[queue.getNextPos()] = KeyMapping.toLwjglKey(key);
-        keyEventStates[queue.getNextPos()] = pressed;
-        nanoTimeEvents[queue.getNextPos()] = System.nanoTime();
-        queue.add();
-    }
-
-    public static void addCharEvent(int key, char c) {
-        int index = KeyMapping.toLwjglKey(key);
-        keyEventChars[index] = c;
-    }
-
     public static boolean isKeyDown(int key) {
         return GLFW.glfwGetKey(Display.getHandle(), KeyMapping.toGlfwKey(key)) == 1;
-    }
-
-    public static void poll() {
-    }
-
-    public static boolean next() {
-        return queue.next();
-    }
-
-    public static int getEventKey() {
-        return keyEvents[queue.getCurrentPos()];
-    }
-
-    public static char getEventCharacter() {
-        return keyEventChars[getEventKey()];
-    }
-
-    public static boolean getEventKeyState() {
-        return keyEventStates[queue.getCurrentPos()];
-    }
-
-    public static long getEventNanoseconds() {
-        return nanoTimeEvents[queue.getCurrentPos()];
     }
 
     public static void initCallbacks() {
         Callbacks.keyCallback = new GLFWKeyCallback() {
             public void invoke(long window, int key, int scancode, int action, int mods) {
-                latestEventKey = key;
-                if (action == 0 || action == 1) {
-                    Keyboard.addKeyEvent(key, action == 1);
-                }
                 if(action==1) {
-                    getKeyboardEventBus().callEvent(new KeyPressEvent(KeyMapping.toLwjglKey(key)));
+                    Display.getEventBus().callEvent(new KeyPressEvent(KeyMapping.toLwjglKey(key)));
                 }
                 if(action==0) {
-                    getKeyboardEventBus().callEvent(new KeyReleaseEvent(KeyMapping.toLwjglKey(key)));
+                    Display.getEventBus().callEvent(new KeyReleaseEvent(KeyMapping.toLwjglKey(key)));
                 }
             }
         };
         Callbacks.charCallback = new GLFWCharCallback() {
             public void invoke(long window, int codepoint) {
-                Keyboard.addCharEvent(latestEventKey, (char) codepoint);
-                getKeyboardEventBus().callEvent(new CharEvent((char) codepoint));
+                Display.getEventBus().callEvent(new CharEvent((char) codepoint));
             }
         };
-    }
-
-    private static final EventBus keyboardEventBus=new EventBus();
-
-    public static EventBus getKeyboardEventBus() {
-        return keyboardEventBus;
     }
 }

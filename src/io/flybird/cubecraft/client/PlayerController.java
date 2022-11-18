@@ -1,9 +1,9 @@
 package io.flybird.cubecraft.client;
 
 import io.flybird.cubecraft.world.entity.Entity;
-import io.flybird.starfish3d.platform.KeyPressEvent;
+import io.flybird.starfish3d.event.KeyPressEvent;
+import io.flybird.starfish3d.platform.Display;
 import io.flybird.starfish3d.platform.input.Keyboard;
-import io.flybird.starfish3d.platform.input.KeyboardCallback;
 import io.flybird.starfish3d.platform.input.Mouse;
 import io.flybird.starfish3d.platform.input.InputHandler;
 import io.flybird.util.event.EventHandler;
@@ -17,7 +17,7 @@ public class PlayerController implements EventListener {
 
     public PlayerController(Entity e){
         this.entity=e;
-        Keyboard.getKeyboardEventBus().registerEventListener(this);
+        Display.getEventBus().registerEventListener(this);
     }
 
     @EventHandler

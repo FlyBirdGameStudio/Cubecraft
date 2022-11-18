@@ -30,6 +30,7 @@ public class InputHandler {
      * tick the input and holding all callbacks.
      */
     public static void tick(){
+        /*
         HashMap<String,MouseCallBack> m= (HashMap<String, MouseCallBack>) mouseCallbacks;
         while (Mouse.next()){
             if(Mouse.getEventButtonState()){
@@ -39,12 +40,14 @@ public class InputHandler {
                 });
             }
         }
+
         int scroll=Mouse.getDWheel();
         if(scroll!=0){
             CollectionUtil.iterateMap(m, (key, item) -> {
                 item.onScroll(scroll);
             });
         }
+         */
 
     }
 

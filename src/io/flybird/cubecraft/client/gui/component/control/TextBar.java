@@ -6,11 +6,10 @@ import io.flybird.cubecraft.client.gui.Text;
 import io.flybird.cubecraft.client.gui.component.Component;
 import io.flybird.cubecraft.client.gui.layout.LayoutManager;
 import io.flybird.cubecraft.register.Registry;
-import io.flybird.starfish3d.platform.CharEvent;
-import io.flybird.starfish3d.platform.Display;
-import io.flybird.starfish3d.platform.KeyPressEvent;
+import io.flybird.starfish3d.event.CharEvent;
+import io.flybird.starfish3d.event.MouseClickEvent;
+import io.flybird.starfish3d.event.KeyPressEvent;
 import io.flybird.starfish3d.platform.input.Keyboard;
-import io.flybird.starfish3d.platform.input.Mouse;
 import io.flybird.util.event.Event;
 import io.flybird.util.event.EventHandler;
 import io.flybird.util.file.faml.FAMLDeserializer;
@@ -68,20 +67,16 @@ public class TextBar extends Component {
         }
     }
 
-    @Override
-    public void onClicked(int xm2, int ym2) {
+    @EventHandler
+    public void onClick(MouseClickEvent e){
         int scale = GameSetting.instance.getValueAsInt("client.render.gui.scale", 2);
-        int xm = Mouse.getX() / scale;
-        int ym = (-Mouse.getY() + Display.getHeight()) / scale;
+        int xm = e.x() / scale;
+        int ym = e.fixedY() / scale;
         int x0 = this.layoutManager.ax;
         int x1 = x0 + this.layoutManager.aWidth;
         int y0 = this.layoutManager.ay;
         int y1 = y0 + this.layoutManager.aHeight;
-        if (xm > x0 && xm < x1 && ym > y0 && ym < y1) {
-            this.focus = true;
-        } else {
-            this.focus = false;
-        }
+        this.focus = xm > x0 && xm < x1 && ym > y0 && ym < y1;
     }
 
     @Override

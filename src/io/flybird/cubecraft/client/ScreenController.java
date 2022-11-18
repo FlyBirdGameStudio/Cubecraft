@@ -31,10 +31,15 @@ public class ScreenController implements EventListener {
                 screen.setParentScreen(ScreenLoader.loadByExtName("cubecraft","title_screen.xml"));
                 e.component().getParent().getPlatform().setScreen(screen);
 
-                /*
+
                 e.component().getParent().getPlatform().setScreen(new HUDScreen());
                 e.component().getParent().getPlatform().joinWorld(new ServerWorld("cubecraft:overworld", new LevelInfo("NULL", "NULL", 0, new Date(), false, "NULL", null)));
-                 */
+
+            }
+            if (Objects.equals(e.component().getID(), "button_multiplayer")) {
+                Screen screen = ScreenLoader.loadByExtName("cubecraft", "multi_player_screen.xml");
+                screen.setParentScreen(ScreenLoader.loadByExtName("cubecraft", "title_screen.xml"));
+                e.component().getParent().getPlatform().setScreen(screen);
             }
             if (Objects.equals(e.component().getID(), "button_option")) {
                 Screen screen = ScreenLoader.loadByExtName("cubecraft","setting_screen.xml");
@@ -62,11 +67,20 @@ public class ScreenController implements EventListener {
                 e.component().getParent().getPlatform().setScreen("cubecraft","title_screen.xml");
             }
         }
-        if (Objects.equals(e.component().getParent().getID(), "cubecraft:setting_screen")) {
+        if (Objects.equals(e.component().getParent().getID(), "cubecraft:option_screen")) {
             if (Objects.equals(e.component().getID(), "confirm")) {
                 e.component().getParent().getPlatform().setScreen(e.component().getParent().getParentScreen());
+                ScreenUtil.createPopup("option.apply","option.apply.subtitle",80,Popup.SUCCESS);
                 GameSetting.instance.flush();
                 GameSetting.instance.save();
+            }
+            if (Objects.equals(e.component().getID(), "apply")) {
+                ScreenUtil.createPopup("option.apply","option.apply.subtitle",80,Popup.SUCCESS);
+                GameSetting.instance.flush();
+                GameSetting.instance.save();
+            }
+            if (Objects.equals(e.component().getID(), "quit")) {
+                e.component().getParent().getPlatform().setScreen(e.component().getParent().getParentScreen());
             }
         }
     }

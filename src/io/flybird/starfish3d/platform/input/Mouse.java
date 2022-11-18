@@ -1,6 +1,8 @@
 
 package io.flybird.starfish3d.platform.input;
 
+import io.flybird.starfish3d.event.MouseClickEvent;
+import io.flybird.starfish3d.event.MouseScrollEvent;
 import io.flybird.starfish3d.platform.Callbacks;
 import io.flybird.starfish3d.platform.Display;
 import org.lwjgl.glfw.*;
@@ -14,17 +16,14 @@ public class Mouse {
     private static int latestY = 0;
     private static int x = 0;
     private static int y = 0;
-    private static EventQueue queue = new EventQueue(32);
-    private static int[] buttonEvents = new int[queue.getMaxEvents()];;
-    private static boolean[] buttonEventStates= new boolean[queue.getMaxEvents()];
-    private static int[] xEvents = new int[queue.getMaxEvents()];
-    private static int[] yEvents = new int[queue.getMaxEvents()];
-    private static int[] lastxEvents = new int[queue.getMaxEvents()];
-    private static int[] lastyEvents = new int[queue.getMaxEvents()];
-    private static long[] nanoTimeEvents = new long[queue.getMaxEvents()];
-    private static boolean clipPostionToDisplay=true;
+    private static final EventQueue queue = new EventQueue(32);
+    private static final int[] buttonEvents = new int[queue.getMaxEvents()];;
+    private static final boolean[] buttonEventStates= new boolean[queue.getMaxEvents()];
+    private static final int[] xEvents = new int[queue.getMaxEvents()];
+    private static final int[] yEvents = new int[queue.getMaxEvents()];
+    private static final int[] lastxEvents = new int[queue.getMaxEvents()];
+    private static final int[] lastyEvents = new int[queue.getMaxEvents()];
     static final double[] scroll = new double[]{0.0};
-    static GLFWScrollCallback callback;
 
     public static void addMoveEvent(double mouseX, double mouseY) {
         latestX = (int)mouseX;
@@ -33,27 +32,14 @@ public class Mouse {
         lastyEvents[queue.getNextPos()] = yEvents[queue.getNextPos()];
         xEvents[queue.getNextPos()] = latestX;
         yEvents[queue.getNextPos()] = latestY;
-        buttonEvents[queue.getNextPos()] = -1;
-        buttonEventStates[queue.getNextPos()] = false;
-        nanoTimeEvents[queue.getNextPos()] = System.nanoTime();
         queue.add();
     }
 
-    public static void addButtonEvent(int button, boolean pressed) {
-        lastxEvents[queue.getNextPos()] = xEvents[queue.getNextPos()];
-        lastyEvents[queue.getNextPos()] = yEvents[queue.getNextPos()];
-        xEvents[queue.getNextPos()] = latestX;
-        yEvents[queue.getNextPos()] = latestY;
-        buttonEvents[queue.getNextPos()] = button;
-        buttonEventStates[queue.getNextPos()] = pressed;
-        nanoTimeEvents[queue.getNextPos()] = System.nanoTime();
-        queue.add();
-    }
 
     public static void poll() {
         lastX = x;
         lastY = y;
-        if (!grabbed && clipPostionToDisplay) {
+        if (!grabbed) {
             if (latestX < 0) {
                 latestX = 0;
             }
@@ -93,26 +79,6 @@ public class Mouse {
         return queue.next();
     }
 
-    public static int getEventX() {
-        return xEvents[queue.getCurrentPos()];
-    }
-
-    public static int getEventY() {
-        return yEvents[queue.getCurrentPos()];
-    }
-
-    public static int getEventDX() {
-        return xEvents[queue.getCurrentPos()] - lastxEvents[queue.getCurrentPos()];
-    }
-
-    public static int getEventDY() {
-        return yEvents[queue.getCurrentPos()] - lastyEvents[queue.getCurrentPos()];
-    }
-
-    public static long getEventNanoseconds() {
-        return nanoTimeEvents[queue.getCurrentPos()];
-    }
-
     public static int getEventButton() {
         return buttonEvents[queue.getCurrentPos()];
     }
@@ -143,14 +109,6 @@ public class Mouse {
         return a;
     }
 
-    public static int getButtonCount() {
-        return 8;
-    }
-
-    public static void setClipMouseCoordinatesToWindow(boolean clip) {
-        clipPostionToDisplay = clip;
-    }
-
     public static void setCursorPosition(int new_x, int new_y) {
         GLFW.glfwSetCursorPos(Display.getHandle(), (double)new_x, (double)new_y);
     }
@@ -163,13 +121,17 @@ public class Mouse {
         };
         Callbacks.mouseButtonCallback = new GLFWMouseButtonCallback() {
             public void invoke(long window, int button, int action, int mods) {
-                Mouse.addButtonEvent(button, action == 1);
+                //Mouse.addButtonEvent(button, action == 1);
+                if(action!=1){
+                    Display.getEventBus().callEvent(new MouseClickEvent(x,y,button));
+                }
             }
         };
         Callbacks.scrollCallback=new GLFWScrollCallback() {
             @Override
             public void invoke(long l, double v, double v1) {
                 scroll[0]=-v1;
+                Display.getEventBus().callEvent(new MouseScrollEvent((int) -v1));
             }
         };
     }

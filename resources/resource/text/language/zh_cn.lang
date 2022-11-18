@@ -31,6 +31,13 @@ option.button.chat=聊天设置...
 option.button.language=语言...
 option.button.mod=模组...
 
+option.button.confirm=确认
+option.button.apply=应用
+option.button.quit=取消
+
+option.apply.subtitle=您的更改已经全部刷新并应用。
+option.apply.subtitle=应用成功
+
 versioncheck.exception.title=无法检查更新
 versioncheck.exception.subtitle=请联网后尝试重启游戏...
 versioncheck.latest.title=你的游戏目前处于最新版本
@@ -48,11 +55,11 @@ singleplayer.button.option=世界选项
 singleplayer.search_world=搜索世界...
 
 # server selection
-serverselection.title=服务器选择
-serverselection.button.join=进入服务器
-serverselection.button.add=添加服务器
-serverselection.button.delete=删除服务器
-serverselection.button.directconnect=直接连接
+singleplayer.search_server=搜索服务器...
+multiplayer.title=服务器选择
+multiplayer.button.join=进入服务器
+multiplayer.button.create=添加服务器
+multiplayer.button.delete=删除服务器
 
 # blocks
 block.air.name=空气
