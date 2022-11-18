@@ -1,0 +1,32 @@
+{
+  "libraries": [
+    "/gson-2.2.4.jar",
+    "/imgui-binding-1.86.4.jar",
+    "/imgui-lwjgl3-1.86.4.jar",
+    "/j-ogg-all-1.0.0.jar",
+    "/jinput.jar",
+    "/jna-5.10.0.jar",
+    "/jna-platform-5.10.0.jar",
+    "/joml-1.10.4.jar",
+    "/lwjgl-glfw.jar",
+    "/lwjgl-openal.jar",
+    "/lwjgl-opengl.jar",
+    "/lwjgl-stb.jar",
+    "/lwjgl.jar",
+    "/lwjgl_util.jar",
+    "/netty-all-4.1.25.Final.jar",
+    "/oshi-core-5.8.2.jar",
+    "/slf4j-api-1.8.0-beta4.jar"
+  ],
+  "instances": [
+    {
+      "name": "main",
+      "core": "/cubecraft.jar",
+      "args": [],
+      "vm": ["-Xms=512m -Xmx=1024m"],
+      "mods": [
+
+      ]
+    }
+  ]
+}

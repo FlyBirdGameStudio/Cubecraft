@@ -34,16 +34,11 @@ public class HUDScreen extends Screen {
     private boolean showGUI = true;
 
     public HUDScreen() {
-        super("cubecraft:hud_screen", ScreenType.EMPTY);
+        super(true, "cubecraft:hud_screen", ScreenType.EMPTY);
         this.actionBar.generateTexture();
         this.actionBar.load(ResourceManager.instance.getResource(ResourceLocation.uiTexture("cubecraft", "containers/actionbar.png")));
         this.pointer.generateTexture();
         this.pointer.load(ResourceManager.instance.getResource(ResourceLocation.uiTexture("cubecraft", "icons/pointer.png")));
-    }
-
-    @Override
-    public void init() {
-        Mouse.setGrabbed(true);
     }
 
     @Override

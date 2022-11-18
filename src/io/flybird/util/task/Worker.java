@@ -11,7 +11,7 @@ public class Worker<I> implements Runnable{
     protected Worker(ArrayQueue<I> queue, WorkerTask<I> callable) {
         this.queue = queue;
         this.callable = callable;
-        this.logger=LogHandler.create("world_generator_worker:"+this.callable.getID(),"client");
+        this.logger=LogHandler.create("WorldGenerator-Worker:"+this.callable.getID(),"client");
     }
 
     @Override

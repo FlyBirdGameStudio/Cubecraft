@@ -65,7 +65,6 @@ public class BlockState implements NBTDataIO, HittableObject {
 
 
     //io
-    @Deprecated
     @Override
     public NBTTagCompound getData() {
         NBTTagCompound compound = new NBTTagCompound();
@@ -74,7 +73,6 @@ public class BlockState implements NBTDataIO, HittableObject {
         return compound;
     }
 
-    @Deprecated
     @Override
     public void setData(NBTTagCompound compound) {
         this.facing = compound.getByte("facing");

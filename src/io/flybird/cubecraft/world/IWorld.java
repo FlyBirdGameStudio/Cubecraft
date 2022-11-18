@@ -8,6 +8,7 @@ import io.flybird.cubecraft.world.chunk.ChunkLoadLevel;
 import io.flybird.cubecraft.world.chunk.ChunkLoadTicket;
 import io.flybird.cubecraft.world.chunk.ChunkPos;
 import io.flybird.cubecraft.world.entity.Entity;
+import io.flybird.cubecraft.world.entity.EntityLocation;
 import io.flybird.util.container.CollectionUtil;
 import io.flybird.util.container.HashMapSet;
 import io.flybird.util.event.EventBus;
@@ -308,5 +309,10 @@ public class IWorld {
                 (int) MathHelper.getRelativePosInChunk(y, Chunk.HEIGHT),
                 (int) MathHelper.getRelativePosInChunk(z, Chunk.WIDTH),t
         );
+    }
+
+    public EntityLocation getSpawnPosition(String uuid) {
+        //todo:pick a spawn position
+        return new EntityLocation(0,1024,0,0,0,0);
     }
 }

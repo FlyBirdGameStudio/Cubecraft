@@ -79,8 +79,8 @@ public class ResourceLoader implements EventListener {
     public void loadLanguage(ClientResourceReloadEvent e) {
         try {
             HashMap<Language.LanguageType, String> languages = new HashMap<>();
-            languages.put(Language.LanguageType.ZH_CN, "/resource/text/language/zh_cn.lang");
-            languages.put(Language.LanguageType.EN_US, "/resource/text/language/en_us.lang");
+            languages.put(Language.LanguageType.ZH_CN, "/resource/cubecraft/text/language/zh_cn.lang");
+            languages.put(Language.LanguageType.EN_US, "/resource/cubecraft/text/language/en_us.lang");
 
             AtomicLong last = new AtomicLong(System.currentTimeMillis());
             int i = 0;
@@ -116,17 +116,18 @@ public class ResourceLoader implements EventListener {
                 }
                 FontRenderer.textures[i] = new Texture2D(false, true);
                 FontRenderer.textures[i].generateTexture();
-                FontRenderer.textures[i].load(ResourceManager.instance.getResource("/resource/textures/font/unicode_page_%s.png".formatted(s2)));
+                FontRenderer.textures[i].load(ResourceManager.instance.getResource("/resource/cubecraft/texture/font/unicode_page_%s.png".formatted(s2)));
                 TextureStateManager.setTextureMipMap(FontRenderer.textures[i], true);
                 if (System.currentTimeMillis() - last > 16) {
                     System.gc();
                     last = System.currentTimeMillis();
                     e.client().onProgressChange((int) ((float) i / 256 * 100));
-                    e.client().onProgressStageChanged("loadingFontTexture:/resource/textures/font/unicode_page_%s.png(%d/256)".formatted(s2, i));
+                    e.client().onProgressStageChanged("loadingFontTexture:/resource/texture/font/unicode_page_%s.png(%d/256)".formatted(s2, i));
                     e.client().refreshScreen();
                 }
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             this.logger.exception(ex);
         }
     }

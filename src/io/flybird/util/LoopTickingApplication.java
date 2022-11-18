@@ -10,10 +10,40 @@ public abstract class LoopTickingApplication implements Runnable{
     private TimingInfo timingInfo;
     long lastTime = System.currentTimeMillis();
 
-    public void init()throws Exception {}
+    /**
+     * this function initialize your application when thread init.
+     * <li>you could initialize everything here.</li>
+     * <li>openGL or openAL should be also initialized here.</li>
+     */
+    public void init(){}
+
+    /**
+     * this function runs at a full speed.
+     * <li>you could render something here.</li>
+     * <li>or do anything thad need full speed looping.</li>
+     */
     public void render() {}
+
+    /**
+     * this function runs at tick speed(according to your setting).
+     * <li>you could make game logic update.</li>
+     * <li>or do anything needs tick-speed looping.</li>
+     */
     public void tick(){}
+
+    /**
+     * game stop logic function.
+     * <li>called when exception happened.</li>
+     * <li>called when flag"this.running"=false.</li>
+     * <li>called when user invocation.</li>
+     */
     public void stop(){}
+
+    /**
+     * this function called on every second.
+     * <li>there might be some time offset caused by timer or lagging.</li>
+     * <li>you could update your statistic information.</li>
+     */
     public void on1sec(){}
 
 

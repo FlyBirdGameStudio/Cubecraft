@@ -20,18 +20,18 @@ public class ScreenUtil {
     private static ArrayList<Popup> popupList=new ArrayList<>();
 
     public static void initBGRenderer(){
-        Registry.getTextureManager().createTexture2D(ResourceManager.instance.getResource("/resource/cubecraft/ui/texture/bg.png"),false,false);
-        Registry.getTextureManager().createTexture2D(ResourceManager.instance.getResource("/resource/cubecraft/ui/texture/controls/popup.png"),false,false);
-        Registry.getTextureManager().createTexture2D(ResourceManager.instance.getResource("/resource/textures/font/unicode_page_00.png"),false,false);
+        Registry.getTextureManager().createTexture2D(ResourceManager.instance.getResource("/resource/cubecraft/texture/ui/bg.png"),false,false);
+        Registry.getTextureManager().createTexture2D(ResourceManager.instance.getResource("/resource/cubecraft/texture/ui/controls/popup.png"),false,false);
+        Registry.getTextureManager().createTexture2D(ResourceManager.instance.getResource("/resource/cubecraft/texture/font/unicode_page_00.png"),false,false);
     }
 
     public static void renderPictureBackground(){
         int scale= GameSetting.instance.getValueAsInt("client.render.gui.scale",2);
-        Registry.getTextureManager().getTexture2DContainer().bind("/resource/cubecraft/ui/texture/bg.png");
+        Registry.getTextureManager().getTexture2DContainer().bind("/resource/cubecraft/texture/ui/bg.png");
         ShapeRenderer.begin();
         ShapeRenderer.drawRectUV(0, Display.getWidth()/ scale,0,Display.getHeight()/scale,-1,-1,0,1,0,1);
         ShapeRenderer.end();
-        Registry.getTextureManager().getTexture2DContainer().unbind("/resource/cubecraft/ui/texture/bg.png");
+        Registry.getTextureManager().getTexture2DContainer().unbind("/resource/cubecraft/texture/ui/bg.png");
     }
 
     public static void renderMask(){
@@ -56,7 +56,7 @@ public class ScreenUtil {
     }
 
     public static void renderPopup(DisplayScreenInfo info, float interpolationTime){
-        Registry.getTextureManager().getTexture2DContainer().bind("/resource/cubecraft/ui/texture/controls/popup.png");
+        Registry.getTextureManager().getTexture2DContainer().bind("/resource/cubecraft/texture/ui/controls/popup.png");
         int yPop=0;
         for (Popup p: popupList){
             GL11.glPushMatrix();
@@ -91,7 +91,7 @@ public class ScreenUtil {
             case MIDDLE -> charPos_scr = (int) (x - contWidth / 2.0f);
             case RIGHT -> charPos_scr = x - contWidth;
         }
-        Registry.getTextureManager().getTexture2DContainer().bind("/resource/textures/font/unicode_page_00.png");
+        Registry.getTextureManager().getTexture2DContainer().bind("/resource/cubecraft/texture/font/unicode_page_00.png");
         for (char c : rawData) {
             VertexArrayBuilder builder=new VertexArrayBuilder(4);
             int pageCode = (int) Math.floor(c / 256.0f);
@@ -126,13 +126,13 @@ public class ScreenUtil {
 
     public static void renderPictureBackgroundBlur() {
         int scale= GameSetting.instance.getValueAsInt("client.render.gui.scale",2);
-        Texture2D tex= Registry.getTextureManager().getTexture2DContainer().get("/resource/cubecraft/ui/texture/bg.png");
+        Texture2D tex= Registry.getTextureManager().getTexture2DContainer().get("/resource/cubecraft/texture/ui/bg.png");
         TextureStateManager.setTextureBlur(tex,true,3);
         tex.bind();
         ShapeRenderer.begin();
         ShapeRenderer.drawRectUV(0, Display.getWidth()/ scale,0,Display.getHeight()/scale,-1,-1,0,1,0,1);
         ShapeRenderer.end();
         TextureStateManager.setTextureBlur(tex,false,0);
-        Registry.getTextureManager().getTexture2DContainer().unbind("/resource/cubecraft/ui/texture/bg.png");
+        Registry.getTextureManager().getTexture2DContainer().unbind("/resource/cubecraft/texture/ui/bg.png");
     }
 }

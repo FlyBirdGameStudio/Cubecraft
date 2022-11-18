@@ -1,5 +1,7 @@
 package io.flybird.cubecraft.register;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.client.gui.renderer.ComponentRenderManager;
 import io.flybird.cubecraft.client.render.model.ModelManager;
@@ -11,13 +13,9 @@ import io.flybird.cubecraft.client.render.model.block.serialize.BlockModelCompDe
 import io.flybird.cubecraft.client.render.model.block.serialize.BlockModelDeserializer;
 import io.flybird.cubecraft.client.render.model.block.serialize.BlockModelFaceDeserializer;
 import io.flybird.cubecraft.client.render.model.object.EntityModel;
-import io.flybird.cubecraft.client.render.renderer.ChunkRenderer;
-import io.flybird.cubecraft.client.render.renderer.EntityRenderer;
-import io.flybird.cubecraft.client.render.renderer.HUDRenderer;
 import io.flybird.cubecraft.client.render.renderer.IWorldRenderer;
 import io.flybird.cubecraft.client.render.worldObjectRenderer.IBlockRenderer;
 import io.flybird.cubecraft.client.render.worldObjectRenderer.IEntityRenderer;
-import io.flybird.cubecraft.internal.worldGen.WorldGeneratorOverworld;
 import io.flybird.cubecraft.net.NetWorkEventBus;
 import io.flybird.cubecraft.server.CubecraftServer;
 import io.flybird.cubecraft.world.IWorld;
@@ -27,15 +25,12 @@ import io.flybird.cubecraft.world.entity.Entity;
 import io.flybird.cubecraft.world.entity.humanoid.Player;
 import io.flybird.cubecraft.world.item.Item;
 import io.flybird.cubecraft.world.worldGen.pipeline.ChunkGeneratorPipeline;
-import io.flybird.cubecraft.internal.worldGen.ChunkGeneratorOverWorld;
 import io.flybird.starfish3d.render.Camera;
 import io.flybird.starfish3d.render.textures.TextureManager;
 import io.flybird.util.container.namespace.NameSpacedConstructingMap;
 import io.flybird.util.container.namespace.NameSpacedRegisterMap;
 import io.flybird.util.net.PacketDecoder;
 import io.flybird.util.net.PacketEncoder;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 
@@ -43,12 +38,13 @@ import java.util.ArrayList;
  * simple register entry set...
  */
 public class Registry {
-    private static ArrayList<String> worldIdList=new ArrayList<>();
+
 
     private Registry() {
         throw new RuntimeException("you should not create instance of this!");
     }
 
+    //client and server
     private static Cubecraft client;
     private static CubecraftServer server;
 
@@ -69,6 +65,7 @@ public class Registry {
     }
 
     //game content
+    private static ArrayList<String> worldIdList = new ArrayList<>();
     private static final NameSpacedRegisterMap<Block, ?> blockBehaviorMap = new NameSpacedRegisterMap<>(null);
     private static final NameSpacedRegisterMap<Block, Block> blockMap = new NameSpacedRegisterMap<>(blockBehaviorMap);
     private static final NameSpacedConstructingMap<Entity> entityMap = new NameSpacedConstructingMap<>(IWorld.class);
@@ -107,7 +104,7 @@ public class Registry {
     private static final ModelManager<BlockModel> blockModelManager = new ModelManager<>(BlockModel.class);
     private static final ModelManager<EntityModel> entityModelManager = new ModelManager<>(EntityModel.class);
     private static final TextureManager textureManager = new TextureManager();
-    private static final NameSpacedRegisterMap<IColorMap,?>colorMaps=new NameSpacedRegisterMap<>(null);
+    private static final NameSpacedRegisterMap<IColorMap, ?> colorMaps = new NameSpacedRegisterMap<>(null);
 
     public static NameSpacedRegisterMap<IColorMap, ?> getColorMaps() {
         return colorMaps;
@@ -138,7 +135,7 @@ public class Registry {
     }
 
 
-    private static final ComponentRenderManager componentRenderManager =new ComponentRenderManager();
+    private static final ComponentRenderManager componentRenderManager = new ComponentRenderManager();
 
     public static ComponentRenderManager getComponentRenderManager() {
         return componentRenderManager;
@@ -149,10 +146,12 @@ public class Registry {
     private static final NameSpacedRegisterMap<? extends PacketDecoder<?>, ?> packetDecoderMap = new NameSpacedRegisterMap<>(null);
     private static final NetWorkEventBus networkEventBus = new NetWorkEventBus();
 
+    @Deprecated
     public static NameSpacedRegisterMap<? extends PacketDecoder<?>, ?> getPacketDecoderMap() {
         return packetDecoderMap;
     }
 
+    @Deprecated
     public static NameSpacedRegisterMap<? extends PacketEncoder<?>, ?> getPacketEncoderMap() {
         return packetEncoderMap;
     }
@@ -163,22 +162,13 @@ public class Registry {
 
     //reader
     private static final Gson gson = new GsonBuilder()
-            .registerTypeAdapter(BlockModel .class, new BlockModelDeserializer())
+            .registerTypeAdapter(BlockModel.class, new BlockModelDeserializer())
             .registerTypeAdapter(BlockModelFace.class, new BlockModelFaceDeserializer())
-            .registerTypeAdapter(IBlockModelComponent.class,new BlockModelCompDeserializer())
+            .registerTypeAdapter(IBlockModelComponent.class, new BlockModelCompDeserializer())
             .create();
 
     public static Gson getJsonReader() {
         return gson;
-    }
-
-
-    //initialize
-    public static void registerVanillaContent() {
-        getWorldRenderers().registerItem("cubecraft:chunk_renderer", ChunkRenderer.class);
-        getWorldRenderers().registerItem("cubecraft:entity_renderer", EntityRenderer.class);
-        getWorldRenderers().registerItem("cubecraft:hud_renderer", HUDRenderer.class);
-
     }
 
     public static ArrayList<String> getWorldIdList() {

@@ -23,6 +23,7 @@ public class Screen extends Container {
     protected final String[] debugInfoLeft = new String[64];
     protected final String[] debugInfoRight = new String[64];
 
+    protected final boolean grabMouse;
     public final String id;
     public final ScreenType type;
     private Cubecraft platform;
@@ -30,7 +31,8 @@ public class Screen extends Container {
     private Screen parent;
 
     //init
-    public Screen(String id, ScreenType type){
+    public Screen(boolean grabMouse, String id, ScreenType type){
+        this.grabMouse = grabMouse;
         this.id = id;
         this.type = type;
     }
@@ -60,6 +62,7 @@ public class Screen extends Container {
                 }
             }
         });
+        Mouse.setGrabbed(this.grabMouse);
     }
 
     @EventHandler
@@ -198,7 +201,12 @@ public class Screen extends Container {
 
             String id=meta.getElementsByTagName("id").item(0).getTextContent();
             String type=meta.getElementsByTagName("type").item(0).getTextContent();
-            Screen screen = new Screen(id,ScreenType.from(type));
+
+            boolean grab=false;
+            if(meta.getElementsByTagName("grab").getLength()>0){
+                grab=Boolean.parseBoolean(meta.getElementsByTagName("grab").item(0).getTextContent());
+            }
+            Screen screen = new Screen(grab, id,ScreenType.from(type));
 
             this.deserializeComponentByType("button",element,screen,famlLoadingContext);
             this.deserializeComponentByType("label",element,screen,famlLoadingContext);

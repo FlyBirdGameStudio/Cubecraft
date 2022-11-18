@@ -24,7 +24,7 @@ public class LogoLoadingScreen extends Screen {
     private boolean checked;
 
     public LogoLoadingScreen() {
-        super("cubecraft:logo_loading", ScreenType.IMAGE_BACKGROUND);
+        super(false, "cubecraft:logo_loading", ScreenType.IMAGE_BACKGROUND);
     }
 
     @Override

@@ -31,7 +31,7 @@ import java.util.List;
 
 public class ChunkRenderer extends IWorldRenderer implements EventListener {
     public Texture2D terrain = new Texture2D(false, true);
-    public LogHandler logHandler = LogHandler.create("chunk-renderer", "game");
+    public LogHandler logHandler = LogHandler.create("ChunkRenderer", "game");
     private final ProjectionMatrixFrustum frustum = new ProjectionMatrixFrustum(this.camera);
     public HashMapSet<RenderChunkPos, RenderChunk> chunks = new HashMapSet<>();
     public ArrayQueue<RenderChunkPos> updateQueue = new ArrayQueue<>();

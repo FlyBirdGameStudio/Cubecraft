@@ -2,7 +2,7 @@
 <faml ext="cubecraft_ui">
     <meta>
         <type>image-bg-blur-mask</type>
-        <id>cubecraft:single_player_screen</id>
+        <id>cubecraft:multi_player_screen</id>
     </meta>
     <elements>
         <textbar id="server_search" limit="20">

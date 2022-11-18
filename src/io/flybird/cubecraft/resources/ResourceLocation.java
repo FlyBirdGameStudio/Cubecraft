@@ -18,14 +18,14 @@ public record ResourceLocation(ResourceType type,String namespace,ResourceLocTyp
     }
 
     enum ResourceLocType{
-        BLOCK_TEXTURE("/block/texture/"),
-        BLOCK_MODEL("/block/model/"),
-        ENTITY_TEXTURE("/entity/texture/"),
-        ENTITY_MODEL("/entity/model/"),
-        UI_RENDER_CONTROLLER("/ui/render_controller/"),
-        UI_TEXTURES("/ui/texture/"),
-        UI_SCREEN("/ui/screen/"),
-        BLOCK_COLORMAP("/block/colormap/"),
+        BLOCK_TEXTURE("/texture/block/"),
+        BLOCK_MODEL("/model/block/"),
+        ENTITY_TEXTURE("/texture/entity/"),
+        ENTITY_MODEL("/model/entity/"),
+        UI_RENDER_CONTROLLER("/model/ui/"),
+        UI_TEXTURES("/texture/ui/"),
+        UI_SCREEN("/ui/"),
+        BLOCK_COLOR_MAP("/misc/colormap/"),
 
         BLOCK_DATA("/block/"),
         ENTITY_DATA("/entity/"),
@@ -63,7 +63,7 @@ public record ResourceLocation(ResourceType type,String namespace,ResourceLocTyp
     }
 
     public static ResourceLocation blockColorMap(String n, String s) {
-        return new ResourceLocation(ResourceType.RESOURCE,n,ResourceLocType.BLOCK_COLORMAP,s);
+        return new ResourceLocation(ResourceType.RESOURCE,n,ResourceLocType.BLOCK_COLOR_MAP,s);
     }
 
     public static ResourceLocation blockColorMap(String all) {

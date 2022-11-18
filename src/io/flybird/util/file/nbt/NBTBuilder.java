@@ -1,6 +1,9 @@
 package io.flybird.util.file.nbt;
 
 import io.flybird.util.file.nbt.tag.*;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.ByteBufOutputStream;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -62,6 +65,12 @@ public class NBTBuilder {
         }
         dataOutput.writeUTF(hm.getKey());
         hm.writeTagContents(dataOutput);
+    }
+
+    public static ByteBuf write(NBTBase root) throws IOException {
+        ByteBuf byteBuf= ByteBufAllocator.DEFAULT.ioBuffer();
+        write(root,new ByteBufOutputStream(byteBuf));
+        return byteBuf;
     }
 
     public static NBTTagList buildStringArray(String[] arr){

@@ -1,14 +1,12 @@
 package io.flybird.cubecraft.world.entity;
+
 import io.flybird.cubecraft.register.Registry;
+import io.flybird.cubecraft.world.HittableObject;
 import io.flybird.cubecraft.world.IWorld;
+import io.flybird.cubecraft.world.entity.item.Item;
 import io.flybird.cubecraft.world.item.Inventory;
 import io.flybird.util.file.nbt.NBTDataIO;
 import io.flybird.util.file.nbt.tag.NBTTagCompound;
-
-import io.flybird.cubecraft.world.HittableObject;
-import io.flybird.cubecraft.world.entity.item.Item;
-
-
 import io.flybird.util.math.*;
 import org.joml.Vector3d;
 
@@ -20,8 +18,8 @@ public abstract class Entity implements HittableObject, NBTDataIO {
 
 
     private Inventory inventory;
-    public boolean sneak=false;
-    private String uuid;
+    public boolean sneak = false;
+    protected String uuid;
 
 
     public HitResult hitResult;
@@ -55,7 +53,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
     public Entity(IWorld world) {
         this.world = world;
         this.resetPos();
-        this.uuid = UUID.nameUUIDFromBytes(String.valueOf(System.currentTimeMillis()^this.hashCode()).getBytes(StandardCharsets.UTF_8)).toString();
+        this.uuid = UUID.nameUUIDFromBytes(String.valueOf(System.currentTimeMillis() ^ this.hashCode()).getBytes(StandardCharsets.UTF_8)).toString();
     }
 
     protected void resetPos() {
@@ -227,7 +225,6 @@ public abstract class Entity implements HittableObject, NBTDataIO {
         float speed;
 
 
-
         if (this.inLiquid()) {//water
 
             this.move(this.xd, this.yd, this.zd);
@@ -261,15 +258,15 @@ public abstract class Entity implements HittableObject, NBTDataIO {
      * calculate where the hit result of entity based on coord and rotation
      */
     public void clipSelectionBox() {
-        this.hitResult=null;
-        Vector3d from=new Vector3d(x,y+1.62,z);
+        this.hitResult = null;
+        Vector3d from = new Vector3d(x, y + 1.62, z);
 
-        this.hitResult= RayTest.rayTrace(world.getSelectionBox(this,from,getHitTargetPos()),from,getHitTargetPos());
+        this.hitResult = RayTest.rayTrace(world.getSelectionBox(this, from, getHitTargetPos()), from, getHitTargetPos());
     }
 
-    public Vector3d getHitTargetPos(){
-        Vector3d from=new Vector3d(x,y+1.62,z);
-        Vector3d to = MathHelper.getVectorForRotation(xRot,yRot-180);
+    public Vector3d getHitTargetPos() {
+        Vector3d from = new Vector3d(x, y + 1.62, z);
+        Vector3d to = MathHelper.getVectorForRotation(xRot, yRot - 180);
         return to.mul(getReachDistance()).add(from);
     }
 
@@ -283,8 +280,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
     }
 
 
-
-    public void render(float interpolationTime){
+    public void render(float interpolationTime) {
         Registry.getEntityModelManager().get(this.getID()).render(this);
     }
 
@@ -347,11 +343,12 @@ public abstract class Entity implements HittableObject, NBTDataIO {
     }
 
     public void setWorld(IWorld world) {
-        this.world=world;
+        this.world = world;
     }
 
     //event
-    public void onInteract(Entity from){}
+    public void onInteract(Entity from) {
+    }
 
     public boolean inLiquid() {
         //return this.world.getBlock((long) x, (long) y, (long) z) instanceof LiquidBlockState;
@@ -368,15 +365,15 @@ public abstract class Entity implements HittableObject, NBTDataIO {
 
     }
 
-    public void attack(){
-        if(this.hitResult!=null){
-            this.hitResult.hit(world,this);
+    public void attack() {
+        if (this.hitResult != null) {
+            this.hitResult.hit(world, this);
         }
     }
 
-    public void interact(){
-        if(this.hitResult!=null){
-            this.hitResult.interact(world,this);
+    public void interact() {
+        if (this.hitResult != null) {
+            this.hitResult.interact(world, this);
         }
     }
 
@@ -385,9 +382,19 @@ public abstract class Entity implements HittableObject, NBTDataIO {
     }
 
 
-    public String selectedBlockID="cubecraft:air";
+    public String selectedBlockID = "cubecraft:air";
+
     @Deprecated
     public String getSelectBlock() {
         return selectedBlockID;
+    }
+
+    public void setLocation(EntityLocation location) {
+        this.x = location.x;
+        this.y = location.y;
+        this.z = location.z;
+        this.xRot = (float) location.xRot;
+        this.yRot = (float) location.yRot;
+        this.zRot = (float) location.zRot;
     }
 }

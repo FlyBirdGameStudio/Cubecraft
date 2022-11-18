@@ -1,4 +1,4 @@
-package io.flybird.cubecraft.internal.worldGen;
+package io.flybird.cubecraft.internal.world.worldGen;
 
 import io.flybird.cubecraft.world.chunk.Chunk;
 import io.flybird.cubecraft.world.worldGen.pipeline.ChunkGenerator;

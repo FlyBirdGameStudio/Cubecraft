@@ -12,8 +12,6 @@
 package io.flybird.cubecraft.client;
 
 import io.flybird.cubecraft.GameSetting;
-import io.flybird.cubecraft.internal.InternalContent;
-import io.flybird.cubecraft.register.Registry;
 import io.flybird.cubecraft.Start;
 import io.flybird.cubecraft.client.event.ClientInitializeEvent;
 import io.flybird.cubecraft.client.event.ClientShutdownEvent;
@@ -24,18 +22,20 @@ import io.flybird.cubecraft.client.gui.ScreenUtil;
 import io.flybird.cubecraft.client.gui.screen.LogoLoadingScreen;
 import io.flybird.cubecraft.client.gui.screen.Screen;
 import io.flybird.cubecraft.client.render.renderer.LevelRenderer;
-import io.flybird.cubecraft.resources.ResourceLoader;
-import io.flybird.cubecraft.resources.ResourceManager;
 import io.flybird.cubecraft.extansion.ExtansionRunningTarget;
 import io.flybird.cubecraft.extansion.ModManager;
 import io.flybird.cubecraft.extansion.PlatformClient;
+import io.flybird.cubecraft.internal.InternalContent;
+import io.flybird.cubecraft.net.base.ClientNettyPipeline;
+import io.flybird.cubecraft.register.Registry;
+import io.flybird.cubecraft.resources.ResourceLoader;
+import io.flybird.cubecraft.resources.ResourceManager;
 import io.flybird.cubecraft.server.CubecraftServer;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.entity.humanoid.Player;
 import io.flybird.starfish3d.audio.Audio;
 import io.flybird.starfish3d.platform.Display;
 import io.flybird.starfish3d.platform.input.InputHandler;
-import io.flybird.starfish3d.platform.input.Keyboard;
 import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.util.LogHandler;
 import io.flybird.util.LoopTickingApplication;
@@ -78,7 +78,9 @@ import org.lwjgl.opengl.GL11;
 //todo:add json driven block register
 
 public class Cubecraft extends LoopTickingApplication implements TaskProgressUpdateListener {
-    private final CubecraftServer server=new CubecraftServer();
+    private final ClientNettyPipeline clientNettyChannel = new ClientNettyPipeline();
+
+    private final CubecraftServer server = new CubecraftServer();
     private final EventBus clientEventBus = new EventBus();
     public static final String VERSION = "alpha-0.2.6";
 
@@ -91,16 +93,29 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
 
 
     private IWorld clientWorld = null;
-    private Player player = new Player(null);
+    private Player player = new Player(null,"GrassBlock2022");
     public final PlayerController controller = new PlayerController(this.player);
     public final UDPSocket clientIO = new UDPSocket(Registry.getPacketEncoderMap(), Registry.getPacketDecoderMap(), "127.0.0.1", 11451);
 
     //world
     public void joinWorld(IWorld world) {
         this.clientWorld = world;
-        player.setPos(1024, 10, 1024);
+        player.setLocation(world.getSpawnPosition(this.player.getUID()));
         this.levelRenderer = new LevelRenderer(this.getClientWorld(), this.player);
         this.getClientWorld().addEntity(this.player);
+    }
+
+    public void joinServer(String host,int port){
+        if(this.clientNettyChannel.isRunning()){
+            this.leaveServer();
+        }
+        this.clientNettyChannel.init(host, port);
+    }
+
+    public void leaveServer(){
+        //todo:send player disconnect packet
+        this.clientNettyChannel.shutdown();
+        this.clientWorld=null;
     }
 
     public void leaveWorld() {
@@ -141,25 +156,28 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
         //init application
 
         this.timer = new Timer(20);
-        this.logHandler = LogHandler.create("main", "game");
+        this.logHandler = LogHandler.create("Main", "game");
         this.initDisplay();
 
         Display.getEventBus().registerEventListener(this.clientInputHandler);
         ScreenUtil.initBGRenderer();
 
         //load content
-        ModManager.loadMod(InternalContent.class, null, getPlatformClient(), ExtansionRunningTarget.CLIENT);
+
         this.clientEventBus.callEvent(new ClientInitializeEvent(this));
         this.setScreen(logoLoadingScreen);
         this.logoLoadingScreen.display();
+
+        ModManager.loadMod(InternalContent.class, null, getPlatformClient(), ExtansionRunningTarget.CLIENT);
+
         GameSetting.instance.read();
-        Registry.registerVanillaContent();
+
         ResourceManager.instance.registerEventListener(new ResourceLoader());
         ResourceManager.instance.reload(this);
 
         this.logoLoadingScreen.dispose();
         this.getClientEventBus().registerEventListener(new ScreenController());
-        this.setScreen("cubecraft","title_screen.xml");
+        this.setScreen("cubecraft", "title_screen.xml");
 
         //check version
         new Thread(new VersionCheck(), "client_update_check").start();
@@ -199,7 +217,7 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
             this.logHandler.checkGLError("pre_screen_render");
             this.screenInfo = this.getDisplaySize();
             this.screen.render(this.screenInfo, this.timer.interpolatedTime);
-            ScreenUtil.renderPopup(this.screenInfo,this.timer.interpolatedTime);
+            ScreenUtil.renderPopup(this.screenInfo, this.timer.interpolatedTime);
             if (!(this.screen instanceof LogoLoadingScreen)) {
                 this.logoLoadingScreen.render(screenInfo, this.timer.interpolatedTime);
             }
@@ -244,8 +262,8 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
         }
     }
 
-    public void setScreen(String namespace,String uiPosition) {
-        this.setScreen(ScreenLoader.loadByExtName(namespace,uiPosition));
+    public void setScreen(String namespace, String uiPosition) {
+        this.setScreen(ScreenLoader.loadByExtName(namespace, uiPosition));
     }
 
     private DisplayScreenInfo getDisplaySize() {
@@ -263,8 +281,8 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
         StartArguments arg = Start.getStartGameArguments();
         Display.create();
         Display.setFXAA(GameSetting.instance.FXAA);
-        String instanceName=arg.getValueAsString("instance", " ");
-        Display.setTitle((arg.getValueAsString("title", "Cubecraft-" + VERSION) + instanceName).equals(" ") ?"":"(%s)".formatted(instanceName));
+        String instanceName = arg.getValueAsString("instance", " ");
+        Display.setTitle((arg.getValueAsString("title", "Cubecraft-" + VERSION) + instanceName).equals(" ") ? "" : "(%s)".formatted(instanceName));
         Display.setIcon(ResourceManager.instance.getResource("/resource/cubecraft/ui/texture/icons/icon.png").getAsStream());
         Display.setResizable(true);
         Display.setVsyncEnable(false);

@@ -10,7 +10,7 @@ public class ClientWorld extends IWorld {
 
     //todo:add remote world id
     public ClientWorld(LevelInfo levelInfo, Cubecraft client) {
-        super("az",levelInfo);
+        super("__client",levelInfo);
         this.client = client;
     }
 

@@ -14,6 +14,9 @@ import io.flybird.util.net.Packet;
 import io.flybird.cubecraft.net.clientPacket.*;
 
 public class ClientNetHandler extends INetHandler{
+    private String accessToken;
+
+
     final Cubecraft client;
     public ClientNetHandler(IWorld world, Cubecraft client) {
         super(world);
@@ -34,12 +37,12 @@ public class ClientNetHandler extends INetHandler{
     //world event
     @EventHandler
     public void onBlockChanged(BlockChangeEvent e){
-        this.send(new ClientPacketBlockChange(client.getPlayer().getUID(),e.x(),e.y(),e.z(),e.newBlockState()));
+        this.send(new ClientPacketBlockChange(accessToken,client.getPlayer().getUID(),e.x(),e.y(),e.z(),e.newBlockState()));
     }
 
     @EventHandler
     public void onPlayerAttack(EntityAttackEvent e){
-        this.send(new ClientPacketAttack(e.from().getUID(),e.target().getUID()));
+        this.send(new ClientPacketAttack(accessToken,e.from().getUID(),e.target().getUID()));
     }
 
     @EventHandler

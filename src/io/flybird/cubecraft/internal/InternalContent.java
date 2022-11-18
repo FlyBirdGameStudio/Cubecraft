@@ -1,10 +1,13 @@
 package io.flybird.cubecraft.internal;
 
+import io.flybird.cubecraft.client.render.renderer.ChunkRenderer;
+import io.flybird.cubecraft.client.render.renderer.EntityRenderer;
+import io.flybird.cubecraft.client.render.renderer.HUDRenderer;
 import io.flybird.cubecraft.extansion.*;
 import io.flybird.cubecraft.internal.block.BlockBehaviorRegistry;
 import io.flybird.cubecraft.internal.block.BlockRegistry;
 import io.flybird.cubecraft.internal.block.ColorMapRegistry;
-import io.flybird.cubecraft.internal.worldGen.WorldGeneratorOverworld;
+import io.flybird.cubecraft.internal.world.worldGen.WorldGeneratorOverworld;
 import io.flybird.cubecraft.register.Registry;
 
 import io.flybird.cubecraft.world.biome.Biome;
@@ -20,6 +23,10 @@ public class InternalContent extends Mod {
 
     @Override
     public void construct() {
+        Registry.getWorldRenderers().registerItem("cubecraft:chunk_renderer", ChunkRenderer.class);
+        Registry.getWorldRenderers().registerItem("cubecraft:entity_renderer", EntityRenderer.class);
+        Registry.getWorldRenderers().registerItem("cubecraft:hud_renderer", HUDRenderer.class);
+
         Registry.getBlockBehaviorMap().registerGetter(BlockBehaviorRegistry.class);
         Registry.getBlockMap().registerGetFunctionProvider(BlockRegistry.class);
         Registry.getColorMaps().registerGetter(ColorMapRegistry.class);

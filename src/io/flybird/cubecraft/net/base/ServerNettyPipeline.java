@@ -6,6 +6,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.*;
 
+//todo:fit addr host
 public class ServerNettyPipeline {
     public void initNettyPipeline(int port){
         new Thread(() -> {
@@ -18,7 +19,7 @@ public class ServerNettyPipeline {
                 b.group(bossGroup)
                         .channel(NioDatagramChannel.class)
                         .option(ChannelOption.SO_BROADCAST, true)
-                        .handler(new NettyChannelHandler(Registry.getPacketEncoderMap(),Registry.getPacketDecoderMap(),5120,40));
+                        .handler(new NettyChannelHandler(null,null));
                 b.bind(port).sync().channel().closeFuture().await();
             }
             catch (Exception e)
