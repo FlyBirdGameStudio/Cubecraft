@@ -17,6 +17,16 @@ public class BlockBehaviorRegistry {
         );
     }
 
+    @ItemGetter(id = "glass", namespace = "cubecraft")
+    public Block glass(){
+        return new SimpleBlock(
+                EnumFacing.all(),
+                new AABB[]{new AABB(0,0,0,1,1,1)},
+                new AABB[]{new AABB(0,0,0,1,1,1)},
+                0, 0, 0, 0, false, "cubecraft:glass", new String[]{}, 0
+        );
+    }
+
     @ItemGetter(id = "stone", namespace = "cubecraft")
     public Block stone(){
         return new SimpleBlock(

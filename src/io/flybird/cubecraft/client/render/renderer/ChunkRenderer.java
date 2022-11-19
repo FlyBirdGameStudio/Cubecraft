@@ -1,6 +1,7 @@
 package io.flybird.cubecraft.client.render.renderer;
 
 import io.flybird.cubecraft.GameSetting;
+import io.flybird.cubecraft.client.render.model.RenderType;
 import io.flybird.cubecraft.client.render.object.RenderChunk;
 import io.flybird.cubecraft.client.render.object.RenderChunkPos;
 import io.flybird.cubecraft.event.block.BlockChangeEvent;
@@ -10,10 +11,7 @@ import io.flybird.cubecraft.world.entity.humanoid.Player;
 import io.flybird.starfish3d.render.Camera;
 import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.starfish3d.render.culling.ProjectionMatrixFrustum;
-import io.flybird.starfish3d.render.multiThread.AsyncRenderCompileService;
-import io.flybird.starfish3d.render.multiThread.IDrawCompile;
-import io.flybird.starfish3d.render.multiThread.IDrawService;
-import io.flybird.starfish3d.render.multiThread.MultiRenderCompileService;
+import io.flybird.starfish3d.render.multiThread.*;
 import io.flybird.starfish3d.render.textures.Texture2D;
 import io.flybird.util.ColorUtil;
 import io.flybird.util.LogHandler;
@@ -35,11 +33,15 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
     private final ProjectionMatrixFrustum frustum = new ProjectionMatrixFrustum(this.camera);
     public HashMapSet<RenderChunkPos, RenderChunk> chunks = new HashMapSet<>();
     public ArrayQueue<RenderChunkPos> updateQueue = new ArrayQueue<>();
-    public ArrayList<RenderChunk> callList = new ArrayList<>();
+
+    public ArrayList<RenderChunk> callListAlpha = new ArrayList<>();
+
+    public ArrayList<RenderChunk> callListTransParent = new ArrayList<>();
+
     public IDrawService<RenderChunk> updateService;
 
-    public ChunkRenderer(IWorld w, Player p, Camera c) {
-        super(w, p, c);
+    public ChunkRenderer(IWorld w, Player p, Camera c, GameSetting setting) {
+        super(w, p, c, setting);
         if (GameSetting.instance.getValueAsBoolean("client.render.terrain.async_chunk_compile", false)) {
             this.updateService = new AsyncRenderCompileService<>();
         } else {
@@ -50,6 +52,7 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
 
     public int allCount;
     public int visibleCount;
+    public int transVisibleCount;
     public int updateCount;
 
     @Override
@@ -70,6 +73,8 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
     }
 
     private void drawChunks() {
+        transVisibleCount = 0;
+        visibleCount = 0;
         GLUtil.enableBlend();
         GLUtil.enableAA();
         int d = GameSetting.instance.getValueAsInt("client.render.terrain.renderDistance", 4);
@@ -78,24 +83,32 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
             GLUtil.setupFog(d * d, ColorUtil.int1Float1ToFloat4(world.getWorldInfo().fogColor(), 1));
         }
         Registry.getTextureManager().getTexture2DTileMapContainer().bind("cubecraft:terrain");
-        for (RenderChunk chunk : this.callList) {
+
+        this.drawChunk(RenderType.ALPHA, this.callListAlpha, d);
+
+        GL11.glDepthMask(false);
+        this.drawChunk(RenderType.TRANSPARENT, this.callListTransParent, d);
+        GL11.glDepthMask(true);
+
+        Registry.getTextureManager().getTexture2DTileMapContainer().unbind("cubecraft:terrain");
+        this.logHandler.checkGLError("draw_chunks");
+        GL11.glDisable(GL11.GL_FOG);
+    }
+
+    public void drawChunk(RenderType type, List<RenderChunk> callList, int dist) {
+        for (RenderChunk chunk : callList) {
             if (
-                    ChunkRenderer.this.camera.objectDistanceSmallerThan(
-                            new Vector3d(chunk.x * 16, chunk.y * 16, chunk.z * 16),
-                            GameSetting.instance.getValueAsInt("client.render.terrain.renderDistance", 4) * 16 + 128
-                    )
-                            && this.frustum.aabbVisible(RenderChunk.getAABBFromPos(chunk.getKey(), camera)
-                    )) {
+                    this.camera.objectDistanceSmallerThan(chunk.getKey().clipToWorldPosition(), dist * 16)
+                            && this.frustum.aabbVisible(chunk.getVisibleArea(this.camera))
+                            && chunk.isFilled(type)
+            ) {
                 GL11.glPushMatrix();
                 this.camera.setupObjectCamera(new Vector3d(new Vector3d(chunk.x * 16, chunk.y * 16, chunk.z * 16)));
-                chunk.render();
+                chunk.render(type);
                 visibleCount++;
                 GL11.glPopMatrix();
             }
         }
-        Registry.getTextureManager().getTexture2DTileMapContainer().unbind("cubecraft:terrain");
-        this.logHandler.checkGLError("draw_chunks");
-        GL11.glDisable(GL11.GL_FOG);
     }
 
     private void updateChunks() {
@@ -125,25 +138,33 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
         logHandler.checkGLError("pre_draw");
         for (int i = 0; i < (maxUPD); i++) {
             if (this.updateService.getResultSize() > 0) {
-                this.updateService.getAvailableCompile().draw();
+                DrawCompile compile = this.updateService.getAvailableCompile();
+                if (compile != null) {
+                    compile.draw();
+                }
             }
         }
 
         //check all compile and set call list
         while (this.updateService.getAllResultSize() > 0) {
-            IDrawCompile compile=this.updateService.getAllCompile();
-            if(compile!=null) {
-                RenderChunk chunk = ((RenderChunk)compile.getObject());
-                if (chunk.isFilled()) {
-                    if (!this.callList.contains(chunk)) {
-                        this.callList.add(chunk);
-                    }
-                } else {
-                    this.callList.remove(chunk);
-                }
+            IDrawCompile compile = this.updateService.getAllCompile();
+            if (compile != null) {
+                RenderChunk chunk = ((RenderChunk) compile.getObject());
+                this.checkCallList(chunk, RenderType.ALPHA, this.callListAlpha);
+                this.checkCallList(chunk, RenderType.TRANSPARENT, this.callListTransParent);
             }
         }
         logHandler.checkGLError("post_draw");
+    }
+
+    public void checkCallList(RenderChunk chunk, RenderType type, List<RenderChunk> callList) {
+        if (chunk.isFilled(type)) {
+            if (!callList.contains(chunk)) {
+                callList.add(chunk);
+            }
+        } else {
+            callList.remove(chunk);
+        }
     }
 
     //try to add chunk in distance but not exist

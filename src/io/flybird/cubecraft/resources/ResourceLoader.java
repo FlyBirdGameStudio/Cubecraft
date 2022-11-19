@@ -55,7 +55,7 @@ public class ResourceLoader implements EventListener {
             terrain.generateTexture();
             terrain.completePlannedLoad(e.client(), 0, 100);
             terrain.upload();
-            terrain.export(new File("F:/terrain.png"));
+            //terrain.export(new File("F:/terrain.png"));
             TextureStateManager.setTextureMipMap(terrain, true);
             TextureStateManager.setTextureClamp(terrain, true);
         } catch (Exception ex) {

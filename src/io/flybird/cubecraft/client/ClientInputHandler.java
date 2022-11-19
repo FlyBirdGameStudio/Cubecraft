@@ -1,5 +1,7 @@
 package io.flybird.cubecraft.client;
 
+import io.flybird.cubecraft.client.gui.Popup;
+import io.flybird.cubecraft.client.gui.ScreenUtil;
 import io.flybird.starfish3d.event.KeyPressEvent;
 import io.flybird.cubecraft.client.gui.screen.Screen;
 import io.flybird.cubecraft.resources.ResourceManager;
@@ -31,6 +33,14 @@ public class ClientInputHandler implements EventListener {
             if (this.client.getScreen().getParentScreen() != null) {
                 this.client.setScreen(this.client.getScreen().getParentScreen());
             }
+        }
+        if(e.key()==Keyboard.KEY_F9){
+            ScreenUtil.createPopup("reloading...","reloading...",40, Popup.INFO);
+            ResourceManager.instance.reload(this.client);
+            ScreenUtil.createPopup("reload success","fully reloaded.",40,Popup.SUCCESS);
+        }
+        if(e.key()==Keyboard.KEY_F3){
+            client.isDebug=!client.isDebug;
         }
     }
 }

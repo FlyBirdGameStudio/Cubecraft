@@ -1,6 +1,7 @@
 package io.flybird.cubecraft.client.render.object;
 
 import io.flybird.cubecraft.GameSetting;
+import io.flybird.cubecraft.client.render.IRenderType;
 import io.flybird.cubecraft.client.render.model.RenderType;
 import io.flybird.cubecraft.client.render.worldObjectRenderer.IBlockRenderer;
 import io.flybird.cubecraft.register.Registry;
@@ -45,24 +46,30 @@ public class RenderChunk implements KeyGetter<RenderChunkPos>, IRenderObject {
         return isAlphaFilled;
     }
 
-    public boolean isTransparentFilled() {
-        return isTransparentFilled;
-    }
-
     public boolean isFilled(){
         return isAlphaFilled||isTransparentFilled;
     }
 
     //render
     @Override
-    public void render() {
-        if(this.isAlphaFilled) {
-            this.renderList_terrain.call();
+    public void render(IRenderType type) {
+        switch (((RenderType) type)){
+            case ALPHA -> this.renderList_terrain.call();
+            case TRANSPARENT -> this.renderList_transparent.call();
         }
+    }
+
+    public boolean isFilled(IRenderType type){
+        return switch (((RenderType) type)){
+            case ALPHA -> this.isAlphaFilled;
+            case TRANSPARENT -> this.isTransparentFilled;
+        };
+    }
+
+
+    public void renderTransParent(){
         if (this.isTransparentFilled){
-            GL11.glDepthMask(false);
             this.renderList_transparent.call();
-            GL11.glDepthMask(true);
         }
     }
 
@@ -132,5 +139,9 @@ public class RenderChunk implements KeyGetter<RenderChunkPos>, IRenderObject {
                 (renderChunkPos.y() * 16 + 16 - camera.getPosition().y),
                 (renderChunkPos.z() * 16 + 16 - camera.getPosition().z)
         );
+    }
+
+    public AABB getVisibleArea(Camera camera) {
+        return getAABBFromPos(this.getKey(),camera);
     }
 }

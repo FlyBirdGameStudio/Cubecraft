@@ -151,6 +151,7 @@ public class Keyboard {
     public static final int KEY_APPS = 221;
     public static final int KEY_POWER = 222;
     public static final int KEY_SLEEP = 223;
+
     //</editor-fold>
     public static boolean isKeyDown(int key) {
         return GLFW.glfwGetKey(Display.getHandle(), KeyMapping.toGlfwKey(key)) == 1;
@@ -159,11 +160,14 @@ public class Keyboard {
     public static void initCallbacks() {
         Callbacks.keyCallback = new GLFWKeyCallback() {
             public void invoke(long window, int key, int scancode, int action, int mods) {
-                if(action==1) {
+                if (action == 1) {
                     Display.getEventBus().callEvent(new KeyPressEvent(KeyMapping.toLwjglKey(key)));
                 }
-                if(action==0) {
+                if (action == 0) {
                     Display.getEventBus().callEvent(new KeyReleaseEvent(KeyMapping.toLwjglKey(key)));
+                }
+                if (action == 2) {
+                    Display.getEventBus().callEvent(new KeyHoldEvent(KeyMapping.toLwjglKey(key)));
                 }
             }
         };

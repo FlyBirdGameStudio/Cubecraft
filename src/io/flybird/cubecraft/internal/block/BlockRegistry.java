@@ -54,6 +54,7 @@ public class BlockRegistry {
         RegisterUtil.registerDefaultOverrideBlock(BlockType.PODZOL, "cubecraft:grass_block", blockMap);
         RegisterUtil.registerDefaultOverrideBlock(BlockType.MYCELIUM, "cubecraft:grass_block", blockMap);
 
+
         //behavior:stone
         RegisterUtil.registerDefaultOverrideBlock(BlockType.STONE, "cubecraft:stone", blockMap);
         RegisterUtil.registerDefaultOverrideBlock(BlockType.ANDESITE, "cubecraft:stone", blockMap);
@@ -70,5 +71,11 @@ public class BlockRegistry {
         RegisterUtil.registerDefaultOverrideBlock("cubecraft:sand_stone","cubecraft:sand_stone",blockMap);
         RegisterUtil.registerDefaultOverrideBlock("cubecraft:red_sand_stone","cubecraft:sand_stone",blockMap);
          */
+    }
+
+    @ItemRegisterFunc
+    public void registerColorBlock(NameSpacedRegisterMap<Block, Block> blockMap) {
+        RegisterUtil.registerDefaultOverrideBlock(BlockType.GREEN_STAINED_GLASS, "cubecraft:glass", blockMap);
+        RegisterUtil.registerDefaultOverrideBlock(BlockType.BLUE_STAINED_GLASS, "cubecraft:glass", blockMap);
     }
 }

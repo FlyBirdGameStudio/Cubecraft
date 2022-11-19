@@ -1,6 +1,5 @@
 package io.flybird.cubecraft.net.base;
 
-import io.flybird.cubecraft.register.Registry;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -19,7 +18,7 @@ public class ServerNettyPipeline {
                 b.group(bossGroup)
                         .channel(NioDatagramChannel.class)
                         .option(ChannelOption.SO_BROADCAST, true)
-                        .handler(new NettyChannelHandler(null,null));
+                        .handler(new NettyChannelHandler(null,null,null ));
                 b.bind(port).sync().channel().closeFuture().await();
             }
             catch (Exception e)

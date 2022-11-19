@@ -1,5 +1,6 @@
 package io.flybird.cubecraft.client.render.renderer;
 
+import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.register.Registry;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.entity.humanoid.Player;
@@ -23,8 +24,8 @@ public class LevelRenderer {
     public LevelRenderer(IWorld w, Player p){
         this.world=w;
         this.player=p;
-        this.renderers= (HashMap<String, IWorldRenderer>) Registry.getWorldRenderers().createAll(world,player,camera);
-        this.environmentRenderer=new EnvironmentRenderer(world,player,camera);
+        this.renderers= (HashMap<String, IWorldRenderer>) Registry.getWorldRenderers().createAll(world,player,camera, GameSetting.instance);
+        this.environmentRenderer=new EnvironmentRenderer(world,player,camera,GameSetting.instance);
     }
 
     public void render(float interpolationTime) {

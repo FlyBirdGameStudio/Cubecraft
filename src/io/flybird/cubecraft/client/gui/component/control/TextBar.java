@@ -9,6 +9,7 @@ import io.flybird.cubecraft.register.Registry;
 import io.flybird.starfish3d.event.CharEvent;
 import io.flybird.starfish3d.event.MouseClickEvent;
 import io.flybird.starfish3d.event.KeyPressEvent;
+import io.flybird.starfish3d.platform.input.KeyHoldEvent;
 import io.flybird.starfish3d.platform.input.Keyboard;
 import io.flybird.util.event.Event;
 import io.flybird.util.event.EventHandler;
@@ -36,7 +37,7 @@ public class TextBar extends Component {
     public void render() {
         Registry.getComponentRenderManager().get(this.getClass()).render(this);
     }
-
+    
     @EventHandler
     public void onChar(CharEvent e) {
         if (focus&&text.length()<limit) {
@@ -45,26 +46,36 @@ public class TextBar extends Component {
         }
     }
 
-    @EventHandler
-    public void onKey(KeyPressEvent e) {
+    private void processPress(int k){
         if (focus) {
-            if (e.key() == Keyboard.KEY_BACK && text.length() > 0 && cursorPos > 0) {
+            if (k == Keyboard.KEY_BACK && text.length() > 0 && cursorPos > 0) {
                 text.deleteCharAt(cursorPos - 1);
                 cursorPos--;
             }
-            if (e.key() == Keyboard.KEY_RETURN) {
+            if (k == Keyboard.KEY_RETURN) {
                 this.parent.getPlatform().getClientEventBus().callEvent(new SubmitEvent(this.text.toString()));
             }
-            if (e.key() == Keyboard.KEY_RIGHT && cursorPos < text.length()) {
+            if (k == Keyboard.KEY_RIGHT && cursorPos < text.length()) {
                 cursorPos++;
             }
-            if (e.key() == Keyboard.KEY_LEFT && cursorPos > 0) {
+            if (k == Keyboard.KEY_LEFT && cursorPos > 0) {
                 cursorPos--;
             }
-            if (e.key() == Keyboard.KEY_DELETE && cursorPos >=0&&cursorPos<text.length()) {
+            if (k == Keyboard.KEY_DELETE && cursorPos >=0&&cursorPos<text.length()) {
                 text.deleteCharAt(cursorPos);
             }
         }
+    }
+        
+    
+    @EventHandler
+    public void onKey(KeyHoldEvent e) {
+        this.processPress(e.key());
+    }
+
+    @EventHandler
+    public void onKey(KeyPressEvent e) {
+        this.processPress(e.key());
     }
 
     @EventHandler

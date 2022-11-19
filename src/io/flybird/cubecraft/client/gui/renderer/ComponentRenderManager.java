@@ -3,6 +3,7 @@ package io.flybird.cubecraft.client.gui.renderer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.flybird.cubecraft.client.gui.Node;
+import io.flybird.cubecraft.client.gui.component.CircleWaitingAnimation;
 import io.flybird.cubecraft.client.gui.component.Panel;
 import io.flybird.cubecraft.client.gui.component.TopBar;
 import io.flybird.cubecraft.client.gui.component.control.Button;
@@ -22,11 +23,13 @@ public class ComponentRenderManager {
             .registerTypeAdapter(ComponentRenderer.class,new ComponentRenderer.JDeserializer())
 
             .registerTypeAdapter(ComponentPartRenderer.class,new ComponentPartRenderer.JDeserializer())
+
             .registerTypeAdapter(HorizontalBoarderImage.class,new HorizontalBoarderImage.JDeserializer())
-            .registerTypeAdapter(VerticalBorderImage.class,new ComponentPartRenderer.JDeserializer())
-            .registerTypeAdapter(AllBoarderImage.class,new AllBoarderImage.JDeserializer())
-            .registerTypeAdapter(Font.class,new Font.JDeserializer())
-            .registerTypeAdapter(Color.class,new Color.JDeserializer())
+            .registerTypeAdapter(VerticalBorderImage.class,   new ComponentPartRenderer.JDeserializer())
+            .registerTypeAdapter(AllBoarderImage.class,       new AllBoarderImage.JDeserializer())
+            .registerTypeAdapter(Font.class,                  new Font.JDeserializer())
+            .registerTypeAdapter(Color.class,                 new Color.JDeserializer())
+            .registerTypeAdapter(ImageAnimation.class,        new ImageAnimation.JDeserializer())
 
             .create();
 
@@ -36,6 +39,7 @@ public class ComponentRenderManager {
         this.renderers.put(Panel.class, gson.fromJson(ResourceManager.instance.getResource(ResourceLocation.uiRenderController("cubecraft","panel.json")).getAsText(),ComponentRenderer.class));
         this.renderers.put(TopBar.class, gson.fromJson(ResourceManager.instance.getResource(ResourceLocation.uiRenderController("cubecraft","topbar.json")).getAsText(),ComponentRenderer.class));
         this.renderers.put(TextBar.class, gson.fromJson(ResourceManager.instance.getResource(ResourceLocation.uiRenderController("cubecraft","textbar.json")).getAsText(),ComponentRenderer.class));
+        this.renderers.put(CircleWaitingAnimation.class, gson.fromJson(ResourceManager.instance.getResource(ResourceLocation.uiRenderController("cubecraft","circle_waiting_animation.json")).getAsText(),ComponentRenderer.class));
     }
 
     public void init(){

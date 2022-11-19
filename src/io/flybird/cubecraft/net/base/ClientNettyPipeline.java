@@ -16,24 +16,30 @@ import java.net.InetSocketAddress;
  * <li>remember:we can not make sure network thread is working at thread Client_main</li>
  * <li>do not try to do any thread-locked operation(such as that annoying openGL)</li>
  */
-public class ClientNettyPipeline {
+public class ClientNettyPipeline extends NettyPipeline {
     boolean running=false;
     private NioEventLoopGroup eventExecutors;
     private final LogHandler logHandler = LogHandler.create("ClientNetworkInitializer", "game");
     private InetSocketAddress server, host;
 
+
+    public void setServerAddress(InetSocketAddress server) {
+        this.server = server;
+    }
+
+    public void setHostAddress(InetSocketAddress host) {
+        this.host = host;
+    }
+
     /**
      * init netty channel,set netHandler
-     *
-     * @param initialHost initial host ip
-     * @param port        initial port
      */
-    public void init(String initialHost, int port) {
-        this.server = new InetSocketAddress(initialHost, port);
+    @Override
+    public void init(String remote,int port) {
         this.host = new InetSocketAddress(0);
         running=true;
         new Thread(() -> {
-            this.logHandler.info("starting client network channel at " + initialHost + ":" + port);
+            this.logHandler.info("connecting to " + remote + ":" + port);
             this.eventExecutors = new NioEventLoopGroup();
             try {
                 Bootstrap bootstrap = new Bootstrap();
@@ -45,10 +51,10 @@ public class ClientNettyPipeline {
                             @Override
                             protected void initChannel(SocketChannel ch) {
                                 //添加客户端通道的处理器
-                                ch.pipeline().addLast("cubecraft:default", new NettyChannelHandler(server, host));
+                                ch.pipeline().addLast("cubecraft:default", new NettyChannelHandler(server, host,null));
                             }
                         });
-                ChannelFuture channelFuture = bootstrap.connect(initialHost, port).sync();
+                ChannelFuture channelFuture = bootstrap.connect(this.server).sync();
                 channelFuture.channel().closeFuture().sync();
             } catch (InterruptedException e) {
                 this.logHandler.error("channel listen interrupt:" + e);

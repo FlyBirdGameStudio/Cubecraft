@@ -38,8 +38,6 @@ public abstract class Component extends Node {
         this.layoutManager.setBorder(border);
     }
 
-    public void onClicked(int xm,int ym) {}
-
     public Screen getParent() {
         return parent;
     }

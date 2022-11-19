@@ -1,17 +1,13 @@
 package io.flybird.cubecraft.net.base;
 
 import io.flybird.cubecraft.net.ChannelTimingEvent;
-import io.flybird.cubecraft.net.INetHandler;
+import io.flybird.cubecraft.net.NetHandlerContext;
+import io.flybird.cubecraft.net.NetWorkEventBus;
 import io.flybird.cubecraft.register.Registry;
 import io.flybird.util.LogHandler;
 import io.flybird.util.container.ArrayQueue;
 import io.flybird.util.container.ArrayUtil;
-import io.flybird.util.container.BufferUtil;
-import io.flybird.util.container.namespace.NameSpacedRegisterMap;
-import io.flybird.util.event.EventListener;
-import io.flybird.util.net.Packet;
-import io.flybird.util.net.PacketDecoder;
-import io.flybird.util.net.PacketEncoder;
+import io.flybird.cubecraft.net.Packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.Channel;
@@ -19,14 +15,9 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;
 
-import java.lang.reflect.InvocationTargetException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 public class NettyChannelHandler extends SimpleChannelInboundHandler<DatagramPacket> {
     private final LogHandler logHandler=LogHandler.create("NettyChannelHandler","game");
@@ -35,24 +26,28 @@ public class NettyChannelHandler extends SimpleChannelInboundHandler<DatagramPac
     private final ArrayQueue<Packet> sending = new ArrayQueue<>();
     Channel ch = null;
 
-    public NettyChannelHandler(InetSocketAddress server,InetSocketAddress host){
+    private final NetWorkEventBus eventBus;
+
+    public NettyChannelHandler(InetSocketAddress server, InetSocketAddress host, NetWorkEventBus eventBus){
         this.addr=server;
         this.host=host;
+        this.eventBus = eventBus;
     }
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet){
-        byte[] data = packet.content().array();
+        ByteBuf buf=packet.content();
+        byte[] data = buf.array();
         byte headSize = data[0];
         String type = new String(ArrayUtil.copySub(1, headSize, data), StandardCharsets.UTF_8);
         try {
             Packet pkt = Packet.createPacket(type);
+            pkt.readPacketData(buf);
+            this.eventBus.callEvent(pkt,new NetHandlerContext(this,packet.sender(),packet.recipient()));
         } catch (Exception e) {
             this.logHandler.error("could not create packet:"+e.getMessage());
         }
-        for (EventListener netHandler: Registry.getNetworkEventBus().getHandlers()){
-            ((INetHandler) netHandler).setSendQueue(this.sending);
-        }
+        buf.release();
     }
 
     @Override
@@ -67,9 +62,10 @@ public class NettyChannelHandler extends SimpleChannelInboundHandler<DatagramPac
                         byteBuf.writeBytes(head);
                         packet.writePacketData(byteBuf);
                         ctx.writeAndFlush(new DatagramPacket(byteBuf,addr,host));
+                        byteBuf.release();
                     }
                     ctx.pipeline().fireUserEventTriggered(new ChannelTimingEvent());
-                    Registry.getNetworkEventBus().callEvent(new ChannelTimingEvent(),this.sending);
+                    Registry.getNetworkEventBus().callEvent(new ChannelTimingEvent(),null);
                 }, 20, TimeUnit.MILLISECONDS);
     }
 }

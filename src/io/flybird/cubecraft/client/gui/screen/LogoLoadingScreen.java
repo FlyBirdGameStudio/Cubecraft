@@ -1,10 +1,12 @@
 package io.flybird.cubecraft.client.gui.screen;
 
+import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.client.gui.DisplayScreenInfo;
 import io.flybird.cubecraft.client.gui.FontAlignment;
 import io.flybird.cubecraft.client.gui.ScreenUtil;
 import io.flybird.cubecraft.resources.ResourceLocation;
 import io.flybird.cubecraft.resources.ResourceManager;
+import io.flybird.starfish3d.platform.input.Mouse;
 import io.flybird.starfish3d.render.ShapeRenderer;
 import io.flybird.starfish3d.render.draw.VertexArrayBuilder;
 import io.flybird.starfish3d.render.draw.VertexArrayUploader;
@@ -33,6 +35,7 @@ public class LogoLoadingScreen extends Screen {
         this.logoTex.generateTexture();
         logoTex.load(ResourceManager.instance.getResource(ResourceLocation.uiTexture("cubecraft","icons/logo.png")));
     }
+
 
     @Override
     public void render(DisplayScreenInfo info, float interpolationTime) {

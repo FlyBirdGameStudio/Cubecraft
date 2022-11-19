@@ -27,8 +27,8 @@ public class EnvironmentRenderer extends IWorldRenderer {
     private final ProjectionMatrixFrustum frustum = new ProjectionMatrixFrustum(this.camera);
     public int visibleCloudCount,allCloudCount;
 
-    public EnvironmentRenderer(IWorld w, Player p, Camera c) {
-        super(w, p, c);
+    public EnvironmentRenderer(IWorld w, Player p, Camera c,GameSetting setting) {
+        super(w, p, c,setting);
         this.sky.allocate();
         updateSky();
         updateCloud();

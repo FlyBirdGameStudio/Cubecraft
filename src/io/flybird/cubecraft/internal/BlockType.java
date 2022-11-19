@@ -13,4 +13,7 @@ public interface BlockType {
     String PODZOL="cubecraft:podzol";
     String GRASS_BLOCK = "cubecraft:grass_block";
     String MYCELIUM = "cubecraft:mycelium";
+
+    String GREEN_STAINED_GLASS="cubecraft:green_stained_glass";
+    String BLUE_STAINED_GLASS = "cubecraft:blue_stained_glass";
 }

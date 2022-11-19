@@ -23,6 +23,7 @@ public interface ComponentPartRenderer{
                 case "image_vertical_boarder"->jsonDeserializationContext.deserialize(jsonElement,VerticalBorderImage.class);
                 case "font"->jsonDeserializationContext.deserialize(jsonElement,Font.class);
                 case "color"->jsonDeserializationContext.deserialize(jsonElement,Color.class);
+                case "image_animation"->jsonDeserializationContext.deserialize(jsonElement,ImageAnimation.class);
                 default -> throw new IllegalStateException("no matched name:"+jsonElement.getAsJsonObject().get("type").getAsString());
             };
         }

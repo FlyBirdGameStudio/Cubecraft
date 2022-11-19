@@ -7,6 +7,7 @@ import io.flybird.cubecraft.client.gui.component.*;
 import io.flybird.cubecraft.client.gui.component.control.Button;
 import io.flybird.cubecraft.client.gui.component.control.TextBar;
 import io.flybird.cubecraft.resources.ResourceManager;
+import io.flybird.starfish3d.event.KeyReleaseEvent;
 import io.flybird.starfish3d.platform.Display;
 import io.flybird.starfish3d.event.KeyPressEvent;
 import io.flybird.starfish3d.platform.input.*;
@@ -26,7 +27,7 @@ public class Screen extends Container {
     protected final boolean grabMouse;
     public final String id;
     public final ScreenType type;
-    private Cubecraft platform;
+    protected Cubecraft platform;
     protected MultiMap<String, Component> components=new MultiMap<>();
     private Screen parent;
 
@@ -51,31 +52,7 @@ public class Screen extends Container {
         this.initFixedDebugInfo();
         CollectionUtil.iterateMap(this.components,((key, item) -> Display.getEventBus().registerEventListener(item)));
         Display.getEventBus().registerEventListener(this);
-
-        InputHandler.registerGlobalMouseCallback("cubecraft:scr_callback_default",this.getMouseCallback());
-        InputHandler.registerGlobalMouseCallback("cubecraft:scr_callback_base",new MouseCallBack(){
-            @Override
-            public void onButtonClicked(int eventButton) {
-                if(eventButton==0){
-                    int scale= GameSetting.instance.getValueAsInt("client.render.gui.scale",2);
-                    CollectionUtil.iterateMap(Screen.this.components, (key, item) -> item.onClicked(Mouse.getX()/ scale,(-Mouse.getY()+Display.getHeight())/scale));
-                }
-            }
-        });
         Mouse.setGrabbed(this.grabMouse);
-    }
-
-    @EventHandler
-    public void onKeyPressed(KeyPressEvent e){
-        if(e.key()==Keyboard.KEY_F9){
-            ScreenUtil.createPopup("reloading...","reloading...",40,Popup.INFO);
-            ResourceManager.instance.reload(this.platform);
-            Screen.this.init();
-            ScreenUtil.createPopup("reload success","fully reloaded.",40,Popup.SUCCESS);
-        }
-        if(e.key()==Keyboard.KEY_F3){
-            Screen.this.getPlatform().isDebug=!Screen.this.getPlatform().isDebug;
-        }
     }
 
     //debug
@@ -164,10 +141,6 @@ public class Screen extends Container {
         return type==ScreenType.IN_GAME;
     }
 
-    public MouseCallBack getMouseCallback(){
-        return new MouseCallBack(){};
-    }
-
     public Screen getParentScreen() {
         return this.parent;
     }
@@ -190,6 +163,11 @@ public class Screen extends Container {
 
     public void setParentScreen(Screen scr) {
         this.parent=scr;
+    }
+
+    public void release(){
+        CollectionUtil.iterateMap(this.components,((key, item) -> Display.getEventBus().unregisterEventListener(item)));
+        Display.getEventBus().unregisterEventListener(this);
     }
 
 
@@ -215,6 +193,7 @@ public class Screen extends Container {
             this.deserializeComponentByType("topbar",element,screen,famlLoadingContext);
             this.deserializeComponentByType("panel",element,screen,famlLoadingContext);
             this.deserializeComponentByType("textbar",element,screen,famlLoadingContext);
+            this.deserializeComponentByType("circlewaitinganimation",element,screen,famlLoadingContext);
             return screen;
         }
 
@@ -227,6 +206,7 @@ public class Screen extends Container {
                 case "topbar"->TopBar.class;
                 case "panel"->Panel.class;
                 case "textbar"-> TextBar.class;
+                case "circlewaitinganimation"-> CircleWaitingAnimation.class;
                 default -> throw new IllegalArgumentException("no matched constant named %s".formatted(name));
             };
         }

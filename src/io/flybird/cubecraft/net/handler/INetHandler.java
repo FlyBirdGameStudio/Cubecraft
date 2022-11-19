@@ -1,9 +1,9 @@
-package io.flybird.cubecraft.net;
+package io.flybird.cubecraft.net.handler;
 
+import io.flybird.cubecraft.net.Packet;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.util.container.ArrayQueue;
 import io.flybird.util.event.EventListener;
-import io.flybird.util.net.Packet;
 
 public class INetHandler implements EventListener {
     protected final IWorld world;

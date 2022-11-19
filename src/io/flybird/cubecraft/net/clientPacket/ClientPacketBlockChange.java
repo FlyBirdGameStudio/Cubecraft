@@ -1,8 +1,7 @@
 package io.flybird.cubecraft.net.clientPacket;
 
 import io.flybird.cubecraft.world.block.BlockState;
-import io.flybird.util.net.IOByteBuffer;
-import io.flybird.util.net.Packet;
+import io.flybird.cubecraft.net.Packet;
 import io.netty.buffer.ByteBuf;
 
 /**

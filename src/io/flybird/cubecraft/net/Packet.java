@@ -1,4 +1,4 @@
-package io.flybird.util.net;
+package io.flybird.cubecraft.net;
 
 import io.flybird.util.event.Event;
 import io.netty.buffer.ByteBuf;

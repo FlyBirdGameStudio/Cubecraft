@@ -103,4 +103,8 @@ public class BlockState implements NBTDataIO, HittableObject {
                 hr.facing()
         );
     }
+
+    public void tick(IWorld world,long x,long y,long z){
+        this.getBlock().onBlockUpdate(world, x, y, z);
+    }
 }

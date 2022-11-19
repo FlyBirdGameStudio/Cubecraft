@@ -16,9 +16,8 @@ import io.flybird.cubecraft.Start;
 import io.flybird.cubecraft.client.event.ClientInitializeEvent;
 import io.flybird.cubecraft.client.event.ClientShutdownEvent;
 import io.flybird.cubecraft.client.event.ScreenInitializeEvent;
-import io.flybird.cubecraft.client.gui.DisplayScreenInfo;
-import io.flybird.cubecraft.client.gui.ScreenLoader;
-import io.flybird.cubecraft.client.gui.ScreenUtil;
+import io.flybird.cubecraft.client.gui.*;
+import io.flybird.cubecraft.client.gui.component.Label;
 import io.flybird.cubecraft.client.gui.screen.LogoLoadingScreen;
 import io.flybird.cubecraft.client.gui.screen.Screen;
 import io.flybird.cubecraft.client.render.renderer.LevelRenderer;
@@ -41,10 +40,12 @@ import io.flybird.util.LogHandler;
 import io.flybird.util.LoopTickingApplication;
 import io.flybird.util.container.StartArguments;
 import io.flybird.util.event.EventBus;
-import io.flybird.util.net.UDPSocket;
+import io.flybird.util.file.lang.Language;
 import io.flybird.util.task.TaskProgressUpdateListener;
 import io.flybird.util.timer.Timer;
 import org.lwjgl.opengl.GL11;
+
+import java.net.InetSocketAddress;
 
 ////////////////////////////////////////////////////////////////////
 //                          _ooOoo_                               //
@@ -76,13 +77,17 @@ import org.lwjgl.opengl.GL11;
 //todo:serialize screen into xml
 //todo:fix smooth light engine
 //todo:add json driven block register
+//todo:merge code
 
 public class Cubecraft extends LoopTickingApplication implements TaskProgressUpdateListener {
     private final ClientNettyPipeline clientNettyChannel = new ClientNettyPipeline();
 
-    private final CubecraftServer server = new CubecraftServer();
+    private InetSocketAddress intergratedServerLocation;
+    private CubecraftServer server = new CubecraftServer();
+    private final Thread serverThread=new Thread(this.server,"server_main");
     private final EventBus clientEventBus = new EventBus();
     public static final String VERSION = "alpha-0.2.6";
+
 
     //display
     private DisplayScreenInfo screenInfo;
@@ -93,9 +98,10 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
 
 
     private IWorld clientWorld = null;
-    private Player player = new Player(null,"GrassBlock2022");
+    private final Player player = new Player(null,"GrassBlock2022");
     public final PlayerController controller = new PlayerController(this.player);
-    public final UDPSocket clientIO = new UDPSocket(Registry.getPacketEncoderMap(), Registry.getPacketDecoderMap(), "127.0.0.1", 11451);
+    private final ClientNettyPipeline clientIO=new ClientNettyPipeline();
+
 
     //world
     public void joinWorld(IWorld world) {
@@ -109,7 +115,21 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
         if(this.clientNettyChannel.isRunning()){
             this.leaveServer();
         }
-        this.clientNettyChannel.init(host, port);
+        this.clientNettyChannel.init(host,port);
+    }
+
+    public void joinNativeWorld(String name){
+        this.intergratedServerLocation=new InetSocketAddress(0);
+        if(this.server.isRunning()){
+            this.server.setRunning(false);
+        }
+        Screen waiting=ScreenLoader.loadByExtName("cubecraft","join_single_player_screen.xml");
+
+        while (this.server.isAvailable()){
+            ((Label) waiting.getComponents().get("stage")).setText(new Text(Language.get("join_singleplayer.wait_fore_server_init"),0xFFFFFF, FontAlignment.LEFT));
+
+            //todo:客户端等待服务端初始化
+        }
     }
 
     public void leaveServer(){
@@ -256,6 +276,9 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
     //render
     public void setScreen(Screen screen) {
         this.clientEventBus.callEvent(new ScreenInitializeEvent(this, screen));
+        if(this.screen!=null){
+            this.screen.release();
+        }
         this.screen = screen;
         if (screen != null) {
             screen.init(this);
@@ -282,8 +305,8 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
         Display.create();
         Display.setFXAA(GameSetting.instance.FXAA);
         String instanceName = arg.getValueAsString("instance", " ");
-        Display.setTitle((arg.getValueAsString("title", "Cubecraft-" + VERSION) + instanceName).equals(" ") ? "" : "(%s)".formatted(instanceName));
-        Display.setIcon(ResourceManager.instance.getResource("/resource/cubecraft/ui/texture/icons/icon.png").getAsStream());
+        Display.setTitle(arg.getValueAsString("title", "Cubecraft-" + VERSION));
+        Display.setIcon(ResourceManager.instance.getResource("/resource/cubecraft/texture/ui/icons/icon.png").getAsStream());
         Display.setResizable(true);
         Display.setVsyncEnable(false);
         Display.setSize(arg.getValueAsInt("width", 1280), arg.getValueAsInt("height", 720));

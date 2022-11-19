@@ -21,6 +21,7 @@ public class Label extends Component {
     }
 
 
+
     @Override
     public void render() {
         FontRenderer.renderShadow(text.getText(),layoutManager.ax,layoutManager.ay, text.getColor(), layoutManager.aHeight,text.getAlignment());
@@ -44,5 +45,9 @@ public class Label extends Component {
             label.setLayout(jsonDeserializationContext.deserialize(node.get("layout"),LayoutManager.class));
             return label;
         }
+    }
+
+    public void setText(Text text) {
+        this.text = text;
     }
 }

@@ -1,5 +1,6 @@
 package io.flybird.util.net;
 
+import io.flybird.cubecraft.net.Packet;
 import io.flybird.util.container.ArrayQueue;
 import io.flybird.util.container.ArrayUtil;
 

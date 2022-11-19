@@ -1,5 +1,6 @@
 package io.flybird.cubecraft.client.render.renderer;
 
+import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.register.Registry;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.entity.Entity;
@@ -9,8 +10,8 @@ import io.flybird.starfish3d.render.Camera;
 public class EntityRenderer extends IWorldRenderer {
     public int visibleCount,allCount;
 
-    public EntityRenderer(IWorld w, Player p, Camera c) {
-        super(w, p,c);
+    public EntityRenderer(IWorld w, Player p, Camera c, GameSetting setting) {
+        super(w, p,c,setting);
     }
 
     @Override

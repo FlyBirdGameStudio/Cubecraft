@@ -4,13 +4,14 @@ import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.client.gui.DisplayScreenInfo;
 import io.flybird.cubecraft.client.gui.screen.Screen;
 
+import io.flybird.cubecraft.net.base.ClientNettyPipeline;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.entity.humanoid.Player;
 import io.flybird.util.net.UDPSocket;
 
 public record PlatformClient(
         Cubecraft platform,
-        UDPSocket clientNettyChannel,
+        ClientNettyPipeline clientNettyChannel,
         Screen currentScreen,
         DisplayScreenInfo displayInfo,
         IWorld worldAccess,

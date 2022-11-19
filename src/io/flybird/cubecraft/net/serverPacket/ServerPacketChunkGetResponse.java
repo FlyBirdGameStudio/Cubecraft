@@ -4,7 +4,7 @@ import io.flybird.cubecraft.world.chunk.Chunk;
 import io.flybird.cubecraft.world.chunk.ChunkPos;
 import io.flybird.util.file.nbt.NBTBuilder;
 import io.flybird.util.file.nbt.tag.NBTTagCompound;
-import io.flybird.util.net.Packet;
+import io.flybird.cubecraft.net.Packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
@@ -43,5 +43,9 @@ public class ServerPacketChunkGetResponse implements Packet {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Chunk getChunk() {
+        return chunk;
     }
 }

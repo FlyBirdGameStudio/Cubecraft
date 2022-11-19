@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 
 
 public class CubecraftServer extends LoopTickingApplication {
-
+    private boolean available;
 
     Option option= new Option("server");
     private Level level;
@@ -33,6 +33,7 @@ public class CubecraftServer extends LoopTickingApplication {
 
     @Override
     public void init(){
+        this.available =false;
         long startTime=System.currentTimeMillis();
 
         this.logHandler= LogHandler.create("main","server");
@@ -69,6 +70,10 @@ public class CubecraftServer extends LoopTickingApplication {
         this.running = false;
         logHandler.info("game stopped...");
         LogHandler.allSave();
-        System.exit(0);
+        this.available =true;
+    }
+
+    public boolean isAvailable() {
+        return available;
     }
 }

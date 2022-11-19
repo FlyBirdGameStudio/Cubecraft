@@ -53,5 +53,13 @@
                 <border>[0,0,0,0]</border>
             </layout>
         </panel>
+
+        <circlewaitinganimation id="wait">
+            <layout type="origin">
+                <layout>[0,16,16,16]</layout>
+                <type>left-top</type>
+                <border>[4,4,4,4]</border>
+            </layout>
+        </circlewaitinganimation>
     </elements>
 </faml>

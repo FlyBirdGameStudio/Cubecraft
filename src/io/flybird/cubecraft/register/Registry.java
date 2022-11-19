@@ -2,6 +2,7 @@ package io.flybird.cubecraft.register;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.client.gui.renderer.ComponentRenderManager;
 import io.flybird.cubecraft.client.render.model.ModelManager;
@@ -100,7 +101,7 @@ public class Registry {
     //render
     private static final NameSpacedRegisterMap<IBlockRenderer, ?> blockRendererMap = new NameSpacedRegisterMap<>(null);
     private static final NameSpacedRegisterMap<IEntityRenderer, ?> entityRendererMap = new NameSpacedRegisterMap<>(null);
-    public static NameSpacedConstructingMap<IWorldRenderer> worldRenderers = new NameSpacedConstructingMap<>(IWorld.class, Player.class, Camera.class);
+    public static NameSpacedConstructingMap<IWorldRenderer> worldRenderers = new NameSpacedConstructingMap<>(IWorld.class, Player.class, Camera.class, GameSetting.class);
     private static final ModelManager<BlockModel> blockModelManager = new ModelManager<>(BlockModel.class);
     private static final ModelManager<EntityModel> entityModelManager = new ModelManager<>(EntityModel.class);
     private static final TextureManager textureManager = new TextureManager();

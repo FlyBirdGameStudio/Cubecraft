@@ -61,7 +61,7 @@
             </layout>
             <text type="lang" color="ffffff" align="left">title_screen.auth</text>
         </label>
-        <image id="logo" img="/resource/cubecraft/ui/texture/icons/logo.png" h-clip="middle" v-clip="middle">
+        <image id="logo" img="/resource/cubecraft/texture/ui/icons/logo.png" h-clip="middle" v-clip="middle">
             <layout type="origin">
                 <layout>[2,-80,320,80]</layout>
                 <type>middle_middle</type>
@@ -74,7 +74,7 @@
                 <type>middle_middle</type>
                 <border>[0,0,0,0]</border>
             </layout>
-            <text type="random" color="efff00" align="middle">/resource/text/splash.json</text>
+            <text type="random" color="efff00" align="middle">/resource/cubecraft/text/splash.json</text>
         </splash>
     </elements>
 </faml>

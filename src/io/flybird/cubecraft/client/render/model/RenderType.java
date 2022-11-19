@@ -1,13 +1,15 @@
 package io.flybird.cubecraft.client.render.model;
 
-public enum RenderType {
+import io.flybird.cubecraft.client.render.IRenderType;
+
+public enum RenderType implements IRenderType {
     ALPHA,
     TRANSPARENT;
 
     public static RenderType from(String id){
         return switch (id){
             case "alpha"->ALPHA;
-            case "blend"->TRANSPARENT;
+            case "transparent"->TRANSPARENT;
             default -> throw new IllegalStateException("Unexpected value: " + id);
         };
     }

@@ -4,6 +4,7 @@ import io.flybird.cubecraft.client.render.sort.DistanceComparable;
 import io.flybird.cubecraft.world.entity.Entity;
 import io.flybird.util.container.keyMap.KeyComparable;
 import io.flybird.util.math.MathHelper;
+import org.joml.Vector3d;
 
 public record RenderChunkPos(long x, long y, long z) implements
         KeyComparable<RenderChunkPos>, DistanceComparable,Comparable<RenderChunkPos> {
@@ -29,5 +30,9 @@ public record RenderChunkPos(long x, long y, long z) implements
     @Override
     public int hashCode() {
         return (String.valueOf(this.x) + this.y + this.z).hashCode();
+    }
+
+    public Vector3d clipToWorldPosition() {
+        return new Vector3d(x*16,y*16,z*16);
     }
 }

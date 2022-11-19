@@ -33,6 +33,7 @@ public class ScreenLoader {
 
         //controls
         famlLoader.registerDeserializer(Button.class, new Button.XMLDeserializer());
+        famlLoader.registerDeserializer(CircleWaitingAnimation.class, new CircleWaitingAnimation.XMLDeserializer());
         famlLoader.registerDeserializer(Label.class, new Label.XMLDeserializer());
         famlLoader.registerDeserializer(ImageRenderer.class, new ImageRenderer.XMLDeserializer());
         famlLoader.registerDeserializer(SplashText.class, new SplashText.XMLDeserializer());

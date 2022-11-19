@@ -16,6 +16,8 @@ import io.flybird.util.file.nbt.tag.NBTTagByteArray;
 import io.flybird.util.file.nbt.tag.NBTTagCompound;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
     private final long x,y,z;
@@ -25,16 +27,19 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
 
     private final DynamicNameIdMap id=new DynamicNameIdMap(WIDTH*HEIGHT*WIDTH);
     private final DynamicNameIdMap biome=new DynamicNameIdMap(WIDTH*HEIGHT*WIDTH);
-
-    private byte[] meta=new byte[WIDTH*HEIGHT*WIDTH];;
+    private byte[] meta=new byte[WIDTH*HEIGHT*WIDTH];
     private byte[] facing=new byte[WIDTH*HEIGHT*WIDTH];
-
     private byte[] light=new byte[WIDTH*HEIGHT*WIDTH];
+    private HashMap<String,BlockState> blockEntities=new HashMap<>();
+
 
     private final Double2ByteArray temperature=new Double2ByteArray(WIDTH*HEIGHT*WIDTH);
     private final Double2ByteArray humidity=new Double2ByteArray(WIDTH*HEIGHT*WIDTH);
 
     public ChunkLoadTicket ticket=new ChunkLoadTicket(ChunkLoadLevel.None_TICKING,256);
+    public ChunkProcessTask task=new ChunkProcessTask(this);
+
+
 
 
     public Chunk(IWorld world, ChunkPos p){
@@ -153,5 +158,9 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
         this.light=tag.getByteArray("block_light");
         this.temperature.setData(tag.getByteArray("temperature"));
         this.humidity.setData(tag.getByteArray("humidity"));
+    }
+
+    public List<BlockState> getBlockEntityList() {
+        return null;
     }
 }

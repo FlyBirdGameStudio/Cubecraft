@@ -105,4 +105,8 @@ public abstract class LoopTickingApplication implements Runnable{
     public TimingInfo getTimingInfo() {
         return timingInfo!=null?timingInfo:new TimingInfo(0,0,0,0);
     }
+
+    public void setRunning(boolean running) {
+        this.running = running;
+    }
 }

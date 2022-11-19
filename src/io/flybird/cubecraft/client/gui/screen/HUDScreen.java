@@ -15,7 +15,6 @@ import io.flybird.starfish3d.event.MouseClickEvent;
 import io.flybird.starfish3d.event.MouseScrollEvent;
 import io.flybird.starfish3d.platform.input.Keyboard;
 import io.flybird.starfish3d.platform.input.Mouse;
-import io.flybird.starfish3d.platform.input.MouseCallBack;
 import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.starfish3d.render.ShapeRenderer;
 import io.flybird.starfish3d.render.textures.Texture2D;
@@ -102,50 +101,6 @@ public class HUDScreen extends Screen {
                 }
             }
         }
-    }
-
-    @Override
-    public MouseCallBack getMouseCallback() {
-        return new MouseCallBack() {
-            @Override
-            public void onScroll(int value) {
-                int i = value;
-                if (i > 0) {
-                    i = 1;
-                }
-                if (i < 0) {
-                    i = -1;
-                }
-                HUDScreen.this.slot += i;
-                if (HUDScreen.this.slot > 8) {
-                    HUDScreen.this.slot = 0;
-                }
-                if (HUDScreen.this.slot < 0) {
-                    HUDScreen.this.slot = 8;
-                }
-            }
-
-            @Override
-            public void onButtonClicked(int eventButton) {
-                if (eventButton == 0) {
-                    Mouse.setGrabbed(true);
-                    HUDScreen.this.getPlatform().getPlayer().attack();
-                }
-                if (eventButton == 1) {
-                    HUDScreen.this.getPlatform().getPlayer().interact();
-                }
-                if (eventButton == 2) {
-                    HitResult hitResult = HUDScreen.this.getPlatform().getPlayer().hitResult;
-                    if (hitResult != null) {
-                        HittableObject obj = HUDScreen.this.getPlatform().getPlayer().hitResult.aabb().getObject();
-                        Inventory inv = HUDScreen.this.getPlatform().getPlayer().getInventory();
-                        if (obj instanceof BlockState) {
-                            inv.selectItem();
-                        }
-                    }
-                }
-            }
-        };
     }
 
     @EventHandler

@@ -1,5 +1,6 @@
 package io.flybird.cubecraft.client;
 
+import io.flybird.cubecraft.internal.BlockType;
 import io.flybird.cubecraft.world.entity.Entity;
 import io.flybird.starfish3d.event.KeyPressEvent;
 import io.flybird.starfish3d.platform.Display;
@@ -107,8 +108,8 @@ public class PlayerController implements EventListener {
             "cubecraft:oak_log",
             "cubecraft:dark_oak_leaves",
             "cubecraft:spruce_leaves",
-            "cubecraft:birch_leaves",
-            "cubecraft:acacia_leaves",
+            BlockType.BLUE_STAINED_GLASS,
+            BlockType.GREEN_STAINED_GLASS,
 
             "cubecraft:stone",
             "cubecraft:dirt",

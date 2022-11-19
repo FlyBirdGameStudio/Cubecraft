@@ -1,5 +1,6 @@
 package io.flybird.cubecraft.client.render.renderer;
 
+import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.block.BlockState;
 import io.flybird.cubecraft.world.entity.humanoid.Player;
@@ -9,8 +10,10 @@ import io.flybird.util.math.HitBox;
 import org.lwjgl.opengl.GL11;
 
 public class HUDRenderer extends IWorldRenderer {
-    public HUDRenderer(IWorld w, Player p, Camera cam) {
-        super(w, p, cam);
+
+
+    public HUDRenderer(IWorld w, Player p, Camera cam, GameSetting setting) {
+        super(w, p, cam, setting);
     }
 
     @Override
