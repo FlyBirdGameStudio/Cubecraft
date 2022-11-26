@@ -1,0 +1,15 @@
+{
+	"cover_json": {
+		"import": "cubecraft:behavior/log.json",
+		"replacement": [
+			{
+				"from": "#texture",
+				"to": "cubecraft:acacia_log.png"
+			},
+			{
+				"from": "#texture_top",
+				"to": "cubecraft:acacia_log_top.png"
+			}
+		]
+	}
+}

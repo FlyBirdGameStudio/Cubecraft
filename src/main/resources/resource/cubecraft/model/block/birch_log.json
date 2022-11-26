@@ -1,0 +1,15 @@
+{
+	"cover_json": {
+		"import": "cubecraft:behavior/log.json",
+		"replacement": [
+			{
+				"from": "#texture",
+				"to": "cubecraft:birch_log.png"
+			},
+			{
+				"from": "#texture_top",
+				"to": "cubecraft:birch_log_top.png"
+			}
+		]
+	}
+}

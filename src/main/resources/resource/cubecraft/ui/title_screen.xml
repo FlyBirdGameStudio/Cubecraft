@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<faml ext="cubecraft_ui">
+    <meta>
+        <type>image-bg-blur</type>
+        <id>cubecraft:title_screen</id>
+    </meta>
+    <elements>
+        <!--top-->
+        <button id="button_check_version">
+            <layout type="origin">
+                <layout>[0,0,30,30]</layout>
+                <type>left_top</type>
+                <border>[4,4,4,4]</border>
+            </layout>
+            <text type="raw" color="ffffff" align="middle"> </text>
+        </button>
+        <button id="button_account_setting">
+            <layout type="origin">
+                <layout>[30,0,30,30]</layout>
+                <type>left_top</type>
+                <border>[4,4,4,4]</border>
+            </layout>
+            <text type="raw" color="ffffff" align="middle"> </text>
+        </button>
+
+        <image id="icon_account_setting" img="cubecraft:icons/user.png" h-clip="scale" v-clip="scale">
+            <layout type="origin">
+                <layout>[30,0,16,16]</layout>
+                <type>left_top</type>
+                <border>[9,0,9,0]</border>
+            </layout>
+        </image>
+        <image id="icon_check_version" img="cubecraft:icons/info.png" h-clip="scale" v-clip="scale">
+            <layout type="origin">
+                <layout>[0,0,16,16]</layout>
+                <type>left_top</type>
+                <border>[9,0,9,0]</border>
+            </layout>
+        </image>
+
+        <!--center-->
+        <button id="button_singleplayer">
+            <layout type="origin">
+                <layout>[0,-10,300,30]</layout>
+                <type>middle_middle</type>
+                <border>[0,0,4,4]</border>
+            </layout>
+            <text type="lang" color="ffffff" align="middle">title_screen.button.singleplayer</text>
+        </button>
+        <button id="button_multiplayer">
+            <layout type="origin">
+                <layout>[0,20,300,30]</layout>
+                <type>middle_middle</type>
+                <border>[0,0,4,4]</border>
+            </layout>
+            <text type="lang" color="ffffff" align="middle">title_screen.button.multiplayer</text>
+        </button>
+        <button id="button_option">
+            <layout type="origin">
+                <layout>[-75,50,150,30]</layout>
+                <type>middle_middle</type>
+                <border>[0,4,4,4]</border>
+            </layout>
+            <text type="lang" color="ffffff" align="middle">title_screen.button.setting</text>
+        </button>
+        <button id="button_quit">
+            <layout type="origin">
+                <layout>[75,50,150,30]</layout>
+                <type>middle_middle</type>
+                <border>[4,4,4,4]</border>
+            </layout>
+            <text type="lang" color="ffffff" align="middle">title_screen.button.quit</text>
+        </button>
+
+        <image id="logo" img="cubecraft:icons/logo.png" h-clip="middle" v-clip="middle">
+            <layout type="origin">
+                <layout>[2,-80,320,80]</layout>
+                <type>middle_middle</type>
+                <border>[0,0,0,0]</border>
+            </layout>
+        </image>
+        <splash id="splash" rotation="-20" bobbing="true">
+            <layout type="origin">
+                <layout>[115,-80,0,0]</layout>
+                <type>middle_middle</type>
+                <border>[0,0,0,0]</border>
+            </layout>
+            <text type="random" color="efff00" align="middle">/resource/cubecraft/text/splash.json</text>
+        </splash>
+
+        <!--bottom-->
+        <label id="copyright">
+            <layout type="origin">
+                <layout>[-2,-2,0,8]</layout>
+                <type>right_bottom</type>
+                <border>[0,0,0,0]</border>
+            </layout>
+            <text type="raw" color="ffffff" align="right">©FlyBirdStudio2015-2022</text>
+        </label>
+        <label id="version_string">
+            <layout type="origin">
+                <layout>[2,-2,0,8]</layout>
+                <type>left_bottom</type>
+                <border>[0,0,0,0]</border>
+            </layout>
+            <text type="lang" color="ffffff" align="left">title_screen.version</text>
+        </label>
+        <label id="auth_string">
+            <layout type="origin">
+                <layout>[2,-12,0,8]</layout>
+                <type>left_bottom</type>
+                <border>[0,0,0,0]</border>
+            </layout>
+            <text type="lang" color="ffffff" align="left">title_screen.auth</text>
+        </label>
+    </elements>
+</faml>
