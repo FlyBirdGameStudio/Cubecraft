@@ -18,6 +18,11 @@ public class AsyncRenderCompileService<V extends VertexArrayCompileCallable> imp
     }
 
     @Override
+    public void startDirect(V v) {
+
+    }
+
+    @Override
     public int getResultSize() {
         return this.multiDrawResult.size();
     }
@@ -36,4 +41,10 @@ public class AsyncRenderCompileService<V extends VertexArrayCompileCallable> imp
     public int getAllResultSize() {
         return this.all.size();
     }
+
+    @Override
+    public ArrayQueue<V> getCache() {
+        return null;
+    }
+
 }

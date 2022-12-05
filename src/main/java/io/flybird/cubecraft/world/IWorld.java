@@ -22,7 +22,7 @@ import org.joml.Vector3d;
 import java.util.*;
 
 public class IWorld {
-    private final EventBus eventBus=new EventBus();
+    private final EventBus eventBus = new EventBus();
     public HashMap<Vector3<Long>, Integer> scheduledTickEvents = new HashMap<>();//event,remaining time
     public HashMapSet<ChunkPos, Chunk> chunks = new HashMapSet<>();//position,chunk
     public HashMap<String, Entity> entities = new HashMap<>();//uuid,entity
@@ -31,8 +31,8 @@ public class IWorld {
     private final String id;
     private ArrayList<WorldListener> listeners = new ArrayList<>();
 
-    public IWorld(String id,LevelInfo levelInfo) {
-        this.id=id;
+    public IWorld(String id, LevelInfo levelInfo) {
+        this.id = id;
         this.levelInfo = levelInfo;
     }
 
@@ -61,9 +61,9 @@ public class IWorld {
     }
 
     public boolean isFree(AABB[] collisionBox) {
-        for (AABB aabb:collisionBox){
-            for (AABB aabb2:getCollisionBox(aabb)){
-                if(aabb.intersects(aabb2)){
+        for (AABB aabb : collisionBox) {
+            for (AABB aabb2 : getCollisionBox(aabb)) {
+                if (aabb.intersects(aabb2)) {
                     return false;
                 }
             }
@@ -74,10 +74,10 @@ public class IWorld {
     public ArrayList<HitBox> getSelectionBox(Entity entity, Vector3d from, Vector3d dest) {
         ArrayList<HitBox> result = new ArrayList<>();
 
-        for (long x = (long) Math.min(from.x, dest.x)-2; x < Math.max(from.x, dest.x)+2; x++) {
-            for (long y = (long) Math.min(from.y, dest.y)-2; y < Math.max(from.y, dest.y+2)+2; y++) {
-                for (long z = (long) Math.min(from.z, dest.z)-2; z < Math.max(from.z, dest.z)+2; z++) {
-                    result.addAll(CollectionUtil.pack(getBlockState(x,y,z).getSelectionBox()));
+        for (long x = (long) Math.min(from.x, dest.x) - 2; x < Math.max(from.x, dest.x) + 2; x++) {
+            for (long y = (long) Math.min(from.y, dest.y) - 2; y < Math.max(from.y, dest.y + 2) + 2; y++) {
+                for (long z = (long) Math.min(from.z, dest.z) - 2; z < Math.max(from.z, dest.z) + 2; z++) {
+                    result.addAll(CollectionUtil.pack(getBlockState(x, y, z).getSelectionBox()));
                 }
             }
         }
@@ -87,7 +87,7 @@ public class IWorld {
                     Math.abs(e.x - from.x) < e.getReachDistance() + 1 &&
                             Math.abs(e.y - from.y) < e.getReachDistance() + 1 &&
                             Math.abs(e.z - from.z) < e.getReachDistance() + 1 &&
-                            entity!=e
+                            entity != e
             ) {
                 result.addAll(List.of(e.getSelectionBoxes()));
             }
@@ -101,10 +101,6 @@ public class IWorld {
         return this.id;
     }
 
-    public Level getLevel() {
-        return this.levelInfo.level();
-    }
-
     public long getSeed() {
         return 0;
     }
@@ -113,9 +109,6 @@ public class IWorld {
         return this.time;
     }
 
-    public Vector3d getSpawnPos() {
-        return new Vector3d(0, 35, 0);
-    }
 
     public WorldInfo getWorldInfo() {
         return new WorldInfo(0x81BDE9, 0x0A1772, 0xDCE9F5, 0xFFFFFF);
@@ -134,13 +127,9 @@ public class IWorld {
     }
 
     public void addEntity(Entity e) {
-        if (!this.entities.containsKey(e.getUID())) {
-            this.entities.put(e.getUID(), e);
-            e.setWorld(IWorld.this);
-            this.loadChunk((long) e.x / Chunk.WIDTH, (long) (e.y / Chunk.HEIGHT), (long) (e.z / Chunk.WIDTH), new ChunkLoadTicket(ChunkLoadLevel.Entity_TICKING, 256));
-        } else {
-            throw new RuntimeException("conflict entity uuid:" + e.getUID());
-        }
+        e.setWorld(IWorld.this);
+        this.entities.put(e.getUID(), e);
+        this.loadChunk((long) e.x / Chunk.WIDTH, (long) (e.y / Chunk.HEIGHT), (long) (e.z / Chunk.WIDTH), new ChunkLoadTicket(ChunkLoadLevel.Entity_TICKING, 256));
     }
 
     public Collection<Entity> getAllEntities() {
@@ -162,19 +151,20 @@ public class IWorld {
 
 
     //block
-    public BlockState getBlockState(Vector3<Long> vec){
+    public BlockState getBlockState(Vector3<Long> vec) {
         return getBlockState(vec.x(), vec.y(), vec.z());
     }
 
     public BlockState getBlockState(long x, long y, long z) {
         ChunkPos chunkPos = ChunkPos.fromWorldPos(x, y, z);
-        if (getChunk(chunkPos) == null) {
-            return ContentRegistry.getBlockMap().get("cubecraft:air").defaultState(x,y,z);
+        Chunk c = getChunk(chunkPos);
+        if (c == null) {
+            return ContentRegistry.getBlockMap().get("cubecraft:air").defaultState(x, y, z);
         }
 
-        return getChunk(chunkPos).getBlockState(
+        return c.getBlockState(
                 (int) MathHelper.getRelativePosInChunk(x, Chunk.WIDTH),
-                (int) MathHelper.getRelativePosInChunk(y, Chunk.HEIGHT),
+                (int) y,
                 (int) MathHelper.getRelativePosInChunk(z, Chunk.WIDTH)
         ).setX(x).setY(y).setZ(z);
     }
@@ -188,14 +178,15 @@ public class IWorld {
         return this.getChunk(new ChunkPos(cx, cy, cz));
     }
 
-    public void loadChunk(ChunkPos p, ChunkLoadTicket ticket) {}
+    public void loadChunk(ChunkPos p, ChunkLoadTicket ticket) {
+    }
 
     public void loadChunk(long cx, long cy, long cz, ChunkLoadTicket chunkLoadTicket) {
         this.loadChunk(new ChunkPos(cx, cy, cz), chunkLoadTicket);
     }
 
     public void loadChunkRange(long centerCX, long centerCY, long centerCZ, int range, ChunkLoadTicket ticket) {
-        long last=System.currentTimeMillis();
+        long last = System.currentTimeMillis();
         for (long x = centerCX - range; x <= centerCX + range; x++) {
             for (long y = centerCY - 1; y <= centerCY + 1; y++) {
                 for (long z = centerCZ - range; z <= centerCZ + range; z++) {
@@ -213,7 +204,6 @@ public class IWorld {
         loadChunkIfNull(x, y + 1, z, ticket);
         loadChunkIfNull(x, y, z - 1, ticket);
         loadChunkIfNull(x, y, z + 1, ticket);
-
     }
 
     public void loadChunkIfNull(long x, long y, long z, ChunkLoadTicket ticket) {
@@ -234,7 +224,8 @@ public class IWorld {
 
 
     //schedule tick
-    public void setTick(long x, long y, long z) {}
+    public void setTick(long x, long y, long z) {
+    }
 
     public void setNeighborTick(long x, long y, long z) {
         setTick(x, y - 1, z);
@@ -245,7 +236,8 @@ public class IWorld {
         setTick(x, y, z + 1);
     }
 
-    public void setTickSchedule(long x, long y, long z, int time) {}
+    public void setTickSchedule(long x, long y, long z, int time) {
+    }
 
     private void setNeighborScheduleTick(long x, long y, long z, int time) {
         setTickSchedule(x, y - 1, z, time);
@@ -262,7 +254,7 @@ public class IWorld {
         time++;
     }
 
-    public void setBlockState(long x,long y,long z,BlockState newState) {
+    public void setBlockState(long x, long y, long z, BlockState newState) {
         ChunkPos chunkPos = ChunkPos.fromWorldPos(x, y, z);
         if (getChunk(chunkPos) == null) {
             return;
@@ -273,7 +265,7 @@ public class IWorld {
                 (int) MathHelper.getRelativePosInChunk(z, Chunk.WIDTH),
                 newState
         );
-        this.getEventBus().callEvent(new BlockChangeEvent(x,y,z,newState));
+        this.getEventBus().callEvent(new BlockChangeEvent(this, x, y, z, newState));
     }
 
     public void setChunk(Chunk chunk) {
@@ -281,9 +273,9 @@ public class IWorld {
     }
 
     public int getLight(long x, long y, long z) {
-        if(getBlockState(x, y, z).getBlock().isSolid()){
+        if (getBlockState(x, y, z).getBlock().isSolid()) {
             return 0;
-        }else{
+        } else {
             return 128;
         }
     }
@@ -304,24 +296,24 @@ public class IWorld {
         );
     }
 
-    public void setTemperature(long x, long y, long z,double t) {
+    public void setTemperature(long x, long y, long z, double t) {
         getChunk(ChunkPos.fromWorldPos(x, y, z)).setTemperature(
                 (int) MathHelper.getRelativePosInChunk(x, Chunk.WIDTH),
                 (int) MathHelper.getRelativePosInChunk(y, Chunk.HEIGHT),
-                (int) MathHelper.getRelativePosInChunk(z, Chunk.WIDTH),t
+                (int) MathHelper.getRelativePosInChunk(z, Chunk.WIDTH), t
         );
     }
 
-    public void setHumidity(long x, long y, long z,double t) {
+    public void setHumidity(long x, long y, long z, double t) {
         getChunk(ChunkPos.fromWorldPos(x, y, z)).setHumidity(
                 (int) MathHelper.getRelativePosInChunk(x, Chunk.WIDTH),
                 (int) MathHelper.getRelativePosInChunk(y, Chunk.HEIGHT),
-                (int) MathHelper.getRelativePosInChunk(z, Chunk.WIDTH),t
+                (int) MathHelper.getRelativePosInChunk(z, Chunk.WIDTH), t
         );
     }
 
     public EntityLocation getSpawnPosition(String uuid) {
         //todo:pick a spawn position
-        return new EntityLocation(0,1024,0,0,0,0);
+        return new EntityLocation(0, 1024, 0, 0, 0, 0, "cubecraft:overworld");
     }
 }

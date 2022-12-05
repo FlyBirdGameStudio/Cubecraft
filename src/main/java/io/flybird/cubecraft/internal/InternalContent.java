@@ -1,5 +1,6 @@
 package io.flybird.cubecraft.internal;
 
+import io.flybird.cubecraft.internal.net.packet.PacketRegistry;
 import io.flybird.cubecraft.internal.renderer.ChunkRenderer;
 import io.flybird.cubecraft.internal.renderer.EntityRenderer;
 import io.flybird.cubecraft.internal.renderer.HUDRenderer;
@@ -44,9 +45,8 @@ public class InternalContent extends Mod {
         });
 
         ContentRegistry.getWorldIdList().add(WorldType.OVERWORLD);
-
         ContentRegistry.getWorldProviderMap().registerItem(WorldType.OVERWORLD,new WorldProviderOverWorld());
-
+        Registry.getPackets().registerGetFunctionProvider(PacketRegistry.class);
         Registry.getSessionServiceMap().registerItem("cubecraft:default",new DefaultSessionService());
     }
 }

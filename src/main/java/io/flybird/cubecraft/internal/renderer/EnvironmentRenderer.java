@@ -2,10 +2,12 @@ package io.flybird.cubecraft.internal.renderer;
 
 import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.client.render.renderer.IWorldRenderer;
+import io.flybird.cubecraft.client.render.renderer.LevelRenderer;
 import io.flybird.cubecraft.register.Registry;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.entity.humanoid.Player;
 import io.flybird.cubecraft.world.worldGen.noiseGenerator.PerlinNoise;
+import io.flybird.starfish3d.platform.Window;
 import io.flybird.starfish3d.render.Camera;
 import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.starfish3d.render.culling.ProjectionMatrixFrustum;
@@ -28,36 +30,32 @@ public class EnvironmentRenderer extends IWorldRenderer {
     private final PerlinNoise noise = new PerlinNoise(new Random(world.getSeed()), 12);
     private final ProjectionMatrixFrustum frustum = new ProjectionMatrixFrustum(this.camera);
 
-    public EnvironmentRenderer(IWorld w, Player p, Camera c,GameSetting setting) {
-        super(w, p, c,setting);
+    public EnvironmentRenderer(Window window, IWorld world, Player player, Camera cam, GameSetting setting) {
+        super(window, world, player, cam, setting);
         this.sky.allocate();
-        updateSky();
-        updateCloud();
+        this.updateCloud();
+        this.updateSky();
     }
+
 
     @Override
     public void render(float interpolationTime) {
-        GLUtil.enableBlend();
-        int d = this.setting.getValueAsInt("client.render.terrain.renderDistance", 4) * 16 + 1024;
+        LevelRenderer.setRenderState(this.setting, world);
 
+        int d = this.setting.getValueAsInt("client.render.terrain.renderDistance", 4) * 16 + 1024;
         GLUtil.setupFog(d / 6, ColorUtil.int1Float1ToFloat4(world.getWorldInfo().fogColor(), 1.0f));
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-        this.camera.setUpGlobalCamera();
+        this.camera.setUpGlobalCamera(this.window);
         this.frustum.calculateFrustum();
         GL11.glDisable(GL11.GL_CULL_FACE);
-
         GL11.glDisable(GL11.GL_FOG);
         this.sky.call();
+
         GL11.glEnable(GL11.GL_FOG);
-
-        this.renderCloud();
-    }
-
-    public void renderCloud(){
-        int d = this.setting.getValueAsInt("client.render.terrain.renderDistance", 4) * 16 + 1024;
+        int d1 = this.setting.getValueAsInt("client.render.terrain.renderDistance", 4) * 16 + 1024;
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-        int d2 = d * 2;
+        int d2 = d1 * 2;
         int allCloudCount=0;
         int visibleCloudCount=0;
         if (this.setting.getValueAsInt("client.render.environment.cloud.quality", 1) > 0) {
@@ -96,10 +94,10 @@ public class EnvironmentRenderer extends IWorldRenderer {
         }
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GLUtil.disableBlend();
-
         Registry.getDebugInfoHandler().putI("cubecraft:environment_renderer/all_clouds",allCloudCount);
         Registry.getDebugInfoHandler().putI("cubecraft:environment_renderer/visible_clouds",visibleCloudCount);
+
+        LevelRenderer.closeState(this.setting);
     }
 
     public void updateSky() {

@@ -2,8 +2,8 @@
   "line": {
     "info": " {white}[{time}]{cyan} [{type}]{default} {source} : {msg}",
     "warning": " {white}[{time}]{yellow} [{type}]{default} {source} : {msg}",
-    "exception": "{white}[{time}]{red} [{type}]{default} {source} : {msg}",
-    "error": "{white}[{time}]{red} [{type}]{default} {source} : {msg}"
+    "exception": " {white}[{time}]{red} [{type}]{default} {source} : {msg}",
+    "error": " {white}[{time}]{red} [{type}]{default} {source} : {msg}"
   },
   "time": {
     "file": "yyyy-MM-dd_HH-mm-ss",

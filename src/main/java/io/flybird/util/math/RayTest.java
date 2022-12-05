@@ -5,8 +5,6 @@ import org.joml.Vector3d;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-//todo:修复当玩家射线对准失眠判断错误
-
 public class RayTest {
     /**
      * test if a ray collide with projection from x-axis of an AxisAlignedBB
@@ -82,68 +80,6 @@ public class RayTest {
     @Deprecated(since = "alpha0.2.6")
     public static boolean innerSection(AABB aabb, Vector3d from, Vector3d destination) {
         return xProjectionCollide(aabb, from, destination) || yProjectionCollide(aabb, from, destination) || zProjectionCollide(aabb, from, destination);
-    }
-
-
-    public static final double STEP = 0.002;
-
-    /**
-     * get a facing from ray test
-     *
-     * @param aabb        test aabb
-     * @param from        from
-     * @param destination destination
-     * @return face of colliding. if not collide return -1.
-     */
-    public static byte getIntersectionFacing(AABB aabb, Vector3d from, Vector3d destination) {
-        Vector3d hitPos = test(from, destination, aabb);
-        if (hitPos != null) {
-            if (hitPos.y >= aabb.y1 && aabb.positionInBoundXZ(hitPos.x, hitPos.z)) {
-                return 0;
-            }
-            if (hitPos.y <= aabb.y0 && aabb.positionInBoundXZ(hitPos.x, hitPos.z)) {
-                return 1;
-            }
-            if (hitPos.z >= aabb.z1 && aabb.positionInBoundXY(hitPos.x, hitPos.y)) {
-                return 2;
-            }
-            if (hitPos.z <= aabb.z0 && aabb.positionInBoundXY(hitPos.x, hitPos.y)) {
-                return 3;
-            }
-            if (hitPos.x >= aabb.x1 && aabb.positionInBoundYZ(hitPos.y, hitPos.z)) {
-                return 4;
-            }
-            if (hitPos.x <= aabb.x0 && aabb.positionInBoundYZ(hitPos.y, hitPos.z)) {
-                return 5;
-            }
-
-        }
-        return -1;
-    }
-
-    /**
-     * ray trace an aabb from given aabbs
-     *
-     * @param aabbs       aabbs
-     * @param from        from
-     * @param destination destination
-     * @return hit result.Contains face and aabb.If no aabb selected will return null. Remind the NPE.
-     */
-    public static HitResult rayTrace(ArrayList<HitBox> aabbs, Vector3d from, Vector3d destination) {
-        ArrayList<HitBox> intersects = new ArrayList<>();
-        for (HitBox aabb : aabbs) {
-            if (test(from,destination,aabb)!=null) {
-                intersects.add(aabb);
-            }
-        }
-        intersects.sort(Comparator.comparingDouble(o -> o.distanceMin(from)));
-        if (intersects.size() > 0) {
-            HitBox aabb = intersects.get(0);
-            return new HitResult(aabb,getIntersectionFacing(aabb,from,destination));
-        } else {
-            return null;
-        }
-
     }
 
     @Deprecated
@@ -225,6 +161,68 @@ public class RayTest {
         return vcHit;
     }
 
+    public static final double STEP = 0.002;
+
+    /**
+     * get a facing from ray test
+     *
+     * @param aabb        test aabb
+     * @param from        from
+     * @param destination destination
+     * @return face of colliding. if not collide return -1.
+     */
+    public static byte getIntersectionFacing(AABB aabb, Vector3d from, Vector3d destination) {
+        Vector3d hitPos = test(from, destination, aabb);
+        if (hitPos != null) {
+            if (hitPos.y >= aabb.y1 && aabb.positionInBoundXZ(hitPos.x, hitPos.z)) {
+                return 0;
+            }
+            if (hitPos.y <= aabb.y0 && aabb.positionInBoundXZ(hitPos.x, hitPos.z)) {
+                return 1;
+            }
+            if (hitPos.z >= aabb.z1 && aabb.positionInBoundXY(hitPos.x, hitPos.y)) {
+                return 2;
+            }
+            if (hitPos.z <= aabb.z0 && aabb.positionInBoundXY(hitPos.x, hitPos.y)) {
+                return 3;
+            }
+            if (hitPos.x >= aabb.x1 && aabb.positionInBoundYZ(hitPos.y, hitPos.z)) {
+                return 4;
+            }
+            if (hitPos.x <= aabb.x0 && aabb.positionInBoundYZ(hitPos.y, hitPos.z)) {
+                return 5;
+            }
+
+        }
+        return -1;
+    }
+
+    /**
+     * ray trace an aabb from given aabbs
+     *
+     * @param aabbs       aabbs
+     * @param from        from
+     * @param destination destination
+     * @return hit result.Contains face and aabb.If no aabb selected will return null. Remind the NPE.
+     */
+    public static HitResult rayTrace(ArrayList<HitBox> aabbs, Vector3d from, Vector3d destination) {
+        ArrayList<HitBox> intersects = new ArrayList<>();
+        for (HitBox aabb : aabbs) {
+            if (test(from,destination,aabb)!=null) {
+                intersects.add(aabb);
+            }
+        }
+        intersects.sort(Comparator.comparingDouble(o -> o.distanceMin(from)));
+        if (intersects.size() > 0) {
+            HitBox aabb = intersects.get(0);
+            return new HitResult(aabb,getIntersectionFacing(aabb,from,destination));
+        } else {
+            return null;
+        }
+
+    }
+
+
 
     /**
      * set a ray from a to b. test if collide aabb.
@@ -251,8 +249,7 @@ public class RayTest {
             double t=sampleDist/distAll;
             double t1=(sampleDist+STEP)/distAll;
             if(aabb.isVectorInside(MathHelper.linear_interpolate(from,dest,t1))){
-                //collided...return position
-                //System.out.println(aabb);
+                //collided..return position
                 return MathHelper.linear_interpolate(from,dest,t);
             }
         }

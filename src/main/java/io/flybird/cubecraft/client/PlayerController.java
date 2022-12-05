@@ -3,22 +3,20 @@ package io.flybird.cubecraft.client;
 import io.flybird.cubecraft.internal.BlockType;
 import io.flybird.cubecraft.world.entity.Entity;
 import io.flybird.starfish3d.event.KeyPressEvent;
-import io.flybird.starfish3d.platform.Display;
 import io.flybird.starfish3d.platform.Keyboard;
-import io.flybird.starfish3d.platform.Mouse;
-import io.flybird.starfish3d.platform.InputHandler;
 import io.flybird.util.event.EventHandler;
 import io.flybird.util.event.EventListener;
 
-import java.util.Arrays;
 
 public class PlayerController implements EventListener {
+    private final Cubecraft client;
     private Entity entity;
     public boolean[] keys = new boolean[100];
 
-    public PlayerController(Entity e){
+    public PlayerController(Cubecraft client, Entity e){
+        this.client = client;
         this.entity=e;
-        Display.getEventBus().registerEventListener(this);
+        this.client.getWindow().getEventBus().registerEventListener(this);
     }
 
     @EventHandler
@@ -34,20 +32,19 @@ public class PlayerController implements EventListener {
 
     public void tick(){
         float xa = 0.0f;
-        float za = 0.0f;
         float ya = 0.0f;
-        float speed = 1.5f;
+        float speed;
         {
-            if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+            if (this.client.getWindow().isKeyDown(Keyboard.KEY_W)) {
                 ya -= 1;
             }
-            if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+            if (this.client.getWindow().isKeyDown(Keyboard.KEY_S)) {
                 ya += 1;
             }
-            if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
+            if (this.client.getWindow().isKeyDown(Keyboard.KEY_A)) {
                 xa -= 1;
             }
-            if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+            if (this.client.getWindow().isKeyDown(Keyboard.KEY_D)) {
                 xa += 1;
             }
             if (entity.flyingMode) {
@@ -64,7 +61,7 @@ public class PlayerController implements EventListener {
                 }
             }
 
-            if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+            if (this.client.getWindow().isKeyDown(Keyboard.KEY_SPACE)) {
                 if (!this.entity.flyingMode) {
                     if (this.entity.inLiquid()) {
                         this.entity.yd += 0.23f;
@@ -75,7 +72,7 @@ public class PlayerController implements EventListener {
                     entity.yd = 0.45f;
                 }
             }
-            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+            if (this.client.getWindow().isKeyDown(Keyboard.KEY_LSHIFT)) {
                 if (entity.flyingMode) {
                     entity.yd = -0.45f;
                 }else{
@@ -86,18 +83,15 @@ public class PlayerController implements EventListener {
             this.entity.moveRelative(xa, ya, this.entity.onGround ? 0.1f * speed : 0.02f * speed);
         }//keys
 
-        if(InputHandler.isKeyDoubleClicked(Keyboard.KEY_SPACE,250)){
+        if(this.client.getWindow().isKeyDoubleClicked(Keyboard.KEY_SPACE,250)){
             this.entity.flyingMode=!this.entity.flyingMode;
         }
     }
 
     public void tickFast(){
-        this.entity.turn(Mouse.getDX(),Mouse.getDY(),0);
+        this.entity.turn(this.client.getWindow().getMouseDX(),this.client.getWindow().getMouseDY(),0);
     }
 
-    public void releaseAllKeys() {
-        Arrays.fill(this.keys, false);
-    }
 
 
     public static final String[] list=new String[]{

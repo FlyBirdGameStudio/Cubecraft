@@ -1,13 +1,15 @@
 package io.flybird.cubecraft.server;
 
 import io.flybird.cubecraft.GameSetting;
-import io.flybird.cubecraft.net.base.ServerNettyPipeline;
+import io.flybird.cubecraft.internal.net.handler.ServerHandlerPlayerConnection;
+import io.flybird.cubecraft.internal.net.handler.ServerHandlerPlayerPlaying;
+import io.flybird.util.network.base.ServerNettyPipeline;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.chunk.Chunk;
+import io.flybird.cubecraft.world.entity.Entity;
 import io.flybird.util.event.EventBus;
 import io.flybird.util.logging.LogHandler;
 import io.flybird.util.LoopTickingApplication;
-import io.flybird.util.container.options.Option;
 import io.flybird.util.task.MultiSourceExecution;
 import io.flybird.util.timer.Timer;
 import io.flybird.cubecraft.world.Level;
@@ -52,11 +54,13 @@ public class CubecraftServer extends LoopTickingApplication {
 
         logHandler.info("starting server on"+this.port);
 
+        this.serverIO.registerNetHandler(new ServerHandlerPlayerConnection(this));
+        this.serverIO.registerNetHandler(new ServerHandlerPlayerPlaying(this));
         this.serverIO.setPort(this.port);
         this.serverIO.init(4);
 
         logHandler.info("loading world...");
-        for (IWorld dim:this.level.dims) {
+        for (IWorld dim:this.level.dims.values()) {
             dim.tick();
         }
         logHandler.info("done,"+((System.currentTimeMillis()-startTime)/1000d));
@@ -65,7 +69,7 @@ public class CubecraftServer extends LoopTickingApplication {
 
     @Override
     public void tick() {
-        for (IWorld dim:this.level.dims) {
+        for (IWorld dim:this.level.dims.values()) {
             worldTickingService.submit(dim::tick);
         }
     }
@@ -89,5 +93,24 @@ public class CubecraftServer extends LoopTickingApplication {
 
     public EventBus getEventBus() {
         return eventBus;
+    }
+
+    public Level getLevel() {
+        return this.level;
+    }
+
+    public IWorld getDim(String id) {
+        return this.getLevel().getDims().get(id);
+    }
+
+    public Entity getEntity(String uuid) {
+        Entity e;
+        for (IWorld world:this.level.dims.values()){
+            e=world.getEntity(uuid);
+            if(e!=null){
+                return e;
+            }
+        }
+        return null;
     }
 }

@@ -2,12 +2,10 @@ package io.flybird.cubecraft.client.gui.screen;
 
 import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.client.gui.*;
-import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.client.gui.component.*;
 import io.flybird.cubecraft.client.gui.component.control.Button;
 import io.flybird.cubecraft.client.gui.component.control.TextBar;
-import io.flybird.starfish3d.platform.Display;
-import io.flybird.starfish3d.platform.Mouse;
+
 import io.flybird.starfish3d.render.draw.VertexArrayUploader;
 import io.flybird.util.JVMInfo;
 import io.flybird.util.container.*;
@@ -46,9 +44,9 @@ public class Screen extends Container {
         this.platform = cubecraft;
         this.init();
         this.initFixedDebugInfo();
-        CollectionUtil.iterateMap(this.components,((key, item) -> Display.getEventBus().registerEventListener(item)));
-        Display.getEventBus().registerEventListener(this);
-        Mouse.setGrabbed(this.grabMouse);
+        CollectionUtil.iterateMap(this.components,((key, item) -> this.platform.getWindow().getEventBus().registerEventListener(item)));
+        this.platform.getWindow().getEventBus().registerEventListener(this);
+        this.platform.getWindow().setMouseGrabbed(this.grabMouse);
     }
 
     //debug
@@ -72,7 +70,7 @@ public class Screen extends Container {
         }else{
             this.debugInfoLeft[4]="CurrentGUI：%s(null)=[%s]".formatted(this.getID(),this.getClass().getName());
         }
-        this.debugInfoLeft[5]="MousePosition:%d/%d".formatted(Mouse.getX(),Mouse.getY());
+        this.debugInfoLeft[5]="MousePosition:%d/%d".formatted(this.platform.getWindow().getMouseX(),this.platform.getWindow().getMouseY());
 
         this.debugInfoRight[1] = "Memory(jvm)(Used/All)：%s/%s(%s)".formatted(JVMInfo.getUsedMemory(), JVMInfo.getTotalMemory(), JVMInfo.getUsage());
     }
@@ -99,13 +97,13 @@ public class Screen extends Container {
     //run
     public void render(DisplayScreenInfo info, float interpolationTime) {
         switch (this.type){
-            case IMAGE_BACKGROUND -> ScreenUtil.renderPictureBackground();
+            case IMAGE_BACKGROUND -> ScreenUtil.renderPictureBackground(this.platform.getWindow());
             case TILE_BACKGROUND -> ScreenUtil.renderTileBackground();
-            case IN_GAME -> ScreenUtil.renderMask();
-            case IMAGE_BLUR_BACKGROUND -> ScreenUtil.renderPictureBackgroundBlur();
+            case IN_GAME -> ScreenUtil.renderMask(this.platform.getWindow());
+            case IMAGE_BLUR_BACKGROUND -> ScreenUtil.renderPictureBackgroundBlur(this.platform.getWindow());
             case IMAGE_BLUR_MASK_BACKGROUND -> {
-                ScreenUtil.renderPictureBackgroundBlur();
-                ScreenUtil.renderMask();
+                ScreenUtil.renderPictureBackgroundBlur(this.platform.getWindow());
+                ScreenUtil.renderMask(this.platform.getWindow());
             }
         }
 
@@ -125,7 +123,7 @@ public class Screen extends Container {
         this.getDebugInfoTick();
         CollectionUtil.iterateMap(this.components, (key, item)-> {
             int scale=this.platform.getGameSetting().getValueAsInt("client.render.gui.scale",2);
-            item.resize(Display.getWidth()/ scale,Display.getHeight()/scale);
+            item.resize(this.platform.getWindow().getWindowWidth()/ scale,this.platform.getWindow().getWindowHeight()/scale);
             item.tick();
         });
 
@@ -162,8 +160,8 @@ public class Screen extends Container {
     }
 
     public void release(){
-        CollectionUtil.iterateMap(this.components,((key, item) -> Display.getEventBus().unregisterEventListener(item)));
-        Display.getEventBus().unregisterEventListener(this);
+        CollectionUtil.iterateMap(this.components,((key, item) -> Screen.this.platform.getWindow().getEventBus().unregisterEventListener(item)));
+        Screen.this.platform.getWindow().getEventBus().unregisterEventListener(this);
     }
 
 
@@ -216,30 +214,7 @@ public class Screen extends Container {
             }
         }
     }
-/*
-    public static class JDeserializer implements JsonDeserializer<Screen>{
-        @Override
-        public Screen deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            JsonObject scr=jsonElement.getAsJsonObject();
-            JsonObject meta=scr.get("meta").getAsJsonObject();
-            Screen screen= new Screen(
-                    meta.get("id").getAsString(),
-                    ScreenType.from(meta.get("type").getAsString())
-            );
-            JsonArray elements=scr.get("elements").getAsJsonArray();
-            for (int i = 0; i < elements.size(); i++) {
-                screen.getComponents().put(
-                        elements.get(i).getAsJsonObject().get("id").getAsString(),
-                        jsonDeserializationContext.deserialize(
-                                elements.get(i),
-                                getClass(elements.get(i).getAsJsonObject().get("type").getAsString())
-                        )
-                );
-            }
-            return screen;
-        }
-    }
-*/
+
     public enum ScreenType{
         EMPTY,
         IN_GAME,

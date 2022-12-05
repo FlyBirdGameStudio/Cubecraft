@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class MultiMap<K,V> implements Map<K,V> {
-    private HashMap<K,V> kvHashMap=new HashMap<>();
-    private HashMap<V,K> vkHashMap=new HashMap<>();
+    private final HashMap<K,V> kvHashMap=new HashMap<>();
+    private final HashMap<V,K> vkHashMap=new HashMap<>();
 
     public V put(K k, V v){
         this.kvHashMap.put(k,v);

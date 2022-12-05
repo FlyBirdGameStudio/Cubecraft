@@ -1,42 +1,103 @@
 package io.flybird.starfish3d.platform;
 
-/*
+
+import io.flybird.starfish3d.event.*;
+import io.flybird.util.ImageUtil;
+import io.flybird.util.container.BufferUtil;
+import io.flybird.util.event.EventBus;
+import org.lwjgl.glfw.*;
+import org.lwjgl.opengl.GL;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.nio.*;
+import java.util.Objects;
+
 public class Window {
-    public static void initGLFW(){
+    //jni glfw
+    public static void initGLFW() {
         GLFW.glfwInit();
     }
 
-    public static void distroyGLFW(){
+    public static void destroyGLFW() {
         GLFW.glfwTerminate();
     }
 
-    public EventBus windowEvent=new EventBus();
-    private long handle;
 
+
+    //window
+    public EventBus windowEvent = new EventBus();
+    private long handle;
     private boolean visible;
     private boolean focused;
-    private boolean dirty;
-
-    private int fboWidth, fboHeight;
     private int x, y;
-    private int width=1280, height=720;
+    private int width = 1280, height = 720;
     private boolean latestResized;
-    private String title="Grass3D window";
-    private int latestWidth,latestHeight;
-    private boolean resized;
+    private String title = "Grass3D window";
+    private int latestWidth, latestHeight;
     private boolean fullScreen;
-    private boolean resizeable;
-    private boolean focus;
+    private int lastNFullScreenWidth, lastNFullScreenHeight, lastNFullScreenX, lastNFullScreenY;
+
+    //mouse
+    private boolean mouseGrabbed = false;
+    private int lastMouseX = 0;
+    private int lastMouseY = 0;
+    private int latestX = 0;
+    private int latestY = 0;
+    private int mouseX = 0;
+    private int mouseY = 0;
+    static final double[] scroll = new double[]{0.0};
+
+    //keyboard
+    boolean keyDownStatus = true;
+    int keyDownCount = 0;
+    long lastTime;
 
 
-    private int lastNFullScreenWidth,lastNFullScreenHeight;
-    private int lastNFullScreenX,lastNFullScreenY;
 
-    public void create(){
+    //mouse
+    public void addMouseMoveEvent(double mouseX, double mouseY) {
+        latestX = (int) mouseX;
+        latestY = this.height - (int) mouseY;
+    }
+
+    public int getMouseX() {
+        return mouseX;
+    }
+
+    public int getMouseY() {
+        return mouseY;
+    }
+
+    public int getMouseDX() {
+        return mouseX - lastMouseX;
+    }
+
+    public int getMouseDY() {
+        return mouseY - lastMouseY;
+    }
+
+    public boolean isMouseGrabbed() {
+        return this.mouseGrabbed;
+    }
+
+    public void setMouseGrabbed(boolean grab) {
+        GLFW.glfwSetInputMode(this.handle, 208897, grab ? 212995 : 212993);
+        this.mouseGrabbed = grab;
+    }
+
+    public void setCursorPosition(int newX, int newY) {
+        GLFW.glfwSetCursorPos(this.handle, newX, newY);
+    }
+
+
+
+    //device
+    public void create() {
         //get handle
         GLFWErrorCallback.createPrint(System.err).set();
-
-        handle = GLFW.glfwCreateWindow(width,height, title, 0L, 0L);
+        handle = GLFW.glfwCreateWindow(width, height, title, 0L, 0L);
         if (handle == 0L) {
             throw new IllegalStateException("Failed to create Display window");
         }
@@ -44,185 +105,200 @@ public class Window {
 
         //set callback
         initCallBacks();
-        Mouse.initCallbacks();
-        Keyboard.initCallbacks();
-        Callbacks.setCallback(handle);
 
         //set gl context
-        getDisplaySize();
-        MonitorInfo monitorInfo=getMonitorInfo();
+        MonitorInfo monitorInfo = getMonitorInfo();
         x = (monitorInfo.width() - width) / 2;
         y = (monitorInfo.height() - height) / 2;
-        GLFW.glfwSetWindowPos(handle, x,y);
+        GLFW.glfwSetWindowPos(handle, x, y);
         GLFW.glfwMakeContextCurrent(handle);
         GLFW.glfwSwapInterval(1);
         GLFW.glfwShowWindow(handle);
         GL.createCapabilities();
     }
 
-
-    private void getDisplaySize(){
-        IntBuffer fbw = BufferUtils.createIntBuffer(1);
-        IntBuffer fbh = BufferUtils.createIntBuffer(1);
-        GLFW.glfwGetFramebufferSize(handle, fbw, fbh);
-        fboWidth = fbw.get(0);
-        fboHeight = fbh.get(0);
-    }
-
-    private MonitorInfo getMonitorInfo(){
-        long monitor = GLFW.glfwGetPrimaryMonitor();
-        GLFWVidMode vidmode = GLFW.glfwGetVideoMode(monitor);
-        return new MonitorInfo(
-                vidmode.width(), vidmode.height(),
-                vidmode.blueBits()+vidmode.greenBits()+ vidmode.redBits(),
-                vidmode.refreshRate()
-        );
+    public void destroy() {
+        GLFW.glfwDestroyWindow(handle);
     }
 
     private void initCallBacks() {
-        Callbacks.windowSizeCallback = new GLFWWindowSizeCallback() {
+        GLFW.glfwSetKeyCallback(this.handle, new GLFWKeyCallback() {
+            public void invoke(long window, int key, int scancode, int action, int mods) {
+                if (action == 1) {
+                    windowEvent.callEvent(new KeyPressEvent(Keyboard.toLwjglKey(key)));
+                }
+                if (action == 0) {
+                    windowEvent.callEvent(new KeyReleaseEvent(Keyboard.toLwjglKey(key)));
+                }
+                if (action == 2) {
+                    windowEvent.callEvent(new KeyHoldEvent(Keyboard.toLwjglKey(key)));
+                }
+            }
+        });
+        GLFW.glfwSetCharCallback(this.handle, new GLFWCharCallback() {
+            public void invoke(long window, int codepoint) {
+                windowEvent.callEvent(new CharEvent((char) codepoint));
+            }
+        });
+        GLFW.glfwSetWindowSizeCallback(this.handle, new GLFWWindowSizeCallback() {
             @Override
             public void invoke(long l, int w, int h) {
                 latestResized = true;
                 latestWidth = w;
                 latestHeight = h;
             }
-        };
-        Callbacks.framebufferSizeCallback = new GLFWFramebufferSizeCallback() {
-            public void invoke(long window, int width, int height) {
-                fboWidth = width;
-                fboHeight = height;
-            }
-        };
-        Callbacks.windowFocusCallback = new GLFWWindowFocusCallback() {
+        });
+        GLFW.glfwSetWindowFocusCallback(this.handle, new GLFWWindowFocusCallback() {
             public void invoke(long window, boolean focus) {
                 focused = focus;
             }
-        };
-        Callbacks.windowIconifyCallback = new GLFWWindowIconifyCallback() {
+        });
+        GLFW.glfwSetWindowIconifyCallback(this.handle, new GLFWWindowIconifyCallback() {
             public void invoke(long window, boolean iconified) {
                 visible = iconified;
             }
-        };
-        Callbacks.windowRefreshCallback = new GLFWWindowRefreshCallback() {
-            public void invoke(long window) {
-                dirty = true;
-            }
-        };
-        Callbacks.windowPosCallback = new GLFWWindowPosCallback() {
+        });
+        GLFW.glfwSetWindowPosCallback(this.handle, new GLFWWindowPosCallback() {
             @Override
             public void invoke(long l, int i, int i1) {
                 x = i;
                 y = i1;
             }
-        };
-        Callbacks.monitorCallback = new GLFWMonitorCallback() {
-            @Override
-            public void invoke(long l, int i) {
-
-            }
-        };
-        Callbacks.errorCallback = new GLFWErrorCallback() {
+        });
+        GLFW.glfwSetErrorCallback(new GLFWErrorCallback() {
             @Override
             public void invoke(int i, long l) {
                 throw new IllegalStateException(String.valueOf(i));
             }
-        };
+        });
+
+        GLFW.glfwSetCursorPosCallback(this.handle, new GLFWCursorPosCallback() {
+            public void invoke(long window, double xPos, double yPos) {
+                addMouseMoveEvent(xPos, yPos);
+            }
+        });
+        GLFW.glfwSetMouseButtonCallback(this.handle, new GLFWMouseButtonCallback() {
+            public void invoke(long window, int button, int action, int mods) {
+                if (action != 1) {
+                    windowEvent.callEvent(new MouseClickEvent(Window.this, mouseX, mouseY, button));
+                }
+            }
+        });
+        GLFW.glfwSetScrollCallback(this.handle, new GLFWScrollCallback() {
+            @Override
+            public void invoke(long l, double v, double v1) {
+                scroll[0] = -v1;
+                windowEvent.callEvent(new MouseScrollEvent((int) -v1));
+            }
+        });
+    }
+
+    public EventBus getEventBus() {
+        return windowEvent;
+    }
+
+
+
+    //display
+    public MonitorInfo getMonitorInfo() {
+        long monitor = GLFW.glfwGetPrimaryMonitor();
+        GLFWVidMode vidMode = Objects.requireNonNull(GLFW.glfwGetVideoMode(monitor));
+        return new MonitorInfo(
+                vidMode.width(), vidMode.height(),
+                vidMode.blueBits() + vidMode.greenBits() + vidMode.redBits(),
+                vidMode.refreshRate()
+        );
     }
 
     public void update() {
         GLFW.glfwSwapBuffers(handle);
-        dirty = false;
         GLFW.glfwPollEvents();
-        Keyboard.poll();
-        Mouse.poll();
+
+        lastMouseX = mouseX;
+        lastMouseY = mouseY;
+        if (!mouseGrabbed) {
+            if (latestX < 0) {
+                latestX = 0;
+            }
+
+            if (latestY < 0) {
+                latestY = 0;
+            }
+
+            if (latestX > this.width - 1) {
+                latestX = this.width - 1;
+            }
+
+            if (latestY > this.height - 1) {
+                latestY = this.height - 1;
+            }
+        }
+
+        mouseX = latestX;
+        mouseY = latestY;
         if (latestResized) {
             latestResized = false;
-            resized = true;
             width = latestWidth;
             height = latestHeight;
-        } else {
-            resized = false;
         }
     }
 
-    public void setVsyncEnable(boolean vsync){
-        GLFW.glfwSwapInterval(vsync?1:0);
+    public void setWindowVsyncEnable(boolean vsync) {
+        GLFW.glfwSwapInterval(vsync ? 1 : 0);
     }
 
-    public void setSample(int FXAALevel){
-        GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES,FXAALevel);
+    public void setWindowTitle(String title) {
+        GLFW.glfwSetWindowTitle(handle, title);
+        this.title = title;
     }
 
-    public void setTitle(String title) {
-        GLFW.glfwSetWindowTitle(handle,title);
-    }
-
-    public long getHandle() {
+    public long getWindowHandle() {
         return handle;
     }
 
-    public void destroy() {
-        Callbacks.releaseCallback();
-        GLFW.glfwDestroyWindow(handle);
-    }
-
-    public void setFullscreen(boolean fullscreen) {
-        fullScreen=fullscreen;
-        if(fullScreen) {
-            lastNFullScreenWidth=width;
-            lastNFullScreenHeight=height;
-            lastNFullScreenX=x;
-            lastNFullScreenY=y;
+    public void setWindowFullscreen(boolean fullscreen) {
+        fullScreen = fullscreen;
+        if (fullScreen) {
+            lastNFullScreenWidth = width;
+            lastNFullScreenHeight = height;
+            lastNFullScreenX = x;
+            lastNFullScreenY = y;
             GLFW.glfwSetWindowMonitor(handle, GLFW.glfwGetPrimaryMonitor(),
-                    0,0,
-                    getMonitorInfo().width(),getMonitorInfo().height(),getMonitorInfo().freshRate()
+                    0, 0,
+                    getMonitorInfo().width(), getMonitorInfo().height(), getMonitorInfo().freshRate()
             );
 
-        }else{
+        } else {
             GLFW.glfwSetWindowMonitor(handle, 0,
-                    lastNFullScreenX,lastNFullScreenY,
-                    lastNFullScreenWidth,lastNFullScreenHeight,60
+                    lastNFullScreenX, lastNFullScreenY,
+                    lastNFullScreenWidth, lastNFullScreenHeight, 60
             );
         }
     }
 
-    public boolean isFullscreen() {
+    public boolean isWindowFullscreen() {
         return fullScreen;
     }
 
-    public boolean isCloseRequested() {
+    public boolean isWindowCloseRequested() {
         return GLFW.glfwWindowShouldClose(handle);
     }
 
-    public void setFXAA(int fxaa) {
-        GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES,fxaa);
-    }
-
-    public void setResizable(boolean b) {
-        resizeable=b;
-        GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE,b?1:0);
-    }
-
-    public void sync(int i) {
-        Sync.sync(i);
-    }
-
-    public boolean isActive() {
+    public boolean isWindowActive() {
         return focused;
     }
 
-    public void setIcon(InputStream in)  {
+    public void setWindowIcon(InputStream in) {
         GLFWImage image = GLFWImage.malloc();
         BufferedImage img;
         try {
-            img= ImageIO.read(in);
+            img = ImageIO.read(in);
             in.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        ByteBuffer buffer= ImageUtil.getByteFromBufferedImage_RGBA(img);
-        image.set(img.getWidth(),img.getHeight(),buffer);
+        ByteBuffer buffer = ImageUtil.getByteFromBufferedImage_RGBA(img);
+        image.set(img.getWidth(), img.getHeight(), buffer);
         GLFWImage.Buffer images = GLFWImage.malloc(1);
         images.put(0, image);
         GLFW.glfwSetWindowIcon(handle, images);
@@ -231,26 +307,71 @@ public class Window {
         BufferUtil.free(buffer);
     }
 
-    public void setSize(int width,int height){
-        GLFW.glfwSetWindowSize(handle,width,height);
+    public void setWindowSize(int width, int height) {
+        GLFW.glfwSetWindowSize(handle, width, height);
     }
 
-    public void setPos(int x,int y){
-        GLFW.glfwSetWindowSize(handle,x,y);
+    public void setWindowPos(int x, int y) {
+        GLFW.glfwSetWindowSize(handle, x, y);
     }
 
-    public int getWidth() {
+    public int getWindowWidth() {
         return width;
     }
 
-    public int getHeight() {
+    public int getWindowHeight() {
         return height;
     }
 
-    public void clear(){
-        GL11.glClear(16640);
+    public boolean isWindowVisible() {
+        return visible;
+    }
+
+    public float getAspect() {
+        return width / (float) height;
+    }
+
+    public void hint(int name, int value) {
+        GLFW.glfwWindowHint(name, value);
+    }
+
+
+
+    //keyboard
+    public boolean isKeyDown(int key) {
+        return GLFW.glfwGetKey(this.handle, Keyboard.toGlfwKey(key)) == 1;
+    }
+
+    public boolean isKeyDoubleClicked(int key, float timeElapse) {
+        if (this.isKeyDown(key)) {
+            if (!keyDownStatus) {
+                keyDownStatus = true;
+                if (keyDownCount == 0) {// 如果按住数量为 0
+                    lastTime = System.currentTimeMillis();// 记录最后时间
+                }
+                keyDownCount++;
+            }
+        }
+        if (!this.isKeyDown(key)) {
+            keyDownStatus = false;
+        }
+        if (keyDownStatus) {
+            if (keyDownCount >= 2) {
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastTime < timeElapse) {
+                    lastTime = currentTime;
+                    keyDownCount = 0;
+                    return true;//返回结果，确认双击
+                } else {
+                    lastTime = System.currentTimeMillis();  // 记录最后时间
+                    keyDownCount = 1;
+                }
+            }
+        }
+        return false;
+    }
+
+    public int getMouseFixedY() {
+        return -this.getMouseY() + this.getWindowHeight();
     }
 }
-
-
- */

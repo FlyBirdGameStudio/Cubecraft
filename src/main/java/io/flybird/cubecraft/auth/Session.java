@@ -13,8 +13,6 @@ public class Session {
     }
 
 
-
-
     public String getName() {
         return this.name;
     }

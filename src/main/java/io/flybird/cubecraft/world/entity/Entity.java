@@ -1,5 +1,6 @@
 package io.flybird.cubecraft.world.entity;
 
+import io.flybird.cubecraft.register.ContentRegistry;
 import io.flybird.cubecraft.register.RenderRegistry;
 import io.flybird.cubecraft.world.HittableObject;
 import io.flybird.cubecraft.world.IWorld;
@@ -12,6 +13,7 @@ import org.joml.Vector3d;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 public abstract class Entity implements HittableObject, NBTDataIO {
@@ -343,6 +345,9 @@ public abstract class Entity implements HittableObject, NBTDataIO {
     }
 
     public void setWorld(IWorld world) {
+        if(this.world!=null){
+            this.world.removeEntity(this);
+        }
         this.world = world;
     }
 
@@ -389,12 +394,13 @@ public abstract class Entity implements HittableObject, NBTDataIO {
         return selectedBlockID;
     }
 
-    public void setLocation(EntityLocation location) {
-        this.x = location.x;
-        this.y = location.y;
-        this.z = location.z;
-        this.xRot = (float) location.xRot;
-        this.yRot = (float) location.yRot;
-        this.zRot = (float) location.zRot;
+    public void setLocation(EntityLocation location, HashMap<String,IWorld> worlds) {
+        this.x = location.getX();
+        this.y = location.getY();
+        this.z = location.getZ();
+        this.xRot = (float) location.getXRot();
+        this.yRot = (float) location.getYRot();
+        this.zRot = (float) location.getZRot();
+        this.setWorld(worlds.get(location.getDim()));
     }
 }

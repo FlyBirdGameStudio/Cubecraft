@@ -8,7 +8,7 @@ package io.flybird.starfish3d.platform;
 
 import org.lwjgl.glfw.GLFW;
 
-class Sync {
+public class Sync {
     private static final long NANOS_IN_SECOND = 1000000000L;
     private static long nextFrame = 0L;
     private static boolean initialised = false;

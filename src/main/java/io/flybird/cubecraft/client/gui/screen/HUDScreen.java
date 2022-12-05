@@ -13,7 +13,6 @@ import io.flybird.starfish3d.event.KeyPressEvent;
 import io.flybird.starfish3d.event.MouseClickEvent;
 import io.flybird.starfish3d.event.MouseScrollEvent;
 import io.flybird.starfish3d.platform.Keyboard;
-import io.flybird.starfish3d.platform.Mouse;
 import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.starfish3d.render.ShapeRenderer;
 import io.flybird.starfish3d.render.textures.Texture2D;
@@ -85,11 +84,11 @@ public class HUDScreen extends Screen {
     @EventHandler
     public void onClicked(MouseClickEvent e) {
         if (e.button() == 0) {
-            Mouse.setGrabbed(true);
-            HUDScreen.this.getPlatform().getPlayer().attack();
+            this.getPlatform().getWindow().setMouseGrabbed(true);
+            this.getPlatform().getPlayer().attack();
         }
         if (e.button() == 1) {
-            HUDScreen.this.getPlatform().getPlayer().interact();
+            this.getPlatform().getPlayer().interact();
         }
         if (e.button() == 2) {
             HitResult hitResult = HUDScreen.this.getPlatform().getPlayer().hitResult;
@@ -106,7 +105,7 @@ public class HUDScreen extends Screen {
     @EventHandler
     public void onKeyEventPressed(KeyPressEvent event) {
         if (event.key() == Keyboard.KEY_ESCAPE) {
-            Mouse.setGrabbed(false);
+            this.getPlatform().getWindow().setMouseGrabbed(false);
         }
         if (event.key() == Keyboard.KEY_F1) {
             HUDScreen.this.showGUI = !HUDScreen.this.showGUI;
@@ -139,11 +138,13 @@ public class HUDScreen extends Screen {
 
         this.debugInfoLeft[2] = "ClientTPS：" + this.getPlatform().getTimingInfo().longTickTPS() + "/MSPT:" + this.getPlatform().getTimingInfo().longTickMSPT();
         this.debugInfoLeft[3] = "LocalChunkCache:%d".formatted(this.getPlatform().getClientWorld().getChunkCache().size());
-        ChunkRenderer cr = (ChunkRenderer) this.getPlatform().levelRenderer.renderers.get("cubecraft:chunk_renderer");
-        if (cr != null) {
-            this.debugInfoLeft[5] = "TerrainRender(All/Visible/Update):%d,%d,%d".formatted(cr.allCount, cr.visibleCount, cr.updateCount);
-        }
 
+        this.debugInfoLeft[5] = "TerrainRender(All/Visible[alpha/trans]/Update):%d,[%d,%d],%d".formatted(
+            Registry.getDebugInfoHandler().getI("cubecraft:chunk_render/all"),
+            Registry.getDebugInfoHandler().getI("cubecraft:chunk_render/visible_alpha"),
+            Registry.getDebugInfoHandler().getI("cubecraft:chunk_render/visible_transparent"),
+            Registry.getDebugInfoHandler().getI("cubecraft:chunk_render/update")
+        );
 
         this.debugInfoLeft[6] = "EntityRender(All/Visible):%d/%d".formatted(
                 handler.getI("cubecraft:entity_renderer/all_entities"),

@@ -18,6 +18,7 @@ import io.flybird.starfish3d.render.multiThread.EmptyDrawCompile;
 import io.flybird.starfish3d.render.multiThread.IDrawCompile;
 import io.flybird.util.container.keyMap.KeyGetter;
 import io.flybird.util.math.AABB;
+import io.flybird.util.math.MathHelper;
 
 public class RenderChunk implements KeyGetter<RenderChunkPos>, IRenderObject {
     public long x, y, z;
@@ -34,10 +35,10 @@ public class RenderChunk implements KeyGetter<RenderChunkPos>, IRenderObject {
         this.y = y;
         this.z = z;
 
-        boolean vbo=Registry.getClient().getGameSetting().getValueAsBoolean("client.render.terrain.useVBO",false);
-        this.renderList_terrain=IRenderCall.create(vbo);
+        boolean vbo = Registry.getClient().getGameSetting().getValueAsBoolean("client.render.terrain.useVBO", false);
+        this.renderList_terrain = IRenderCall.create(vbo);
         this.renderList_terrain.allocate();
-        this.renderList_transparent=IRenderCall.create(vbo);
+        this.renderList_transparent = IRenderCall.create(vbo);
         this.renderList_transparent.allocate();
     }
 
@@ -45,67 +46,68 @@ public class RenderChunk implements KeyGetter<RenderChunkPos>, IRenderObject {
         return isAlphaFilled;
     }
 
-    public boolean isFilled(){
-        return isAlphaFilled||isTransparentFilled;
+    public boolean isFilled() {
+        return isAlphaFilled || isTransparentFilled;
     }
 
     //render
     @Override
     public void render(IRenderType type) {
-        switch (((RenderType) type)){
+        switch (((RenderType) type)) {
             case ALPHA -> this.renderList_terrain.call();
             case TRANSPARENT -> this.renderList_transparent.call();
         }
     }
 
-    public boolean isFilled(IRenderType type){
-        return switch (((RenderType) type)){
+    public boolean isFilled(IRenderType type) {
+        return switch (((RenderType) type)) {
             case ALPHA -> this.isAlphaFilled;
             case TRANSPARENT -> this.isTransparentFilled;
         };
     }
 
 
-    public void renderTransParent(){
-        if (this.isTransparentFilled){
+    public void renderTransParent() {
+        if (this.isTransparentFilled) {
             this.renderList_transparent.call();
         }
     }
 
     @Override
     public IDrawCompile[] compile() {
-        if(Registry.getClient().getGameSetting().getValueAsBoolean("client.render.terrain.over_distance_load",false)){
-            this.world.loadChunkAndNear(this.x,this.y,this.z,new ChunkLoadTicket(ChunkLoadLevel.None_TICKING,20));
-        }
+        //todo:fuck you!
+
+
         VertexArrayBuilder builder = new VertexArrayBuilder(131072);
         builder.begin();
-        this.isAlphaFilled=this.compileBlocks(RenderType.ALPHA, builder);
+        this.isAlphaFilled = this.compileBlocks(RenderType.ALPHA, builder);
         builder.end();
 
         VertexArrayBuilder builder2 = new VertexArrayBuilder(131072);
         builder2.begin();
-        this.isTransparentFilled=this.compileBlocks(RenderType.TRANSPARENT, builder2);
+        this.isTransparentFilled = this.compileBlocks(RenderType.TRANSPARENT, builder2);
         builder2.end();
 
         return new IDrawCompile[]{
-                this.isAlphaFilled?new DrawCompile(renderList_terrain, builder,this):new EmptyDrawCompile(this),
-                this.isTransparentFilled?new DrawCompile(renderList_transparent, builder2,this):new EmptyDrawCompile(this)
+                this.isAlphaFilled ? new DrawCompile(renderList_terrain, builder, this) : new EmptyDrawCompile(this),
+                this.isTransparentFilled ? new DrawCompile(renderList_transparent, builder2, this) : new EmptyDrawCompile(this)
         };
     }
 
     private boolean compileBlocks(RenderType renderType, VertexArrayBuilder builder) {
         for (long cx = 0; cx < 16; ++cx) {
             for (long cy = 0; cy < 16; ++cy) {
+                this.world.loadChunkAndNear(this.x, MathHelper.getChunkPos(this.y, 8), this.z, new ChunkLoadTicket(ChunkLoadLevel.None_TICKING, 10));
                 for (long cz = 0; cz < 16; ++cz) {
                     BlockState bs = world.getBlockState(cx + x * 16, cy + y * 16, cz + z * 16);
                     IBlockRenderer renderer = RenderRegistry.getBlockRendererMap().get(bs.getId());
                     if (renderer != null) {
-                        renderer.renderBlock(bs,renderType,world,cx,cy,cz,cx + x * 16, cy + y * 16, cz + z * 16,builder);
+                        renderer.renderBlock(bs, renderType, world, cx, cy, cz, cx + x * 16, cy + y * 16, cz + z * 16, builder);
                     }
                 }
             }
         }
-        return builder.getVertexCount()>0;
+        return builder.getVertexCount() > 0;
     }
 
 
@@ -120,7 +122,17 @@ public class RenderChunk implements KeyGetter<RenderChunkPos>, IRenderObject {
         double x = Math.abs(target.x - this.x * 16);
         double y = Math.abs(target.y - this.y * 16);
         double z = Math.abs(target.z - this.z * 16);
-        return x * y * z;
+        double d = x * y * z;
+        if (d < x) {
+            return x;
+        }
+        if (d < y) {
+            return y;
+        }
+        if (d < z) {
+            return z;
+        }
+        return d;
     }
 
     //others
@@ -141,6 +153,6 @@ public class RenderChunk implements KeyGetter<RenderChunkPos>, IRenderObject {
     }
 
     public AABB getVisibleArea(Camera camera) {
-        return getAABBFromPos(this.getKey(),camera);
+        return getAABBFromPos(this.getKey(), camera);
     }
 }

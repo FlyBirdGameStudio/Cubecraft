@@ -13,15 +13,18 @@ import io.flybird.util.math.Vector3;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Objects;
 
 public class ServerWorld extends IWorld{
     public final String id;
     private final GameSetting setting;
+    private final Level level;
 
-    public ServerWorld(String id, LevelInfo levelInfo, GameSetting setting) {
+    public ServerWorld(String id,Level level, LevelInfo levelInfo, GameSetting setting) {
         super(id,levelInfo);
         this.id = id;
         this.setting = setting;
+        this.level=level;
     }
 
     //todo:test
@@ -51,9 +54,13 @@ public class ServerWorld extends IWorld{
     @Override
     public void tick() {
         super.tick();
-        EntityLocation loc=this.getSpawnPosition(null);
+
         //keep spawn location
-        this.loadChunkRange((long) (loc.x/16), (long) (loc.y/16), (long) (loc.z/16),8,new ChunkLoadTicket(ChunkLoadLevel.Entity_TICKING,20));
+        EntityLocation loc=this.level.getSpawnPoint("__LOAD");
+        if(Objects.equals(loc.getDim(), this.getID())) {
+            this.loadChunkRange((long) (loc.getX() / 16), (long) (loc.getY() / 16), (long) (loc.getZ() / 16), 2, new ChunkLoadTicket(ChunkLoadLevel.Entity_TICKING, 20));
+        }
+
         processChunkLoad();
         processEntity();
         processTickSchedule();
