@@ -55,8 +55,8 @@ public class MathHelper {
     }
 
     public static long rand2(long n, long n2) {
-        long homooooooooooooooo = 1145141919810L;
-        long l = (n * 3129871) ^ homooooooooooooooo * 116129781L ^ n2;
+        long what = 1145141919810L;
+        long l = (n * 3129871) ^ what * 116129781L ^ n2;
         l = l * l * 42317861L + l * 11L;
         return l >> 16;
     }

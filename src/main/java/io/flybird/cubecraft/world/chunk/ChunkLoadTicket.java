@@ -1,7 +1,5 @@
 package io.flybird.cubecraft.world.chunk;
 
-import io.flybird.util.container.options.Option;
-
 public class ChunkLoadTicket {
     private ChunkLoadLevel chunkLoadLevel;
     private int time;

@@ -10,11 +10,11 @@ public class ClientMain {
     public static void main(String[] args) {
         startArguments =new StartArguments(args);
         //init log handler
-        LogHandler handler=LogHandler.create("Client/Bootstrap");
+
         LogHandler.setLogPath(getGamePath()+"/data/logs/");
         LogHandler.setLogOutput(startArguments.getValueAsBoolean("log_output",true));
         LogHandler.setLogFormat(getGamePath()+"/data/configs/log_format.json");
-
+        LogHandler handler=LogHandler.create("Client/Bootstrap");
         //init game runtime
 
         handler.info("args:"+ Arrays.toString(args));

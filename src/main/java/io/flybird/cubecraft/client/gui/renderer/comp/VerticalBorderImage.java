@@ -13,8 +13,6 @@ public record VerticalBorderImage(double x0,double x1,double y0,double y1,int bo
     @Override
     public void render(Node node) {
         Texture2D tex= RenderRegistry.getTextureManager().getTexture2DContainer().get(ResourceLocation.uiTexture(this.loc.split(":")[0],this.loc.split(":")[1]).format());
-
-        //todo:add render
     }
 
     @Override

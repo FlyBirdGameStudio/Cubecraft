@@ -1,5 +1,7 @@
 package io.flybird.util.container;
 
+import io.flybird.cubecraft.world.IWorld;
+
 import java.util.*;
 
 public class CollectionUtil {
@@ -14,6 +16,12 @@ public class CollectionUtil {
         for(K key:keys){
             action.action(key,map.get(key));
         }
+    }
+
+    public static <T> HashMap<String, T> wrap(String id, T t) {
+        HashMap<String,T> map=new HashMap<>();
+        map.put(id, t);
+        return map;
     }
 
     public interface ListIterationAction<E>{

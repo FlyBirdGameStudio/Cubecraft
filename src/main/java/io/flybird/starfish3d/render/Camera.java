@@ -1,6 +1,6 @@
 package io.flybird.starfish3d.render;
 
-import io.flybird.starfish3d.platform.Display;
+import io.flybird.starfish3d.platform.Window;
 import io.flybird.util.math.AABB;
 import org.joml.*;
 import org.lwjgl.opengl.GL11;
@@ -15,9 +15,9 @@ public class Camera {
     private final Vector3d relativePosition=new Vector3d();
     private Matrix4f proj= new Matrix4f();
 
-    public void setUpGlobalCamera(){
+    public void setUpGlobalCamera(Window window){
         
-        GLUtil.setupPerspectiveCamera(fov, Display.getWidth(),Display.getHeight());
+        GLUtil.setupPerspectiveCamera(fov, window.getWindowWidth(), window.getWindowHeight());
         GL11.glTranslated(relativePosition.x,relativePosition.y,relativePosition.z);
         GL11.glRotated(rotation.x,1,0,0);
         GL11.glRotated(rotation.y,0,1,0);
@@ -28,7 +28,7 @@ public class Camera {
         //proj.transform(new Vector4f((float) relativePosition.x,(float)relativePosition.y,(float)relativePosition.z,1.0f));
 
         proj.rotate(new Quaternionf(rotation.x,rotation.y, rotation.z,1.0f));
-        proj.mul(new Matrix4f().perspective(this.fov,Display.getWidth()/(float)Display.getHeight(),0,114514));
+        proj.mul(new Matrix4f().perspective(this.fov,window.getAspect(),0,114514));
     }
 
     public void setupObjectCamera(Vector3d objPosition){
@@ -101,5 +101,9 @@ public class Camera {
         AABB aabb2=new AABB(aabb);
         aabb2.move(-this.position.x,-this.position.y,-this.position.z);
         return aabb2;
+    }
+
+    public void setFov(float fov) {
+        this.fov = fov;
     }
 }

@@ -10,8 +10,10 @@ import io.flybird.cubecraft.client.render.model.block.IBlockModelComponent;
 import io.flybird.cubecraft.client.render.model.block.serialize.BlockModelCompDeserializer;
 import io.flybird.cubecraft.client.render.model.block.serialize.BlockModelDeserializer;
 import io.flybird.cubecraft.client.render.model.block.serialize.BlockModelFaceDeserializer;
+import io.flybird.util.network.packet.Packet;
 import io.flybird.cubecraft.server.CubecraftServer;
 import io.flybird.util.DebugInfoHandler;
+import io.flybird.util.container.namespace.NameSpacedConstructingMap;
 import io.flybird.util.container.namespace.NameSpacedRegisterMap;
 
 /**
@@ -23,6 +25,8 @@ public class Registry {
     private static Cubecraft client;
     private static CubecraftServer server;
     private static NameSpacedRegisterMap<SessionService, ?> sessionServiceMap = new NameSpacedRegisterMap<>(null);
+    private static NameSpacedConstructingMap<Packet> packets= new NameSpacedConstructingMap<>();
+
 
     private Registry() {
         throw new RuntimeException("you should not create instance of this!");
@@ -34,6 +38,10 @@ public class Registry {
 
     public static Cubecraft getClient() {
         return client;
+    }
+
+    public static NameSpacedConstructingMap<Packet> getPackets() {
+        return packets;
     }
 
     public static void setServer(CubecraftServer server) {

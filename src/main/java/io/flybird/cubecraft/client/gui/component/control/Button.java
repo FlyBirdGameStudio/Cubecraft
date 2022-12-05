@@ -7,8 +7,6 @@ import io.flybird.cubecraft.client.gui.layout.LayoutManager;
 import io.flybird.cubecraft.register.Registry;
 import io.flybird.cubecraft.register.RenderRegistry;
 import io.flybird.starfish3d.event.MouseClickEvent;
-import io.flybird.starfish3d.platform.Display;
-import io.flybird.starfish3d.platform.Mouse;
 import io.flybird.util.event.Event;
 import io.flybird.util.event.EventHandler;
 import io.flybird.util.file.faml.FAMLDeserializer;
@@ -37,14 +35,14 @@ public class Button extends Component {
 
     @Override
     public String getStatement() {
-        return this.style+":"+(this.enabled?this.hovered?"selected":"normal":"disabled");
+        return this.style + ":" + (this.enabled ? this.hovered ? "selected" : "normal" : "disabled");
     }
 
     @Override
     public void tick() {
-        int scale= Registry.getClient().getGameSetting().getValueAsInt("client.render.gui.scale",2);
-        int xm = Mouse.getX()/ scale;
-        int ym = (-Mouse.getY()+ Display.getHeight())/scale;
+        int scale = Registry.getClient().getGameSetting().getValueAsInt("client.render.gui.scale", 2);
+        int xm = Registry.getClient().getWindow().getMouseX() / scale;
+        int ym = Registry.getClient().getWindow().getMouseFixedY() / scale;
         int x0 = this.layoutManager.ax;
         int x1 = x0 + this.layoutManager.aWidth;
         int y0 = this.layoutManager.ay;
@@ -64,9 +62,11 @@ public class Button extends Component {
         int x1 = x0 + this.layoutManager.aWidth;
         int y0 = this.layoutManager.ay;
         int y1 = y0 + this.layoutManager.aHeight;
-        int xm= event.x()/scale,ym= event.fixedY()/scale;
+        int xm = event.x() / scale, ym = event.fixedY() / scale;
         if (xm > x0 && xm < x1 && ym > y0 && ym < y1) {
-            Registry.getClient().getClientEventBus().callEvent(new ActionEvent(this));
+            if(enabled) {
+                Registry.getClient().getClientEventBus().callEvent(new ActionEvent(this));
+            }
         }
     }
 
@@ -75,7 +75,7 @@ public class Button extends Component {
         public Button deserialize(Element element, XmlReader famlLoadingContext) {
             Button btn = new Button(
                     famlLoadingContext.deserialize((Element) element.getElementsByTagName("text").item(0), Text.class),
-                    element.hasAttribute("style")?element.getAttribute("style"):"default"
+                    element.hasAttribute("style") ? element.getAttribute("style") : "default"
             );
             btn.setLayout(famlLoadingContext.deserialize((Element) element.getElementsByTagName("layout").item(0), LayoutManager.class));
             return btn;
@@ -92,11 +92,12 @@ public class Button extends Component {
         }
     }
 
-    public record ActionEvent(Button component) implements Event {}
+    public record ActionEvent(Button component) implements Event {
+    }
 
     @Override
     public Text queryText(String query) {
-        if(Objects.equals(query, "button:text")) {
+        if (Objects.equals(query, "button:text")) {
             return this.text;
         }
         return super.queryText(query);

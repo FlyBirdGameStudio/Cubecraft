@@ -11,6 +11,7 @@ import io.flybird.cubecraft.client.render.worldObjectRenderer.IBlockRenderer;
 import io.flybird.cubecraft.client.render.worldObjectRenderer.IEntityRenderer;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.entity.humanoid.Player;
+import io.flybird.starfish3d.platform.Window;
 import io.flybird.starfish3d.render.Camera;
 import io.flybird.starfish3d.render.textures.TextureManager;
 import io.flybird.util.container.namespace.NameSpacedConstructingMap;
@@ -25,7 +26,7 @@ public class RenderRegistry {
     private static final TextureManager textureManager = new TextureManager();
     private static final NameSpacedRegisterMap<IColorMap, ?> colorMaps = new NameSpacedRegisterMap<>(null);
     private static final ComponentRenderManager componentRenderManager = new ComponentRenderManager();
-    public static NameSpacedConstructingMap<IWorldRenderer> worldRenderers = new NameSpacedConstructingMap<>(IWorld.class, Player.class, Camera.class, GameSetting.class);
+    public static NameSpacedConstructingMap<IWorldRenderer> worldRenderers = new NameSpacedConstructingMap<>(Window.class,IWorld.class, Player.class, Camera.class, GameSetting.class);
 
     private RenderRegistry() {
         throw new RuntimeException("you should not create instance of this!");

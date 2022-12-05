@@ -2,6 +2,7 @@ package io.flybird.util.container;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 
 public class ArrayUtil {
@@ -21,6 +22,14 @@ public class ArrayUtil {
 
     public static int calcDispatchPos3d(int w,int h,int d,int x,int y,int z) {
         return (y * d + z) * w + x;
+    }
+
+    public static Byte[] box(byte[] data) {
+        Byte[] data2=new Byte[data.length];
+        for (int i=0;i<data.length;i++){
+            data2[i]=data[i];
+        }
+        return data2;
     }
 
     public interface ArrayIterationAction<E>{

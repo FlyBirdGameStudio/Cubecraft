@@ -15,21 +15,24 @@ import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.auth.Session;
 import io.flybird.cubecraft.client.event.*;
 import io.flybird.cubecraft.client.gui.*;
-import io.flybird.cubecraft.client.gui.component.*;
 import io.flybird.cubecraft.client.gui.screen.*;
 import io.flybird.cubecraft.client.render.renderer.LevelRenderer;
 import io.flybird.cubecraft.extansion.ExtansionRunningTarget;
 import io.flybird.cubecraft.extansion.ModManager;
 import io.flybird.cubecraft.extansion.PlatformClient;
+import io.flybird.cubecraft.internal.ClientInputHandler;
 import io.flybird.cubecraft.internal.InternalContent;
-import io.flybird.cubecraft.net.base.ClientNettyPipeline;
-import io.flybird.cubecraft.net.clientPacket.connect.PacketPlayerJoinRequest;
+import io.flybird.cubecraft.internal.ScreenController;
+import io.flybird.cubecraft.internal.net.handler.ClientNetHandlerConnection;
+import io.flybird.cubecraft.internal.net.handler.ClientNetHandlerPlaying;
+import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerLeave;
+import io.flybird.util.network.base.ClientNettyPipeline;
+import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerJoinRequest;
 import io.flybird.cubecraft.register.Registry;
 import io.flybird.cubecraft.client.resources.ResourceLoader;
 import io.flybird.cubecraft.client.resources.ResourceManager;
 import io.flybird.cubecraft.server.CubecraftServer;
-import io.flybird.cubecraft.server.ServerStatus;
-import io.flybird.cubecraft.world.IWorld;
+import io.flybird.cubecraft.world.*;
 import io.flybird.cubecraft.world.entity.humanoid.Player;
 import io.flybird.starfish3d.audio.Audio;
 import io.flybird.starfish3d.platform.*;
@@ -38,14 +41,15 @@ import io.flybird.util.logging.LogHandler;
 import io.flybird.util.LoopTickingApplication;
 import io.flybird.util.container.StartArguments;
 import io.flybird.util.event.EventBus;
-import io.flybird.util.file.lang.Language;
 import io.flybird.util.task.TaskProgressUpdateListener;
 import io.flybird.util.timer.Timer;
+
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.util.Random;
+import java.util.Calendar;
+import java.util.Date;
 
 ////////////////////////////////////////////////////////////////////
 //                          _ooOoo_                               //
@@ -73,52 +77,58 @@ import java.util.Random;
 
 //todo:add server net support
 //todo:add inventory support
-//todo:add block model
-//todo:serialize screen into xml
 //todo:fix smooth light engine
 //todo:add json driven block register
 //todo:merge code
 
+//todo:add cache for event bus
+//todo:add cache and sort for render compile service :D
+
+
 public class Cubecraft extends LoopTickingApplication implements TaskProgressUpdateListener {
-    public static final String VERSION = "0.2.1";
+    public static final String VERSION = "0.2.2";
+
+    private final Window window=new Window();
 
     private InetSocketAddress integratedServerLocation;
+    private ClientNetHandlerPlaying handler=new ClientNetHandlerPlaying(this);
     private CubecraftServer server;
     private final EventBus clientEventBus = new EventBus();
-
     private final GameSetting setting = new GameSetting(ClientMain.getGamePath() + "/data/configs/settings.properties", "cubecraft client " + VERSION);
-
-    //display
     private DisplayScreenInfo screenInfo;
     public LevelRenderer levelRenderer;
     private Screen screen;
     private final LogoLoadingScreen logoLoadingScreen = new LogoLoadingScreen();
     private final ClientInputHandler clientInputHandler = new ClientInputHandler(this);
-
-
     private IWorld clientWorld;
-    private final Session session=new Session("CubeVlmu", "cubecraft:default");
+    private final Session session = new Session("CubeVlmu", "cubecraft:default");
     private Player player;
-
-    public final PlayerController controller = new PlayerController(this.player);
+    public PlayerController controller;
     private final ClientNettyPipeline clientIO = new ClientNettyPipeline();
-
+    private LevelInfo clientLevelInfo;
 
 
     //world
-    public void joinWorld(IWorld world) {
-        this.clientWorld = world;
-        player.setLocation(world.getSpawnPosition(this.player.getUID()));
+    public void joinWorld() {
+        this.handler.setWorld(this.clientWorld);
+        this.clientWorld.getEventBus().registerEventListener(this.handler);
+        this.player = new Player(this.clientWorld, this.session);
+        this.controller = new PlayerController(this, this.player);
         this.levelRenderer = new LevelRenderer(this.getClientWorld(), this.player, this);
+        this.setScreen(new HUDScreen());
         this.getClientWorld().addEntity(this.player);
     }
 
     public void joinLocalWorld(String name) {
-        this.integratedServerLocation = new InetSocketAddress("127.0.0.1", new Random().nextInt(65535));
+        this.clientWorld=new ServerWorld("cubecraft:overworld",new Level("az",this.setting),null,this.setting);
+        this.joinWorld();
+
+        /*
+        this.integratedServerLocation = new InetSocketAddress(65535);
 
         Screen waiting = ScreenLoader.loadByExtName("cubecraft", "join_single_player_screen.xml");
         this.setScreen(waiting);
-        if (this.server!=null){
+        if (this.server != null) {
             if (this.server.isRunning()) {
                 this.server.setRunning(false);
             }
@@ -128,37 +138,252 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
             }
         }
 
-        this.server=new CubecraftServer(this.integratedServerLocation.getPort(),name);
+        this.server = new CubecraftServer(this.integratedServerLocation.getPort(), name);
         new Thread(this.server, "server_main").start();
         while (this.server.getStatus() != ServerStatus.STARTUP) {
-            ((Label) waiting.getComponents().get("stage")).setText(new Text(Language.get("join_singleplayer.before_server_init"), 0xFFFFFF, FontAlignment.LEFT));
+            ((Label) waiting.getComponents().get("stage")).setText(new Text(Language.get("join_singleplayer.server_init"), 0xFFFFFF, FontAlignment.LEFT));
             this.refreshScreen();
         }
         while (this.server.getStatus() != ServerStatus.RUNNING) {
-            ((Label) waiting.getComponents().get("stage")).setText(new Text(Language.get("join_singleplayer.server_loading"), 0xFFFFFF, FontAlignment.LEFT));
+            ((Label) waiting.getComponents().get("stage")).setText(new Text(Language.get("join_singleplayer.server_load"), 0xFFFFFF, FontAlignment.LEFT));
             this.refreshScreen();
         }
-        this.clientIO.setServerAddr(this.integratedServerLocation);
-        this.clientIO.init(this.setting.getValueAsInt("client.net.threads",4));
-        this.clientIO.getHandler().pushSend(new PacketPlayerJoinRequest(this.session));
+        this.joinOnlineWorld(this.integratedServerLocation);
+        while (this.clientWorld == null) {
+            ((Label) waiting.getComponents().get("stage")).setText(new Text(Language.get("join_singleplayer.connect"), 0xFFFFFF, FontAlignment.LEFT));
+            this.refreshScreen();
+        }
+        this.joinWorld();
+
+         */
     }
 
-    public void joinOnlineWorld(String host, int port) {
+    public void joinOnlineWorld(InetSocketAddress addr) {
         if (this.clientIO.isRunning()) {
             this.leaveServer();
         }
-        this.clientIO.init(1);
+        this.clientIO.setServerAddr(addr);
+        this.clientIO.init(this.setting.getValueAsInt("client.net.threads", 4));
+        this.clientIO.getHandler().pushSend(new PacketPlayerJoinRequest(this.session));
     }
 
     public void leaveServer() {
-        //todo:send player disconnect packet
-        //this.clientNettyChannel.getHandler().pushSend();
+        this.clientIO.getHandler().pushSend(new PacketPlayerLeave());
         this.clientIO.shutdown();
         this.clientWorld = null;
     }
 
     public void leaveWorld() {
         this.clientWorld = null;
+    }
+
+
+    //application
+    @Override
+    public void init() {
+        Registry.setClient(this);
+        Timer.startTiming();
+        this.setting.read();
+
+        StartArguments arg = ClientMain.getStartGameArguments();
+
+        Window.initGLFW();
+
+        this.window.create();
+        this.window.hint(GLFW.GLFW_SAMPLES,this.setting.getValueAsInt("client.render.fxaa",0));
+        this.window.setWindowTitle(arg.getValueAsString("title", "Cubecraft-" + VERSION));
+        this.window.setWindowSize(arg.getValueAsInt("width", 1280), arg.getValueAsInt("height", 720));
+        this.window.setWindowIcon(ResourceManager.instance.getResource("/resource/cubecraft/texture/ui/icons/icon.png").getAsStream());
+        this.window.hint(GLFW.GLFW_RESIZABLE,GLFW.GLFW_TRUE);
+        this.window.setWindowVsyncEnable(false);
+
+        Audio.create();
+
+
+        //init application
+
+        this.timer = new Timer(20);
+        this.logHandler = LogHandler.create("Client/Main");
+        this.logHandler.info("initializing client...");
+        //this.initDisplay();
+
+
+        this.window.getEventBus().registerEventListener(this.clientInputHandler);
+
+
+        //load content
+
+        ScreenUtil.initFont();
+        this.clientEventBus.callEvent(new ClientInitializeEvent(this));
+        this.setScreen(logoLoadingScreen);
+        this.logoLoadingScreen.display();
+        ScreenUtil.init(this);
+
+        this.logHandler.info("loading mods...");
+        ModManager.loadMod(InternalContent.class, null, getPlatformClient(), ExtansionRunningTarget.CLIENT);
+
+        this.player = new Player(null, this.session);
+
+        this.logHandler.info("loading resources...");
+        ResourceManager.instance.registerEventListener(new ResourceLoader());
+        ResourceManager.instance.reload(this);
+
+        this.logoLoadingScreen.dispose();
+        this.getClientEventBus().registerEventListener(new ScreenController());
+        this.setScreen("cubecraft", "title_screen.xml");
+
+        this.clientIO.registerNetHandler(this.handler);
+        this.clientIO.registerNetHandler(new ClientNetHandlerConnection(this));
+
+        //check version
+        if (this.setting.getValueAsBoolean("client.check_update", true)) {
+            VersionCheck.check();
+        }
+
+        //finish loading
+        this.logHandler.info("client initialization done,in%dms", Timer.endTiming());
+
+
+    }
+
+    @Override
+    public void on1sec() {
+        if (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() > 512 * 1024 * 1024) {
+            System.gc();
+        }
+    }
+
+    @Override
+    public void render() {
+        this.logHandler.checkGLError("pre_render");
+        this.screenInfo = getDisplaySize();
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);//16640
+        if (this.window.isWindowCloseRequested()) {
+            this.stop();
+        }
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+
+        //render world
+        if (this.screen.isInGameGUI()) {
+            this.logHandler.checkGLError("pre_world_render");
+            levelRenderer.render(this.timer.interpolatedTime);
+            this.logHandler.checkGLError("post_world_render");
+        }
+
+
+        //render gui
+        GLUtil.setupOrthogonalCamera(0, 0, this.window.getWindowWidth(), this.window.getWindowHeight(), screenInfo.scrWidth(), screenInfo.scrHeight());
+        if (this.screen != null) {
+            GLUtil.enableDepthTest();
+            GLUtil.enableBlend();
+            this.logHandler.checkGLError("pre_screen_render");
+            this.screenInfo = this.getDisplaySize();
+            this.screen.render(this.screenInfo, this.timer.interpolatedTime);
+            ScreenUtil.renderPopup(this.screenInfo, this.timer.interpolatedTime);
+            if (!(this.screen instanceof LogoLoadingScreen)) {
+                this.logoLoadingScreen.render(screenInfo, this.timer.interpolatedTime);
+            }
+            this.logHandler.checkGLError("post_screen_render");
+            GLUtil.disableBlend();
+        }
+
+        //post
+        Sync.sync(this.setting.getValueAsInt("client.render.maxFPS", 60));
+        this.window.update();
+        this.logHandler.checkGLError("post_render");
+    }
+
+    @Override
+    public void tick() {
+        this.screen.tick();
+        ScreenUtil.tickPopup();
+        if (!(this.screen instanceof LogoLoadingScreen)) {
+            this.logoLoadingScreen.tick();
+        }
+        if (this.getClientWorld() != null) {
+            this.getClientWorld().tick();
+        }
+        if (this.setting.getValueAsBoolean("client.tick_gc", false)) {
+            System.gc();
+        }
+    }
+
+    @Override
+    public void stop() {
+        this.clientEventBus.callEvent(new ClientShutdownEvent(this));
+        this.window.destroy();
+        logHandler.info("game stopped...");
+        LogHandler.allSave();
+        Audio.destroy();
+        Window.destroyGLFW();
+        System.exit(0);
+    }
+
+
+    //render
+    public void setScreen(Screen screen) {
+        this.clientEventBus.callEvent(new ScreenInitializeEvent(this, screen));
+        if (this.screen != null) {
+            this.screen.release();
+        }
+        this.screen = screen;
+        if (screen != null) {
+            screen.init(this);
+        }
+    }
+
+    public void setScreen(String namespace, String uiPosition) {
+        this.setScreen(ScreenLoader.loadByExtName(namespace, uiPosition));
+    }
+
+    @Override
+    public void refreshScreen() {
+        this.render();
+        if (System.currentTimeMillis() % 5 == 0) {
+            this.screen.tick();
+        }
+    }
+
+
+    //progress
+    @Override
+    public void onProgressChange(int prog) {
+        this.logoLoadingScreen.updateProgress(prog / 100f);
+    }
+
+    @Override
+    public void onProgressStageChanged(String newStage) {
+        this.logoLoadingScreen.setText(newStage);
+    }
+
+
+    //access
+    private DisplayScreenInfo getDisplaySize() {
+        int scale = this.setting.getValueAsInt("client.render.gui.scale", 2);
+        return new DisplayScreenInfo(
+                scale,
+                Math.max(this.window.getWindowWidth() / scale, 1),
+                Math.max(this.window.getWindowHeight() / scale, 1),
+                Math.max(this.window.getWindowWidth() / scale, 1) / 2,
+                Math.max(this.window.getWindowHeight() / scale, 1) / 2
+        );
+    }
+
+    public Screen getScreen() {
+        return this.screen;
+    }
+
+    public LogoLoadingScreen getLoadingScreen() {
+        return this.logoLoadingScreen;
+    }
+
+    public GameSetting getGameSetting() {
+        return this.setting;
+    }
+
+    public ClientNettyPipeline getClientIO() {
+        return this.clientIO;
     }
 
     public EventBus getClientEventBus() {
@@ -186,193 +411,19 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
         return server;
     }
 
-    //application
-    @Override
-    public void init() {
-        Registry.setClient(this);
-        Timer.startTiming();
-
-        //init application
-
-        this.timer = new Timer(20);
-        this.logHandler = LogHandler.create("Client/Main");
-        this.logHandler.info("initializing client...");
-        this.initDisplay();
-        this.setting.read();
-
-        Display.getEventBus().registerEventListener(this.clientInputHandler);
-
-
-        //load content
-
-        ScreenUtil.initFont();
-        this.clientEventBus.callEvent(new ClientInitializeEvent(this));
-        this.setScreen(logoLoadingScreen);
-        this.logoLoadingScreen.display();
-        ScreenUtil.init(this);
-
-        this.logHandler.info("loading mods...");
-        ModManager.loadMod(InternalContent.class, null, getPlatformClient(), ExtansionRunningTarget.CLIENT);
-
-        this.player=new Player(null,this.session);
-
-        this.logHandler.info("loading resources...");
-        ResourceManager.instance.registerEventListener(new ResourceLoader());
-        ResourceManager.instance.reload(this);
-
-        this.logoLoadingScreen.dispose();
-        this.getClientEventBus().registerEventListener(new ScreenController());
-        this.setScreen("cubecraft", "title_screen.xml");
-
-        //check version
-        if (this.setting.getValueAsBoolean("client.check_update", true)) {
-            VersionCheck.check();
-        }
-
-        //finish loading
-        this.logHandler.info("client initialization done,in%dms", Timer.endTiming());
-
-
+    public void setClientWorld(ClientWorld clientWorld) {
+        this.clientWorld = clientWorld;
     }
 
-    @Override
-    public void on1sec() {
-        if (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() > 512 * 1024 * 1024) {
-            System.gc();
-        }
+    public LevelInfo getClientLevelInfo() {
+        return this.clientLevelInfo;
     }
 
-    @Override
-    public void render() {
-        this.logHandler.checkGLError("pre_render");
-        this.screenInfo = getDisplaySize();
-        Display.clear();
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);//16640
-
-        if (this.screen.isInGameGUI()) {
-            this.logHandler.checkGLError("pre_world_render");
-            levelRenderer.render(this.timer.interpolatedTime);
-            this.logHandler.checkGLError("post_world_render");
-        }
-        if (Display.isCloseRequested()) {
-            this.stop();
-        }
-
-        GLUtil.setupOrthogonalCamera(0, 0, Display.getWidth(), Display.getHeight(), screenInfo.scrWidth(), screenInfo.scrHeight());
-
-        if (this.screen != null) {
-            GLUtil.enableDepthTest();
-            GLUtil.enableBlend();
-            this.logHandler.checkGLError("pre_screen_render");
-            this.screenInfo = this.getDisplaySize();
-            this.screen.render(this.screenInfo, this.timer.interpolatedTime);
-            ScreenUtil.renderPopup(this.screenInfo, this.timer.interpolatedTime);
-            if (!(this.screen instanceof LogoLoadingScreen)) {
-                this.logoLoadingScreen.render(screenInfo, this.timer.interpolatedTime);
-            }
-            this.logHandler.checkGLError("post_screen_render");
-            GLUtil.disableBlend();
-        }
-        Display.sync(this.setting.getValueAsInt("client.render.maxFPS", 60));
-        Display.update();
-        this.logHandler.checkGLError("post_render");
+    public void setClientLevelInfo(LevelInfo clientLevelInfo) {
+        this.clientLevelInfo = clientLevelInfo;
     }
 
-    @Override
-    public void tick() {
-        InputHandler.tick();
-        this.screen.tick();
-        ScreenUtil.tickPopup();
-        if (!(this.screen instanceof LogoLoadingScreen)) {
-            this.logoLoadingScreen.tick();
-        }
-        if (this.getClientWorld() != null) {
-            this.getClientWorld().tick();
-        }
-        if (this.setting.getValueAsBoolean("client.tick_gc", false)) {
-            System.gc();
-        }
-    }
-
-    @Override
-    public void stop() {
-        this.clientEventBus.callEvent(new ClientShutdownEvent(this));
-        Display.destroy();
-        logHandler.info("game stopped...");
-        LogHandler.allSave();
-        Audio.destroy();
-        System.exit(0);
-    }
-
-
-    //render
-    public void setScreen(Screen screen) {
-        this.clientEventBus.callEvent(new ScreenInitializeEvent(this, screen));
-        if (this.screen != null) {
-            this.screen.release();
-        }
-        this.screen = screen;
-        if (screen != null) {
-            screen.init(this);
-        }
-    }
-
-    public void setScreen(String namespace, String uiPosition) {
-        this.setScreen(ScreenLoader.loadByExtName(namespace, uiPosition));
-    }
-
-    private DisplayScreenInfo getDisplaySize() {
-        int scale = this.setting.getValueAsInt("client.render.gui.scale", 2);
-        return new DisplayScreenInfo(
-                scale,
-                Math.max(Display.getWidth() / scale, 1),
-                Math.max(Display.getHeight() / scale, 1),
-                Math.max(Display.getWidth() / scale, 1) / 2,
-                Math.max(Display.getHeight() / scale, 1) / 2
-        );
-    }
-
-    protected void initDisplay() {
-        StartArguments arg = ClientMain.getStartGameArguments();
-        Display.create();
-        Display.setFXAA(this.setting.FXAA);
-        Display.setTitle(arg.getValueAsString("title", "Cubecraft-" + VERSION));
-        Display.setIcon(ResourceManager.instance.getResource("/resource/cubecraft/texture/ui/icons/icon.png").getAsStream());
-        Display.setResizable(true);
-        Display.setVsyncEnable(false);
-        Display.setSize(arg.getValueAsInt("width", 1280), arg.getValueAsInt("height", 720));
-        Audio.create();
-    }
-
-    public Screen getScreen() {
-        return this.screen;
-    }
-
-    @Override
-    public void refreshScreen() {
-        this.render();
-        if (System.currentTimeMillis() % 5 == 0) {
-            this.screen.tick();
-        }
-    }
-
-
-    //progress
-    @Override
-    public void onProgressChange(int prog) {
-        this.logoLoadingScreen.updateProgress(prog / 100f);
-    }
-
-    @Override
-    public void onProgressStageChanged(String newStage) {
-        this.logoLoadingScreen.setText(newStage);
-    }
-
-    public LogoLoadingScreen getLoadingScreen() {
-        return this.logoLoadingScreen;
-    }
-
-    public GameSetting getGameSetting() {
-        return this.setting;
+    public Window getWindow() {
+        return window;
     }
 }

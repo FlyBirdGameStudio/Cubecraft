@@ -1,7 +1,11 @@
 package io.flybird.util.container.namespace;
 
+import io.flybird.cubecraft.internal.net.packet.PacketRegistry;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,5 +75,29 @@ public class NameSpacedConstructingMap<I> {
             map.put(all,create(all,initArgs));
         }
         return map;
+    }
+
+    public void registerItem(Class<? extends I> item) {
+        TypeItem a=item.getDeclaredAnnotation(TypeItem.class);
+        if(a==null){
+            throw new RuntimeException("item does not contains TypeItem annotation,so can`t auto reg.");
+        }
+        registerItem(a.value(),item);
+    }
+
+    public void registerGetFunctionProvider(Class<?> clazz) {
+        try {
+            for (Method m : clazz.getMethods()) {
+                ItemRegisterFunc getter = m.getAnnotation(ItemRegisterFunc.class);
+                if (getter != null) {
+                    if (m.getParameters().length == 1 && m.getParameters()[0].getType() == NameSpacedConstructingMap.class) {
+                        m.invoke(clazz.getConstructor().newInstance(), this);
+                    }
+                }
+            }
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException |
+                 NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -49,7 +49,11 @@ public class NameSpaceMap <I>{
      * @return nothing
      */
     public I get(String all){
-        return this.get(all.split(this.split)[1],all.split(this.split)[0]);
+        try {
+            return this.get(all.split(this.split)[1], all.split(this.split)[0]);
+        }catch (ArrayIndexOutOfBoundsException e){
+            throw new RuntimeException("invalid format:"+all);
+        }
     }
 
     /**

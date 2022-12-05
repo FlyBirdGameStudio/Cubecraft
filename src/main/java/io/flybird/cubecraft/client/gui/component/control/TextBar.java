@@ -9,7 +9,7 @@ import io.flybird.cubecraft.register.RenderRegistry;
 import io.flybird.starfish3d.event.CharEvent;
 import io.flybird.starfish3d.event.MouseClickEvent;
 import io.flybird.starfish3d.event.KeyPressEvent;
-import io.flybird.starfish3d.platform.KeyHoldEvent;
+import io.flybird.starfish3d.event.KeyHoldEvent;
 import io.flybird.starfish3d.platform.Keyboard;
 import io.flybird.util.event.Event;
 import io.flybird.util.event.EventHandler;

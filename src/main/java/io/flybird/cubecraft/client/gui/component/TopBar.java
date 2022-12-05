@@ -6,8 +6,6 @@ import io.flybird.cubecraft.client.gui.Text;
 import io.flybird.cubecraft.client.gui.layout.LayoutManager;
 import io.flybird.cubecraft.register.RenderRegistry;
 import io.flybird.starfish3d.event.MouseClickEvent;
-import io.flybird.starfish3d.platform.Display;
-import io.flybird.starfish3d.platform.Mouse;
 import io.flybird.util.event.EventHandler;
 import io.flybird.util.file.faml.FAMLDeserializer;
 import io.flybird.util.file.faml.XmlReader;
@@ -40,8 +38,8 @@ public class TopBar extends Component {
     @EventHandler
     public void onClicked(MouseClickEvent e){
         int scale= Registry.getClient().getGameSetting().getValueAsInt("client.render.gui.scale",2);
-        int xm = Mouse.getX()/ scale;
-        int ym = (-Mouse.getY()+ Display.getHeight())/scale;
+        int xm = e.x()/ scale;
+        int ym = e.fixedY()/scale;
         int x0 = this.layoutManager.ax;
         int x1 = x0 + this.layoutManager.aWidth;
         int y0 = this.layoutManager.ay;
@@ -56,8 +54,8 @@ public class TopBar extends Component {
     @Override
     public String getStatement() {
         int scale= Registry.getClient().getGameSetting().getValueAsInt("client.render.gui.scale",2);
-        int xm = Mouse.getX()/ scale;
-        int ym = (-Mouse.getY()+ Display.getHeight())/scale;
+        int xm = Registry.getClient().getWindow().getMouseX()/ scale;
+        int ym = Registry.getClient().getWindow().getMouseFixedY()/scale;
         int x0 = this.layoutManager.ax;
         int x1 = x0 + this.layoutManager.aHeight;
         int y0 = this.layoutManager.ay;

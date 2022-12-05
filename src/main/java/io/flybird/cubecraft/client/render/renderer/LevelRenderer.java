@@ -1,20 +1,25 @@
 package io.flybird.cubecraft.client.render.renderer;
 
+import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.internal.renderer.EnvironmentRenderer;
 import io.flybird.cubecraft.register.RenderRegistry;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.entity.humanoid.Player;
+import io.flybird.starfish3d.event.KeyPressEvent;
+import io.flybird.starfish3d.platform.Keyboard;
 import io.flybird.starfish3d.render.Camera;
+import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.util.ColorUtil;
 import io.flybird.util.container.CollectionUtil;
-import io.flybird.starfish3d.render.GLUtil;
+import io.flybird.util.event.EventHandler;
+import io.flybird.util.event.EventListener;
 import io.flybird.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
 
-public class LevelRenderer {
+public class LevelRenderer implements EventListener {
 
     public HashMap<String, IWorldRenderer>renderers;
     public IWorld world;
@@ -23,11 +28,15 @@ public class LevelRenderer {
     public EnvironmentRenderer environmentRenderer;
 
     public LevelRenderer(IWorld w, Player p, Cubecraft client){
+        client.getWindow().getEventBus().registerEventListener(this);
         this.world=w;
         this.player=p;
-        this.renderers= (HashMap<String, IWorldRenderer>) RenderRegistry.getWorldRenderers().createAll(world,player,camera, client.getGameSetting());
-        this.environmentRenderer=new EnvironmentRenderer(world,player,camera,client.getGameSetting());
+        this.renderers= (HashMap<String, IWorldRenderer>) RenderRegistry.getWorldRenderers().createAll(client.getWindow(),world,player,camera, client.getGameSetting());
+        this.environmentRenderer=new EnvironmentRenderer(client.getWindow(),world,player,camera,client.getGameSetting());
     }
+
+
+
 
     public void render(float interpolationTime) {
         float[] col= ColorUtil.int1Float1ToFloat4(world.getWorldInfo().fogColor(),1.0f);
@@ -41,7 +50,6 @@ public class LevelRenderer {
         this.camera.setPosRelative(0,0,0.15);
 
         GL11.glEnable(GL11.GL_CULL_FACE);
-        GLUtil.enableMultiSample();
         GL11.glPushMatrix();
         this.environmentRenderer.render(interpolationTime);
         GL11.glPopMatrix();
@@ -51,7 +59,6 @@ public class LevelRenderer {
             item.render(interpolationTime);
             GL11.glPopMatrix();
         });
-        GLUtil.disableMultiSample();
         GL11.glDisable(GL11.GL_CULL_FACE);
 
         if(this.camera.isRotationChanged()){
@@ -59,6 +66,37 @@ public class LevelRenderer {
         }
         if(this.camera.isPositionChanged()){
             this.camera.updatePosition();
+        }
+    }
+
+    @EventHandler
+    public void onRefresh(KeyPressEvent e){
+        if(e.key()== Keyboard.KEY_F8){
+            CollectionUtil.iterateMap(this.renderers, (key, item) -> item.refresh());
+        }
+    }
+
+
+
+    public static void setRenderState(GameSetting setting,IWorld world) {
+        GLUtil.enableBlend();
+        if (setting.getValueAsInt("client.render.fxaa", 0)>0) {
+            GLUtil.enableMultiSample();
+        }
+        int d = setting.getValueAsInt("client.render.terrain.renderDistance", 4);
+        if (setting.getValueAsBoolean("client.render.fog", true)) {
+            GL11.glEnable(GL11.GL_FOG);
+            GLUtil.setupFog(d * d, ColorUtil.int1Float1ToFloat4(world.getWorldInfo().fogColor(), 1));
+        }
+    }
+
+    public static void closeState(GameSetting setting) {
+        if (setting.getValueAsBoolean("client.render.fog", true)) {
+            GL11.glDisable(GL11.GL_FOG);
+        }
+        GLUtil.disableBlend();
+        if (setting.getValueAsInt("client.render.fxaa", 0)>0) {
+            GLUtil.disableMultiSample();
         }
     }
 }

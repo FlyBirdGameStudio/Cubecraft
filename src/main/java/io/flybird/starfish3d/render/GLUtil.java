@@ -3,6 +3,7 @@ package io.flybird.starfish3d.render;
 import io.flybird.util.container.BufferUtil;
 import org.joml.Matrix4d;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
@@ -127,6 +128,7 @@ public class GLUtil {
         GL11.glDisable(GL13.GL_MULTISAMPLE);
         GL11.glDisable(GL11.GL_LINE_SMOOTH);
         GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
+        disableBlend();
     }
 
 
@@ -141,13 +143,6 @@ public class GLUtil {
 
     public static void disableDepthTest() {
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-    }
-
-    public static void enableAA() {
-        assertRenderThread();
-        GL11.glEnable(GL13.GL_MULTISAMPLE);
-        GL11.glEnable(GL11.GL_LINE_SMOOTH);
-        GL11.glEnable(GL11.GL_POLYGON_SMOOTH);
     }
 
     public static void allEnableClientState(){

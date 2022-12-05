@@ -3,30 +3,34 @@ package io.flybird.util.container;
 import java.util.*;
 
 public class ArrayQueue <E> {
-    public PriorityQueue<PriorityAdapter<E>> items=new PriorityQueue<>();
-    public HashSet<Integer> e=new HashSet<>();
+
 
     //information
     public int size() {
-        return this.items.size();
+        return this.list.size();
     }
 
     public boolean isEmpty() {
-        return this.items.isEmpty();
+        return this.list.isEmpty();
     }
 
     public boolean contains(E e) {
-        return this.e.contains(e.hashCode());
+        return this.list.contains(e);
     }
 
-    public <T> T[] toArray(T[] a) {
-        return this.items.toArray(a);
+    public E[] toArray(E[] a) {
+        return this.list.toArray(a);
     }
+
+
+    public ArrayList<E> list=new ArrayList<>();
 
     public void add(E e) {
-        if(!contains(e)&&e!=null) {
-            items.offer(new PriorityAdapter<>(e));
-            this.e.add(e.hashCode());
+        if(this.list.isEmpty()){
+            this.list=new ArrayList<>();
+        }
+        if(e!=null&&!contains(e)) {
+           this.list.add(0,e);
         }
     }
 
@@ -37,10 +41,13 @@ public class ArrayQueue <E> {
     }
 
     public E poll(){
-        if(items.size()>0) {
-            PriorityAdapter<E> item=this.items.poll();
-            return item==null?null:item.e;
-        }else{
+        try {
+            if (list.size() > 0) {
+                return this.list.remove(this.list.size() - 1);
+            } else {
+                return null;
+            }
+        }catch (Exception e){
             return null;
         }
     }
@@ -55,44 +62,36 @@ public class ArrayQueue <E> {
         return returns;
     }
     public void clear() {
-        this.items.clear();
+        this.list.clear();
     }
 
     public List<E> pollIf(int count , Prediction<E> pollIf){
-        ArrayList<E> returns=new ArrayList<>();
-        for (PriorityAdapter<E> e:this.items) {
-            if(pollIf.If(e.e)){
-                returns.add(e.e);
+        ArrayList<E> returns=new ArrayList<>(1);
+        for (E e:this.list) {
+            if(pollIf.If(e)){
+                returns.add(e);
             }//给我standby到满足条件
             if(returns.size()>=count){
                 break;
             }
         }
-        ;
+
         return returns;
     }
 
     public void removeIf(Prediction<E> tester) {
-        this.items.removeIf(ePriorityAdapter -> tester.If(ePriorityAdapter.e));
+        this.list.removeIf(tester::If);
     }
 
     public void remove(E e) {
-        this.items.remove(e);
+        this.list.remove(e);
+    }
+
+    public void sort(Comparator<E> sorter){
+        this.list.sort(sorter);
     }
 
     public interface Prediction<E>{
         boolean If(E e);
-    }
-
-    /**
-     * yep,just an adapter to fit for class that not support {@link Comparable<T>}
-     * @param e item
-     * @param <T> class
-     */
-    private record PriorityAdapter<T>(T e) implements Comparable<PriorityAdapter>{
-        @Override
-        public int compareTo(PriorityAdapter o) {
-            return 0;
-        }
     }
 }

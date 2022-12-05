@@ -4,7 +4,7 @@ import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.client.resources.ResourceManager;
 import io.flybird.cubecraft.register.RenderRegistry;
-import io.flybird.starfish3d.platform.Display;
+import io.flybird.starfish3d.platform.Window;
 import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.starfish3d.render.ShapeRenderer;
 import io.flybird.starfish3d.render.draw.VertexArrayBuilder;
@@ -31,19 +31,19 @@ public class ScreenUtil {
         RenderRegistry.getTextureManager().createTexture2D(ResourceManager.instance.getResource("/resource/cubecraft/texture/font/unicode_page_00.png"),false,false);
     }
 
-    public static void renderPictureBackground(){
-        int scale= gameSetting.getValueAsInt("client.render.gui.scale",2);
+    public static void renderPictureBackground(Window window){
+        float scale= gameSetting.getValueAsInt("client.render.gui.scale",2);
         RenderRegistry.getTextureManager().getTexture2DContainer().bind("/resource/cubecraft/texture/ui/bg.png");
         ShapeRenderer.begin();
-        ShapeRenderer.drawRectUV(0, Display.getWidth()/ scale,0,Display.getHeight()/scale,-1,-1,0,1,0,1);
+        ShapeRenderer.drawRectUV(0, window.getWindowWidth()/ scale,0,window.getWindowHeight()/scale,-1,-1,0,1,0,1);
         ShapeRenderer.end();
         RenderRegistry.getTextureManager().getTexture2DContainer().unbind("/resource/cubecraft/texture/ui/bg.png");
     }
 
-    public static void renderMask(){
-        int scale= gameSetting.getValueAsInt("client.render.gui.scale",2);
+    public static void renderMask(Window window){
+        float scale= gameSetting.getValueAsInt("client.render.gui.scale",2);
         ShapeRenderer.setColor(0,0,0,127);
-        ShapeRenderer.drawRect(0,Display.getWidth()/ scale,0,Display.getHeight()/scale,-1,-1);
+        ShapeRenderer.drawRect(0,window.getWindowWidth()/ scale,0,window.getWindowHeight()/scale,-1,-1);
     }
 
     public static void createPopup(String title, String subTitle, int time, int type){
@@ -100,9 +100,7 @@ public class ScreenUtil {
         RenderRegistry.getTextureManager().getTexture2DContainer().bind("/resource/cubecraft/texture/font/unicode_page_00.png");
         for (char c : rawData) {
             VertexArrayBuilder builder=new VertexArrayBuilder(4);
-            int pageCode = (int) Math.floor(c / 256.0f);
             int charPos_Page = c % 256;
-            String s2 = Integer.toHexString(pageCode);
             int charPos_V = charPos_Page / 16;
             int charPos_H = charPos_Page % 16;
             if (c == 0x0020) {
@@ -112,13 +110,12 @@ public class ScreenUtil {
                 charPos_scr = 0;
             }
             else {
-                float x0 = charPos_scr, x1 = charPos_scr + size,
-                        y0 = y, y1 = y + size,
+                float x0 = charPos_scr, x1 = charPos_scr + size, y1 = y + size,
                         u0 = charPos_H / 16.0f, u1 = charPos_H / 16f + 0.0625f,
                         v0 = charPos_V / 16.0f, v1 = charPos_V / 16f + 0.0625f;
                 builder.begin();
                 builder.color(color);
-                ShapeRenderer.drawRectUV(builder,x0, x1, y0, y1, 0, 0,u0,u1,v0,v1);
+                ShapeRenderer.drawRectUV(builder,x0, x1, (float) y, y1, 0, 0,u0,u1,v0,v1);
                 builder.end();
                 VertexArrayUploader.uploadPointer(builder);
                 charPos_scr += size*0.5f;
@@ -130,13 +127,13 @@ public class ScreenUtil {
         //todo:add minecraft themed tile background rendering
     }
 
-    public static void renderPictureBackgroundBlur() {
-        int scale= gameSetting.getValueAsInt("client.render.gui.scale",2);
+    public static void renderPictureBackgroundBlur(Window window) {
+        float scale= gameSetting.getValueAsInt("client.render.gui.scale",2);
         Texture2D tex= RenderRegistry.getTextureManager().getTexture2DContainer().get("/resource/cubecraft/texture/ui/bg.png");
         TextureStateManager.setTextureBlur(tex,true,3);
         tex.bind();
         ShapeRenderer.begin();
-        ShapeRenderer.drawRectUV(0, Display.getWidth()/ scale,0,Display.getHeight()/scale,-1,-1,0,1,0,1);
+        ShapeRenderer.drawRectUV(0, window.getWindowWidth()/ scale,0,window.getWindowHeight()/scale,-1,-1,0,1,0,1);
         ShapeRenderer.end();
         TextureStateManager.setTextureBlur(tex,false,0);
         RenderRegistry.getTextureManager().getTexture2DContainer().unbind("/resource/cubecraft/texture/ui/bg.png");

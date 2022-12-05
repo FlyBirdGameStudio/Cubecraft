@@ -1,5 +1,6 @@
 package io.flybird.util.container;
 
+import io.flybird.cubecraft.world.IWorld;
 import io.flybird.util.file.nbt.NBTBase;
 import io.flybird.util.file.nbt.NBTBuilder;
 import io.netty.buffer.ByteBuf;
@@ -11,6 +12,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.io.IOException;
 import java.nio.*;
+import java.nio.charset.StandardCharsets;
 
 public class BufferUtil {
 
@@ -244,4 +246,28 @@ public class BufferUtil {
         MemoryUtil.memSet(MemoryUtil.memAddress(buffer),0,buffer.capacity()* 4L);
     }
 
+    public static byte[] unwrap(ByteBuf buffer){
+        byte[] data=new byte[buffer.writerIndex()-buffer.readerIndex()];
+        buffer.readBytes(data);
+        return data;
+    }
+
+    public static String readString(ByteBuf buffer) {
+        int len=buffer.readByte();
+        return (String) buffer.readCharSequence(len, StandardCharsets.UTF_8);
+    }
+
+    public static void writeString(String s,ByteBuf buffer) {
+        buffer.writeByte(s.getBytes(StandardCharsets.UTF_8).length);
+        buffer.writeBytes(s.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static void writeArray(byte[] arr,ByteBuf buffer) {
+        buffer.writeInt(arr.length);
+        buffer.writeBytes(arr);
+    }
+
+    public static void free(IntBuffer buffer) {
+        MemoryUtil.memSet(MemoryUtil.memAddress(buffer),0,buffer.capacity()* 4L);
+    }
 }
