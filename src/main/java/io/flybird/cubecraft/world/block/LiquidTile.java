@@ -56,7 +56,7 @@ extends Tile {
             hasChanged |= this.checkWater(world, x, y, z + 1, depth);
         }
         if (!hasChanged) {
-            world.setTileNoUpdate(x, y, z, this.calmTileId);
+            world.setTile(x, y, z, this.calmTileId);
         }
         return hasChanged;
     }

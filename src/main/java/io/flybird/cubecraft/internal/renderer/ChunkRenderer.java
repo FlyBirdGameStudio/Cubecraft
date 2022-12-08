@@ -16,7 +16,7 @@ import io.flybird.starfish3d.render.culling.ProjectionMatrixFrustum;
 import io.flybird.starfish3d.render.multiThread.*;
 import io.flybird.starfish3d.render.textures.Texture2D;
 import io.flybird.util.container.CollectionUtil;
-import io.flybird.util.container.HashMapSet;
+import io.flybird.util.container.keyMap.KeyMap;
 import io.flybird.util.event.EventHandler;
 import io.flybird.util.event.EventListener;
 import io.flybird.util.logging.LogHandler;
@@ -25,7 +25,6 @@ import org.joml.Vector3d;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -34,7 +33,7 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
     public Texture2D terrain = new Texture2D(false, true);
     public LogHandler logHandler = LogHandler.create("Client/ChunkRenderer");
     private final ProjectionMatrixFrustum frustum = new ProjectionMatrixFrustum(this.camera);
-    public HashMapSet<RenderChunkPos, RenderChunk> chunks = new HashMapSet<>();
+    public KeyMap<RenderChunkPos, RenderChunk> chunks = new KeyMap<>();
     public ArrayList<RenderChunk> callListAlpha = new ArrayList<>();
     public ArrayList<RenderChunk> callListTransParent = new ArrayList<>();
 

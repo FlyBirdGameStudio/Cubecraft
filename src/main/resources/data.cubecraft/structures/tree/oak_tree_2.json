@@ -1,26 +1,32 @@
 {
   "size": [5,8,5],
-  "patterns": [
+  "elements": [
     {
+      "type": "pattern",
       "from": [0,4,0],
       "to": [4,5,4],
-      "id": "cubecraft:oak_leaves"
+      "id": "cubecraft:oak_leaves",
+      "meta": "",
+      "facing": "top"
     },
     {
+      "type": "pattern",
       "from": [1,6,1],
       "to": [3,7,3],
       "id": "cubecraft:oak_leaves",
-      "meta": ""
+      "meta": "",
+      "facing": "top"
     },
     {
+      "type": "pattern",
       "from": [3,0,3],
       "to": [3,5,3],
       "id": "cubecraft:oak_logs",
-      "meta": ""
-    }
-  ],
-  "random_cull": [
+      "meta": "",
+      "facing": "top"
+    },
     {
+      "type": "random_replacement",
       "loc": [
         [0,4,0],
         [0,4,4],
@@ -46,6 +52,5 @@
       "facing": "top",
       "meta": ""
     }
-  ],
-  "block": []
+  ]
 }

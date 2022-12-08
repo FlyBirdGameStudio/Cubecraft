@@ -21,7 +21,6 @@ public abstract class IWorldRenderer implements WorldListener {
         this.player=player;
         this.camera=cam;
         this.setting=setting;
-        this.world.addListener(this);
         this.window=window;
     }
 

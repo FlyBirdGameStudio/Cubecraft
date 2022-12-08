@@ -1,15 +1,10 @@
 package io.flybird.cubecraft.world.chunk;
 
 import io.flybird.cubecraft.world.entity.Entity;
-import io.flybird.util.container.keyMap.KeyComparable;
+import io.flybird.util.container.keyMap.Key;
 import io.flybird.util.math.MathHelper;
 
-public record ChunkPos (long x, long y,long z) implements KeyComparable<ChunkPos> {
-
-    @Override
-    public boolean compare(ChunkPos another){
-        return this.x==another.x&&this.y==another.y&&this.z==another.z;
-    }
+public record ChunkPos (long x, long y,long z) implements Key<ChunkPos> {
 
     @Override
     public String toString() {

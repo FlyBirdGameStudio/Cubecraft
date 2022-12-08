@@ -1,3 +1,5 @@
 Manifest-Version: 1.0
 Main-Class: io.flybird.cubecraft.client.ClientMain
+Name: Cubecraft-client
+Implementation-Version: alpha-0.2.2
 

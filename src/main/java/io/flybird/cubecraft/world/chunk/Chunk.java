@@ -32,11 +32,11 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
     private byte[] meta = new byte[WIDTH * HEIGHT * WIDTH];
     private byte[] facing = new byte[WIDTH * HEIGHT * WIDTH];
     private byte[] light = new byte[WIDTH * HEIGHT * WIDTH];
-    private HashMap<String, BlockState> blockEntities = new HashMap<>();
+    private final HashMap<String, BlockState> blockEntities = new HashMap<>();
 
 
-    private final Double2ByteArray temperature = new Double2ByteArray(WIDTH * HEIGHT * WIDTH);
-    private final Double2ByteArray humidity = new Double2ByteArray(WIDTH * HEIGHT * WIDTH);
+    private final Double2ByteArray temperature = new Double2ByteArray(WIDTH * WIDTH);
+    private final Double2ByteArray humidity = new Double2ByteArray(WIDTH * WIDTH);
 
     public ChunkProcessTask task = new ChunkProcessTask(this);
 
@@ -148,10 +148,10 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
     public NBTTagCompound getData() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setTag("block_facing", new NBTTagByteArray(this.facing));
-        tag.setTag("block_id", NBTBuilder.buildStringArray(this.id.export()));
+        tag.setTag("block_id", this.id.export());
         tag.setTag("block_meta", new NBTTagByteArray(this.meta));
 
-        tag.setTag("biome", NBTBuilder.buildStringArray(this.biome.export()));
+        tag.setTag("biome", this.biome.export());
         tag.setTag("light", new NBTTagByteArray(this.light));
         tag.setTag("temperature", new NBTTagByteArray(this.temperature.getData()));
         tag.setTag("humidity", new NBTTagByteArray(this.humidity.getData()));
@@ -162,16 +162,15 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
         }
         tag.setCompoundTag("block_entities",blockEntities);
         return tag;
-
     }
 
     @Override
     public void setData(NBTTagCompound tag) {
-        this.id.setArr(NBTBuilder.readStringArray(tag.getTagList("block_id")));
+        this.id.setData(tag.getCompoundTag("block_id"));
         this.facing = tag.getByteArray("block_facing");
         this.meta = tag.getByteArray("block_meta");
 
-        this.biome.setArr(NBTBuilder.readStringArray(tag.getTagList("biome")));
+        this.biome.setData(tag.getCompoundTag("biome"));
         this.light = tag.getByteArray("block_light");
         this.temperature.setData(tag.getByteArray("temperature"));
         this.humidity.setData(tag.getByteArray("humidity"));

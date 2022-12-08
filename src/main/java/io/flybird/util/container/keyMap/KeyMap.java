@@ -1,54 +1,33 @@
 package io.flybird.util.container.keyMap;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 
-public class KeyMap <K extends KeyComparable<K>,E extends KeyGetter<K>>{
-    public ArrayList<E> elements =new ArrayList<>();
+public class KeyMap<K extends Key<K>,V extends KeyGetter<K>> {
+    public HashMap<Integer,V> map=new HashMap<>();
 
-    public void add(E e){
-        if(!containsKey(e.getKey())){
-            this.elements.add(e);
+    public void add(V v){
+        if (!map.containsKey(v.getKey().hashCode())){
+            map.put(v.getKey().hashCode(),v);
         }
+    }
+
+    public V get(K k){
+        return this.map.getOrDefault(k.hashCode(),null);
+    }
+
+    public boolean contains(K k) {
+        return map.containsKey(k.hashCode());
     }
 
     public int size() {
-        return this.elements.size();
+        return this.map.size();
     }
 
-    public boolean isEmpty() {
-        return this.size()==0;
+    public void forceAdd(V v){
+        map.put(v.getKey().hashCode(),v);
     }
 
-    public boolean containsKey(K key) {
-        for (E e:this.elements){
-            if(e.getKey().compare(key)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public E get(K key) {
-        Iterator<E> it=this.elements.iterator();
-        while (it.hasNext()){
-            E e=it.next();
-            if(e.getKey().compare(key)){
-                return e;
-            }
-        }
-        return null;
-    }
-
-    public E remove(K key) {
-        Iterator<E> it=this.elements.iterator();
-        while (it.hasNext()){
-            E e=it.next();
-            if(e.getKey().compare(key)){
-                it.remove();
-                return e;
-            }
-        }
-        return null;
+    public void clear() {
+        this.map.clear();
     }
 }

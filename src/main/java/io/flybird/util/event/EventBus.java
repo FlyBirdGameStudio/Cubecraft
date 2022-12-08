@@ -1,54 +1,13 @@
 package io.flybird.util.event;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+/**
+ * abstraction of event bus implementations.<br/>
+ */
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+public interface EventBus {
+    void callEvent(Event event, Object... param);
 
-public class EventBus {
-    protected final ArrayList<EventListener> listeners = new ArrayList<>();
+    void registerEventListener(EventListener el);
 
-    private final ArrayList<Class<?>> params=new ArrayList<>();
-
-    public EventBus (Class<?>... params){
-        this.params.addAll(List.of(params));
-    }
-
-    public void callEvent(Event event,Object... param) {
-        for (EventListener el : ((ArrayList<EventListener>) this.listeners.clone())) {
-            Method[] ms = el.getClass().getMethods();
-            for (Method m : ms) {
-                if (Arrays.stream(m.getAnnotations()).anyMatch(annotation -> annotation instanceof EventHandler)) {
-                    boolean equals=true;
-                    for (int i=0;i< params.size();i++){
-                        if(m.getParameters()[i+1].getType()!=params.get(i)){
-                            equals=false;
-                        }
-                    }
-
-                    if (m.getParameters()[0].getType() == event.getClass()&&equals) {
-                        try {
-                            m.invoke(el, event);
-                        } catch (IllegalAccessException | InvocationTargetException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public void registerEventListener(EventListener el){
-        this.listeners.add(el);
-    }
-
-    public void unregisterEventListener(EventListener el){
-        this.listeners.remove(el);
-    }
-
-    public ArrayList<EventListener> getHandlers() {
-        return this.listeners;
-    }
+    void unregisterEventListener(EventListener el);
 }

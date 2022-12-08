@@ -1,24 +1,43 @@
 package io.flybird.cubecraft;
 
-
 import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerJoinResponse;
-import io.flybird.cubecraft.internal.net.packet.playing.PacketChunkData;
+import io.flybird.cubecraft.world.block.BlockState;
+import io.flybird.util.file.nbt.NBTBuilder;
+import io.flybird.util.file.nbt.tag.NBTTagCompound;
 import io.flybird.util.network.NetHandlerContext;
 import io.flybird.util.network.packet.PacketEventHandler;
 import io.flybird.util.network.handler.INetHandler;
-import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.chunk.Chunk;
 import io.flybird.cubecraft.world.chunk.ChunkPos;
-import io.flybird.util.container.namespace.TypeItem;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 
-import java.nio.charset.StandardCharsets;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class Test {
     static int ppsServer, ppsClient;
 
     public static void main(String[] args) throws Exception {
+        Chunk c=new Chunk(null,new ChunkPos(11,45,14));
+        c.setBiome(0,0,0,"cubecraft:void");
+        c.setLight(0,0,0, (byte) 123);
+        c.setBlockState(15,127,15, new BlockState("fuck:fuck", (byte) 5, (byte) 0));
+
+        NBTTagCompound tag=c.getData();
+
+        File f=new File("E:/chunk.nbt");
+
+        f.createNewFile();
+
+        GZIPOutputStream s=new GZIPOutputStream(new FileOutputStream(f));
+
+        NBTBuilder.write(tag,new DataOutputStream(s));
+
+        s.close();
+
+
+        /*
         ByteBuf out = ByteBufAllocator.DEFAULT.ioBuffer(512, 4194304);
         PacketChunkData dat=new PacketChunkData(new Chunk(new IWorld("test",null),new ChunkPos(11,45,14)));
         String type = dat.getClass().getAnnotation(TypeItem.class).value();
@@ -37,6 +56,7 @@ public class Test {
         PacketChunkData data=new PacketChunkData();
         data.readPacketData(out);
         Chunk c=data.getChunk();
+         */
 
 
 

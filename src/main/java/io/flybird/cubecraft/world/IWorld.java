@@ -8,10 +8,10 @@ import io.flybird.cubecraft.world.chunk.ChunkLoadLevel;
 import io.flybird.cubecraft.world.chunk.ChunkLoadTicket;
 import io.flybird.cubecraft.world.chunk.ChunkPos;
 import io.flybird.cubecraft.world.entity.Entity;
-import io.flybird.cubecraft.world.entity.EntityLocation;
 import io.flybird.util.container.CollectionUtil;
-import io.flybird.util.container.HashMapSet;
+import io.flybird.util.container.keyMap.KeyMap;
 import io.flybird.util.event.EventBus;
+import io.flybird.util.event.CachedEventBus;
 import io.flybird.util.math.AABB;
 import io.flybird.util.math.HitBox;
 import io.flybird.util.math.MathHelper;
@@ -22,14 +22,13 @@ import org.joml.Vector3d;
 import java.util.*;
 
 public class IWorld {
-    private final EventBus eventBus = new EventBus();
+    private final EventBus eventBus = new CachedEventBus();
     public HashMap<Vector3<Long>, Integer> scheduledTickEvents = new HashMap<>();//event,remaining time
-    public HashMapSet<ChunkPos, Chunk> chunks = new HashMapSet<>();//position,chunk
+    public KeyMap<ChunkPos, Chunk> chunks = new KeyMap<>();//position,chunk
     public HashMap<String, Entity> entities = new HashMap<>();//uuid,entity
-    private LevelInfo levelInfo;
+    private final LevelInfo levelInfo;
     private long time;
     private final String id;
-    private ArrayList<WorldListener> listeners = new ArrayList<>();
 
     public IWorld(String id, LevelInfo levelInfo) {
         this.id = id;
@@ -114,7 +113,7 @@ public class IWorld {
         return new WorldInfo(0x81BDE9, 0x0A1772, 0xDCE9F5, 0xFFFFFF);
     }
 
-    public HashMapSet<ChunkPos, Chunk> getChunkCache() {
+    public KeyMap<ChunkPos, Chunk> getChunkCache() {
         return this.chunks;
     }
 
@@ -164,7 +163,7 @@ public class IWorld {
 
         return c.getBlockState(
                 (int) MathHelper.getRelativePosInChunk(x, Chunk.WIDTH),
-                (int) y,
+                (int) MathHelper.getRelativePosInChunk(y, Chunk.HEIGHT),
                 (int) MathHelper.getRelativePosInChunk(z, Chunk.WIDTH)
         ).setX(x).setY(y).setZ(z);
     }
@@ -186,7 +185,6 @@ public class IWorld {
     }
 
     public void loadChunkRange(long centerCX, long centerCY, long centerCZ, int range, ChunkLoadTicket ticket) {
-        long last = System.currentTimeMillis();
         for (long x = centerCX - range; x <= centerCX + range; x++) {
             for (long y = centerCY - 1; y <= centerCY + 1; y++) {
                 for (long z = centerCZ - range; z <= centerCZ + range; z++) {
@@ -211,17 +209,6 @@ public class IWorld {
             loadChunk(new ChunkPos(x, y, z), ticket);
         }
     }
-
-
-    //listener
-    public void addListener(WorldListener worldListener) {
-        this.listeners.add(worldListener);
-    }
-
-    public void removeListener(WorldListener worldListener) {
-        this.listeners.remove(worldListener);
-    }
-
 
     //schedule tick
     public void setTick(long x, long y, long z) {
@@ -312,8 +299,7 @@ public class IWorld {
         );
     }
 
-    public EntityLocation getSpawnPosition(String uuid) {
-        //todo:pick a spawn position
-        return new EntityLocation(0, 1024, 0, 0, 0, 0, "cubecraft:overworld");
+    public LevelInfo getLevelInfo() {
+        return levelInfo;
     }
 }

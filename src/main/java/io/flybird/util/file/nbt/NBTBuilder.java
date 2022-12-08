@@ -1,5 +1,6 @@
 package io.flybird.util.file.nbt;
 
+import io.flybird.util.container.MultiMap;
 import io.flybird.util.file.nbt.tag.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -10,6 +11,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.Map;
 
 public class NBTBuilder {
     private static final HashMap<Type,NBTDeserializer<Object>> deserializers=new HashMap<>();

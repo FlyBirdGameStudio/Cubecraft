@@ -16,7 +16,7 @@ public class NBTTagCompound extends NBTBase
     
     public NBTTagCompound() {
         super();
-        this.tagMap = new HashMap<String, NBTBase>();
+        this.tagMap = new HashMap<>();
     }
     
     @Override
@@ -182,4 +182,7 @@ public class NBTTagCompound extends NBTBase
 		return this.getByte(string)==i;
 	}
 
+    public Map<String, NBTBase> getTagMap() {
+        return tagMap;
+    }
 }

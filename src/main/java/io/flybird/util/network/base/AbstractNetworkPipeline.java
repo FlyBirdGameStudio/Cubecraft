@@ -1,5 +1,6 @@
 package io.flybird.util.network.base;
 
+import io.flybird.util.event.CachedEventBus;
 import io.flybird.util.network.NetWorkEventBus;
 import io.flybird.util.network.handler.INetHandler;
 import io.flybird.util.event.EventBus;
@@ -7,7 +8,7 @@ import io.flybird.util.event.EventListener;
 
 public abstract class AbstractNetworkPipeline {
     protected final NetWorkEventBus packetEventBus =new NetWorkEventBus();
-    protected final EventBus eventBus =new EventBus();
+    protected final EventBus eventBus =new CachedEventBus();
 
     public void registerNetHandler(INetHandler handler){
         this.packetEventBus.registerEventListener(handler);

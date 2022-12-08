@@ -26,6 +26,7 @@ import io.flybird.cubecraft.internal.ScreenController;
 import io.flybird.cubecraft.internal.net.handler.ClientNetHandlerConnection;
 import io.flybird.cubecraft.internal.net.handler.ClientNetHandlerPlaying;
 import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerLeave;
+import io.flybird.util.event.CachedEventBus;
 import io.flybird.util.network.base.ClientNettyPipeline;
 import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerJoinRequest;
 import io.flybird.cubecraft.register.Registry;
@@ -93,7 +94,7 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
     private InetSocketAddress integratedServerLocation;
     private ClientNetHandlerPlaying handler=new ClientNetHandlerPlaying(this);
     private CubecraftServer server;
-    private final EventBus clientEventBus = new EventBus();
+    private final EventBus clientEventBus = new CachedEventBus();
     private final GameSetting setting = new GameSetting(ClientMain.getGamePath() + "/data/configs/settings.properties", "cubecraft client " + VERSION);
     private DisplayScreenInfo screenInfo;
     public LevelRenderer levelRenderer;

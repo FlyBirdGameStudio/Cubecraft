@@ -3,14 +3,13 @@ package io.flybird.cubecraft.server;
 import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.internal.net.handler.ServerHandlerPlayerConnection;
 import io.flybird.cubecraft.internal.net.handler.ServerHandlerPlayerPlaying;
+import io.flybird.util.event.CachedEventBus;
 import io.flybird.util.network.base.ServerNettyPipeline;
 import io.flybird.cubecraft.world.IWorld;
-import io.flybird.cubecraft.world.chunk.Chunk;
 import io.flybird.cubecraft.world.entity.Entity;
 import io.flybird.util.event.EventBus;
 import io.flybird.util.logging.LogHandler;
 import io.flybird.util.LoopTickingApplication;
-import io.flybird.util.task.MultiSourceExecution;
 import io.flybird.util.timer.Timer;
 import io.flybird.cubecraft.world.Level;
 
@@ -25,22 +24,17 @@ public class CubecraftServer extends LoopTickingApplication {
     private Level level;
     private final ExecutorService worldTickingService = Executors.newFixedThreadPool(this.setting.getValueAsInt("server.worldTickThread",1));
 
-    private final MultiSourceExecution<Chunk> worldProvideService = new MultiSourceExecution<>(this.setting.getValueAsInt("server.worldGenThread",1));
-
     public CubecraftServer(int port, String levelName) {
         this.port = port;
         this.levelName = levelName;
     }
 
-    public MultiSourceExecution<Chunk> getWorldProvideService() {
-        return worldProvideService;
-    }
     private ServerNettyPipeline serverIO =new ServerNettyPipeline();
     private final PlayerTable playerTable =new PlayerTable();
 
     private final int port;
     private final String levelName;
-    private final EventBus eventBus=new EventBus();
+    private final EventBus eventBus=new CachedEventBus();
 
     @Override
     public void init(){

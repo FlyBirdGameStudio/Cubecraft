@@ -5,6 +5,7 @@ import io.flybird.starfish3d.event.*;
 import io.flybird.util.ImageUtil;
 import io.flybird.util.container.BufferUtil;
 import io.flybird.util.event.EventBus;
+import io.flybird.util.event.CachedEventBus;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 
@@ -27,7 +28,7 @@ public class Window {
 
 
     //window
-    public EventBus windowEvent = new EventBus();
+    public EventBus windowEvent = new CachedEventBus();
     private long handle;
     private boolean visible;
     private boolean focused;
