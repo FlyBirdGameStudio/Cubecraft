@@ -1,18 +1,28 @@
 package io.flybird.util.container.namespace;
 
+import io.flybird.cubecraft.internal.block.BlockBehaviorRegistry;
+
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 
 /**
- * pack of {@link NameSpaceMap}
+ * pack of {@link NameSpaceMap},used to register.
  *
  * @param <I> item
  * @param <D> item depending on object class
+ *
+ * @author GrassBlock2022
  */
 public class NameSpacedRegisterMap<I, D> extends NameSpaceMap<I> {
     private final NameSpacedRegisterMap<D, ?> depend;
 
+    /**
+     * init a map. If with no depend on then "map" field could be null.
+     * @param map depend map.
+     */
     public NameSpacedRegisterMap(NameSpacedRegisterMap<D, ?> map) {
         super(":");
         this.depend = map;
@@ -73,8 +83,8 @@ public class NameSpacedRegisterMap<I, D> extends NameSpaceMap<I> {
 
     /**
      * put a class of getter of{@link I}
-     *
-     * @param clazz class
+     * @see ItemGetter,GetterDepend
+     * @param clazz class that contains getter
      */
     public void registerGetter(Class<?> clazz) {
         for (Method m : clazz.getMethods()) {
@@ -96,6 +106,12 @@ public class NameSpacedRegisterMap<I, D> extends NameSpaceMap<I> {
         }
     }
 
+    /**
+     * register a class,find all method with {@link ItemRegisterFunc},run and register item.
+     * @param clazz target class
+     *
+     * @see ItemRegisterFunc
+     */
     public void registerGetFunctionProvider(Class<?> clazz) {
         try {
             for (Method m : clazz.getMethods()) {
@@ -109,6 +125,42 @@ public class NameSpacedRegisterMap<I, D> extends NameSpaceMap<I> {
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException |
                  NoSuchMethodException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * register a FML-like field holder,when registering,it will scan all field,and register them.
+     * @param clazz target class
+     * @see FieldRegistryHolder
+     * @see FieldRegistry
+     */
+    public void registerFieldHolder(Class<?> clazz) {
+        FieldRegistryHolder holder=clazz.getAnnotation(FieldRegistryHolder.class);
+        if(holder==null){
+            for (Field f : clazz.getFields()) {
+                FieldRegistry registry = f.getAnnotation(FieldRegistry.class);
+                if (!Objects.equals(registry.namespace(), FieldRegistry.DEFAULT_NAMESPACE)) {
+                    try {
+                        this.registerItem(registry.id(), registry.namespace(), (I) f.get(null));
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+            }
+        }else {
+            for (Field f : clazz.getFields()) {
+                String namespace = holder.namespace();
+                FieldRegistry registry = f.getAnnotation(FieldRegistry.class);
+                if (!Objects.equals(registry.namespace(), FieldRegistry.DEFAULT_NAMESPACE)) {
+                    namespace = registry.namespace();
+                }
+                try {
+                    this.registerItem(registry.id(), namespace, (I) f.get(null));
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 }

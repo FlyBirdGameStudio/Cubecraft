@@ -1,16 +1,20 @@
 package io.flybird.util.container;
 
-import io.flybird.cubecraft.world.IWorld;
-
 import java.util.*;
 
+/**
+ * simple util for collection
+ *
+ * @author GrassBlock2022
+ */
 public class CollectionUtil {
-    public static <E>void iterateList(List<E> list, ListIterationAction<E> action){
-        for(E item:list){
-            action.action(item);
-        }
-    }
-
+    /**
+     * map iterate
+     * @param map target
+     * @param action action
+     * @param <K> map key Template class
+     * @param <V> map value Template class
+     */
     public static <K,V>void iterateMap(Map<K,V> map, MapIterationAction<K,V> action){
         Set<K> keys=map.keySet();
         for(K key:keys){
@@ -18,22 +22,20 @@ public class CollectionUtil {
         }
     }
 
+    /**
+     * wrap a single k-v-pair to an map.
+     * @param id key
+     * @param t value
+     * @return wrapped value
+     * @param <T>
+     */
     public static <T> HashMap<String, T> wrap(String id, T t) {
         HashMap<String,T> map=new HashMap<>();
         map.put(id, t);
         return map;
     }
 
-    public interface ListIterationAction<E>{
-        void action(E item);
-    }
-
     public interface MapIterationAction<K,V>{
         void action(K key,V item);
-    }
-
-
-    public static <T>List<T> pack(T... item){
-        return Arrays.asList(item);
     }
 }

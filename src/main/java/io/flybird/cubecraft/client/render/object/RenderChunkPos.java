@@ -2,13 +2,13 @@ package io.flybird.cubecraft.client.render.object;
 
 import io.flybird.cubecraft.client.render.sort.DistanceComparable;
 import io.flybird.cubecraft.world.entity.Entity;
-import io.flybird.util.container.keyMap.Key;
+import io.flybird.util.container.keymap.Key;
 import io.flybird.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3d;
 
 public record RenderChunkPos(long x, long y, long z) implements
-        Key<RenderChunkPos>, DistanceComparable,Comparable<RenderChunkPos> {
+        Key, DistanceComparable,Comparable<RenderChunkPos> {
 
     @Override
     public int compareTo(@NotNull RenderChunkPos o) {

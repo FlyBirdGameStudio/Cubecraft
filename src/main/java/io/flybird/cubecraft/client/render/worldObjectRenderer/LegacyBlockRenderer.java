@@ -4,7 +4,7 @@ import io.flybird.cubecraft.client.render.BlockRenderUtil;
 import io.flybird.cubecraft.client.render.model.RenderType;
 import io.flybird.cubecraft.client.render.model.object.Vertex;
 import io.flybird.cubecraft.client.resources.ResourceLocation;
-import io.flybird.cubecraft.register.RenderRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.block.BlockState;
 import io.flybird.cubecraft.world.block.EnumFacing;
@@ -65,7 +65,7 @@ public abstract class LegacyBlockRenderer implements IBlockRenderer {
     }
 
     public void renderFaceWithColor(String tex, int c,int face,VertexArrayBuilder builder, IWorld w, BlockState bs, long x, long y, long z, double renderX, double renderY, double renderZ) {
-        Texture2DTileMap terrain = RenderRegistry.getTextureManager().getTexture2DTileMapContainer().get("cubecraft:terrain");
+        Texture2DTileMap terrain = Registries.TEXTURE.getTexture2DTileMapContainer().get("cubecraft:terrain");
         float u0 = terrain.exactTextureU(tex, 0);
         float u1 = terrain.exactTextureU(tex, 1);
         float v0 = terrain.exactTextureV(tex, 0);

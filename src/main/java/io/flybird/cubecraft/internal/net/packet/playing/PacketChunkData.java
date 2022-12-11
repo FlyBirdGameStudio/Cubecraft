@@ -6,8 +6,8 @@ import io.flybird.cubecraft.world.chunk.Chunk;
 import io.flybird.cubecraft.world.chunk.ChunkPos;
 import io.flybird.util.container.BufferUtil;
 import io.flybird.util.container.namespace.TypeItem;
-import io.flybird.util.file.nbt.NBTBuilder;
-import io.flybird.util.file.nbt.tag.NBTTagCompound;
+import io.flybird.util.file.NBTBuilder;
+import io.flybird.util.file.nbt.NBTTagCompound;
 import io.netty.buffer.ByteBuf;
 
 import java.io.*;

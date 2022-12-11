@@ -1,15 +1,12 @@
 package io.flybird.cubecraft.world;
 
 import io.flybird.cubecraft.GameSetting;
-import io.flybird.cubecraft.register.ContentRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.entity.EntityLocation;
-import io.flybird.util.container.CollectionUtil;
 import io.flybird.util.file.FileUtil;
-import org.joml.Vector3d;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class Level {
     private final String name;
@@ -19,7 +16,7 @@ public class Level {
 
     public Level(String name, GameSetting setting) {
         this.name = name;
-        for (IWorldProvider provider:ContentRegistry.getWorldProviderMap().itemList()){
+        for (IWorldProvider provider: Registries.WORLD_PROVIDER.itemList()){
             IWorld world=provider.createServerWorld(this,setting);
             this.dims.put(world.getID(),world);
         }

@@ -20,6 +20,6 @@ public class Select extends Synth {
         if(select.getValue(var1, var3)<0.0f){
             return low.getValue(var1, var3);
         }
-        return MathHelper.linear_interpolate(low.getValue(var1, var3),high.getValue(var1, var3),select.getValue(var1, var3));
+        return MathHelper.linearInterpolate(low.getValue(var1, var3),high.getValue(var1, var3),select.getValue(var1, var3));
     }
 }

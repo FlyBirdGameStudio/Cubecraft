@@ -5,31 +5,43 @@ import org.joml.Vector3d;
 import java.util.Arrays;
 
 public class MathHelper {
-    public static double linear_interpolate(double x, double y, double t) {
+
+    /**
+     * linear_interpolate
+     *
+     * @param x a
+     * @param y b
+     * @param t t
+     * @return interpolated value
+     */
+    public static double linearInterpolate(double x, double y, double t) {
         return x + (y - x) * t;
     }
 
-    public static Vector3d linear_interpolate(Vector3d x, Vector3d y, double t) {
+    /**
+     * 3d linear_interpolate
+     *
+     * @param x a
+     * @param y b
+     * @param t t
+     * @return interpolated value
+     */
+    public static Vector3d linearInterpolate(Vector3d x, Vector3d y, double t) {
         return new Vector3d(
-                linear_interpolate(x.x, y.x, t),
-                linear_interpolate(x.y, y.y, t),
-                linear_interpolate(x.z, y.z, t)
+                linearInterpolate(x.x, y.x, t),
+                linearInterpolate(x.y, y.y, t),
+                linearInterpolate(x.z, y.z, t)
         );
     }
 
-
-    public static double smooth_interpolate(double x, double y, double t) {
-        return smoothstep(x, y, t);
-    }
-
-    static double smoothstep(double t1, double t2, double x) {
-        // Scale, bias and saturate x to 0..1 range
-        // 还记得么？在remap算法中接触过
-        x = clamp((x - t1) / (t2 - t1), 0.0, 1.0);
-        // Evaluate polynomial
-        return x * x * (3 - 2 * x);
-    }
-
+    /**
+     * clamp value to range
+     *
+     * @param x   value
+     * @param max max range
+     * @param min min range
+     * @return clamped value
+     */
     public static double clamp(double x, double max, double min) {
         if (x > max) {
             x = max;
@@ -40,20 +52,29 @@ public class MathHelper {
         return x;
     }
 
-    public static double step(double x, double step) {
-        if (x < step) {
-            return 0.0;
-        } else {
-            return 1.0;
-        }
-    }
-
+    /**
+     * get random from 3d vec
+     *
+     * @param n  x
+     * @param n2 y
+     * @param n3 z
+     * @return rand
+     * @author Minecraft
+     */
     public static long rand3(long n, long n2, long n3) {
         long l = (n * 3129871) ^ n3 * 116129781L ^ n2;
         l = l * l * 42317861L + l * 11L;
         return l >> 16;
     }
 
+    /**
+     * get random from 2d vec
+     *
+     * @param n  x
+     * @param n2 y
+     * @return rand
+     * @author Minecraft
+     */
     public static long rand2(long n, long n2) {
         long what = 1145141919810L;
         long l = (n * 3129871) ^ what * 116129781L ^ n2;
@@ -61,74 +82,41 @@ public class MathHelper {
         return l >> 16;
     }
 
+    /**
+     * scale number from a range to another range
+     * @param x value
+     * @param outputMin min range for out
+     * @param outputMax max range for out
+     * @param inputMin min range for in
+     * @param inputMax max range for in
+     * @return scaled value
+     */
     public static double scale(double x, double outputMin, double outputMax, double inputMin, double inputMax) {
         return (x - inputMin) / (inputMax - inputMin) * (outputMax - outputMin) + outputMin;
     }
 
+    /**
+     * get a chunk position in world
+     * @param world world coordinate
+     * @param aspect aspect(chunk size)
+     * @return chunk position
+     */
     public static long getChunkPos(long world, long aspect) {
         int fix = world < 0 ? 1 : 0;
         return world / aspect - fix;
     }
 
+    /**
+     * get relative pos in chunk
+     * @param world world coordinate
+     * @param aspect aspect(chunk size)
+     * @return relative pos
+     */
     public static long getRelativePosInChunk(long world, long aspect) {
         long a = getChunkPos(world, aspect) * aspect;
         return world - a - (world < 0 ? 1 : 0);
     }
 
-    public static long floor(double d) {
-        final long n = (long) d;
-        if (d < n) {
-            return n - 1;
-        }
-        return n;
-    }
-
-    public static Vector3d getIntermediateWithXValue(final Vector3d self, final Vector3d vec3D, double float2) {
-        final double n = vec3D.x - self.x;
-        final double n2 = vec3D.y - self.y;
-        final double n3 = vec3D.z - self.z;
-        if (n * n < 1.0E-7f) {
-            return null;
-        }
-        if ((float2 = (float2 - self.x) / n) < 0.0f || float2 > 1.0f) {
-            return null;
-        }
-        return new Vector3d(self.x + n * float2, self.y + n2 * float2, self.z + n3 * float2);
-    }
-
-    public static Vector3d getIntermediateWithYValue(final Vector3d self, final Vector3d vec3D, double float2) {
-        final double n = vec3D.x - self.x;
-        final double n2 = vec3D.y - self.y;
-        final double n3 = vec3D.z - self.z;
-        if (n2 * n2 < 1.0E-7f) {
-            return null;
-        }
-        if ((float2 = (float2 - self.y) / n2) < 0.0f || float2 > 1.0f) {
-            return null;
-        }
-        return new Vector3d(self.x + n * float2, self.y + n2 * float2, self.z + n3 * float2);
-    }
-
-    public static Vector3d getIntermediateWithZValue(final Vector3d self, final Vector3d vec3D, double float2) {
-        final double n = vec3D.x - self.x;
-        final double n2 = vec3D.y - self.y;
-        final double n3;
-        if ((n3 = vec3D.z - self.z) * n3 < 1.0E-7f) {
-            return null;
-        }
-        if ((float2 = (float2 - self.z) / n3) < 0.0f || float2 > 1.0f) {
-            return null;
-        }
-        return new Vector3d(self.x + n * float2, self.y + n2 * float2, self.z + n3 * float2);
-    }
-
-    public static int floor_double(double d) {
-        final int n = (int) d;
-        if (d < n) {
-            return n - 1;
-        }
-        return n;
-    }
 
     /**
      * get "t" from a,b,x
@@ -137,11 +125,18 @@ public class MathHelper {
         return (x - a) / (b - a);
     }
 
+    /**
+     * get "t" from a,b,x
+     */
     public static double reverse_interpolate_abs(double a, double b, double x) {
         return (x - a) / Math.abs(b - a);
     }
 
-
+    /**
+     * get vector for rotation
+     *
+     * @author Minecraft
+     */
     public static Vector3d getVectorForRotation(float pitch, float yaw) {
         float f = (float) Math.cos(-yaw * 0.017453292F - (float) Math.PI);
         float f1 = (float) Math.sin(-yaw * 0.017453292F - (float) Math.PI);
@@ -150,28 +145,56 @@ public class MathHelper {
         return new Vector3d((f1 * f2), f3, (f * f2));
     }
 
-    public static long toExactWorldPos(double pos) {
-        return (long) (pos - (pos >= 0 ? 0 : 1));
-    }
-
+    /**
+     * distance from a-b
+     * @param v0 a
+     * @param v1 b
+     * @return dist
+     */
     public static double dist(Vector3d v0, Vector3d v1) {
         return Math.sqrt(pow2(v0.x - v1.x) + pow2(v0.y - v1.y) + pow2(v0.z - v1.z));
     }
 
+    /**
+     * power 2
+     * @param a origin number
+     * @return powered data
+     */
     public static double pow2(double a) {
         return a * a;
     }
 
+    /**
+     * interpolate in 2d
+     * @param _00 00
+     * @param _01 01
+     * @param _10 10
+     * @param _11 11
+     * @param xt xt
+     * @param yt yt
+     * @return interpolated data
+     */
     public static double linear_interpolate2d(double _00, double _01, double _10, double _11, double xt, double yt) {
-        double _0z = linear_interpolate(_00, _10, xt);
-        double _1z = linear_interpolate(_01, _11, xt);
-        return linear_interpolate(_0z, _1z, yt);
+        double _0z = linearInterpolate(_00, _10, xt);
+        double _1z = linearInterpolate(_01, _11, xt);
+        return linearInterpolate(_0z, _1z, yt);
     }
 
+    /**
+     * reflect value against y
+     * @param y reflect axis
+     * @param v value
+     * @return reflected value
+     */
     public static double reflect(double y, double v) {
         return v - (y - v);
     }
 
+    /**
+     * hex char to int
+     * @param ch char
+     * @return value
+     */
     public static int getHexValue(char ch) {
         if (ch >= '0' && ch <= '9') {
             return Integer.parseInt(String.valueOf(ch));
@@ -202,6 +225,11 @@ public class MathHelper {
         return -1;
     }
 
+    /**
+     * hex string to int
+     * @param str string
+     * @return value
+     */
     public static int hex2Int(String str) {
         int result = 0;
         char[] hex = str.toCharArray();
@@ -215,14 +243,44 @@ public class MathHelper {
         return result;
     }
 
+    /**
+     * find min one in 3 value
+     * @param d0 value
+     * @param d1 value
+     * @param d2 value
+     * @return min one
+     */
     public static double min3(double d0, double d1, double d2) {
         return Math.min(d0, Math.min(d1, d2));
     }
 
+    /**
+     * find max one in 3 value
+     * @param d0 value
+     * @param d1 value
+     * @param d2 value
+     * @return max one
+     */
     public static double max3(double d0, double d1, double d2) {
         return Math.max(d0, Math.max(d1, d2));
     }
 
+    /**
+     * 3d linear interpolation
+     * @param _000 vertex value
+     * @param _001 vertex value
+     * @param _010 vertex value
+     * @param _011 vertex value
+     * @param _100 vertex value
+     * @param _101 vertex value
+     * @param _110 vertex value
+     * @param _111 vertex value
+     * @param xt x pos
+     * @param yt y pos
+     * @param zt z pos
+     *
+     * @return interpolated value
+     */
     public static double linear_interpolate3d(double _000, double _001, double _010, double _011,
                                               double _100, double _101, double _110, double _111,
                                               double xt, double yt, double zt
@@ -247,6 +305,11 @@ public class MathHelper {
         return accum;
     }
 
+    /**
+     * find avg data
+     * @param data data
+     * @return avg
+     */
     public static double avg(double... data) {
         double result = 0;
         for (double d : data) {
@@ -255,29 +318,28 @@ public class MathHelper {
         return result / data.length;
     }
 
-
-    public static double[] maxRange(int nums, double... data) {
-        double[] result = new double[nums];
-        Arrays.sort(data);
-        for (int i = 0; i < nums; i++) {
-            result[i] = data[data.length - nums + i];
-        }
-        return result;
-    }
-
+    /**
+     * alt method
+     * @param v vertex data
+     * @param v1 vertex data
+     * @param v2 vertex data
+     * @param v3 vertex data
+     * @param v4 vertex data
+     * @param v5 vertex data
+     * @param v6 vertex data
+     * @param v7 vertex data
+     * @param t pos
+     * @return interpolated data
+     */
     public static double linear_interpolate3d(double v, double v1, double v2, double v3, double v4, double v5, double v6, double v7, Vector3d t) {
         return linear_interpolate3d(v, v1, v2, v3, v4, v5, v6, v7, t.x, t.y, t.z);
     }
 
-    public static double[] minRange(int nums, double... data) {
-        double[] result = new double[nums];
-        Arrays.sort(data);
-        for (int i = 0; i < nums; i++) {
-            result[i] = data[nums];
-        }
-        return result;
-    }
-
+    /**
+     * find median from data
+     * @param data data
+     * @return median number
+     */
     public static double median(double... data) {
         Arrays.sort(data);
         if (data.length % 2 == 0) {
@@ -287,9 +349,13 @@ public class MathHelper {
         }
     }
 
-
+    /**
+     * find max from data
+     * @param data dara
+     * @return max number
+     */
     public static double max(double... data) {
         Arrays.sort(data);
-        return data[data.length-1];
+        return data[data.length - 1];
     }
 }

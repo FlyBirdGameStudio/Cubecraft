@@ -1,26 +1,30 @@
 package io.flybird.cubecraft.client.render.model.block;
 
+import com.google.gson.*;
 import io.flybird.cubecraft.client.render.model.RenderType;
 import io.flybird.cubecraft.client.render.model.object.Model;
 import io.flybird.cubecraft.client.resources.ResourceLocation;
+import io.flybird.cubecraft.client.resources.ResourceManager;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.block.BlockState;
 import io.flybird.starfish3d.render.draw.VertexArrayBuilder;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class BlockModel implements Model {
-    private final ArrayList<IBlockModelComponent> components;
+    private final ArrayList<BlockModelComponent> components;
     private final ArrayList<String> usedTextures;
 
-    public BlockModel(ArrayList<IBlockModelComponent> components, ArrayList<String> usedTextures) {
+    public BlockModel(ArrayList<BlockModelComponent> components, ArrayList<String> usedTextures) {
         this.components = components;
         this.usedTextures = usedTextures;
     }
 
     public void render(VertexArrayBuilder builder, RenderType currentType, IWorld world, BlockState bs, long x, long y, long z, double renderX, double rendery, double renderz){
-        for (IBlockModelComponent model:components){
+        for (BlockModelComponent model:components){
             if(currentType==model.type) {
                 model.render(builder, currentType, world, bs, x, y, z, renderX, rendery, renderz);
             }
@@ -28,7 +32,7 @@ public final class BlockModel implements Model {
     }
 
     public void renderAsItem(VertexArrayBuilder builder, double renderX, double renderY, double renderZ){
-        for (IBlockModelComponent model:components){
+        for (BlockModelComponent model:components){
             model.renderAsItem(builder, renderX, renderY, renderZ);
         }
     }
@@ -40,6 +44,36 @@ public final class BlockModel implements Model {
             if(!textureList.contains(loc)) {
                 textureList.add(loc);
             }
+        }
+    }
+
+
+    public static class JDeserializer implements JsonDeserializer<BlockModel> {
+        @Override
+        public BlockModel deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            if (jsonElement.getAsJsonObject().has("cover_json")) {
+                JsonObject root = jsonElement.getAsJsonObject().get("cover_json").getAsJsonObject();
+                String src = ResourceManager.instance.getResource(ResourceLocation.blockModel(root.get("import").getAsString())).getAsText();
+                JsonArray arr = root.get("replacement").getAsJsonArray();
+                for (JsonElement n : arr) {
+                    src = src.replace(n.getAsJsonObject().get("from").getAsString(), n.getAsJsonObject().get("to").getAsString());
+                }
+                BlockModel m = Registries.createJsonReader().fromJson(src, BlockModel.class);
+                return m;
+            }
+
+            JsonArray comp = jsonElement.getAsJsonObject().get("components").getAsJsonArray();
+            ArrayList<BlockModelComponent> component = new ArrayList<>();
+            for (int i = 0; i < comp.size(); i++) {
+                component.add(jsonDeserializationContext.deserialize(comp.get(i), BlockModelComponent.class));
+            }
+
+            ArrayList<String> usedTextures = new ArrayList<>();
+            JsonArray texture = jsonElement.getAsJsonObject().get("used_textures").getAsJsonArray();
+            for (int i = 0; i < texture.size(); i++) {
+                usedTextures.add(texture.get(i).getAsString());
+            }
+            return new BlockModel(component, usedTextures);
         }
     }
 }

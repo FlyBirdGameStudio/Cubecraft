@@ -2,8 +2,8 @@ package io.flybird.cubecraft;
 
 import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerJoinResponse;
 import io.flybird.cubecraft.world.block.BlockState;
-import io.flybird.util.file.nbt.NBTBuilder;
-import io.flybird.util.file.nbt.tag.NBTTagCompound;
+import io.flybird.util.file.NBTBuilder;
+import io.flybird.util.file.nbt.NBTTagCompound;
 import io.flybird.util.network.NetHandlerContext;
 import io.flybird.util.network.packet.PacketEventHandler;
 import io.flybird.util.network.handler.INetHandler;

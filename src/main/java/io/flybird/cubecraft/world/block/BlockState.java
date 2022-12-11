@@ -1,11 +1,11 @@
 package io.flybird.cubecraft.world.block;
 
-import io.flybird.cubecraft.register.ContentRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.HittableObject;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.entity.Entity;
-import io.flybird.util.file.nbt.NBTDataIO;
-import io.flybird.util.file.nbt.tag.NBTTagCompound;
+import io.flybird.util.file.NBTDataIO;
+import io.flybird.util.file.nbt.NBTTagCompound;
 import io.flybird.util.math.AABB;
 import io.flybird.util.math.HitBox;
 import io.flybird.util.math.HitResult;
@@ -50,7 +50,7 @@ public class BlockState implements NBTDataIO, HittableObject {
     }
 
     public Block getBlock() {
-        return ContentRegistry.getBlockMap().get(this.id);
+        return Registries.BLOCK.get(this.id);
     }
 
     public byte getMeta() {

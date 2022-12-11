@@ -1,15 +1,16 @@
 package io.flybird.cubecraft.client.gui;
 
 import io.flybird.cubecraft.client.resources.ResourceManager;
-import io.flybird.util.file.faml.FAMLDeserializer;
-import io.flybird.util.file.faml.XmlReader;
-import io.flybird.util.file.lang.Language;
+import io.flybird.util.file.FAMLDeserializer;
+import io.flybird.util.file.XmlReader;
 import io.flybird.util.math.MathHelper;
 import com.google.gson.*;
 import org.w3c.dom.Element;
 
 import java.lang.reflect.Type;
 import java.util.Random;
+
+import static io.flybird.cubecraft.register.Registries.I18N;
 
 public class Text {
     private String text;
@@ -72,7 +73,7 @@ public class Text {
     private static String getText(String type, String src) {
         return switch (type) {
             case "raw" -> src;
-            case "lang" -> Language.get(src);
+            case "lang" -> I18N.get(src);
             case "random" -> {
                 String[] splash;
                 splash = new Gson().fromJson(ResourceManager.instance.getResource(src).getAsText(), String[].class);

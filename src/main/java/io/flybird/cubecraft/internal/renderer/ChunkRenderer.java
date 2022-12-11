@@ -5,18 +5,18 @@ import io.flybird.cubecraft.client.render.model.RenderType;
 import io.flybird.cubecraft.client.render.object.*;
 import io.flybird.cubecraft.client.render.renderer.IWorldRenderer;
 import io.flybird.cubecraft.client.render.renderer.LevelRenderer;
-import io.flybird.cubecraft.register.Registry;
-import io.flybird.cubecraft.register.RenderRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.entity.humanoid.Player;
 import io.flybird.cubecraft.world.event.block.BlockChangeEvent;
 import io.flybird.starfish3d.platform.Window;
 import io.flybird.starfish3d.render.Camera;
+import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.starfish3d.render.culling.ProjectionMatrixFrustum;
 import io.flybird.starfish3d.render.multiThread.*;
 import io.flybird.starfish3d.render.textures.Texture2D;
 import io.flybird.util.container.CollectionUtil;
-import io.flybird.util.container.keyMap.KeyMap;
+import io.flybird.util.container.keymap.KeyMap;
 import io.flybird.util.event.EventHandler;
 import io.flybird.util.event.EventListener;
 import io.flybird.util.logging.LogHandler;
@@ -65,9 +65,9 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
         }
         this.drawChunks();
 
-        Registry.getDebugInfoHandler().putI("cubecraft:chunk_render/all",chunks.size());
+        Registries.DEBUG_INFO.putI("cubecraft:chunk_render/all",chunks.size());
 
-        Registry.getDebugInfoHandler().putI("cubecraft:chunk_render/update",this.updateService.getCache().size());
+        Registries.DEBUG_INFO.putI("cubecraft:chunk_render/update",this.updateService.getCache().size());
     }
 
     private void drawChunks() {
@@ -79,18 +79,18 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
 
         AtomicInteger counter=new AtomicInteger();
 
-        RenderRegistry.getTextureManager().getTexture2DTileMapContainer().bind("cubecraft:terrain");
+        Registries.TEXTURE.getTexture2DTileMapContainer().bind("cubecraft:terrain");
         this.drawChunk(RenderType.ALPHA, this.callListAlpha, d,counter);
         GL11.glDepthMask(false);
-        Registry.getDebugInfoHandler().putI("cubecraft:chunk_render/visible_alpha",counter.get());
+        Registries.DEBUG_INFO.putI("cubecraft:chunk_render/visible_alpha",counter.get());
         counter.set(0);
         this.drawChunk(RenderType.TRANSPARENT, this.callListTransParent, d,counter);
-        Registry.getDebugInfoHandler().putI("cubecraft:chunk_render/visible_transparent",counter.get());
+        Registries.DEBUG_INFO.putI("cubecraft:chunk_render/visible_transparent",counter.get());
         GL11.glDepthMask(true);
 
-        RenderRegistry.getTextureManager().getTexture2DTileMapContainer().unbind("cubecraft:terrain");
+        Registries.TEXTURE.getTexture2DTileMapContainer().unbind("cubecraft:terrain");
 
-        this.logHandler.checkGLError("draw_chunks");
+        GLUtil.checkGLError("draw_chunks");
 
         LevelRenderer.closeState(this.setting);
     }
@@ -144,7 +144,7 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
         }
 
         //draw available compile
-        logHandler.checkGLError("pre_draw");
+        GLUtil.checkGLError("pre_draw");
         for (int i = 0; i < (this.setting.getValueAsInt("client.render.chunk.maxUpdate", 2)); i++) {
             if (this.updateService.getResultSize() > 0) {
                 DrawCompile compile = this.updateService.getAvailableCompile();
@@ -163,7 +163,7 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
                 this.checkCallList(chunk, RenderType.TRANSPARENT, this.callListTransParent);
             }
         }
-        logHandler.checkGLError("post_draw");
+        GLUtil.checkGLError("post_draw");
     }
 
     public void checkCallList(RenderChunk chunk, RenderType type, List<RenderChunk> callList) {

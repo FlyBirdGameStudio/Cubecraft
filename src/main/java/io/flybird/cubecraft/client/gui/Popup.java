@@ -1,6 +1,6 @@
 package io.flybird.cubecraft.client.gui;
 
-import io.flybird.cubecraft.register.RenderRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.starfish3d.render.ShapeRenderer;
 import io.flybird.util.math.MathHelper;
@@ -34,7 +34,7 @@ public class Popup {
 
     public void render(DisplayScreenInfo info){
         GLUtil.enableBlend();
-        RenderRegistry.getTextureManager().getTexture2DContainer().bind("/resource/cubecraft/texture/ui/controls/popup.png");
+        Registries.TEXTURE.getTexture2DContainer().bind("/resource/cubecraft/texture/ui/controls/popup.png");
         ShapeRenderer.drawRectUV(4,196,4,46,0,0, 0,1,
                 type*42/198f,(type+1)*42/198f
         );
@@ -43,7 +43,7 @@ public class Popup {
                 type*30/198f,(type+1)*30/198f
                 ,168/198f,1
         );
-        RenderRegistry.getTextureManager().getTexture2DContainer().unbind("/resource/cubecraft/texture/ui/controls/popup.png");
+        Registries.TEXTURE.getTexture2DContainer().unbind("/resource/cubecraft/texture/ui/controls/popup.png");
         FontRenderer.renderShadow(title,40,12,0xffffff,12, FontAlignment.LEFT);
         FontRenderer.renderShadow(subTitle,40,28,0xffffff,8, FontAlignment.LEFT);
     }
@@ -66,6 +66,6 @@ public class Popup {
     }
 
     public int getPos(float t){
-        return (int) MathHelper.linear_interpolate(xo,x,t);
+        return (int) MathHelper.linearInterpolate(xo,x,t);
     }
 }

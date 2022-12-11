@@ -8,7 +8,7 @@ import io.flybird.cubecraft.world.entity.humanoid.Player;
 import io.flybird.cubecraft.world.worldGen.ChunkProvider;
 import io.flybird.util.container.CollectionUtil;
 import io.flybird.util.math.MathHelper;
-import io.flybird.util.math.Vector3;
+import io.flybird.util.container.Vector3;
 
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;

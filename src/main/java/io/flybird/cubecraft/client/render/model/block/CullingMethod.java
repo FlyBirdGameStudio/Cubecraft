@@ -2,7 +2,7 @@ package io.flybird.cubecraft.client.render.model.block;
 
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.block.EnumFacing;
-import io.flybird.util.math.Vector3;
+import io.flybird.util.container.Vector3;
 
 import java.util.Objects;
 

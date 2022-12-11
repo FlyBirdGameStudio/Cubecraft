@@ -1,5 +1,6 @@
 package io.flybird.starfish3d.render.textures;
 
+import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.util.ImageUtil;
 import io.flybird.util.container.BufferUtil;
 import org.lwjgl.opengl.*;
@@ -27,7 +28,7 @@ public class Texture2DArray extends Texture{
         this.bind();
         GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
         GL12.glTexImage3D(this.getBindingType(),1,GL11.GL_RGBA,width,height,count,0,GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE, (ByteBuffer) null);
-        logHandler.checkGLError("generate_texture");
+        GLUtil.checkGLError("generate_texture");
     }
 
     @Override
@@ -41,7 +42,7 @@ public class Texture2DArray extends Texture{
         BufferUtil.free(buffer);
         this.textureMapping.put(image.getName(),prevLayer);
         this.unbind();
-        logHandler.checkGLError("load");
+        GLUtil.checkGLError("load");
         prevLayer++;
     }
 

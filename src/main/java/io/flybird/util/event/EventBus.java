@@ -5,9 +5,25 @@ package io.flybird.util.event;
  */
 
 public interface EventBus {
-    void callEvent(Event event, Object... param);
 
+    /**
+     * call event
+     *
+     * @param event
+     */
+    void callEvent(Event event);
+
+    /**
+     * register a event listener
+     *
+     * @param el handler
+     */
     void registerEventListener(EventListener el);
 
+    /**
+     * unregister a event handler
+     *
+     * @param el handler
+     */
     void unregisterEventListener(EventListener el);
 }

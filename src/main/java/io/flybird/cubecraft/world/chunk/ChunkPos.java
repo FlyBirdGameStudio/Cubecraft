@@ -1,10 +1,10 @@
 package io.flybird.cubecraft.world.chunk;
 
 import io.flybird.cubecraft.world.entity.Entity;
-import io.flybird.util.container.keyMap.Key;
+import io.flybird.util.container.keymap.Key;
 import io.flybird.util.math.MathHelper;
 
-public record ChunkPos (long x, long y,long z) implements Key<ChunkPos> {
+public record ChunkPos (long x, long y,long z) implements Key {
 
     @Override
     public String toString() {

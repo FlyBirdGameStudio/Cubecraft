@@ -1,7 +1,13 @@
 package io.flybird.util.container;
 
-import io.flybird.util.file.nbt.tag.NBTTagCompound;
+import io.flybird.util.file.nbt.NBTTagCompound;
 
+/**
+ * allocate a space-friendly short alias name(short) to string id.
+ * <p>works like FMLNameSpacedRegistry,but a bit different is it support frag manage.</p>
+ *
+ * @author GrassBlock2022
+ */
 public class DynamicNameIdMap {
     public short[] array;
     public final MultiMap<String,Short> mapping=new MultiMap<>();
@@ -11,6 +17,11 @@ public class DynamicNameIdMap {
         this.array = new short[size];
     }
 
+    /**
+     * insert a value to array.
+     * @param index index (pos).
+     * @param id target value.
+     */
     public void set(int index,String id){
         if(!this.mapping.containsKey(id)){
              this.alloc(id);
@@ -18,11 +29,20 @@ public class DynamicNameIdMap {
         this.array[index]=this.mapping.get(id);
     }
 
+    /**
+     * alloc a new num id for string
+     * @param id id that needs to allocate.
+     */
     public void alloc(String id){
         this.mapping.put(id,this.counter);
         this.counter++;
     }
 
+    /**
+     * manage fragment of mapping,to lower used space,resort mapping.
+     *
+     * <p>cause a bit time when its big,so not recommended to use really often.</p>
+     */
     public void manageFragment(){
         String[] raw=new String[this.array.length];
         for (int i=0;i<this.array.length;i++){
@@ -35,6 +55,11 @@ public class DynamicNameIdMap {
         }
     }
 
+    /**
+     * get value in given index.
+     * @param index index
+     * @return value
+     */
     public String get(int index){
         return this.mapping.of(this.array[index]);
     }
@@ -45,6 +70,10 @@ public class DynamicNameIdMap {
         }
     }
 
+    /**
+     * export to nbt tag,encode all data(a complex data storage).
+     * @return tag
+     */
     public NBTTagCompound export() {
         NBTTagCompound tag=new NBTTagCompound();
         NBTTagCompound map=new NBTTagCompound();
@@ -54,6 +83,10 @@ public class DynamicNameIdMap {
         return tag;
     }
 
+    /**
+     * import from nbt tag,cover all exist data.
+     * @param tag tag
+     */
     public void setData(NBTTagCompound tag){
         this.mapping.clear();
         NBTTagCompound map=tag.getCompoundTag("map");
@@ -63,6 +96,10 @@ public class DynamicNameIdMap {
         this.manageFragment();
     }
 
+    /**
+     * fill data in,cover origin data.
+     * @param raw data
+     */
     public void setArr(String[] raw) {
         for (int i=0;i<this.array.length;i++){
             this.set(i,raw[i]);

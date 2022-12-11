@@ -29,7 +29,8 @@ public record ResourceLocation(ResourceType type,String namespace,ResourceLocTyp
 
         BLOCK_DATA("/block/"),
         ENTITY_DATA("/entity/"),
-        EMPTY("/");
+        EMPTY("/"),
+        TEXT("/text/");
 
         final String name;
 
@@ -60,6 +61,10 @@ public record ResourceLocation(ResourceType type,String namespace,ResourceLocTyp
     //block
     public static ResourceLocation blockTexture(String namespace,String relativePos){
         return new ResourceLocation(ResourceType.RESOURCE,namespace,ResourceLocType.BLOCK_TEXTURE,relativePos);
+    }
+
+    public static ResourceLocation language(String namespace,String rel) {
+        return new ResourceLocation(ResourceType.RESOURCE,namespace,ResourceLocType.TEXT,rel);
     }
 
     public static ResourceLocation blockColorMap(String n, String s) {

@@ -1,13 +1,12 @@
 package io.flybird.cubecraft.world.entity;
 
-import io.flybird.cubecraft.register.ContentRegistry;
-import io.flybird.cubecraft.register.RenderRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.HittableObject;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.entity.item.Item;
 import io.flybird.cubecraft.world.item.Inventory;
-import io.flybird.util.file.nbt.NBTDataIO;
-import io.flybird.util.file.nbt.tag.NBTTagCompound;
+import io.flybird.util.file.NBTDataIO;
+import io.flybird.util.file.nbt.NBTTagCompound;
 import io.flybird.util.math.*;
 import org.joml.Vector3d;
 
@@ -283,7 +282,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
 
 
     public void render(float interpolationTime) {
-        RenderRegistry.getEntityModelManager().get(this.getID()).render(this);
+        Registries.ENTITY_MODEL.get(this.getID()).render(this);
     }
 
 

@@ -104,14 +104,6 @@ public class PlayerController implements EventListener {
             "cubecraft:spruce_leaves",
             BlockType.BLUE_STAINED_GLASS,
             BlockType.GREEN_STAINED_GLASS,
-
-            "cubecraft:stone",
-            "cubecraft:dirt",
-            "cubecraft:grass_block",
-            "cubecraft:oak_leaves",
-            "cubecraft:dark_oak_leaves",
-            "cubecraft:spruce_leaves",
-            "cubecraft:birch_leaves",
     };
     public void setSelectedSlot(int slot){
         this.entity.selectedBlockID=list[slot];

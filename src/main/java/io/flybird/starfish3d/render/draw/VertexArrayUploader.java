@@ -1,5 +1,6 @@
 package io.flybird.starfish3d.render.draw;
 
+import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.util.logging.LogHandler;
 import io.flybird.util.container.BufferUtil;
 import org.lwjgl.BufferUtils;
@@ -21,7 +22,7 @@ public class VertexArrayUploader {
 
     public static void uploadPointer(VertexArrayBuilder arr) {
         uploadedCount+=arr.vertexCount;
-        logHandler.checkGLError("pre_upload_pointer");
+        GLUtil.checkGLError("pre_upload_pointer");
 
         GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
         GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
@@ -45,7 +46,7 @@ public class VertexArrayUploader {
         GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
         GL11.glDisableClientState(GL11.GL_NORMAL_ARRAY);
 
-        logHandler.checkGLError("post_upload_pointer");
+        GLUtil.checkGLError("post_upload_pointer");
     }
 
     public static void uploadVBO(VertexArrayBuilder arr, int vbo) {

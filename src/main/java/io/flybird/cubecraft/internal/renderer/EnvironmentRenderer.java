@@ -3,7 +3,7 @@ package io.flybird.cubecraft.internal.renderer;
 import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.client.render.renderer.IWorldRenderer;
 import io.flybird.cubecraft.client.render.renderer.LevelRenderer;
-import io.flybird.cubecraft.register.Registry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.entity.humanoid.Player;
 import io.flybird.cubecraft.world.worldGen.noiseGenerator.PerlinNoise;
@@ -94,8 +94,8 @@ public class EnvironmentRenderer extends IWorldRenderer {
         }
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
-        Registry.getDebugInfoHandler().putI("cubecraft:environment_renderer/all_clouds",allCloudCount);
-        Registry.getDebugInfoHandler().putI("cubecraft:environment_renderer/visible_clouds",visibleCloudCount);
+        Registries.DEBUG_INFO.putI("cubecraft:environment_renderer/all_clouds",allCloudCount);
+        Registries.DEBUG_INFO.putI("cubecraft:environment_renderer/visible_clouds",visibleCloudCount);
 
         LevelRenderer.closeState(this.setting);
     }

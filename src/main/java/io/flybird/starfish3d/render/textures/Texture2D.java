@@ -1,5 +1,6 @@
 package io.flybird.starfish3d.render.textures;
 
+import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.util.ImageUtil;
 import io.flybird.util.container.BufferUtil;
 import org.lwjgl.opengl.GL11;
@@ -21,7 +22,7 @@ public class Texture2D extends Texture {
         ByteBuffer buffer=ImageUtil.getByteFromBufferedImage_RGBA(img);
         GL11.glTexImage2D(this.getBindingType(),0,GL11.GL_RGBA,width,height,0,GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE,buffer);
         BufferUtil.free(buffer);
-        logHandler.checkGLError("load");
+        GLUtil.checkGLError("load");
     }
 
     @Override

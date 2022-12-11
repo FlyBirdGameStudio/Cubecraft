@@ -1,18 +1,23 @@
 package io.flybird.util.container.namespace;
 
-import io.flybird.cubecraft.internal.net.packet.PacketRegistry;
-
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * hols an item constructing registration
+ * @param <I> Template class
+ */
 public class NameSpacedConstructingMap<I> {
     private final NameSpacedRegisterMap<Class<? extends I>,?> map=new NameSpacedRegisterMap<>(null);
     private final Class<?>[] params;
 
+    /**
+     * simple initializer
+     * @param params object init args
+     */
     public NameSpacedConstructingMap(Class<?>... params) {
         this.params = params;
     }
@@ -69,6 +74,11 @@ public class NameSpacedConstructingMap<I> {
         }
     }
 
+    /**
+     * create all instances in mapping.
+     * @param initArgs arg
+     * @return created object
+     */
     public Map<String,I> createAll(Object... initArgs){
         Map<String,I> map=new HashMap<>();
         for (String all:this.map.idList()){
@@ -77,6 +87,11 @@ public class NameSpacedConstructingMap<I> {
         return map;
     }
 
+    /**
+     * register item class,using {@link TypeItem} as id getter.
+     * @param item class
+     * @throws RuntimeException if item does not contain "typeitem" annotation.
+     */
     public void registerItem(Class<? extends I> item) {
         TypeItem a=item.getDeclaredAnnotation(TypeItem.class);
         if(a==null){
@@ -85,6 +100,12 @@ public class NameSpacedConstructingMap<I> {
         registerItem(a.value(),item);
     }
 
+    /**
+     * register a class,find all method with {@link ItemRegisterFunc},run and register item.
+     * @param clazz target class
+     *
+     * @see ItemRegisterFunc
+     */
     public void registerGetFunctionProvider(Class<?> clazz) {
         try {
             for (Method m : clazz.getMethods()) {

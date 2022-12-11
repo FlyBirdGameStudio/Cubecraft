@@ -2,8 +2,7 @@ package io.flybird.cubecraft.client.gui.screen;
 
 import io.flybird.cubecraft.client.gui.DisplayScreenInfo;
 import io.flybird.cubecraft.client.gui.ScreenLoader;
-import io.flybird.cubecraft.internal.renderer.ChunkRenderer;
-import io.flybird.cubecraft.register.Registry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.client.resources.ResourceLocation;
 import io.flybird.cubecraft.client.resources.ResourceManager;
 import io.flybird.cubecraft.world.HittableObject;
@@ -114,7 +113,7 @@ public class HUDScreen extends Screen {
 
     @Override
     public Screen getParentScreen() {
-        return ScreenLoader.loadByExtName("cubecraft", "pause_screen.xml");
+        return Registries.SCREEN_LOADER.loadByExtName("cubecraft", "pause_screen.xml");
     }
 
     @Override
@@ -126,7 +125,7 @@ public class HUDScreen extends Screen {
 
     @Override
     public void getDebugInfoTick() {
-        DebugInfoHandler handler=Registry.getDebugInfoHandler();
+        DebugInfoHandler handler= Registries.DEBUG_INFO;
 
         handler.putD("cubecraft:client_player/x",this.getPlatform().getPlayer().x);
         handler.putD("cubecraft:client_player/y",this.getPlatform().getPlayer().y);
@@ -140,10 +139,10 @@ public class HUDScreen extends Screen {
         this.debugInfoLeft[3] = "LocalChunkCache:%d".formatted(this.getPlatform().getClientWorld().getChunkCache().size());
 
         this.debugInfoLeft[5] = "TerrainRender(All/Visible[alpha/trans]/Update):%d,[%d,%d],%d".formatted(
-            Registry.getDebugInfoHandler().getI("cubecraft:chunk_render/all"),
-            Registry.getDebugInfoHandler().getI("cubecraft:chunk_render/visible_alpha"),
-            Registry.getDebugInfoHandler().getI("cubecraft:chunk_render/visible_transparent"),
-            Registry.getDebugInfoHandler().getI("cubecraft:chunk_render/update")
+            Registries.DEBUG_INFO.getI("cubecraft:chunk_render/all"),
+            Registries.DEBUG_INFO.getI("cubecraft:chunk_render/visible_alpha"),
+            Registries.DEBUG_INFO.getI("cubecraft:chunk_render/visible_transparent"),
+            Registries.DEBUG_INFO.getI("cubecraft:chunk_render/update")
         );
 
         this.debugInfoLeft[6] = "EntityRender(All/Visible):%d/%d".formatted(

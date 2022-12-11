@@ -1,7 +1,6 @@
 package io.flybird.cubecraft.auth;
 
-import io.flybird.util.file.nbt.tag.NBTTagCompound;
-import io.netty.buffer.ByteBuf;
+import io.flybird.util.file.nbt.NBTTagCompound;
 
 public interface SessionService {
     boolean validSession(Session session);

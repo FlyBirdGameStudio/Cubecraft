@@ -1,7 +1,7 @@
 package io.flybird.cubecraft.world.item;
 
-import io.flybird.cubecraft.register.ContentRegistry;
-import io.flybird.util.file.nbt.tag.NBTTagCompound;
+import io.flybird.cubecraft.register.Registries;
+import io.flybird.util.file.nbt.NBTTagCompound;
 import io.flybird.util.math.MathHelper;
 
 public class ItemStack{
@@ -10,7 +10,7 @@ public class ItemStack{
     private NBTTagCompound nbt;
 
     public void merge(ItemStack another){
-        Item item= ContentRegistry.getItemMap().get(this.type);
+        Item item= Registries.ITEM.get(this.type);
         if(another.getType()==this.type&&another.nbt!=null&&this.nbt!=null){//物品id一致，且双方均无nbt，且该物品可堆叠
             this.counts+= item.getMaxStackCount()- MathHelper.clamp(another.getCounts(),Integer.MAX_VALUE,0);
 

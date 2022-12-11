@@ -2,6 +2,11 @@ package io.flybird.util.math;
 
 import org.joml.Vector3d;
 
+/**
+ * simple axis-aligned bounding box
+ *
+ * @author Miencraft(classic 0.0.13a)
+ */
 public class AABB {
     private double epsilon = 0.0f;
     public double x0;
@@ -52,6 +57,7 @@ public class AABB {
     public AABB cloneMove(double xa, double ya, double za) {
         return new AABB(this.x0 + za, this.y0 + ya, this.z0 + za, this.x1 + xa, this.y1 + ya, this.z1 + za);
     }
+
 
     public double clipXCollide(AABB c, double xa) {
         double max;
@@ -125,10 +131,6 @@ public class AABB {
 
     public AABB grow(double r) {
         return this.grow(r, r, r);
-    }
-
-    public static boolean isClosest(Vector3d x, Vector3d a, Vector3d b) {
-        return a == null || x.distanceSquared(b) < x.distanceSquared(a);
     }
 
     public Vector3d getCenter() {

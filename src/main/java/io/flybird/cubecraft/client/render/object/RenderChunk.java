@@ -3,8 +3,7 @@ package io.flybird.cubecraft.client.render.object;
 import io.flybird.cubecraft.client.render.IRenderType;
 import io.flybird.cubecraft.client.render.model.RenderType;
 import io.flybird.cubecraft.client.render.worldObjectRenderer.IBlockRenderer;
-import io.flybird.cubecraft.register.Registry;
-import io.flybird.cubecraft.register.RenderRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.block.BlockState;
 import io.flybird.cubecraft.world.chunk.ChunkLoadLevel;
@@ -16,7 +15,7 @@ import io.flybird.starfish3d.render.drawcall.IRenderCall;
 import io.flybird.starfish3d.render.multiThread.DrawCompile;
 import io.flybird.starfish3d.render.multiThread.EmptyDrawCompile;
 import io.flybird.starfish3d.render.multiThread.IDrawCompile;
-import io.flybird.util.container.keyMap.KeyGetter;
+import io.flybird.util.container.keymap.KeyGetter;
 import io.flybird.util.math.AABB;
 import io.flybird.util.math.MathHelper;
 
@@ -35,7 +34,7 @@ public class RenderChunk implements KeyGetter<RenderChunkPos>, IRenderObject {
         this.y = y;
         this.z = z;
 
-        boolean vbo = Registry.getClient().getGameSetting().getValueAsBoolean("client.render.terrain.useVBO", false);
+        boolean vbo = Registries.CLIENT.getGameSetting().getValueAsBoolean("client.render.terrain.useVBO", false);
         this.renderList_terrain = IRenderCall.create(vbo);
         this.renderList_terrain.allocate();
         this.renderList_transparent = IRenderCall.create(vbo);
@@ -100,7 +99,7 @@ public class RenderChunk implements KeyGetter<RenderChunkPos>, IRenderObject {
                 this.world.loadChunkAndNear(this.x, MathHelper.getChunkPos(this.y, 8), this.z, new ChunkLoadTicket(ChunkLoadLevel.None_TICKING, 10));
                 for (long cz = 0; cz < 16; ++cz) {
                     BlockState bs = world.getBlockState(cx + x * 16, cy + y * 16, cz + z * 16);
-                    IBlockRenderer renderer = RenderRegistry.getBlockRendererMap().get(bs.getId());
+                    IBlockRenderer renderer = Registries.BLOCK_RENDERER.get(bs.getId());
                     if (renderer != null) {
                         renderer.renderBlock(bs, renderType, world, cx, cy, cz, cx + x * 16, cy + y * 16, cz + z * 16, builder);
                     }

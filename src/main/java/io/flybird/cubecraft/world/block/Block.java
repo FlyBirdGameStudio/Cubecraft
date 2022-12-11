@@ -1,15 +1,14 @@
 package io.flybird.cubecraft.world.block;
 
-import io.flybird.cubecraft.register.ContentRegistry;
 import io.flybird.cubecraft.client.render.worldObjectRenderer.BlockModelRenderer;
 import io.flybird.cubecraft.client.resources.ResourceLocation;
-import io.flybird.cubecraft.register.RenderRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.entity.Entity;
 import io.flybird.cubecraft.world.entity.item.Item;
 import io.flybird.util.math.AABB;
 import io.flybird.util.math.HitBox;
-import io.flybird.util.math.Vector3;
+import io.flybird.util.container.Vector3;
 import org.joml.Vector3d;
 
 /**
@@ -18,7 +17,7 @@ import org.joml.Vector3d;
  */
 public abstract class Block {
     public Block(String defaultRegisterId) {
-        RenderRegistry.getBlockRendererMap().registerItem(defaultRegisterId, new BlockModelRenderer(ResourceLocation.blockModel(defaultRegisterId.split(":")[0], defaultRegisterId.split(":")[1] + ".json")));
+        Registries.BLOCK_RENDERER.registerItem(defaultRegisterId, new BlockModelRenderer(ResourceLocation.blockModel(defaultRegisterId.split(":")[0], defaultRegisterId.split(":")[1] + ".json")));
     }
 
     public Block() {
@@ -129,13 +128,13 @@ public abstract class Block {
     public void onInteract(Entity from, IWorld world, long x, long y, long z, byte f) {
         //todo:use inventory
         Vector3<Long> pos = EnumFacing.findNear(x, y, z, 1, f);
-        if (world.isFree(ContentRegistry.getBlockMap().get(from.getSelectBlock()).getCollisionBox(pos.x(), pos.y(), pos.z()))) {
-            world.setBlockState(pos.x(), pos.y(), pos.z(), ContentRegistry.getBlockMap().get(from.getSelectBlock()).defaultState(x,y,z));
+        if (world.isFree(Registries.BLOCK.get(from.getSelectBlock()).getCollisionBox(pos.x(), pos.y(), pos.z()))) {
+            world.setBlockState(pos.x(), pos.y(), pos.z(), Registries.BLOCK.get(from.getSelectBlock()).defaultState(x,y,z));
         }
     }
 
     public void onHit(Entity from, IWorld world, long x, long y, long z, byte f) {
-        world.setBlockState(x, y, z, ContentRegistry.getBlockMap().get("cubecraft:air").defaultState(x, y, z));
+        world.setBlockState(x, y, z, Registries.BLOCK.get("cubecraft:air").defaultState(x, y, z));
     }
 
     public BlockState defaultState(long x, long y, long z) {

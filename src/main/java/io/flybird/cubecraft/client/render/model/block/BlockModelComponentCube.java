@@ -3,7 +3,7 @@ package io.flybird.cubecraft.client.render.model.block;
 import io.flybird.cubecraft.client.render.BlockRenderUtil;
 import io.flybird.cubecraft.client.render.model.RenderType;
 import io.flybird.cubecraft.client.render.model.object.Vertex;
-import io.flybird.cubecraft.register.RenderRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.block.BlockState;
 import io.flybird.cubecraft.world.block.EnumFacing;
@@ -15,7 +15,7 @@ import org.joml.Vector3d;
 
 import java.util.Objects;
 
-public class BlockModelComponentCube extends IBlockModelComponent {
+public class BlockModelComponentCube extends BlockModelComponent {
     private final BlockModelFace top, bottom, left, right, front, back;
 
     public BlockModelComponentCube(RenderType renderType, Vector3d start, Vector3d end, BlockModelFace top1, BlockModelFace bottom1, BlockModelFace left1, BlockModelFace right1, BlockModelFace front1, BlockModelFace back1) {
@@ -76,7 +76,7 @@ public class BlockModelComponentCube extends IBlockModelComponent {
 
 
     public void renderFace(BlockModelFace f, int face, VertexArrayBuilder builder, IWorld w, BlockState bs, long x, long y, long z, double renderX, double renderY, double renderZ) {
-        Texture2DTileMap terrain = RenderRegistry.getTextureManager().getTexture2DTileMapContainer().get("cubecraft:terrain");
+        Texture2DTileMap terrain = Registries.TEXTURE.getTexture2DTileMapContainer().get("cubecraft:terrain");
 
         float u0 = terrain.exactTextureU(f.getTexture(), f.u0());
         float u1 = terrain.exactTextureU(f.getTexture(), f.u1());
@@ -93,7 +93,7 @@ public class BlockModelComponentCube extends IBlockModelComponent {
         Vector3d v111 = bs.getFacing().clipVec(new Vector3d(this.end.x, this.end.y, this.end.z));
 
         Vector3d render = new Vector3d(renderX, renderY, renderZ);
-        int c = RenderRegistry.getColorMaps().get(f.color()).sample(w,bs,x,y,z);
+        int c = Registries.COLOR_MAP.get(f.color()).sample(w,bs,x,y,z);
         if (face == 0) {
             Vector3d faceColor = new Vector3d(ColorUtil.int1ToFloat3(c));
             BlockRenderUtil.bakeVertex(Vertex.create(new Vector3d(v111).add(render), new Vector2d(u1, v1), faceColor), v111, w, x, y, z, 0).draw(builder);
@@ -150,7 +150,7 @@ public class BlockModelComponentCube extends IBlockModelComponent {
     }
 
     @Override
-    public void renderAsItem(VertexArrayBuilder builder, double renderX, double rendery, double renderz) {
+    public void renderAsItem(VertexArrayBuilder builder, double renderX, double renderY, double renderZ) {
 
     }
 }

@@ -7,9 +7,9 @@
     </meta>
     <label id="label">
         <layout type="origin">
-            <layout>[0,-65,0,8]</layout>
+            <layout>[0,-75,0,8]</layout>
             <type>middle_middle</type>
-            <border>[0,0,4,4]</border>
+            <border>[0,0,0,0]</border>
         </layout>
         <text type="lang" color="ffffff" align="middle">pause_screen.title</text>
     </label>

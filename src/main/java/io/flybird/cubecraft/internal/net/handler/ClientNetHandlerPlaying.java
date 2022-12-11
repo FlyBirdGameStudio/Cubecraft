@@ -2,10 +2,10 @@ package io.flybird.cubecraft.internal.net.handler;
 
 import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.internal.net.packet.playing.*;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.util.network.NetHandlerContext;
 import io.flybird.util.network.packet.PacketEventHandler;
 import io.flybird.util.network.handler.ClientNetHandler;
-import io.flybird.cubecraft.register.ContentRegistry;
 import io.flybird.cubecraft.world.entity.Entity;
 import io.flybird.cubecraft.world.event.block.BlockChangeEvent;
 import io.flybird.cubecraft.world.event.entity.EntityAttackEvent;
@@ -36,7 +36,7 @@ public class ClientNetHandlerPlaying extends ClientNetHandler {
     public void clientLocationUpdate(PacketEntityPosition loc, NetHandlerContext ctx) {
         Entity e=this.client.getClientWorld().getEntity(loc.getUuid());
         if(Objects.equals(loc.getUuid(), this.client.getPlayer().getUID())){
-            this.client.setClientWorld( ContentRegistry.getWorldProviderMap()
+            this.client.setClientWorld( Registries.WORLD_PROVIDER
                     .get(loc.getNewLoc().getDim())
                     .createClientWorld(this.client)
             );

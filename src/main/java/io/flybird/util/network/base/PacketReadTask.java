@@ -2,7 +2,7 @@ package io.flybird.util.network.base;
 
 import io.flybird.util.network.NetHandlerContext;
 import io.flybird.util.network.packet.Packet;
-import io.flybird.cubecraft.register.Registry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.util.logging.LogHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -33,7 +33,7 @@ public class PacketReadTask implements Runnable {
         try {
             Packet pkt;
             try {
-                pkt = Registry.getPackets().create(type);
+                pkt = Registries.PACKET.create(type);
             } catch (RuntimeException e) {
                 this.logHandler.exception("cannot create packet:" + e.getMessage());
                 return;

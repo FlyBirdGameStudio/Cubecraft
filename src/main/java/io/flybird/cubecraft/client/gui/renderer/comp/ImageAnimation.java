@@ -3,7 +3,7 @@ package io.flybird.cubecraft.client.gui.renderer.comp;
 import com.google.gson.*;
 import io.flybird.cubecraft.client.gui.Node;
 import io.flybird.cubecraft.client.resources.ResourceLocation;
-import io.flybird.cubecraft.register.RenderRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.starfish3d.render.ShapeRenderer;
 import io.flybird.starfish3d.render.draw.VertexArrayBuilder;
 import io.flybird.starfish3d.render.draw.VertexArrayUploader;
@@ -23,7 +23,7 @@ public record ImageAnimation(double x0,double x1,double y0,double y1,int interva
         int w= (int) (node.getLayoutManager().aWidth*(x1-x0));
         int h= (int) (node.getLayoutManager().aHeight*(y1-y0));
 
-        Texture2D tex= RenderRegistry.getTextureManager().getTexture2DContainer().get(ResourceLocation.uiTexture(this.loc.split(":")[0],this.loc.split(":")[1]).format());
+        Texture2D tex= Registries.TEXTURE.getTexture2DContainer().get(ResourceLocation.uiTexture(this.loc.split(":")[0],this.loc.split(":")[1]).format());
 
         //corner
         tex.bind();

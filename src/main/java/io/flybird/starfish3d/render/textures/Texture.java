@@ -1,5 +1,6 @@
 package io.flybird.starfish3d.render.textures;
 
+import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.util.logging.LogHandler;
 import org.lwjgl.opengl.*;
 
@@ -20,12 +21,12 @@ public abstract class Texture {
     public void bind() {
         GL11.glEnable(this.getBindingType());
         GL11.glBindTexture(this.getBindingType(),this.glId);
-        logHandler.checkGLError("texture_binding");
+        GLUtil.checkGLError("texture_binding");
     }
 
     public void unbind(){
         GL11.glDisable(this.getBindingType());
-        logHandler.checkGLError("texture_unbind");
+        GLUtil.checkGLError("texture_unbind");
     }
 
     public abstract int getBindingType();
@@ -40,7 +41,7 @@ public abstract class Texture {
             GL11.glTexParameteri(this.getBindingType(), GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
         }
         GL11.glTexParameteri(this.getBindingType(), GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-        logHandler.checkGLError("generate_texture");
+        GLUtil.checkGLError("generate_texture");
     }
 
     public abstract void load(ITextureImage image);

@@ -3,7 +3,7 @@ package io.flybird.cubecraft.client.gui.renderer.comp;
 import com.google.gson.*;
 import io.flybird.cubecraft.client.gui.Node;
 import io.flybird.cubecraft.client.resources.ResourceLocation;
-import io.flybird.cubecraft.register.RenderRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.starfish3d.render.textures.Texture2D;
 
 import java.lang.reflect.Type;
@@ -12,7 +12,7 @@ import java.util.List;
 public record VerticalBorderImage(double x0,double x1,double y0,double y1,int boarder,String loc) implements ComponentPartRenderer {
     @Override
     public void render(Node node) {
-        Texture2D tex= RenderRegistry.getTextureManager().getTexture2DContainer().get(ResourceLocation.uiTexture(this.loc.split(":")[0],this.loc.split(":")[1]).format());
+        Texture2D tex= Registries.TEXTURE.getTexture2DContainer().get(ResourceLocation.uiTexture(this.loc.split(":")[0],this.loc.split(":")[1]).format());
     }
 
     @Override

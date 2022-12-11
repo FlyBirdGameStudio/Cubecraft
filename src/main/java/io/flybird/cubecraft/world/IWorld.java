@@ -1,6 +1,6 @@
 package io.flybird.cubecraft.world;
 
-import io.flybird.cubecraft.register.ContentRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.event.block.BlockChangeEvent;
 import io.flybird.cubecraft.world.block.BlockState;
 import io.flybird.cubecraft.world.chunk.Chunk;
@@ -8,14 +8,13 @@ import io.flybird.cubecraft.world.chunk.ChunkLoadLevel;
 import io.flybird.cubecraft.world.chunk.ChunkLoadTicket;
 import io.flybird.cubecraft.world.chunk.ChunkPos;
 import io.flybird.cubecraft.world.entity.Entity;
-import io.flybird.util.container.CollectionUtil;
-import io.flybird.util.container.keyMap.KeyMap;
+import io.flybird.util.container.keymap.KeyMap;
 import io.flybird.util.event.EventBus;
 import io.flybird.util.event.CachedEventBus;
 import io.flybird.util.math.AABB;
 import io.flybird.util.math.HitBox;
 import io.flybird.util.math.MathHelper;
-import io.flybird.util.math.Vector3;
+import io.flybird.util.container.Vector3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 
@@ -47,7 +46,7 @@ public class IWorld {
                 for (long k = (long) box.z0 - 4; k < (long) box.z1 + 4; k++) {
                     AABB[] collisionBoxes = this.getBlockState(i, j, k).getCollisionBox();
                     if (collisionBoxes != null) {
-                        result.addAll(CollectionUtil.pack(collisionBoxes));
+                        result.addAll(List.of(collisionBoxes));
                     }
                 }
             }
@@ -76,7 +75,7 @@ public class IWorld {
         for (long x = (long) Math.min(from.x, dest.x) - 2; x < Math.max(from.x, dest.x) + 2; x++) {
             for (long y = (long) Math.min(from.y, dest.y) - 2; y < Math.max(from.y, dest.y + 2) + 2; y++) {
                 for (long z = (long) Math.min(from.z, dest.z) - 2; z < Math.max(from.z, dest.z) + 2; z++) {
-                    result.addAll(CollectionUtil.pack(getBlockState(x, y, z).getSelectionBox()));
+                    result.addAll(List.of(getBlockState(x, y, z).getSelectionBox()));
                 }
             }
         }
@@ -120,7 +119,7 @@ public class IWorld {
 
     //entity
     public void spawnEntity(String id, double x, double y, double z) {
-        Entity e = ContentRegistry.getEntityMap().create(id, this);
+        Entity e = Registries.ENTITY.create(id, this);
         e.setPos(x, y, z);
         this.addEntity(e);
     }
@@ -158,7 +157,7 @@ public class IWorld {
         ChunkPos chunkPos = ChunkPos.fromWorldPos(x, y, z);
         Chunk c = getChunk(chunkPos);
         if (c == null) {
-            return ContentRegistry.getBlockMap().get("cubecraft:air").defaultState(x, y, z);
+            return Registries.BLOCK.get("cubecraft:air").defaultState(x, y, z);
         }
 
         return c.getBlockState(

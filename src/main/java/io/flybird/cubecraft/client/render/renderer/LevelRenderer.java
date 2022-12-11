@@ -3,7 +3,7 @@ package io.flybird.cubecraft.client.render.renderer;
 import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.internal.renderer.EnvironmentRenderer;
-import io.flybird.cubecraft.register.RenderRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.entity.humanoid.Player;
 import io.flybird.starfish3d.event.KeyPressEvent;
@@ -31,7 +31,7 @@ public class LevelRenderer implements EventListener {
         client.getWindow().getEventBus().registerEventListener(this);
         this.world=w;
         this.player=p;
-        this.renderers= (HashMap<String, IWorldRenderer>) RenderRegistry.getWorldRenderers().createAll(client.getWindow(),world,player,camera, client.getGameSetting());
+        this.renderers= (HashMap<String, IWorldRenderer>) Registries.WORLD_RENDERER.createAll(client.getWindow(),world,player,camera, client.getGameSetting());
         this.environmentRenderer=new EnvironmentRenderer(client.getWindow(),world,player,camera,client.getGameSetting());
     }
 
@@ -43,9 +43,9 @@ public class LevelRenderer implements EventListener {
         GL11.glClearColor(col[0],col[1],col[2],col[3]);
         //update camera position
         this.camera.setPos(
-                MathHelper.linear_interpolate(this.player.xo, this.player.x,interpolationTime)+this.player.getCameraPosition().x,
-                MathHelper.linear_interpolate(this.player.yo, this.player.y,interpolationTime)+this.player.getCameraPosition().y,
-                MathHelper.linear_interpolate(this.player.zo, this.player.z,interpolationTime)+this.player.getCameraPosition().z);
+                MathHelper.linearInterpolate(this.player.xo, this.player.x,interpolationTime)+this.player.getCameraPosition().x,
+                MathHelper.linearInterpolate(this.player.yo, this.player.y,interpolationTime)+this.player.getCameraPosition().y,
+                MathHelper.linearInterpolate(this.player.zo, this.player.z,interpolationTime)+this.player.getCameraPosition().z);
         this.camera.setupRotation(this.player.xRot,this.player.yRot,this.player.zRot);
         this.camera.setPosRelative(0,0,0.15);
 

@@ -2,19 +2,18 @@ package io.flybird.cubecraft.world.chunk;
 
 import io.flybird.cubecraft.internal.BiomeType;
 import io.flybird.cubecraft.internal.BlockType;
-import io.flybird.cubecraft.register.ContentRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.block.entity.BlockEntity;
 import io.flybird.util.container.ArrayUtil;
 import io.flybird.util.container.Double2ByteArray;
 import io.flybird.util.container.DynamicNameIdMap;
-import io.flybird.util.container.keyMap.KeyGetter;
+import io.flybird.util.container.keymap.KeyGetter;
 import io.flybird.cubecraft.world.block.BlockState;
 import io.flybird.cubecraft.world.block.EnumFacing;
-import io.flybird.util.file.nbt.NBTBuilder;
-import io.flybird.util.file.nbt.NBTDataIO;
-import io.flybird.util.file.nbt.tag.NBTTagByteArray;
-import io.flybird.util.file.nbt.tag.NBTTagCompound;
+import io.flybird.util.file.NBTDataIO;
+import io.flybird.util.file.nbt.NBTTagByteArray;
+import io.flybird.util.file.nbt.NBTTagCompound;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -80,7 +79,7 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
                     this.meta[ArrayUtil.calcDispatchPos3d(WIDTH, HEIGHT, WIDTH, x, y, z)]
             );
         } else {
-            return ContentRegistry.getBlockMap().get("cubecraft:air").defaultState(
+            return Registries.BLOCK.get("cubecraft:air").defaultState(
                     this.getKey().toWorldPosX(x),
                     this.getKey().toWorldPosY(y),
                     this.getKey().toWorldPosZ(z)

@@ -3,6 +3,9 @@ package io.flybird.cubecraft.client.resources;
 import io.flybird.cubecraft.client.ClientMain;
 import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.client.event.ClientResourceReloadEvent;
+import io.flybird.util.event.DirectEventBus;
+import io.flybird.util.event.Event;
+import io.flybird.util.event.EventBus;
 import io.flybird.util.logging.LogHandler;
 import io.flybird.util.event.EventListener;
 
@@ -13,13 +16,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ResourceManager {
     public static ResourceManager instance=new ResourceManager();
     public ArrayList<ResourcePack> resourcePacks=new ArrayList<>();
     public LogHandler logHandler=LogHandler.create("Client/ResourceLoader");
+    private final EventBus eventBus=new DirectEventBus();
+    private final ArrayList<String> namespaces=new ArrayList<>();
 
     public void reload(Cubecraft client) {
+        this.reloadStage(new ClientResourceReloadEvent(client,this),ResourceLoadStage.DETECT);
         this.reloadStage(new ClientResourceReloadEvent(client,this),ResourceLoadStage.BLOCK_MODEL);
         this.reloadStage(new ClientResourceReloadEvent(client,this),ResourceLoadStage.BLOCK_TEXTURE);
         this.reloadStage(new ClientResourceReloadEvent(client,this),ResourceLoadStage.COLOR_MAP);
@@ -66,10 +73,12 @@ public class ResourceManager {
 
     protected final ArrayList<EventListener> listeners = new ArrayList<>();
     public void registerEventListener(EventListener listener) {
+        this.eventBus.registerEventListener(listener);
         this.listeners.add(listener);
     }
 
     public void unregisterEventListener(EventListener el){
+        this.eventBus.unregisterEventListener(el);
         this.listeners.remove(el);
     }
 
@@ -89,5 +98,19 @@ public class ResourceManager {
                 }
             }
         }
+    }
+
+    public void callEvent(Event evt) {
+        this.eventBus.callEvent(evt);
+    }
+
+    public void addNameSpace(String space) {
+        if(!this.namespaces.contains(space)){
+            this.namespaces.add(space);
+        }
+    }
+
+    public List<String> getNameSpaces() {
+        return this.namespaces;
     }
 }

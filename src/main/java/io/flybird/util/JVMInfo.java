@@ -3,6 +3,10 @@ package io.flybird.util;
 import java.lang.management.ManagementFactory;
 
 public class JVMInfo {
+    /**
+     * get java version
+     * @return java version
+     */
     public static String getJavaVersion(){
         return ManagementFactory.getRuntimeMXBean().getVmVersion();
     }

@@ -1,7 +1,7 @@
 package io.flybird.cubecraft.internal.world.worldGen;
 
 import io.flybird.cubecraft.internal.WorldType;
-import io.flybird.cubecraft.register.ContentRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.block.BlockState;
 import io.flybird.cubecraft.world.chunk.Chunk;
 import io.flybird.cubecraft.world.chunk.ChunkPos;
@@ -54,7 +54,7 @@ public class WorldGeneratorOverworld implements IChunkGenerator {
             for (int z=0;z<16;z++){
                 for (int y=0;y<Chunk.HEIGHT;y++){
                     ChunkPos p=chunk.getKey();
-                    chunk.setBiome(x,y,z, ContentRegistry.getBiomeMap().match(
+                    chunk.setBiome(x,y,z, Registries.BIOME.match(
                             continental.getValue(
                                     p.toWorldPosX(x)/setting.getValueOrDefaultAsDouble("overworld.biome.continental.scale",128d),
                                     p.toWorldPosZ(z)/setting.getValueOrDefaultAsDouble("overworld.biome.continental.scale",128d)

@@ -5,7 +5,7 @@ import io.flybird.cubecraft.internal.net.packet.connect.*;
 import io.flybird.util.network.NetHandlerContext;
 import io.flybird.util.network.packet.PacketEventHandler;
 import io.flybird.util.network.handler.ServerNetHandler;
-import io.flybird.cubecraft.register.Registry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.server.CubecraftServer;
 import io.flybird.cubecraft.server.event.*;
 import io.flybird.cubecraft.world.entity.humanoid.Player;
@@ -14,6 +14,7 @@ import io.flybird.util.event.EventHandler;
 /**
  * this handler handles player connection,runs in server side.
  */
+
 public class ServerHandlerPlayerConnection extends ServerNetHandler {
     public ServerHandlerPlayerConnection(CubecraftServer server) {
         super(server);
@@ -22,7 +23,7 @@ public class ServerHandlerPlayerConnection extends ServerNetHandler {
     @PacketEventHandler
     public void onJoinRequest(PacketPlayerJoinRequest packet, NetHandlerContext ctx){
         try{
-            SessionService service=Registry.getSessionServiceMap().get(packet.getSession().getType());
+            SessionService service= Registries.SESSION_SERVICE.get(packet.getSession().getType());
             if(service.validSession(packet.getSession())){
                 ctx.sendPacket(new PacketPlayerJoinResponse("__ACCEPT__"));
                 String uid=service.genUUID(packet.getSession());

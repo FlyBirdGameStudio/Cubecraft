@@ -2,6 +2,11 @@ package io.flybird.util.math;
 
 import java.nio.ByteBuffer;
 
+/**
+ * code number to bytes,or decode number from bytes.
+ *
+ * @author GrassBlock2022
+ */
 public class NumberCodec {
     public static ByteBuffer buffer = ByteBuffer.allocate(8);
 

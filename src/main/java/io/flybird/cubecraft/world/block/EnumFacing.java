@@ -2,7 +2,7 @@ package io.flybird.cubecraft.world.block;
 
 
 import io.flybird.util.math.RotationMatrixConstants;
-import io.flybird.util.math.Vector3;
+import io.flybird.util.container.Vector3;
 import org.joml.Matrix4d;
 import org.joml.Vector3d;
 

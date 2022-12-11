@@ -1,7 +1,7 @@
 package io.flybird.cubecraft.world.worldGen;
 
 import io.flybird.cubecraft.client.ClientMain;
-import io.flybird.cubecraft.register.ContentRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.chunk.Chunk;
 import io.flybird.cubecraft.world.chunk.ChunkPos;
@@ -27,7 +27,7 @@ public class ChunkProvider implements IChunkProvider{
     public ChunkProvider(IWorld world) {
         this.world = world;
         this.test= new Scale(new PerlinNoise(new Random(world.getSeed()), 3),1,1);
-        this.pipeline= ContentRegistry.getWorldGeneratorMap().get(this.world.getID());
+        this.pipeline= Registries.WORLD_GENERATOR.get(this.world.getID());
     }
 
     public static ChunkProvider getProvider(IWorld world) {

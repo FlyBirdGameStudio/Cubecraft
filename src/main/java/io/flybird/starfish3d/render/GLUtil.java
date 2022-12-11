@@ -158,4 +158,11 @@ public class GLUtil {
         GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
         GL11.glDisableClientState(GL11.GL_NORMAL_ARRAY);
     }
+
+    public static void checkGLError(String status) {
+        int errorStatus = GL11.glGetError();
+        if (errorStatus != 0) {
+            throw new RuntimeException(errorStatus + ":" + status);
+        }
+    }
 }

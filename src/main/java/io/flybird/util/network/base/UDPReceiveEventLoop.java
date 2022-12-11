@@ -1,5 +1,6 @@
 package io.flybird.util.network.base;
 
+import io.flybird.util.math.Crc16DataCorrection;
 import io.flybird.util.network.NetHandlerContext;
 import io.flybird.util.network.packet.Packet;
 import io.flybird.util.container.ArrayUtil;
@@ -15,10 +16,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.zip.CRC32;
 
 public class UDPReceiveEventLoop extends UDPEventLoop {
     //32(manifest)+128(token)+128(uuid)+packet id(2)+total_count(2)+remote addr(31)+type(64)+len(2)+data[1024]
-    public static final int LENGTH = 32 + 128 + 128 + 2 + 2 + 31 + 64 + 2 + 1024;
+    public static final int LENGTH = 2 + 32 + 128 + 128 + 2 + 2 + 31 + 64 + 2 + 1024;
 
     public UDPReceiveEventLoop(UDPPipeline udpPipeline) {
         super(udpPipeline);
@@ -35,8 +37,20 @@ public class UDPReceiveEventLoop extends UDPEventLoop {
         }
 
         //read header
-        ByteBuf data = ByteBufAllocator.DEFAULT.ioBuffer(LENGTH);
-        data.writeBytes(dataArr);
+        ByteBuf data3 = ByteBufAllocator.DEFAULT.ioBuffer(LENGTH);
+        data3.writeBytes(dataArr);
+
+        int crc = data3.readShort();
+        byte[] data2 = new byte[LENGTH - 2];
+        data3.readBytes(data2);
+        int realCRC = Crc16DataCorrection.crc16(data2);
+        if (realCRC != crc) {
+
+        }
+
+        ByteBuf data = ByteBufAllocator.DEFAULT.ioBuffer(LENGTH - 2);
+        data.writeBytes(data2);
+
         String manifest = BufferUtil.readString(data);
         String token = (String) data.readCharSequence(128, StandardCharsets.UTF_8);
         String uuid = (String) data.readCharSequence(128, StandardCharsets.UTF_8);
@@ -46,10 +60,10 @@ public class UDPReceiveEventLoop extends UDPEventLoop {
         int port = data.readUnsignedShort();
         InetSocketAddress remote = new InetSocketAddress(addr, port);
 
-        if(token.startsWith("__CONNECT__")&&!this.parent.getConnectionMap().containsKey(token)){
-            this.parent.getConnectionMap().put(token,remote);
+        if (token.startsWith("__CONNECT__") && !this.parent.getConnectionMap().containsKey(token)) {
+            this.parent.getConnectionMap().put(token, remote);
         }
-        if(token.startsWith("__DISCONNECT__")){
+        if (token.startsWith("__DISCONNECT__")) {
             this.parent.getConnectionMap().remove(token);
         }
         if (!Objects.equals(manifest, this.parent.getConnectionManifest()) || !this.parent.getConnectionMap().containsKey(token)) {
@@ -64,8 +78,8 @@ public class UDPReceiveEventLoop extends UDPEventLoop {
         data.readBytes(dat);
 
         //process
-        HashMap<String,ArrayList<Byte>> dataMapping= this.parent.getPacketCache();
-        HashMap<String,ArrayList<Integer>> idMapping= this.parent.getPacketCacheL();
+        HashMap<String, ArrayList<Byte>> dataMapping = this.parent.getPacketCache();
+        HashMap<String, ArrayList<Integer>> idMapping = this.parent.getPacketCacheL();
 
         if (!idMapping.containsKey(uuid)) {
             idMapping.put(uuid, new ArrayList<>());

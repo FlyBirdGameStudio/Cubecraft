@@ -2,7 +2,7 @@ package io.flybird.cubecraft.client.render.worldObjectRenderer;
 
 import io.flybird.cubecraft.client.render.model.RenderType;
 import io.flybird.cubecraft.client.resources.ResourceLocation;
-import io.flybird.cubecraft.register.RenderRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.block.BlockState;
 import io.flybird.starfish3d.render.draw.VertexArrayBuilder;
@@ -26,12 +26,12 @@ public class BlockModelRenderer implements IBlockRenderer{
 
     @Override
     public void renderBlock(BlockState currentBlockState, RenderType type, IWorld world, double renderX, double renderY, double renderZ, long worldX, long worldY, long worldZ, VertexArrayBuilder builder) {
-        RenderRegistry.getBlockModelManager().get(model).render(builder,type,world,currentBlockState,worldX,worldY,worldZ,renderX,renderY,renderZ);
+        Registries.BLOCK_MODEL.get(model).render(builder,type,world,currentBlockState,worldX,worldY,worldZ,renderX,renderY,renderZ);
     }
 
     @Override
     public void initializeRenderer(List<ResourceLocation> textureList) {
-        RenderRegistry.getBlockModelManager().load(model);
-        RenderRegistry.getBlockModelManager().get(model).initializeModel(textureList);
+        Registries.BLOCK_MODEL.load(model);
+        Registries.BLOCK_MODEL.get(model).initializeModel(textureList);
     }
 }

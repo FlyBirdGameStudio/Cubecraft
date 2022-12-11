@@ -2,7 +2,7 @@ package io.flybird.cubecraft.internal;
 
 import io.flybird.cubecraft.auth.Session;
 import io.flybird.cubecraft.auth.SessionService;
-import io.flybird.util.file.nbt.tag.NBTTagCompound;
+import io.flybird.util.file.nbt.NBTTagCompound;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;

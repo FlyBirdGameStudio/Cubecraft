@@ -4,10 +4,10 @@ import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerJoinResponse;
 import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerJoinWorld;
 import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerJoinWorldResponse;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.util.network.NetHandlerContext;
 import io.flybird.util.network.packet.PacketEventHandler;
 import io.flybird.util.network.handler.ClientNetHandler;
-import io.flybird.cubecraft.register.ContentRegistry;
 
 public class ClientNetHandlerConnection extends ClientNetHandler {
     public ClientNetHandlerConnection(Cubecraft client) {
@@ -27,7 +27,7 @@ public class ClientNetHandlerConnection extends ClientNetHandler {
     @PacketEventHandler
     public void onJoinResponse(PacketPlayerJoinWorldResponse packet, NetHandlerContext ctx){
         this.client.setClientLevelInfo(packet.getInfo());
-        this.client.setClientWorld( ContentRegistry.getWorldProviderMap()
+        this.client.setClientWorld( Registries.WORLD_PROVIDER
                 .get(packet.getId())
                 .createClientWorld(this.client)
         );

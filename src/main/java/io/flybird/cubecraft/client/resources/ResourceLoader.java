@@ -1,24 +1,25 @@
 package io.flybird.cubecraft.client.resources;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import io.flybird.cubecraft.client.event.ClientResourceReloadEvent;
 import io.flybird.cubecraft.client.gui.FontRenderer;
+import io.flybird.cubecraft.client.render.model.block.BlockModel;
+import io.flybird.cubecraft.client.render.model.block.BlockModelComponent;
+import io.flybird.cubecraft.client.render.model.block.BlockModelFace;
 import io.flybird.cubecraft.client.render.worldObjectRenderer.IBlockRenderer;
-import io.flybird.cubecraft.register.Registry;
-import io.flybird.cubecraft.register.RenderRegistry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.starfish3d.render.textures.Texture2D;
 import io.flybird.starfish3d.render.textures.Texture2DTileMap;
 import io.flybird.starfish3d.render.textures.TextureStateManager;
+import io.flybird.util.I18nHelper;
 import io.flybird.util.logging.LogHandler;
-import io.flybird.util.container.CollectionUtil;
 import io.flybird.util.container.namespace.NameSpaceMap;
 import io.flybird.util.event.EventListener;
-import io.flybird.util.file.lang.Language;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.*;
 
 public class ResourceLoader implements EventListener {
     LogHandler logger = LogHandler.create("Client/ResourceLoader");
@@ -27,8 +28,12 @@ public class ResourceLoader implements EventListener {
 
     @ResourceLoadHandler(stage = ResourceLoadStage.BLOCK_MODEL)
     public void loadBlockModel(ClientResourceReloadEvent e) {
+        Registries.GSON_BUILDER.registerTypeAdapter(BlockModel.class,new BlockModel.JDeserializer());
+        Registries.GSON_BUILDER.registerTypeAdapter(BlockModelFace.class,new BlockModelFace.JDeserializer());
+        Registries.GSON_BUILDER.registerTypeAdapter(BlockModelComponent.class,new BlockModelComponent.JDeserializer());
+
         try {
-            for (IBlockRenderer renderer : ((NameSpaceMap<? extends IBlockRenderer>) RenderRegistry.getBlockRendererMap()).itemList()) {
+            for (IBlockRenderer renderer : ((NameSpaceMap<? extends IBlockRenderer>) Registries.BLOCK_RENDERER).itemList()) {
                 if (renderer != null) {
                     renderer.initializeRenderer(textureList);
                 }
@@ -47,7 +52,7 @@ public class ResourceLoader implements EventListener {
                 f[i] = ResourceManager.instance.getResource(loc);
                 i++;
             }
-            Texture2DTileMap terrain = RenderRegistry.getTextureManager().getTexture2DTileMapContainer().set("cubecraft:terrain", Texture2DTileMap.autoGenerate(f, false));
+            Texture2DTileMap terrain = Registries.TEXTURE.getTexture2DTileMapContainer().set("cubecraft:terrain", Texture2DTileMap.autoGenerate(f, false));
             for (Resource r : f) {
                 terrain.register(r);
             }
@@ -68,9 +73,9 @@ public class ResourceLoader implements EventListener {
     @ResourceLoadHandler(stage = ResourceLoadStage.COLOR_MAP)
     public void loadColorMap(ClientResourceReloadEvent e) {
         try {
-            Collection<String> s = RenderRegistry.getColorMaps().idList();
+            Collection<String> s = Registries.COLOR_MAP.idList();
             for (String s2 : s) {
-                RenderRegistry.getColorMaps().get(s2).load();
+                Registries.COLOR_MAP.get(s2).load();
             }
         } catch (Exception ex) {
             this.logger.exception(ex);
@@ -79,26 +84,34 @@ public class ResourceLoader implements EventListener {
 
     @ResourceLoadHandler(stage = ResourceLoadStage.LANGUAGE)
     public void loadLanguage(ClientResourceReloadEvent e) {
-        try {
-            HashMap<Language.LanguageType, String> languages = new HashMap<>();
-            languages.put(Language.LanguageType.ZH_CN, "/resource/cubecraft/text/language/zh_cn.lang");
-            languages.put(Language.LanguageType.EN_US, "/resource/cubecraft/text/language/en_us.lang");
+        String f= (String) Registries.CLIENT.getGameSetting().getValue("client.language","auto");
+        if(Objects.equals(f, "auto")){
+            Locale locale=Locale.getDefault();
+            String lang=locale.getLanguage();
+            String reg=locale.getCountry();
+            f=I18nHelper.covert(locale);
+            logger.info("detected user language:%s-%s",lang,reg);
+        }
+        Registries.I18N.setCurrentType(f);
 
-            AtomicLong last = new AtomicLong(System.currentTimeMillis());
-            int i = 0;
-            CollectionUtil.iterateMap(languages, (key, item) -> {
-                if (System.currentTimeMillis() - last.get() > 16) {
-                    last.set(System.currentTimeMillis());
-                    e.client().onProgressStageChanged("loading language file:zh_cn(%d/%d)".formatted(i, languages.size()));
-                    e.client().refreshScreen();
-                    e.client().onProgressChange((int) ((float) i / languages.size() * 100));
+        for (String s:e.resourceManager().getNameSpaces()){
+            JsonArray arr= JsonParser.parseString(e.resourceManager().getResource(ResourceLocation.language(s,"language_index.json")).getAsText()).getAsJsonArray();
+            for (JsonElement registry:arr){
+                String type=registry.getAsJsonObject().get("type").getAsString();
+                String author=registry.getAsJsonObject().get("author").getAsString();
+                String display=registry.getAsJsonObject().get("author").getAsString();
+                String file=registry.getAsJsonObject().get("file").getAsString();
+
+                String data=e.resourceManager().getResource(ResourceLocation.language(file.split(":")[0],file.split(":")[1])).getAsText();
+
+                if(!Registries.I18N.has(type)){
+                    Registries.I18N.createNew(type,display);
                 }
-
-                Language.create(key);
-                Language.selectInstance(key).attachTranslationFile(ResourceManager.instance.getResource(item).getAsText());
-            });
-            Language.selectInstance(Language.LanguageType.valueOf((String) Registry.getClient().getGameSetting().getValue("client.language", "ZH_CN")));
-            System.gc();
+                Registries.I18N.attach(type,data);
+                Registries.I18N.addAuthor(type,author);
+            }
+        }
+        try {
         } catch (Exception ex) {
             this.logger.exception(ex);
         }
@@ -136,7 +149,12 @@ public class ResourceLoader implements EventListener {
 
     @ResourceLoadHandler(stage = ResourceLoadStage.UI_CONTROLLER)
     public void loadUIController(ClientResourceReloadEvent e){
-        RenderRegistry.getComponentRenderManager().reload();
-        RenderRegistry.getComponentRenderManager().init();
+        Registries.COMPONENT_RENDERER.reload();
+        Registries.COMPONENT_RENDERER.init();
+    }
+
+    @ResourceLoadHandler(stage = ResourceLoadStage.DETECT)
+    public void detectResourceLoader(ClientResourceReloadEvent e){
+        e.resourceManager().addNameSpace("cubecraft");
     }
 }

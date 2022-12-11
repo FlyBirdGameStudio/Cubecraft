@@ -17,7 +17,6 @@ import io.flybird.cubecraft.client.event.*;
 import io.flybird.cubecraft.client.gui.*;
 import io.flybird.cubecraft.client.gui.screen.*;
 import io.flybird.cubecraft.client.render.renderer.LevelRenderer;
-import io.flybird.cubecraft.extansion.ExtansionRunningTarget;
 import io.flybird.cubecraft.extansion.ModManager;
 import io.flybird.cubecraft.extansion.PlatformClient;
 import io.flybird.cubecraft.internal.ClientInputHandler;
@@ -29,7 +28,7 @@ import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerLeave;
 import io.flybird.util.event.CachedEventBus;
 import io.flybird.util.network.base.ClientNettyPipeline;
 import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerJoinRequest;
-import io.flybird.cubecraft.register.Registry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.client.resources.ResourceLoader;
 import io.flybird.cubecraft.client.resources.ResourceManager;
 import io.flybird.cubecraft.server.CubecraftServer;
@@ -87,7 +86,7 @@ import java.util.Date;
 
 
 public class Cubecraft extends LoopTickingApplication implements TaskProgressUpdateListener {
-    public static final String VERSION = "0.2.2";
+    public static final String VERSION = "0.2.5";
 
     private final Window window=new Window();
 
@@ -182,7 +181,9 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
     //application
     @Override
     public void init() {
-        Registry.setClient(this);
+
+
+        Registries.CLIENT = this;
         Timer.startTiming();
         this.setting.read();
 
@@ -221,7 +222,7 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
         ScreenUtil.init(this);
 
         this.logHandler.info("loading mods...");
-        ModManager.loadMod(InternalContent.class, null, getPlatformClient(), ExtansionRunningTarget.CLIENT);
+        ModManager.loadMod(InternalContent.class,true);
 
         this.player = new Player(null, this.session);
 
@@ -256,7 +257,7 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
 
     @Override
     public void render() {
-        this.logHandler.checkGLError("pre_render");
+        GLUtil.checkGLError("pre_render");
         this.screenInfo = getDisplaySize();
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);//16640
         if (this.window.isWindowCloseRequested()) {
@@ -267,9 +268,9 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
 
         //render world
         if (this.screen.isInGameGUI()) {
-            this.logHandler.checkGLError("pre_world_render");
+            GLUtil.checkGLError("pre_world_render");
             levelRenderer.render(this.timer.interpolatedTime);
-            this.logHandler.checkGLError("post_world_render");
+            GLUtil.checkGLError("post_world_render");
         }
 
 
@@ -278,21 +279,21 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
         if (this.screen != null) {
             GLUtil.enableDepthTest();
             GLUtil.enableBlend();
-            this.logHandler.checkGLError("pre_screen_render");
+            GLUtil.checkGLError("pre_screen_render");
             this.screenInfo = this.getDisplaySize();
             this.screen.render(this.screenInfo, this.timer.interpolatedTime);
             ScreenUtil.renderPopup(this.screenInfo, this.timer.interpolatedTime);
             if (!(this.screen instanceof LogoLoadingScreen)) {
                 this.logoLoadingScreen.render(screenInfo, this.timer.interpolatedTime);
             }
-            this.logHandler.checkGLError("post_screen_render");
+            GLUtil.checkGLError("post_screen_render");
             GLUtil.disableBlend();
         }
 
         //post
         Sync.sync(this.setting.getValueAsInt("client.render.maxFPS", 60));
         this.window.update();
-        this.logHandler.checkGLError("post_render");
+        GLUtil.checkGLError("post_render");
     }
 
     @Override
@@ -335,7 +336,7 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
     }
 
     public void setScreen(String namespace, String uiPosition) {
-        this.setScreen(ScreenLoader.loadByExtName(namespace, uiPosition));
+        this.setScreen(Registries.SCREEN_LOADER.loadByExtName(namespace, uiPosition));
     }
 
     @Override

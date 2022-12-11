@@ -2,6 +2,7 @@ package io.flybird.cubecraft.extansion;
 
 import io.flybird.cubecraft.client.ClientMain;
 import io.flybird.cubecraft.client.Cubecraft;
+import io.flybird.cubecraft.extansion.event.ModLoadEvent;
 import io.flybird.util.logging.LogHandler;
 import io.flybird.util.ReflectHelper;
 import io.flybird.util.task.LoadTask;
@@ -17,22 +18,6 @@ public class ModManager {
     static LogHandler logger = LogHandler.create("ModLoader");
     public static HashMap<String, Mod> mods = new HashMap<>();
 
-    public static void loadMod(String path, PlatformServer server, PlatformClient client, ExtansionRunningTarget tgt) {
-        Attributes attr;
-        try {
-            attr = new JarFile(path).getManifest().getAttributes("modInfo");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            loadMod(ReflectHelper.loadJarFromAbsolute(path).get(attr.getValue("modEntry")), server, client, tgt);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
     public static HashMap<String, Mod> getLoadedMods() {
         return mods;
     }
@@ -41,29 +26,25 @@ public class ModManager {
         File[] mods = new File(ClientMain.getGamePath() + "/mods").listFiles();
         if (new File(ClientMain.getGamePath() + "/mods").exists()) {
             if (mods != null) {
-                new LoadTask(mods.length, 0.2f, 0.5f, count ->
-                        ModManager.loadMod(mods[count].getAbsolutePath(), null,
-                                client.getPlatformClient(),
-                                ExtansionRunningTarget.CLIENT), client);
+                //todo:load mod
             } else {
                 throw new RuntimeException("null or invalid mod path");
             }
         }
     }
 
-    //todo:read mod attr
-    public static void loadMod(Class<?> clazz, PlatformServer server, PlatformClient client, ExtansionRunningTarget tgt) {
+    public static void loadMod(Class<?> clazz,boolean client) {
         Mod mod = null;
         try {
             mod = (Mod) clazz
-                    .getDeclaredConstructor(PlatformClient.class, PlatformServer.class, ExtansionRunningTarget.class)
-                    .newInstance(client, server, tgt);
+                    .getDeclaredConstructor()
+                    .newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
         CubecraftMod annotation = mod.getClass().getAnnotation(CubecraftMod.class);
-        mod.construct();
+        mod.load(new ModLoadEvent(client));
         logger.info("constructing mod:" + annotation.name() + "-" + annotation.version());
         mods.put(annotation.name(), mod);
     }

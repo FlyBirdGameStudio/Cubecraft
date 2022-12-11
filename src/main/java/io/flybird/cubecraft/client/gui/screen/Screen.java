@@ -3,13 +3,13 @@ package io.flybird.cubecraft.client.gui.screen;
 import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.client.gui.*;
 import io.flybird.cubecraft.client.gui.component.*;
-import io.flybird.cubecraft.client.gui.component.control.Button;
-import io.flybird.cubecraft.client.gui.component.control.TextBar;
 
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.starfish3d.render.draw.VertexArrayUploader;
 import io.flybird.util.JVMInfo;
 import io.flybird.util.container.*;
-import io.flybird.util.file.faml.*;
+import io.flybird.util.file.FAMLDeserializer;
+import io.flybird.util.file.XmlReader;
 import org.lwjgl.openal.AL11;
 import org.lwjgl.opengl.GL11;
 import org.w3c.dom.Element;
@@ -180,35 +180,23 @@ public class Screen extends Container {
             }
             Screen screen = new Screen(grab, id,ScreenType.from(type));
 
-            this.deserializeComponentByType("button",element,screen,famlLoadingContext);
-            this.deserializeComponentByType("label",element,screen,famlLoadingContext);
-            this.deserializeComponentByType("image",element,screen,famlLoadingContext);
-            this.deserializeComponentByType("splash",element,screen,famlLoadingContext);
-            this.deserializeComponentByType("topbar",element,screen,famlLoadingContext);
-            this.deserializeComponentByType("panel",element,screen,famlLoadingContext);
-            this.deserializeComponentByType("textbar",element,screen,famlLoadingContext);
-            this.deserializeComponentByType("circlewaitinganimation",element,screen,famlLoadingContext);
+            for (String s: Registries.SCREEN_LOADER.getCompIdList()){
+                this.deserializeComponentByType("button",element,screen,famlLoadingContext);
+                this.deserializeComponentByType("label",element,screen,famlLoadingContext);
+                this.deserializeComponentByType("image",element,screen,famlLoadingContext);
+                this.deserializeComponentByType("splash",element,screen,famlLoadingContext);
+                this.deserializeComponentByType("topbar",element,screen,famlLoadingContext);
+                this.deserializeComponentByType("panel",element,screen,famlLoadingContext);
+                this.deserializeComponentByType("textbar",element,screen,famlLoadingContext);
+                this.deserializeComponentByType("circlewaitinganimation",element,screen,famlLoadingContext);
+            }
             return screen;
-        }
-
-        Class<? extends Component> getClass(String name){
-            return switch (name){
-                case "button"-> Button.class;
-                case "label"->Label.class;
-                case "image"->ImageRenderer.class;
-                case "splash"->SplashText.class;
-                case "topbar"->TopBar.class;
-                case "panel"->Panel.class;
-                case "textbar"-> TextBar.class;
-                case "circlewaitinganimation"-> CircleWaitingAnimation.class;
-                default -> throw new IllegalArgumentException("no matched constant named %s".formatted(name));
-            };
         }
 
         void deserializeComponentByType(String type,Element element,Screen target,XmlReader ctx){
             for (int i = 0; i < element.getElementsByTagName(type).getLength(); i++) {
                 Element comp = (Element) element.getElementsByTagName(type).item(i);
-                Component component = ctx.deserialize(comp, getClass(type));
+                Component component = ctx.deserialize(comp, Registries.SCREEN_LOADER.getCompClass(type));
                 target.components.put(comp.getAttribute("id"), component);
                 component.setParent(target);
             }

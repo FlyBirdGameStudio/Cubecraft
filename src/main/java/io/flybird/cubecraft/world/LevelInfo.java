@@ -1,7 +1,7 @@
 package io.flybird.cubecraft.world;
 
-import io.flybird.util.file.nbt.NBTDataIO;
-import io.flybird.util.file.nbt.tag.NBTTagCompound;
+import io.flybird.util.file.NBTDataIO;
+import io.flybird.util.file.nbt.NBTTagCompound;
 
 import java.util.Date;
 

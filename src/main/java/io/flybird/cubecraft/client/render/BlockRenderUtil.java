@@ -1,12 +1,11 @@
 package io.flybird.cubecraft.client.render;
 
-import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.client.render.model.object.Vertex;
-import io.flybird.cubecraft.register.Registry;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.block.EnumFacing;
 import io.flybird.util.math.MathHelper;
-import io.flybird.util.math.Vector3;
+import io.flybird.util.container.Vector3;
 import org.joml.Vector3d;
 
 
@@ -33,13 +32,13 @@ public class BlockRenderUtil {
     }
 
     public static Vertex bakeVertex(Vertex v, Vector3d pos, IWorld w, long x, long y, long z, int face) {
-        if (Registry.getClient().getGameSetting().getValueAsBoolean("client.render.terrain.use_smooth_lighting", true)) {
+        if (Registries.CLIENT.getGameSetting().getValueAsBoolean("client.render.terrain.use_smooth_lighting", true)) {
             v.multiplyColor(BlockRenderUtil.getSmoothedLight(w, x, y, z, pos) / 128d);
         } else {
             Vector3<Long> v2 = EnumFacing.fromId(face).findNear(x, y, z, 1);
             v.multiplyColor(w.getLight(v2.x(), v2.y(), v2.z()) / 128d);
         }
-        if (Registry.getClient().getGameSetting().getValueAsBoolean("client.render.terrain.use_classic_lighting", false)) {
+        if (Registries.CLIENT.getGameSetting().getValueAsBoolean("client.render.terrain.use_classic_lighting", false)) {
             v.multiplyColor(getClassicLight(face));
         }
         return v;

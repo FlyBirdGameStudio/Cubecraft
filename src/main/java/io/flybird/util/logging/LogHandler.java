@@ -1,13 +1,16 @@
 package io.flybird.util.logging;
 
 import com.google.gson.GsonBuilder;
-import io.flybird.util.ColorUtil;
-import org.lwjgl.opengl.GL11;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * simple log handler(thread save)
+ *
+ * @author GrassBlock2022
+ */
 public class LogHandler {
     private static String logPath = "/";
 
@@ -24,25 +27,41 @@ public class LogHandler {
             "yyyy-MM-dd_HH-mm-ss"
     );
 
-    public static void setLogFormat(String loc){
+    /**
+     * set current log format
+     *
+     * @param loc format file location
+     */
+    public static void setLogFormat(String loc) {
         try {
-            InputStream stream=new FileInputStream(loc);
-            String s=new String(stream.readAllBytes());
-           setLogFormat(
-                   new GsonBuilder().registerTypeAdapter(LogFormat.class,new LogFormat.Deserializer())
-                           .create().fromJson(s,LogFormat.class)
-           );
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            InputStream stream = new FileInputStream(loc);
+            String s = new String(stream.readAllBytes());
+            setLogFormat(
+                    new GsonBuilder().registerTypeAdapter(LogFormat.class, new LogFormat.Deserializer())
+                            .create().fromJson(s, LogFormat.class)
+            );
+            stream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * set current log format
+     *
+     * @param logFormat format
+     */
     public static void setLogFormat(LogFormat logFormat) {
         LogHandler.logFormat = logFormat;
     }
 
+    /**
+     * create a logger
+     *
+     * @param source source
+     * @param file   target file
+     * @return brand-new logger
+     */
     public static LogHandler create(String source, String file) {
         if (logOutput) {
             if (!files.containsKey(file)) {
@@ -65,6 +84,9 @@ public class LogHandler {
         return e;
     }
 
+    /**
+     * all save log,clear cache.
+     */
     public static void allSave() {
         if (logOutput) {
             Set<String> keySet = logArrays.keySet();
@@ -93,6 +115,26 @@ public class LogHandler {
         }
     }
 
+    /**
+     * set if log should save to file,use when debugging.
+     *
+     * @param logOutput output
+     */
+    public static void setLogOutput(boolean logOutput) {
+        LogHandler.logOutput = logOutput;
+    }
+
+    /**
+     * create logger,using default file.
+     *
+     * @param name name
+     * @return brand-new logger
+     */
+    public static LogHandler create(String name) {
+        return create(name, "_NO_");
+    }
+
+
     private static boolean logOutput = true;
 
     public String source;
@@ -103,37 +145,53 @@ public class LogHandler {
         this.file = file;
     }
 
-    public static void setLogOutput(boolean logOutput) {
-        LogHandler.logOutput = logOutput;
-    }
 
-    public static LogHandler create(String name) {
-        return create(name, "_NO_");
-    }
-
-    public void info(String str,Object... args ){
+    /**
+     * record info
+     *
+     * @param str message
+     * @param args format arguments
+     */
+    public void info(String str, Object... args) {
         log(str.formatted(args), LogType.INFO);
     }
 
-    public void warning(String str,Object... args) {
+    /**
+     * record warning
+     *
+     * @param str  message
+     * @param args format arguments
+     */
+    public void warning(String str, Object... args) {
         log(str.formatted(args), LogType.WARN);
     }
 
-    public void error(String str,Object... args) {
+    /**
+     * record error
+     *
+     * @param str  message
+     * @param args format arguments
+     */
+    public void error(String str, Object... args) {
         log(str.formatted(args), LogType.ERROR);
     }
 
-    public void exception(String msg,Object... args){
-        this.log(msg.formatted(args),LogType.EXCEPTION);
+    /**
+     * record exception
+     *
+     * @param msg  message
+     * @param args format arguments
+     */
+    public void exception(String msg, Object... args) {
+        this.log(msg.formatted(args), LogType.EXCEPTION);
     }
 
-    public void checkGLError(String status) {
-        int errorStatus = GL11.glGetError();
-        if (errorStatus != 0) {
-            throw new RuntimeException(errorStatus + ":" + status);
-        }
-    }
-
+    /**
+     * write info by type
+     *
+     * @param message msg
+     * @param type    type
+     */
     public void log(String message, LogType type) {
         Log e = new Log(message, type, System.currentTimeMillis(), this.source);
         if (logOutput) {
@@ -143,7 +201,7 @@ public class LogHandler {
     }
 
 
-    public record Log(String message, LogType err, long time, String source) implements Comparable<Log> {
+    record Log(String message, LogType err, long time, String source) implements Comparable<Log> {
         @Override
         public int compareTo(Log o) {
             return o.time >= this.time ? 1 : -1;
@@ -160,22 +218,25 @@ public class LogHandler {
         }
     }
 
+    /**
+     * set log location
+     *
+     * @param logPath path
+     */
     public static void setLogPath(String logPath) {
         LogHandler.logPath = logPath;
     }
 
-    public static LogFormat getLogFormat() {
-        return logFormat;
-    }
-
-    public static String getLogPath() {
-        return logPath;
-    }
-
-    public void error(Error e){
+    /**
+     * create stack trace and log error
+     *
+     * @param e obj
+     * @author CubeVlmu
+     */
+    public void error(Error e) {
         this.warning("|> Error Was Found : %s", e.getLocalizedMessage());
         this.error("|> Maybe Cause : %s", e.getCause());
-        for(StackTraceElement line : e.getStackTrace())
+        for (StackTraceElement line : e.getStackTrace())
             this.error(
                     "|- at %s.%s (at line %s from file %s) ",
                     line.getClassName(),
@@ -185,10 +246,16 @@ public class LogHandler {
             );
     }
 
-    public void exception(Exception e){
+    /**
+     * create stack trace and log exception
+     *
+     * @param e obj
+     * @author CubeVlmu
+     */
+    public void exception(Exception e) {
         this.exception("|> Error Was Found : %s", e.getLocalizedMessage());
         this.exception("|> Maybe Cause : %s", e.getCause());
-        for(StackTraceElement line : e.getStackTrace())
+        for (StackTraceElement line : e.getStackTrace())
             this.exception(
                     "|- at %s.%s (at line %s from file %s) ",
                     line.getClassName(),

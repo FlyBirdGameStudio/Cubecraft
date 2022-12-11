@@ -1,6 +1,6 @@
 package io.flybird.util.logging;
 
-public enum LogType {
+enum LogType {
     INFO("info",0),
     WARN("warning",1),
     ERROR("error",2),
@@ -14,7 +14,4 @@ public enum LogType {
         this.level = level;
     }
 
-    public boolean contains(LogType another){
-        return another.level>this.level;
-    }
 }

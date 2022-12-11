@@ -5,25 +5,34 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 
+/**
+ * simple util for array.
+ *
+ * @author GrassBlock2022
+ */
 public class ArrayUtil {
-    public static <T> void iterateArray(T[] array, ArrayIterationAction<T> action) {
-        for (T item : array) {
-            action.action(item);
-        }
-    }
 
-    public static <T> boolean arrayMatchAny(T t, T[] arr) {
-        return Arrays.asList(arr).contains(t);
-    }
-
-    public static <T> boolean arrayMatchNone(T t, T[] arr) {
-        return Arrays.stream(arr).noneMatch(t2 -> Objects.equals(t2, t));
-    }
-
+    /**
+     * calc dispatched array position in 3d
+     *
+     * @param w width
+     * @param h height
+     * @param d depth
+     * @param x x
+     * @param y y
+     * @param z z
+     * @return position
+     */
     public static int calcDispatchPos3d(int w, int h, int d, int x, int y, int z) {
         return (y * d + z) * w + x;
     }
 
+    /**
+     * box basic data type to object data type
+     *
+     * @param data raw array
+     * @return boxed array
+     */
     public static Byte[] box(byte[] data) {
         Byte[] data2 = new Byte[data.length];
         for (int i = 0; i < data.length; i++) {
@@ -32,6 +41,26 @@ public class ArrayUtil {
         return data2;
     }
 
+    /**
+     * unbox basic object data type to basic data type
+     *
+     * @param data boxed array
+     * @return raw array
+     */
+    public static byte[] unBox(Byte[] data) {
+        byte[] data2 = new byte[data.length];
+        for (int i = 0; i < data.length; i++) {
+            data2[i] = data[i];
+        }
+        return data2;
+    }
+
+    /**
+     * covert data type to another data type.
+     *
+     * @param array array
+     * @return another typed array
+     */
     public static int[] short2int(short[] array) {
         int[] d = new int[array.length];
         int c = 0;
@@ -42,6 +71,12 @@ public class ArrayUtil {
         return d;
     }
 
+    /**
+     * covert data type to another data type.
+     *
+     * @param array array
+     * @return another typed array
+     */
     public static short[] int2short(int[] array) {
         short[] d = new short[array.length];
         int c = 0;
@@ -52,15 +87,24 @@ public class ArrayUtil {
         return d;
     }
 
-    public interface ArrayIterationAction<E> {
-        void action(E item);
-    }
-
+    /**
+     * allocate data array from varargs.
+     *
+     * @param args args
+     * @param <T>  Template class for atrray.
+     * @return data
+     */
     @SafeVarargs
     public static <T> T[] allocate(T... args) {
         return args;
     }
 
+    /**
+     * connect arrays to an big array.
+     *
+     * @param a arrays
+     * @return connected array.
+     */
     public static byte[] connect(byte[]... a) {
         ArrayList<Byte> data = new ArrayList<>();
         for (byte[] arr : a) {
@@ -69,14 +113,6 @@ public class ArrayUtil {
             }
         }
         return unBox(data.toArray(new Byte[0]));
-    }
-
-    public static byte[] unBox(Byte[] data) {
-        byte[] data2 = new byte[data.length];
-        for (int i = 0; i < data.length; i++) {
-            data2[i] = data[i];
-        }
-        return data2;
     }
 
 

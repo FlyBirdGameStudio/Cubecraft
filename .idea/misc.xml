@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="EntryPointsManager">
-    <list size="4">
-      <item index="0" class="java.lang.String" itemvalue="io.flybird.util.network.packet.PacketConstructor" />
-      <item index="1" class="java.lang.String" itemvalue="io.flybird.util.network.packet.PacketEventHandler" />
+    <list size="6">
+      <item index="0" class="java.lang.String" itemvalue="io.flybird.cubecraft.client.resources.ResourceLoadHandler" />
+      <item index="1" class="java.lang.String" itemvalue="io.flybird.util.container.namespace.FieldRegistry" />
       <item index="2" class="java.lang.String" itemvalue="io.flybird.util.container.namespace.ItemRegisterFunc" />
       <item index="3" class="java.lang.String" itemvalue="io.flybird.util.event.EventHandler" />
+      <item index="4" class="java.lang.String" itemvalue="io.flybird.util.network.packet.PacketConstructor" />
+      <item index="5" class="java.lang.String" itemvalue="io.flybird.util.network.packet.PacketEventHandler" />
     </list>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="jbr-11" project-jdk-type="JavaSDK">
+  <component name="JavadocGenerationManager">
+    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/doc" />
+    <option name="OTHER_OPTIONS" value="-encoding utf-8" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

@@ -3,6 +3,7 @@ package io.flybird.cubecraft.server;
 import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.internal.net.handler.ServerHandlerPlayerConnection;
 import io.flybird.cubecraft.internal.net.handler.ServerHandlerPlayerPlaying;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.util.event.CachedEventBus;
 import io.flybird.util.network.base.ServerNettyPipeline;
 import io.flybird.cubecraft.world.IWorld;
@@ -38,6 +39,7 @@ public class CubecraftServer extends LoopTickingApplication {
 
     @Override
     public void init(){
+        Registries.SERVER=this;
         this.status = ServerStatus.STARTUP;
         long startTime=System.currentTimeMillis();
 

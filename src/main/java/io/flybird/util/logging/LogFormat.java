@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public record LogFormat(
+record LogFormat(
         String info,
         String warn,
         String error,

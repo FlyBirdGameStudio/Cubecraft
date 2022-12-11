@@ -1,30 +1,7 @@
 package io.flybird.cubecraft.extansion;
 
+import io.flybird.cubecraft.extansion.event.ModLoadEvent;
+
 public abstract class Mod {
-    private final PlatformClient client;
-    private final ExtansionRunningTarget targetPlatform;
-    private final PlatformServer server;
-    public Mod(
-            PlatformClient client,
-            PlatformServer server,
-            ExtansionRunningTarget target
-    ){
-        this.client=client;
-        this.server=server;
-        this.targetPlatform=target;
-    }
-
-    public abstract void construct();
-
-    public PlatformClient getClient() {
-        return client;
-    }
-
-    public PlatformServer getServer() {
-        return server;
-    }
-
-    public ExtansionRunningTarget getTargetPlatform() {
-        return targetPlatform;
-    }
+    public void load(ModLoadEvent e){}
 }

@@ -1,8 +1,11 @@
 package io.flybird.cubecraft.client.gui.layout;
 
-import io.flybird.cubecraft.client.gui.ScreenLoader;
-import io.flybird.util.file.faml.FAMLDeserializer;
-import io.flybird.util.file.faml.XmlReader;
+import io.flybird.cubecraft.internal.ui.layout.FlowLayout;
+import io.flybird.cubecraft.internal.ui.layout.OriginLayout;
+import io.flybird.cubecraft.internal.ui.layout.ViewportLayout;
+import io.flybird.cubecraft.register.Registries;
+import io.flybird.util.file.FAMLDeserializer;
+import io.flybird.util.file.XmlReader;
 import com.google.gson.*;
 import org.w3c.dom.Element;
 
@@ -30,7 +33,7 @@ public abstract class LayoutManager {
     public static class XMLDeserializer implements FAMLDeserializer<LayoutManager> {
         @Override
         public LayoutManager deserialize(Element element, XmlReader famlLoadingContext) {
-            return ScreenLoader.getSharedXMLReader().deserialize(element,LayoutManager.getClass(element.getAttribute("type")));
+            return Registries.FAML_READER.deserialize(element,Registries.SCREEN_LOADER.getLayoutClass(element.getAttribute("type")));
         }
     }
 
@@ -76,7 +79,7 @@ public abstract class LayoutManager {
         return switch (id){
             case "origin"->OriginLayout.class;
             case "viewport"->ViewportLayout.class;
-            case "flow"->FlowLayout.class;
+            case "flow"-> FlowLayout.class;
             default -> throw new IllegalArgumentException("no matched constant named "+id);
         };
     }
