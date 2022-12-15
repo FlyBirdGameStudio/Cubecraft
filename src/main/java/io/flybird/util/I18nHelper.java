@@ -157,7 +157,7 @@ public class I18nHelper {
     static class LanguageTranslator {
         private final HashMap<String,String> mapping=new HashMap<>();
         private final ArrayList<String> authors=new ArrayList<>();
-        private String display;
+        private final String display;
 
         public LanguageTranslator(String display) {
             this.display = display;

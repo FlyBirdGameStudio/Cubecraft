@@ -8,8 +8,6 @@ package io.flybird.starfish3d.platform;
 public class RunningAvg {
     private final long[] slots;
     private int offset;
-    private static final long DAMPEN_THRESHOLD = 10000000L;
-    private static final float DAMPEN_FACTOR = 0.9F;
 
     public RunningAvg(int slotCount) {
         this.slots = new long[slotCount];
@@ -31,8 +29,8 @@ public class RunningAvg {
     public long avg() {
         long sum = 0L;
 
-        for(int i = 0; i < this.slots.length; ++i) {
-            sum += this.slots[i];
+        for (long slot : this.slots) {
+            sum += slot;
         }
 
         return sum / (long)this.slots.length;

@@ -14,18 +14,14 @@ public class MultiRenderCompileService<V extends VertexArrayCompileCallable> imp
     private final ArrayQueue<DrawCompile> multiDrawResult = new ArrayQueue<>();
     private final ArrayQueue<IDrawCompile> all = new ArrayQueue<>();
     private final ArrayQueue<V> cache = new ArrayQueue<>();
-
-    private final Thread[] threads;
-    private final CompilerWorker<?>[] workers;
+    private final CompilerWorker<V>[] workers;
 
     public MultiRenderCompileService(int max) {
-        this.threads=new Thread[max];
-        this.workers=new CompilerWorker[max];
+        workers=new CompilerWorker<>[max];
         for (int i=0;i<max;i++){
             CompilerWorker<V> worker=new CompilerWorker<>(this.multiDrawResult, this.all,this.cache);
-            this.workers[i]=worker;
-            this.threads[i]=THREAD_FACTORY.newThread(worker);
-            this.threads[i].start();
+            workers[i]=worker;
+            THREAD_FACTORY.newThread(worker).start();
         }
     }
 
@@ -68,5 +64,11 @@ public class MultiRenderCompileService<V extends VertexArrayCompileCallable> imp
     @Override
     public ArrayQueue<V> getCache() {
         return this.cache;
+    }
+
+    public void stop(){
+        for (CompilerWorker<V> w : this.workers) {
+            w.setRunning(false);
+        }
     }
 }

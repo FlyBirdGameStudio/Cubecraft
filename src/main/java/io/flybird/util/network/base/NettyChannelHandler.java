@@ -17,7 +17,7 @@ import java.net.SocketAddress;
 public class NettyChannelHandler extends SimpleChannelInboundHandler<ByteBuf> {
     private final LogHandler logHandler = LogHandler.create("NettyChannelHandler");
     final ArrayQueue<Packet> sending = new ArrayQueue<>();
-    Channel ch = null;
+    final Channel ch = null;
 
     private final NetWorkEventBus eventBus;
     private SocketAddress localAddr;
@@ -43,8 +43,7 @@ public class NettyChannelHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        if (evt instanceof IdleStateEvent) {//超时事件
-            IdleStateEvent idleEvent = (IdleStateEvent) evt;
+        if (evt instanceof IdleStateEvent idleEvent) {//超时事件
             if (idleEvent.state() == IdleState.READER_IDLE) {//读
                 ctx.channel().close();
             }

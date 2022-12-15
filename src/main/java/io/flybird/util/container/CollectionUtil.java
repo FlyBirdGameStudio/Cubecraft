@@ -27,7 +27,7 @@ public class CollectionUtil {
      * @param id key
      * @param t value
      * @return wrapped value
-     * @param <T>
+     * @param <T> Template class
      */
     public static <T> HashMap<String, T> wrap(String id, T t) {
         HashMap<String,T> map=new HashMap<>();

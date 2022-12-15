@@ -46,7 +46,7 @@ public abstract class Block {
     public abstract AABB[] getSelectionBoxSizes();
 
     /**
-     * defines resistance of a block.if entity goes into it,speed will multiply this value.
+     * defines resistance of a block. If entity goes into it,speed will multiply this value.
      *
      * @return resistance(0.0 ~ 1.0)
      */
@@ -72,9 +72,9 @@ public abstract class Block {
 //  ------ ticking ------
 
     /**
-     * when a block updates,this will be invoke.
+     * when a block updates,this will be invoked.
      *
-     * @param dimension happened dimention
+     * @param dimension happened dimension
      * @param x         happened position
      * @param y         happened position
      * @param z         happened position
@@ -84,16 +84,14 @@ public abstract class Block {
     }
 
     /**
-     * when a block random ticks,this will be invoke.
+     * when a block random ticks,this will be invoked.
      *
-     * @param dimension happened dimention
+     * @param dimension happened dimension
      * @param x         happened position
      * @param y         happened position
      * @param z         happened position
      */
-    public void onBlockRandomTick(IWorld dimension, long x, long y, long z) {
-        //do nth
-    }
+    public void onBlockRandomTick(IWorld dimension, long x, long y, long z) {}
 
     //  ------ metadata ------
     //this part is about attributes :)

@@ -2,28 +2,23 @@ package io.flybird.cubecraft.internal.ui.component;
 
 
 import io.flybird.cubecraft.client.gui.component.Component;
-import io.flybird.cubecraft.client.gui.layout.LayoutManager;
+import io.flybird.cubecraft.client.gui.component.LayoutManager;
 import io.flybird.cubecraft.client.resources.ResourceLocation;
 import io.flybird.cubecraft.client.resources.ResourceManager;
 import io.flybird.starfish3d.render.ShapeRenderer;
 import io.flybird.starfish3d.render.textures.Texture2D;
 import io.flybird.util.file.FAMLDeserializer;
 import io.flybird.util.file.XmlReader;
-import com.google.gson.*;
 import org.w3c.dom.Element;
-
-import java.lang.reflect.Type;
 
 public class ImageRenderer extends Component {
     private final Texture2D texture = new Texture2D(false, false);
-    private String file;
-    public HorizontalClipping hClip;
-    public VerticalClipping vClip;
+    public final HorizontalClipping hClip;
+    public final VerticalClipping vClip;
 
     public ImageRenderer(String file, HorizontalClipping hClip, VerticalClipping vClip) {
         this.hClip = hClip;
         this.vClip = vClip;
-        this.file = file;
         this.texture.generateTexture();
         this.texture.load(ResourceManager.instance.getResource(ResourceLocation.uiTexture(
                 file.split(":")[0],
@@ -79,7 +74,7 @@ public class ImageRenderer extends Component {
                 layoutManager.ax + layoutManager.width,
                 layoutManager.ay,
                 layoutManager.ay + layoutManager.height,
-                layer, layer, u0, u1, v0, v1);
+                layer, u0, u1, v0, v1);
         ShapeRenderer.end();
     }
 
@@ -92,20 +87,6 @@ public class ImageRenderer extends Component {
                     VerticalClipping.from(element.getAttribute("v-clip"))
             );
             imageRenderer.setLayout(famlLoadingContext.deserialize((Element) element.getElementsByTagName("layout").item(0), LayoutManager.class));
-            return imageRenderer;
-        }
-    }
-
-    public static class JDeserializer implements JsonDeserializer<ImageRenderer> {
-        @Override
-        public ImageRenderer deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            JsonObject node = jsonElement.getAsJsonObject();
-            ImageRenderer imageRenderer = new ImageRenderer(
-                    node.get("image").getAsString(),
-                    HorizontalClipping.from(node.get("h-clip").getAsString()),
-                    VerticalClipping.from(node.get("v-clip").getAsString())
-            );
-            imageRenderer.setLayout(jsonDeserializationContext.deserialize(node.get("layout"), LayoutManager.class));
             return imageRenderer;
         }
     }

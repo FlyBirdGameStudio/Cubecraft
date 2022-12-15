@@ -58,8 +58,7 @@ public final class BlockModel implements Model {
                 for (JsonElement n : arr) {
                     src = src.replace(n.getAsJsonObject().get("from").getAsString(), n.getAsJsonObject().get("to").getAsString());
                 }
-                BlockModel m = Registries.createJsonReader().fromJson(src, BlockModel.class);
-                return m;
+                return Registries.createJsonReader().fromJson(src, BlockModel.class);
             }
 
             JsonArray comp = jsonElement.getAsJsonObject().get("components").getAsJsonArray();

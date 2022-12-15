@@ -6,9 +6,9 @@ import io.flybird.util.container.MultiMap;
 import java.net.InetSocketAddress;
 
 public class PlayerTable {
-    public MultiMap<String, Player> uuid2player=new MultiMap<>();
-    public MultiMap<String, InetSocketAddress> uuid2address=new MultiMap<>();
-    public MultiMap<Player,InetSocketAddress> player2address=new MultiMap<>();
+    public final MultiMap<String, Player> uuid2player=new MultiMap<>();
+    public final MultiMap<String, InetSocketAddress> uuid2address=new MultiMap<>();
+    public final MultiMap<Player,InetSocketAddress> player2address=new MultiMap<>();
 
     public String getPlayerUUID(Player player){
         return uuid2player.of(player);

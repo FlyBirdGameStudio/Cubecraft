@@ -1,7 +1,7 @@
 package io.flybird.cubecraft.internal.ui.layout;
 
-import io.flybird.cubecraft.client.gui.layout.Border;
-import io.flybird.cubecraft.client.gui.layout.LayoutManager;
+import io.flybird.cubecraft.client.gui.component.Border;
+import io.flybird.cubecraft.client.gui.component.LayoutManager;
 import io.flybird.util.file.FAMLDeserializer;
 import io.flybird.util.file.XmlReader;
 import com.google.gson.Gson;

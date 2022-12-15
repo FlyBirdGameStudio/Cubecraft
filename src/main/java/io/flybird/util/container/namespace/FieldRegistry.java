@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * holds a static field for registering.
+ * holds a FML-like static field for registering.
  *
  * <p>when there is a {@link FieldRegistryHolder} outside,you no longer need to type namespace here.
  * you could still write namespace,and it will cover the namespace from {@link FieldRegistryHolder} outside</p>

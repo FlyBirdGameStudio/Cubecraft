@@ -21,11 +21,11 @@ import java.util.HashMap;
 
 public class LevelRenderer implements EventListener {
 
-    public HashMap<String, IWorldRenderer>renderers;
-    public IWorld world;
-    public Player player;
-    public Camera camera=new Camera();
-    public EnvironmentRenderer environmentRenderer;
+    public final HashMap<String, IWorldRenderer>renderers;
+    public final IWorld world;
+    public final Player player;
+    public final Camera camera=new Camera();
+    public final EnvironmentRenderer environmentRenderer;
 
     public LevelRenderer(IWorld w, Player p, Cubecraft client){
         client.getWindow().getEventBus().registerEventListener(this);

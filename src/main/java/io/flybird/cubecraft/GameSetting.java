@@ -1,6 +1,5 @@
 package io.flybird.cubecraft;
 
-import io.flybird.cubecraft.client.ClientMain;
 import io.flybird.util.container.CollectionUtil;
 
 import java.io.*;
@@ -9,8 +8,8 @@ import java.util.Properties;
 
 public class GameSetting {
     private final File file;
-    public HashMap<String, Object> buffer = new HashMap<>();
-    public Properties properties = new Properties();
+    public final HashMap<String, Object> buffer = new HashMap<>();
+    public final Properties properties = new Properties();
     private final String operator;
 
     public GameSetting(String path,String operator) {
@@ -20,7 +19,7 @@ public class GameSetting {
             file.getParentFile().mkdirs();
             try {
                 file.createNewFile();
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
     }
@@ -46,7 +45,7 @@ public class GameSetting {
     }
 
     public void flush() {
-        CollectionUtil.iterateMap(this.buffer, (key, item) -> properties.put(key, item));
+        CollectionUtil.iterateMap(this.buffer, properties::put);
         this.buffer.clear();
     }
 

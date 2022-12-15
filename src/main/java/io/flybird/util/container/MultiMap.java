@@ -1,5 +1,7 @@
 package io.flybird.util.container;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -88,7 +90,7 @@ public class MultiMap<K,V> implements Map<K,V> {
      * {@inheritDoc}
      */
     @Override
-    public void putAll(Map<? extends K, ? extends V> m) {
+    public void putAll(@NotNull Map<? extends K, ? extends V> m) {
         CollectionUtil.iterateMap(m, this::put);
     }
 

@@ -18,14 +18,12 @@ public record Vertex(
         return this;
     }
 
-    public Vertex multiplyColor(double col){
+    public void multiplyColor(double col){
         multiplyColor(new Vector3d(col,col,col));
-        return this;
     }
 
-    public Vertex multiplyColor(Vector3d col){
+    public void multiplyColor(Vector3d col){
         this.color.mul(new Vector4d(col.x,col.y,col.z,1d));
-        return this;
     }
 
 

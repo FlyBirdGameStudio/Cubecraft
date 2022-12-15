@@ -1,40 +1,37 @@
 package io.flybird.cubecraft;
 
 import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerJoinResponse;
-import io.flybird.cubecraft.world.block.BlockState;
-import io.flybird.util.file.NBTBuilder;
-import io.flybird.util.file.nbt.NBTTagCompound;
 import io.flybird.util.network.NetHandlerContext;
-import io.flybird.util.network.packet.PacketEventHandler;
 import io.flybird.util.network.handler.INetHandler;
-import io.flybird.cubecraft.world.chunk.Chunk;
-import io.flybird.cubecraft.world.chunk.ChunkPos;
+import io.flybird.util.network.packet.PacketEventHandler;
 
-import java.io.DataOutputStream;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.util.zip.GZIPOutputStream;
 
 public class Test {
     static int ppsServer, ppsClient;
 
     public static void main(String[] args) throws Exception {
-        Chunk c=new Chunk(null,new ChunkPos(11,45,14));
-        c.setBiome(0,0,0,"cubecraft:void");
-        c.setLight(0,0,0, (byte) 123);
-        c.setBlockState(15,127,15, new BlockState("fuck:fuck", (byte) 5, (byte) 0));
+        int size=16;
+        String str="Hello,World";
+        Font font=new Font(Font.SANS_SERIF,Font.PLAIN,size);
 
-        NBTTagCompound tag=c.getData();
+        BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        FontMetrics fm = img.getGraphics().getFontMetrics(font);
+        int width = fm.stringWidth(str);
+        int height=fm.getHeight();
 
-        File f=new File("E:/chunk.nbt");
 
+        BufferedImage img2=new BufferedImage(128,128,BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g=img2.createGraphics();
+        g.drawString(str,64,64);
+
+
+        File f=new File("E:/test_font.png");
         f.createNewFile();
-
-        GZIPOutputStream s=new GZIPOutputStream(new FileOutputStream(f));
-
-        NBTBuilder.write(tag,new DataOutputStream(s));
-
-        s.close();
+        ImageIO.write(img2,"png",f);
 
 
         /*

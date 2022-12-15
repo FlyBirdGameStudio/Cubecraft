@@ -1,6 +1,6 @@
 package io.flybird.cubecraft.client;
 
-import io.flybird.cubecraft.internal.BlockType;
+import io.flybird.cubecraft.internal.block.BlockType;
 import io.flybird.cubecraft.world.entity.Entity;
 import io.flybird.starfish3d.event.KeyPressEvent;
 import io.flybird.starfish3d.platform.Keyboard;
@@ -11,7 +11,7 @@ import io.flybird.util.event.EventListener;
 public class PlayerController implements EventListener {
     private final Cubecraft client;
     private Entity entity;
-    public boolean[] keys = new boolean[100];
+    public final boolean[] keys = new boolean[100];
 
     public PlayerController(Cubecraft client, Entity e){
         this.client = client;

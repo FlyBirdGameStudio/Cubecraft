@@ -35,10 +35,6 @@ public class Texture2DTileMap extends Texture2D {
         this.minStepY = minStepY;
     }
 
-    public Texture2DTileMap(boolean mipMap, int sectionSizeH, int sectionSizeV) {
-        this(false, sectionSizeH,sectionSizeV,1,1);
-    }
-
     @Override
     public void load(ITextureImage image) {
         Image img = new Image(image.getName(), image.getAsImage());
@@ -120,7 +116,7 @@ public class Texture2DTileMap extends Texture2D {
         private final int sizeV;
         private final HashMap<String, AABB2D> tex = new HashMap<>();
         private final Texture2DTileMap parent;
-        boolean[][] usage;
+        final boolean[][] usage;
         private final int id;
 
         public Section(int sizeH, int sizeV, Texture2DTileMap parent, int id) {

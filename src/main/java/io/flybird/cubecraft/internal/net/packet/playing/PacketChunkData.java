@@ -15,9 +15,8 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 @TypeItem("cubecraft:chunk_data")
-//@CompressPacket
 public class PacketChunkData implements Packet {
-    private Chunk chunk;
+    private final Chunk chunk;
 
     public PacketChunkData(Chunk chunk) {
         this.chunk = chunk;

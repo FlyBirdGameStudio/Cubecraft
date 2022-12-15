@@ -2,7 +2,7 @@ package io.flybird.cubecraft.client;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import io.flybird.cubecraft.client.gui.Popup;
+import io.flybird.cubecraft.client.gui.base.Popup;
 import io.flybird.cubecraft.client.gui.ScreenUtil;
 import io.flybird.cubecraft.register.Registries;
 import io.flybird.util.HTTPUtil;
@@ -88,7 +88,6 @@ public class VersionCheck implements Runnable {
         String[] current = target.split("\\.");
 
         int[] numI = new int[3];
-        int[] remoteI = new int[3];
 
         try {
             for (int i = 0; i < 3; i++) {

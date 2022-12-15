@@ -20,8 +20,10 @@ import io.flybird.util.math.AABB;
 import io.flybird.util.math.MathHelper;
 
 public class RenderChunk implements KeyGetter<RenderChunkPos>, IRenderObject {
-    public long x, y, z;
-    public IWorld world;
+    public final long x;
+    public final long y;
+    public final long z;
+    public final IWorld world;
     private final IRenderCall renderList_terrain;
     private boolean isAlphaFilled;
 
@@ -39,14 +41,6 @@ public class RenderChunk implements KeyGetter<RenderChunkPos>, IRenderObject {
         this.renderList_terrain.allocate();
         this.renderList_transparent = IRenderCall.create(vbo);
         this.renderList_transparent.allocate();
-    }
-
-    public boolean isAlphaFilled() {
-        return isAlphaFilled;
-    }
-
-    public boolean isFilled() {
-        return isAlphaFilled || isTransparentFilled;
     }
 
     //render
@@ -128,10 +122,7 @@ public class RenderChunk implements KeyGetter<RenderChunkPos>, IRenderObject {
         if (d < y) {
             return y;
         }
-        if (d < z) {
-            return z;
-        }
-        return d;
+        return Math.max(d, z);
     }
 
     //others

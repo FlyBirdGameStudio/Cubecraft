@@ -22,9 +22,8 @@ public class NBTTagIntArray extends NBTBase {
     {
         p_74734_1_.writeInt(this.intArray.length);
 
-        for (int var2 = 0; var2 < this.intArray.length; ++var2)
-        {
-            p_74734_1_.writeInt(this.intArray[var2]);
+        for (int i : this.intArray) {
+            p_74734_1_.writeInt(i);
         }
     }
 

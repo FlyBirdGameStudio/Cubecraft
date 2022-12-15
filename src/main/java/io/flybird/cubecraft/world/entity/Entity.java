@@ -79,7 +79,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
     }
 
     /**
-     * this is offset but not set.yaw value will clamp to -90~90（degree）
+     * this is offset but not set. Yaw value will clamp to -90~90（degree）
      *
      * @param xo yaw
      * @param yo pitch
@@ -274,10 +274,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
     public boolean isFree(double xa, double ya, double za) {
         AABB box = this.collisionBox.cloneMove(xa, ya, za);
         ArrayList<AABB> aABBs = this.world.getCollisionBox(box);
-        if (aABBs.size() > 0) {
-            return false;
-        }
-        return true;//!this.world.containsAnyLiquid(box);
+        return aABBs.size() <= 0;//!this.world.containsAnyLiquid(box);
     }
 
 

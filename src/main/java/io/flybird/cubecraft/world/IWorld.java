@@ -22,9 +22,9 @@ import java.util.*;
 
 public class IWorld {
     private final EventBus eventBus = new CachedEventBus();
-    public HashMap<Vector3<Long>, Integer> scheduledTickEvents = new HashMap<>();//event,remaining time
-    public KeyMap<ChunkPos, Chunk> chunks = new KeyMap<>();//position,chunk
-    public HashMap<String, Entity> entities = new HashMap<>();//uuid,entity
+    public final HashMap<Vector3<Long>, Integer> scheduledTickEvents = new HashMap<>();//event,remaining time
+    public final KeyMap<ChunkPos, Chunk> chunks = new KeyMap<>();//position,chunk
+    public final HashMap<String, Entity> entities = new HashMap<>();//uuid,entity
     private final LevelInfo levelInfo;
     private long time;
     private final String id;
@@ -260,7 +260,7 @@ public class IWorld {
 
     public int getLight(long x, long y, long z) {
         if (getBlockState(x, y, z).getBlock().isSolid()) {
-            return 0;
+            return 48;
         } else {
             return 128;
         }

@@ -4,7 +4,7 @@ import io.flybird.cubecraft.client.ClientMain;
 import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.client.event.ClientResourceReloadEvent;
 import io.flybird.util.event.DirectEventBus;
-import io.flybird.util.event.Event;
+
 import io.flybird.util.event.EventBus;
 import io.flybird.util.logging.LogHandler;
 import io.flybird.util.event.EventListener;
@@ -19,9 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ResourceManager {
-    public static ResourceManager instance=new ResourceManager();
-    public ArrayList<ResourcePack> resourcePacks=new ArrayList<>();
-    public LogHandler logHandler=LogHandler.create("Client/ResourceLoader");
+    public static final ResourceManager instance=new ResourceManager();
+    public final ArrayList<ResourcePack> resourcePacks=new ArrayList<>();
+    public final LogHandler logHandler=LogHandler.create("Client/ResourceLoader");
     private final EventBus eventBus=new DirectEventBus();
     private final ArrayList<String> namespaces=new ArrayList<>();
 
@@ -61,8 +61,8 @@ public class ResourceManager {
     }
 
     public static void createResourceFolder(){
-        new File(ClientMain.getGamePath()+"/data/resourcepacks").mkdirs();
-        new File(ClientMain.getGamePath()+"/data/shaderpacks").mkdirs();
+        new File(ClientMain.getGamePath()+"/data/resource_packs").mkdirs();
+        new File(ClientMain.getGamePath()+"/data/shader_packs").mkdirs();
         new File(ClientMain.getGamePath()+"/data/plugins").mkdirs();
         new File(ClientMain.getGamePath()+"/data/mods").mkdirs();
         new File(ClientMain.getGamePath()+"/data/logs").mkdirs();
@@ -75,11 +75,6 @@ public class ResourceManager {
     public void registerEventListener(EventListener listener) {
         this.eventBus.registerEventListener(listener);
         this.listeners.add(listener);
-    }
-
-    public void unregisterEventListener(EventListener el){
-        this.eventBus.unregisterEventListener(el);
-        this.listeners.remove(el);
     }
 
     public void reloadStage(ClientResourceReloadEvent e,ResourceLoadStage stage) {
@@ -98,10 +93,6 @@ public class ResourceManager {
                 }
             }
         }
-    }
-
-    public void callEvent(Event evt) {
-        this.eventBus.callEvent(evt);
     }
 
     public void addNameSpace(String space) {

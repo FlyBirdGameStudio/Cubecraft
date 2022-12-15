@@ -1,17 +1,15 @@
 package io.flybird.cubecraft.internal.block;
 
-import io.flybird.cubecraft.internal.BlockType;
-import io.flybird.cubecraft.register.RegisterUtil;
-import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.block.Block;
 import io.flybird.cubecraft.world.block.OverwrittenBlock;
 import io.flybird.util.container.namespace.FieldRegistry;
 import io.flybird.util.container.namespace.FieldRegistryHolder;
-import io.flybird.util.container.namespace.ItemRegisterFunc;
-import io.flybird.util.container.namespace.NameSpacedRegisterMap;
 
 /**
- * block registry,auto register with field registry
+ * block registry,auto register with field registry,
+ * direct constant calls are allowed.
+ *
+ * @author GrassBlock2022
  */
 @FieldRegistryHolder(namespace = "cubecraft")
 public class BlockRegistry {
@@ -30,7 +28,7 @@ public class BlockRegistry {
     public static final Block DIORITE=new OverwrittenBlock(BlockType.DIORITE, BlockBehaviorRegistry.STONE);
 
     @FieldRegistry(id = "granite")
-    public static final Block GRANITE=new OverwrittenBlock(BlockType.DIORITE, BlockBehaviorRegistry.STONE);
+    public static final Block GRANITE=new OverwrittenBlock(BlockType.GRANITE, BlockBehaviorRegistry.STONE);
 
     @FieldRegistry(id = "granite")
     public static final Block BASALT=new OverwrittenBlock(BlockType.BASALT, BlockBehaviorRegistry.STONE);
@@ -76,54 +74,125 @@ public class BlockRegistry {
     public static final Block DARK_OAK_LEAVES=new OverwrittenBlock(BlockType.DARK_OAK_LEAVES, BlockBehaviorRegistry.LEAVES);
     //</editor-fold>
 
+    //<editor-fold> dirt
+    @FieldRegistry(id="dirt")
+    public static final Block DIRT=new OverwrittenBlock(BlockType.DIRT,BlockBehaviorRegistry.DIRT);
 
-    @ItemRegisterFunc
-    public void registerBlockTree(NameSpacedRegisterMap<Block, Block> blockMap) {
-        //behavior:sapling todo
-        /*
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:oak_sapling", "cubecraft:sapling", blockMap);
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:birch_sapling", "cubecraft:sapling", blockMap);
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:spruce_sapling", "cubecraft:sapling", blockMap);
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:dark_oak_sapling", "cubecraft:sapling", blockMap);
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:acacia_sapling", "cubecraft:sapling", blockMap);
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:mangrove_sapling", "cubecraft:sapling", blockMap);
-         */
-    }
+    @FieldRegistry(id="coarse_dirt")
+    public static final Block COARSE_DIRT=new OverwrittenBlock(BlockType.COARSE_DIRT,BlockBehaviorRegistry.DIRT);
+    //</editor-fold>
 
-    @ItemRegisterFunc
-    public void registerEnvironmentBlock(NameSpacedRegisterMap<Block, Block> blockMap) {
-        //behavior:air todo
-        RegisterUtil.registerDefaultOverrideBlock(BlockType.AIR,BlockType.AIR,blockMap);
+    //<editor-fold> grass_block
+    @FieldRegistry(id="grass_block")
+    public static final Block GRASS_BLOCK=new OverwrittenBlock(BlockType.GRASS_BLOCK,BlockBehaviorRegistry.GRASS_BLOCK);
 
+    @FieldRegistry(id="podzol")
+    public static final Block PODZOL=new OverwrittenBlock(BlockType.PODZOL,BlockBehaviorRegistry.GRASS_BLOCK);
 
-        //behavior:dirt todo
-        RegisterUtil.registerDefaultOverrideBlock(BlockType.DIRT, "cubecraft:dirt", blockMap);
-        //RegisterUtil.registerDefaultOverrideBlock("cubecraft:coarse_dirt", "cubecraft:dirt", blockMap);
-        //RegisterUtil.registerDefaultOverrideBlock("cubecraft:coarse_dirt", "cubecraft:dirt", blockMap);
+    @FieldRegistry(id="mycelium")
+    public static final Block MYCELIUM=new OverwrittenBlock(BlockType.MYCELIUM,BlockBehaviorRegistry.GRASS_BLOCK);
+    //</editor-fold>
 
-        //behavior:grass-block todo
-        RegisterUtil.registerDefaultOverrideBlock(BlockType.GRASS_BLOCK, "cubecraft:grass_block", blockMap);
-        RegisterUtil.registerDefaultOverrideBlock(BlockType.PODZOL, "cubecraft:grass_block", blockMap);
-        RegisterUtil.registerDefaultOverrideBlock(BlockType.MYCELIUM, "cubecraft:grass_block", blockMap);
+    //<editor-fold> glass
+    @FieldRegistry(id="glass")
+    public static final Block GLASS=new OverwrittenBlock(BlockType.GLASS,BlockBehaviorRegistry.GLASS);
 
-        /*
-        //behavior:sand todo
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:sand","cubecraft:sand",blockMap);
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:red_sand","cubecraft:sand",blockMap);
+    @FieldRegistry(id="white_stained_glass")
+    public static final Block WHITE_STAINED_GLASS=new OverwrittenBlock(BlockType.WHITE_STAINED_GLASS,BlockBehaviorRegistry.GLASS);
 
-        //behavior:sand-stone todo
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:sand_stone","cubecraft:sand_stone",blockMap);
-        RegisterUtil.registerDefaultOverrideBlock("cubecraft:red_sand_stone","cubecraft:sand_stone",blockMap);
-         */
-    }
+    @FieldRegistry(id="orange_stained_glass")
+    public static final Block ORANGE_STAINED_GLASS=new OverwrittenBlock(BlockType.ORANGE_STAINED_GLASS,BlockBehaviorRegistry.GLASS);
 
-    @ItemRegisterFunc
-    public void registerColorBlock(NameSpacedRegisterMap<Block, Block> blockMap) {
-        RegisterUtil.registerDefaultOverrideBlock(BlockType.GREEN_STAINED_GLASS, "cubecraft:glass", blockMap);
-        RegisterUtil.registerDefaultOverrideBlock(BlockType.BLUE_STAINED_GLASS, "cubecraft:glass", blockMap);
-    }
+    @FieldRegistry(id="magenta_stained_glass")
+    public static final Block MAGENTA_STAINED_GLASS=new OverwrittenBlock(BlockType.MAGENTA_STAINED_GLASS,BlockBehaviorRegistry.GLASS);
 
+    @FieldRegistry(id="light_blue_stained_glass")
+    public static final Block LIGHT_BLUE_STAINED_GLASS=new OverwrittenBlock(BlockType.LIGHT_BLUE_STAINED_GLASS,BlockBehaviorRegistry.GLASS);
 
+    @FieldRegistry(id="yellow_stained_glass")
+    public static final Block YELLOW_STAINED_GLASS=new OverwrittenBlock(BlockType.YELLOW_STAINED_GLASS,BlockBehaviorRegistry.GLASS);
 
+    @FieldRegistry(id="lime_stained_glass")
+    public static final Block LIME_STAINED_GLASS=new OverwrittenBlock(BlockType.LIME_STAINED_GLASS,BlockBehaviorRegistry.GLASS);
 
+    @FieldRegistry(id="pink_stained_glass")
+    public static final Block PINK_STAINED_GLASS=new OverwrittenBlock(BlockType.PINK_STAINED_GLASS,BlockBehaviorRegistry.GLASS);
+
+    @FieldRegistry(id="gray_stained_glass")
+    public static final Block GRAY_STAINED_GLASS=new OverwrittenBlock(BlockType.GRAY_STAINED_GLASS,BlockBehaviorRegistry.GLASS);
+
+    @FieldRegistry(id="light_gray_stained_glass")
+    public static final Block _STAINED_GLASS=new OverwrittenBlock(BlockType.LIGHT_GRAY_STAINED_GLASS,BlockBehaviorRegistry.GLASS);
+
+    @FieldRegistry(id="cyan_stained_glass")
+    public static final Block CYAN_STAINED_GLASS=new OverwrittenBlock(BlockType.CYAN_STAINED_GLASS,BlockBehaviorRegistry.GLASS);
+
+    @FieldRegistry(id="purple_stained_glass")
+    public static final Block PURPLE_STAINED_GLASS=new OverwrittenBlock(BlockType.PURPLE_STAINED_GLASS,BlockBehaviorRegistry.GLASS);
+
+    @FieldRegistry(id="blue_stained_glass")
+    public static final Block BLUE_STAINED_GLASS=new OverwrittenBlock(BlockType.BLUE_STAINED_GLASS,BlockBehaviorRegistry.GLASS);
+
+    @FieldRegistry(id="brown_stained_glass")
+    public static final Block BROWN_STAINED_GLASS=new OverwrittenBlock(BlockType.BROWN_STAINED_GLASS,BlockBehaviorRegistry.GLASS);
+
+    @FieldRegistry(id="green_stained_glass")
+    public static final Block GREEN_STAINED_GLASS=new OverwrittenBlock(BlockType.GREEN_STAINED_GLASS,BlockBehaviorRegistry.GLASS);
+
+    @FieldRegistry(id="red_stained_glass")
+    public static final Block RED_STAINED_GLASS=new OverwrittenBlock(BlockType.RED_STAINED_GLASS,BlockBehaviorRegistry.GLASS);
+
+    @FieldRegistry(id="black_stained_glass")
+    public static final Block BLACK_STAINED_GLASS=new OverwrittenBlock(BlockType.BLACK_STAINED_GLASS,BlockBehaviorRegistry.GLASS);
+    //</editor-fold>
+
+    //<editor-fold> wool
+    @FieldRegistry(id="wool")
+    public static final Block WOOL=new OverwrittenBlock(BlockType.WOOL,BlockBehaviorRegistry.WOOL);
+
+    @FieldRegistry(id="orange_wool")
+    public static final Block ORANGE_WOOL=new OverwrittenBlock(BlockType.ORANGE_WOOL,BlockBehaviorRegistry.WOOL);
+
+    @FieldRegistry(id="magenta_wool")
+    public static final Block MAGENTA_WOOL=new OverwrittenBlock(BlockType.MAGENTA_WOOL,BlockBehaviorRegistry.WOOL);
+
+    @FieldRegistry(id="light_blue_wool")
+    public static final Block LIGHT_BLUE_WOOL=new OverwrittenBlock(BlockType.LIGHT_BLUE_WOOL,BlockBehaviorRegistry.WOOL);
+
+    @FieldRegistry(id="yellow_wool")
+    public static final Block YELLOW_WOOL=new OverwrittenBlock(BlockType.YELLOW_WOOL,BlockBehaviorRegistry.WOOL);
+
+    @FieldRegistry(id="lime_wool")
+    public static final Block LIME_WOOL=new OverwrittenBlock(BlockType.LIME_WOOL,BlockBehaviorRegistry.WOOL);
+
+    @FieldRegistry(id="pink_wool")
+    public static final Block PINK_WOOL=new OverwrittenBlock(BlockType.PINK_WOOL,BlockBehaviorRegistry.WOOL);
+
+    @FieldRegistry(id="gray_wool")
+    public static final Block GRAY_WOOL=new OverwrittenBlock(BlockType.GRAY_WOOL,BlockBehaviorRegistry.WOOL);
+
+    @FieldRegistry(id="light_gray_wool")
+    public static final Block _WOOL=new OverwrittenBlock(BlockType.LIGHT_GRAY_WOOL,BlockBehaviorRegistry.WOOL);
+
+    @FieldRegistry(id="cyan_wool")
+    public static final Block CYAN_WOOL=new OverwrittenBlock(BlockType.CYAN_WOOL,BlockBehaviorRegistry.WOOL);
+
+    @FieldRegistry(id="purple_wool")
+    public static final Block PURPLE_WOOL=new OverwrittenBlock(BlockType.PURPLE_WOOL,BlockBehaviorRegistry.WOOL);
+
+    @FieldRegistry(id="blue_wool")
+    public static final Block BLUE_WOOL=new OverwrittenBlock(BlockType.BLUE_WOOL,BlockBehaviorRegistry.WOOL);
+
+    @FieldRegistry(id="brown_wool")
+    public static final Block BROWN_WOOL=new OverwrittenBlock(BlockType.BROWN_WOOL,BlockBehaviorRegistry.WOOL);
+
+    @FieldRegistry(id="green_wool")
+    public static final Block GREEN_WOOL=new OverwrittenBlock(BlockType.GREEN_WOOL,BlockBehaviorRegistry.WOOL);
+
+    @FieldRegistry(id="red_wool")
+    public static final Block RED_WOOL=new OverwrittenBlock(BlockType.RED_WOOL,BlockBehaviorRegistry.WOOL);
+
+    @FieldRegistry(id="black_wool")
+    public static final Block BLACK_WOOL=new OverwrittenBlock(BlockType.BLACK_WOOL,BlockBehaviorRegistry.WOOL);
+    //</editor-fold>
 }

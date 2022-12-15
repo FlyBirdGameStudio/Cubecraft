@@ -3,11 +3,7 @@ package io.flybird.starfish3d.render.textures;
 import java.util.HashMap;
 
 public class TextureContainer <T extends Texture>{
-    HashMap<String,T> mapping=new HashMap<>();
-
-    public HashMap<String, T> getMapping() {
-        return mapping;
-    }
+    final HashMap<String,T> mapping=new HashMap<>();
 
     public T get(String name){
         return this.mapping.get(name);

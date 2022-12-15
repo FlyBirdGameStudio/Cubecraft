@@ -38,7 +38,6 @@ public class PacketReadTask implements Runnable {
                 this.logHandler.exception("cannot create packet:" + e.getMessage());
                 return;
             }
-            int length = this.buffer.writerIndex() - this.buffer.readerIndex();
             try {
 
                 pkt.readPacketData(this.buffer);

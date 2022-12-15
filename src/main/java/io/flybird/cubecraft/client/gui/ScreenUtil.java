@@ -2,6 +2,9 @@ package io.flybird.cubecraft.client.gui;
 
 import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.client.Cubecraft;
+import io.flybird.cubecraft.client.gui.base.DisplayScreenInfo;
+import io.flybird.cubecraft.client.gui.base.FontAlignment;
+import io.flybird.cubecraft.client.gui.base.Popup;
 import io.flybird.cubecraft.client.resources.ResourceManager;
 import io.flybird.cubecraft.register.Registries;
 import io.flybird.starfish3d.platform.Window;
@@ -35,7 +38,7 @@ public class ScreenUtil {
         float scale= gameSetting.getValueAsInt("client.render.gui.scale",2);
         Registries.TEXTURE.getTexture2DContainer().bind("/resource/cubecraft/texture/ui/bg.png");
         ShapeRenderer.begin();
-        ShapeRenderer.drawRectUV(0, window.getWindowWidth()/ scale,0,window.getWindowHeight()/scale,-1,-1,0,1,0,1);
+        ShapeRenderer.drawRectUV(0, window.getWindowWidth()/ scale,0,window.getWindowHeight()/scale,-1, 0,1,0,1);
         ShapeRenderer.end();
         Registries.TEXTURE.getTexture2DContainer().unbind("/resource/cubecraft/texture/ui/bg.png");
     }
@@ -47,7 +50,7 @@ public class ScreenUtil {
     }
 
     public static void createPopup(String title, String subTitle, int time, int type){
-        popupList.add(new Popup("",title,subTitle,time,type));
+        popupList.add(new Popup(title,subTitle,time,type));
     }
 
     public static void tickPopup(){
@@ -67,7 +70,7 @@ public class ScreenUtil {
         for (Popup p: popupList){
             GL11.glPushMatrix();
             GL11.glTranslated(info.scrWidth()-200-16+p.getPos(interpolationTime),yPop,0);
-            p.render(info);
+            p.render();
             GL11.glPopMatrix();
             yPop+=50;
         }
@@ -115,7 +118,7 @@ public class ScreenUtil {
                         v0 = charPos_V / 16.0f, v1 = charPos_V / 16f + 0.0625f;
                 builder.begin();
                 builder.color(color);
-                ShapeRenderer.drawRectUV(builder,x0, x1, (float) y, y1, 0, 0,u0,u1,v0,v1);
+                ShapeRenderer.drawRectUV(builder,x0, x1, (float) y, y1, 0, u0,u1,v0,v1);
                 builder.end();
                 VertexArrayUploader.uploadPointer(builder);
                 charPos_scr += size*0.5f;
@@ -133,7 +136,7 @@ public class ScreenUtil {
         TextureStateManager.setTextureBlur(tex,true,3);
         tex.bind();
         ShapeRenderer.begin();
-        ShapeRenderer.drawRectUV(0, window.getWindowWidth()/ scale,0,window.getWindowHeight()/scale,-1,-1,0,1,0,1);
+        ShapeRenderer.drawRectUV(0, window.getWindowWidth()/ scale,0,window.getWindowHeight()/scale,-1, 0,1,0,1);
         ShapeRenderer.end();
         TextureStateManager.setTextureBlur(tex,false,0);
         Registries.TEXTURE.getTexture2DContainer().unbind("/resource/cubecraft/texture/ui/bg.png");

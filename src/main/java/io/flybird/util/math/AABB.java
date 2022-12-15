@@ -8,7 +8,7 @@ import org.joml.Vector3d;
  * @author Miencraft(classic 0.0.13a)
  */
 public class AABB {
-    private double epsilon = 0.0f;
+    private final double epsilon = 0.0f;
     public double x0;
     public double y0;
     public double z0;

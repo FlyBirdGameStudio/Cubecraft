@@ -48,7 +48,9 @@ public abstract class LoopTickingApplication implements Runnable{
     public void on1sec(){}
 
 
-
+    /**
+     * default thread entry,where the application starts.
+     */
     @Override
     public void run() {
         this.running = true;

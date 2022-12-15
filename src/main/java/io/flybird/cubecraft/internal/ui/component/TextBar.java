@@ -1,9 +1,9 @@
 package io.flybird.cubecraft.internal.ui.component;
 
-import io.flybird.cubecraft.client.gui.FontAlignment;
-import io.flybird.cubecraft.client.gui.Text;
+import io.flybird.cubecraft.client.gui.base.FontAlignment;
+import io.flybird.cubecraft.client.gui.base.Text;
 import io.flybird.cubecraft.client.gui.component.Component;
-import io.flybird.cubecraft.client.gui.layout.LayoutManager;
+import io.flybird.cubecraft.client.gui.component.LayoutManager;
 import io.flybird.cubecraft.register.Registries;
 import io.flybird.starfish3d.event.CharEvent;
 import io.flybird.starfish3d.event.MouseClickEvent;
@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
 import java.util.Objects;
 
 public class TextBar extends Component {
-    StringBuilder text = new StringBuilder();
+    final StringBuilder text = new StringBuilder();
     private boolean focus;
     private int cursorPos;
     private final int limit;
@@ -30,11 +30,6 @@ public class TextBar extends Component {
         this.hint = hint;
         String s=" "+this.hint.getText();
         this.hint.setText(s);
-    }
-
-    @Override
-    public void render() {
-        Registries.COMPONENT_RENDERER.get(this.getClass()).render(this);
     }
     
     @EventHandler

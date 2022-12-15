@@ -7,5 +7,5 @@ public enum ResourceLoadStage {
     COLOR_MAP,
     LANGUAGE,
     FONT_TEXTURE,
-    UI_CONTROLLER;
+    UI_CONTROLLER
 }

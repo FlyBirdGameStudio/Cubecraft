@@ -9,7 +9,7 @@ public interface EventBus {
     /**
      * call event
      *
-     * @param event
+     * @param event event
      */
     void callEvent(Event event);
 

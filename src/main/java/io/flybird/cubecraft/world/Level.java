@@ -10,8 +10,8 @@ import java.util.HashMap;
 
 public class Level {
     private final String name;
-    public HashMap<String,IWorld> dims = new HashMap<>();
-    private LevelInfo levelInfo;
+    public final HashMap<String,IWorld> dims = new HashMap<>();
+    private final LevelInfo levelInfo;
     private EntityLocation getEntityLocation;
 
     public Level(String name, GameSetting setting) {

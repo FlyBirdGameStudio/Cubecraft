@@ -5,7 +5,7 @@ import io.flybird.util.math.AABB;
 public class OverwrittenBlock extends Block {
 
     private final Block behavior;
-    String id;
+    final String id;
 
     /**
      * this is an override block. if you want to change any attribute from parent,just override it.

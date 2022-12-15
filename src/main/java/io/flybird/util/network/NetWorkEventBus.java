@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class NetWorkEventBus{
-    private ArrayList<EventListener> listeners=new ArrayList<>();
+    private final ArrayList<EventListener> listeners=new ArrayList<>();
 
     public void callEvent(Event event,NetHandlerContext context) {
         for (EventListener el : this.listeners) {

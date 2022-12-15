@@ -7,7 +7,7 @@ import io.netty.buffer.ByteBuf;
  */
 public abstract class StatementPacket implements Packet{
     @Override
-    public void writePacketData(ByteBuf buffer){};
+    public void writePacketData(ByteBuf buffer){}
 
     @Override
     public void readPacketData(ByteBuf buffer){}

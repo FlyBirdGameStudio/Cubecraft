@@ -13,98 +13,71 @@ package io.flybird.cubecraft.client;
 
 import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.auth.Session;
-import io.flybird.cubecraft.client.event.*;
-import io.flybird.cubecraft.client.gui.*;
-import io.flybird.cubecraft.client.gui.screen.*;
+import io.flybird.cubecraft.client.event.ClientInitializeEvent;
+import io.flybird.cubecraft.client.event.ClientShutdownEvent;
+import io.flybird.cubecraft.client.event.ScreenInitializeEvent;
+import io.flybird.cubecraft.client.gui.ScreenUtil;
+import io.flybird.cubecraft.client.gui.base.DisplayScreenInfo;
+import io.flybird.cubecraft.client.gui.base.SmoothedFontRenderer;
+import io.flybird.cubecraft.client.gui.component.Screen;
 import io.flybird.cubecraft.client.render.renderer.LevelRenderer;
+import io.flybird.cubecraft.client.resources.ResourceLoader;
+import io.flybird.cubecraft.client.resources.ResourceManager;
 import io.flybird.cubecraft.extansion.ModManager;
-import io.flybird.cubecraft.extansion.PlatformClient;
 import io.flybird.cubecraft.internal.ClientInputHandler;
 import io.flybird.cubecraft.internal.InternalContent;
 import io.flybird.cubecraft.internal.ScreenController;
 import io.flybird.cubecraft.internal.net.handler.ClientNetHandlerConnection;
 import io.flybird.cubecraft.internal.net.handler.ClientNetHandlerPlaying;
-import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerLeave;
-import io.flybird.util.event.CachedEventBus;
-import io.flybird.util.network.base.ClientNettyPipeline;
 import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerJoinRequest;
+import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerLeave;
+import io.flybird.cubecraft.internal.ui.screen.HUDScreen;
+import io.flybird.cubecraft.internal.ui.screen.LogoLoadingScreen;
 import io.flybird.cubecraft.register.Registries;
-import io.flybird.cubecraft.client.resources.ResourceLoader;
-import io.flybird.cubecraft.client.resources.ResourceManager;
 import io.flybird.cubecraft.server.CubecraftServer;
 import io.flybird.cubecraft.world.*;
 import io.flybird.cubecraft.world.entity.humanoid.Player;
-import io.flybird.starfish3d.audio.Audio;
-import io.flybird.starfish3d.platform.*;
+import io.flybird.starfish3d.platform.Sync;
+import io.flybird.starfish3d.platform.Window;
 import io.flybird.starfish3d.render.GLUtil;
-import io.flybird.util.logging.LogHandler;
 import io.flybird.util.LoopTickingApplication;
 import io.flybird.util.container.StartArguments;
+import io.flybird.util.event.CachedEventBus;
 import io.flybird.util.event.EventBus;
+import io.flybird.util.logging.LogHandler;
+import io.flybird.util.network.base.ClientNettyPipeline;
 import io.flybird.util.task.TaskProgressUpdateListener;
 import io.flybird.util.timer.Timer;
-
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import java.net.InetSocketAddress;
 import java.util.Calendar;
 import java.util.Date;
-
-////////////////////////////////////////////////////////////////////
-//                          _ooOoo_                               //
-//                         o8888888o                              //
-//                         88" . "88                              //
-//                         (| ^_^ |)                              //
-//                         O\  =  /O                              //
-//                      ____/`---'\____                           //
-//                    .'  \\|     |//  `.                         //
-//                   /  \\|||  :  |||//  \                        //
-//                  /  _||||| -:- |||||-  \                       //
-//                  |   | \\\  -  /// |   |                       //
-//                  | \_|  ''\---/''  |   |                       //
-//                  \  .-\__  `-`  ___/-. /                       //
-//                ___`. .'  /--.--\  `. . ___                     //
-//              ."" '<  `.___\_<|>_/___.'  >'"".                  //
-//            | | :  `- \`.;`\ _ /`;.`/ - ` : | |                 //
-//            \  \ `-.   \_ __\ /__ _/   .-` /  /                 //
-//      ========`-.____`-.___\_____/___.-`____.-'========         //
-//                           `=---='                              //
-//      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^        //
-//            佛祖保佑       永不内存泄漏     永无BUG                  //
-////////////////////////////////////////////////////////////////////
-
-
 //todo:add server net support
 //todo:add inventory support
 //todo:fix smooth light engine
 //todo:add json driven block register
-//todo:merge code
-
-//todo:add cache for event bus
-//todo:add cache and sort for render compile service :D
 
 
 public class Cubecraft extends LoopTickingApplication implements TaskProgressUpdateListener {
     public static final String VERSION = "0.2.5";
 
-    private final Window window=new Window();
-
-    private InetSocketAddress integratedServerLocation;
-    private ClientNetHandlerPlaying handler=new ClientNetHandlerPlaying(this);
-    private CubecraftServer server;
+    private final Window window = new Window();
     private final EventBus clientEventBus = new CachedEventBus();
     private final GameSetting setting = new GameSetting(ClientMain.getGamePath() + "/data/configs/settings.properties", "cubecraft client " + VERSION);
-    private DisplayScreenInfo screenInfo;
-    public LevelRenderer levelRenderer;
-    private Screen screen;
     private final LogoLoadingScreen logoLoadingScreen = new LogoLoadingScreen();
     private final ClientInputHandler clientInputHandler = new ClientInputHandler(this);
-    private IWorld clientWorld;
-    private final Session session = new Session("CubeVlmu", "cubecraft:default");
-    private Player player;
-    public PlayerController controller;
+    private final Session session = new Session("Notch", "cubecraft:default");
     private final ClientNettyPipeline clientIO = new ClientNettyPipeline();
+    public LevelRenderer levelRenderer;
+    public PlayerController controller;
+    private InetSocketAddress integratedServerLocation;
+    private final ClientNetHandlerPlaying handler = new ClientNetHandlerPlaying(this);
+    private CubecraftServer server;
+    private Screen screen;
+    private IWorld clientWorld;
+    private Player player;
     private LevelInfo clientLevelInfo;
 
 
@@ -120,7 +93,7 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
     }
 
     public void joinLocalWorld(String name) {
-        this.clientWorld=new ServerWorld("cubecraft:overworld",new Level("az",this.setting),null,this.setting);
+        this.clientWorld = new ServerWorld("cubecraft:overworld", new Level("az", this.setting), null, this.setting);
         this.joinWorld();
 
         /*
@@ -192,15 +165,12 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
         Window.initGLFW();
 
         this.window.create();
-        this.window.hint(GLFW.GLFW_SAMPLES,this.setting.getValueAsInt("client.render.fxaa",0));
+        this.window.hint(GLFW.GLFW_SAMPLES, this.setting.getValueAsInt("client.render.fxaa", 0));
         this.window.setWindowTitle(arg.getValueAsString("title", "Cubecraft-" + VERSION));
         this.window.setWindowSize(arg.getValueAsInt("width", 1280), arg.getValueAsInt("height", 720));
         this.window.setWindowIcon(ResourceManager.instance.getResource("/resource/cubecraft/texture/ui/icons/icon.png").getAsStream());
-        this.window.hint(GLFW.GLFW_RESIZABLE,GLFW.GLFW_TRUE);
+        this.window.hint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
         this.window.setWindowVsyncEnable(false);
-
-        Audio.create();
-
 
         //init application
 
@@ -222,7 +192,7 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
         ScreenUtil.init(this);
 
         this.logHandler.info("loading mods...");
-        ModManager.loadMod(InternalContent.class,true);
+        ModManager.loadMod(InternalContent.class, true);
 
         this.player = new Player(null, this.session);
 
@@ -258,7 +228,7 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
     @Override
     public void render() {
         GLUtil.checkGLError("pre_render");
-        this.screenInfo = getDisplaySize();
+        DisplayScreenInfo screenInfo = getDisplaySize();
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);//16640
         if (this.window.isWindowCloseRequested()) {
             this.stop();
@@ -280,9 +250,9 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
             GLUtil.enableDepthTest();
             GLUtil.enableBlend();
             GLUtil.checkGLError("pre_screen_render");
-            this.screenInfo = this.getDisplaySize();
-            this.screen.render(this.screenInfo, this.timer.interpolatedTime);
-            ScreenUtil.renderPopup(this.screenInfo, this.timer.interpolatedTime);
+            screenInfo = this.getDisplaySize();
+            this.screen.render(screenInfo, this.timer.interpolatedTime);
+            ScreenUtil.renderPopup(screenInfo, this.timer.interpolatedTime);
             if (!(this.screen instanceof LogoLoadingScreen)) {
                 this.logoLoadingScreen.render(screenInfo, this.timer.interpolatedTime);
             }
@@ -309,6 +279,7 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
         if (this.setting.getValueAsBoolean("client.tick_gc", false)) {
             System.gc();
         }
+        SmoothedFontRenderer.update();
     }
 
     @Override
@@ -317,26 +288,12 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
         this.window.destroy();
         logHandler.info("game stopped...");
         LogHandler.allSave();
-        Audio.destroy();
         Window.destroyGLFW();
         System.exit(0);
     }
 
-
-    //render
-    public void setScreen(Screen screen) {
-        this.clientEventBus.callEvent(new ScreenInitializeEvent(this, screen));
-        if (this.screen != null) {
-            this.screen.release();
-        }
-        this.screen = screen;
-        if (screen != null) {
-            screen.init(this);
-        }
-    }
-
     public void setScreen(String namespace, String uiPosition) {
-        this.setScreen(Registries.SCREEN_LOADER.loadByExtName(namespace, uiPosition));
+        this.setScreen(Registries.GUI_MANAGER.loadFAML(namespace, uiPosition));
     }
 
     @Override
@@ -346,7 +303,6 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
             this.screen.tick();
         }
     }
-
 
     //progress
     @Override
@@ -358,7 +314,6 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
     public void onProgressStageChanged(String newStage) {
         this.logoLoadingScreen.setText(newStage);
     }
-
 
     //access
     private DisplayScreenInfo getDisplaySize() {
@@ -374,6 +329,18 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
 
     public Screen getScreen() {
         return this.screen;
+    }
+
+    //render
+    public void setScreen(Screen screen) {
+        this.clientEventBus.callEvent(new ScreenInitializeEvent(this, screen));
+        if (this.screen != null) {
+            this.screen.release();
+        }
+        this.screen = screen;
+        if (screen != null) {
+            screen.init(this);
+        }
     }
 
     public LogoLoadingScreen getLoadingScreen() {
@@ -396,25 +363,16 @@ public class Cubecraft extends LoopTickingApplication implements TaskProgressUpd
         return clientWorld;
     }
 
+    public void setClientWorld(ClientWorld clientWorld) {
+        this.clientWorld = clientWorld;
+    }
+
     public Player getPlayer() {
         return player;
     }
 
-    public PlatformClient getPlatformClient() {
-        return new PlatformClient(this,
-                this.clientIO,
-                this.screen,
-                this.screenInfo,
-                this.getClientWorld(),
-                this.player);
-    }
-
     public CubecraftServer getServer() {
         return server;
-    }
-
-    public void setClientWorld(ClientWorld clientWorld) {
-        this.clientWorld = clientWorld;
     }
 
     public LevelInfo getClientLevelInfo() {

@@ -4,7 +4,7 @@ import io.flybird.cubecraft.world.worldGen.noiseGenerator.Synth;
 
 public class Emboss
 extends Synth {
-    private Synth synth;
+    private final Synth synth;
 
     public Emboss(Synth synth) {
         this.synth = synth;

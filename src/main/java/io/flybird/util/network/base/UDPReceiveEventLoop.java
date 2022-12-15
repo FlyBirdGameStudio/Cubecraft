@@ -1,10 +1,10 @@
 package io.flybird.util.network.base;
 
+import io.flybird.util.container.ArrayUtil;
+import io.flybird.util.container.BufferUtil;
 import io.flybird.util.math.Crc16DataCorrection;
 import io.flybird.util.network.NetHandlerContext;
 import io.flybird.util.network.packet.Packet;
-import io.flybird.util.container.ArrayUtil;
-import io.flybird.util.container.BufferUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.zip.CRC32;
 
 public class UDPReceiveEventLoop extends UDPEventLoop {
     //32(manifest)+128(token)+128(uuid)+packet id(2)+total_count(2)+remote addr(31)+type(64)+len(2)+data[1024]

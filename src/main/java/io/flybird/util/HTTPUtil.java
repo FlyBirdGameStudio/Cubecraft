@@ -9,20 +9,16 @@ public class HTTPUtil {
     private static final String USER_AGENT = "Mozilla/5.0";
 
     public static String get(String url) throws IOException {
-        String str="";
-        try {
-            HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+        String str;
+        HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
 
-            con.setRequestMethod("GET");
-            con.setRequestProperty("User-Agent",USER_AGENT);
+        con.setRequestMethod("GET");
+        con.setRequestProperty("User-Agent",USER_AGENT);
 
-            InputStream in = con.getInputStream();
-            str = new String(in.readAllBytes());
-            in.close();
-            con.disconnect();
-        }catch (IOException e){
-            throw e;
-        }
+        InputStream in = con.getInputStream();
+        str = new String(in.readAllBytes());
+        in.close();
+        con.disconnect();
         return str;
     }
 

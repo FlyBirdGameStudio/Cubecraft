@@ -6,28 +6,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NBTTagList extends NBTBase
-{
+public class NBTTagList extends NBTBase {
     private List<NBTBase> tagList;
     private byte tagType;
     
     public NBTTagList() {
         super();
-        this.tagList = new ArrayList<NBTBase>();
+        this.tagList = new ArrayList<>();
     }
     
     @Override
     public void writeTagContents(final DataOutput dataOutput) throws IOException {
         if (this.tagList.size() > 0) {
-            this.tagType = ((NBTBase)this.tagList.get(0)).getType();
+            this.tagType = this.tagList.get(0).getType();
         }
         else {
             this.tagType = 1;
         }
         dataOutput.writeByte(this.tagType);
         dataOutput.writeInt(this.tagList.size());
-        for (int i = 0; i < this.tagList.size(); ++i) {
-            ((NBTBase)this.tagList.get(i)).writeTagContents(dataOutput);
+        for (NBTBase nbtBase : this.tagList) {
+            nbtBase.writeTagContents(dataOutput);
         }
     }
     
@@ -35,7 +34,7 @@ public class NBTTagList extends NBTBase
     public void readTagContents(final DataInput dataInput) throws IOException {
         this.tagType = dataInput.readByte();
         final int int1 = dataInput.readInt();
-        this.tagList = new ArrayList<NBTBase>();
+        this.tagList = new ArrayList<>();
         for (int i = 0; i < int1; ++i) {
             final NBTBase tagOfType = createTagOfType(this.tagType);
             tagOfType.readTagContents(dataInput);
@@ -57,12 +56,5 @@ public class NBTTagList extends NBTBase
         this.tagType = hm.getType();
         this.tagList.add(hm);
     }
-    
-    public NBTBase tagAt(final int integer) {
-        return (NBTBase) this.tagList.get(integer);
-    }
-    
-    public int tagCount() {
-        return this.tagList.size();
-    }
+
 }

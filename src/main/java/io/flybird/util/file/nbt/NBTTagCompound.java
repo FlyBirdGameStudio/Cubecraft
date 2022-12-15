@@ -6,12 +6,10 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-public class NBTTagCompound extends NBTBase
-{
-    private Map<String, NBTBase> tagMap;
+public class NBTTagCompound extends NBTBase {
+    private final Map<String, NBTBase> tagMap;
     
     public NBTTagCompound() {
         super();
@@ -20,9 +18,8 @@ public class NBTTagCompound extends NBTBase
     
     @Override
     public void writeTagContents(final DataOutput dataOutput) throws IOException {
-        final Iterator<NBTBase> iterator = this.tagMap.values().iterator();
-        while (iterator.hasNext()) {
-            NBTBuilder.write(iterator.next(), dataOutput);
+        for (NBTBase nbtBase : this.tagMap.values()) {
+            NBTBuilder.write(nbtBase, dataOutput);
         }
         dataOutput.writeByte(0);
     }

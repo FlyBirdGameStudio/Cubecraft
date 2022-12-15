@@ -72,16 +72,12 @@ public class NameSpaceMap <I>{
 
     public Collection<String> idList(){
         Collection<String> list=new ArrayList<>();
-        CollectionUtil.iterateMap(map, (key, item) -> {
-           list.add(key);
-        });
+        CollectionUtil.iterateMap(map, (key, item) -> list.add(key));
         return list;
     }
     public Collection<I> itemList(){
         Collection<I> list=new ArrayList<>();
-        CollectionUtil.iterateMap(map, (key, item) -> {
-            list.add(item);
-        });
+        CollectionUtil.iterateMap(map, (key, item) -> list.add(item));
         return list;
     }
 }

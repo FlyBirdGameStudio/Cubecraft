@@ -1,17 +1,14 @@
 package io.flybird.util.logging;
 
 enum LogType {
-    INFO("info",0),
-    WARN("warning",1),
-    ERROR("error",2),
-    EXCEPTION("exception",3);
+    INFO("info"),
+    WARN("warning"),
+    ERROR("error"),
+    EXCEPTION("exception");
 
     final String desc;
-    final int level;
 
-    LogType(String desc, int level) {
+    LogType(String desc) {
         this.desc = desc;
-        this.level = level;
     }
-
 }

@@ -1,11 +1,9 @@
 package io.flybird.cubecraft.client.resources;
 
-
-public record ResourceLocation(ResourceType type,String namespace,ResourceLocType folder,String relativePos) {
-
+public record ResourceLocation(ResourceType type, String namespace, ResourceLocType folder, String relativePos) {
 
     public String format(){
-        return new StringBuilder().append(type.getName()).append(namespace).append(folder.getName()).append(relativePos).toString();
+        return type.getName() + namespace + folder.getName() + relativePos;
     }
 
     @Override
@@ -30,7 +28,8 @@ public record ResourceLocation(ResourceType type,String namespace,ResourceLocTyp
         BLOCK_DATA("/block/"),
         ENTITY_DATA("/entity/"),
         EMPTY("/"),
-        TEXT("/text/");
+        TEXT("/text/"),
+        FONT("/font/");
 
         final String name;
 
@@ -109,6 +108,10 @@ public record ResourceLocation(ResourceType type,String namespace,ResourceLocTyp
 
     public static ResourceLocation uiTexture(String namespace,String relativePos){
         return new ResourceLocation(ResourceType.RESOURCE,namespace,ResourceLocType.UI_TEXTURES,relativePos);
+    }
+
+    public static ResourceLocation font(String namespace,String rel) {
+        return new ResourceLocation(ResourceType.RESOURCE,namespace,ResourceLocType.FONT,rel);
     }
 }
 

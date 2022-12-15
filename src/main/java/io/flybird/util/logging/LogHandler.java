@@ -15,8 +15,8 @@ public class LogHandler {
     private static String logPath = "/";
 
     private static final HashMap<String, ArrayList<Log>> logArrays = new HashMap<>();
-    public static HashMap<String, File> files = new HashMap<>();
-    public static HashMap<String, LogHandler> handlers = new HashMap<>();
+    public static final HashMap<String, File> files = new HashMap<>();
+    public static final HashMap<String, LogHandler> handlers = new HashMap<>();
 
     private static LogFormat logFormat = new LogFormat(
             " [{time}][{type}]{source} : {msg}",
@@ -137,8 +137,8 @@ public class LogHandler {
 
     private static boolean logOutput = true;
 
-    public String source;
-    public String file;
+    public final String source;
+    public final String file;
 
     private LogHandler(String source, String file) {
         this.source = source;

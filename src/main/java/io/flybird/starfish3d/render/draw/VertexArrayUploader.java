@@ -10,8 +10,6 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.DoubleBuffer;
 
 public class VertexArrayUploader {
-    private static final LogHandler logHandler = LogHandler.create("Grass3D/VertexUploader");
-
     private static final DoubleBuffer vertex = BufferUtils.createDoubleBuffer(131072);
     private static final DoubleBuffer normal = BufferUtils.createDoubleBuffer(131072);
     private static final DoubleBuffer tc = BufferUtils.createDoubleBuffer(131072);

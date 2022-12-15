@@ -8,8 +8,8 @@ import org.lwjgl.opengl.GL11;
 import java.nio.FloatBuffer;
 
 public class ShapeRenderer {
-    private static Tesselator t=Tesselator.instance;
-    public static void drawRectUV(double x0,double x1,double y0,double y1,double z0,double z1,double u0,double u1,double v0,double v1){
+    private static final Tesselator t=Tesselator.instance;
+    public static void drawRectUV(double x0, double x1, double y0, double y1, double z0, double u0, double u1, double v0, double v1){
         t.begin();
         t.vertexUV(x1, y0, z0, (float)u1, (float)v0);
         t.vertexUV(x0, y0, z0, (float)u0, (float)v0);
@@ -49,7 +49,7 @@ public class ShapeRenderer {
         builder.vertex((float)x0, (float)y0, (float)z1);
     }
 
-    public static void drawRectUV(VertexArrayBuilder builder, double x0,double x1,double y0,double y1,double z0,double z1,double u0,double u1,double v0,double v1) {
+    public static void drawRectUV(VertexArrayBuilder builder, double x0, double x1, double y0, double y1, double z0, double u0, double u1, double v0, double v1) {
         builder.vertexUV(x1, y0, z0, (float)u1, (float)v0);
         builder.vertexUV(x0, y0, z0, (float)u0, (float)v0);
         builder.vertexUV(x0, y1, z0, (float)u0, (float)v1);
@@ -57,10 +57,8 @@ public class ShapeRenderer {
     }
 
     public static class Tesselator {
-        private static final int MAX_MEMORY_USE = 0x400000;
-        private static final int MAX_FLOATS = 524288;
-        private FloatBuffer buffer = BufferUtils.createFloatBuffer(524288);
-        private float[] array = new float[524288];
+        private final FloatBuffer buffer = BufferUtils.createFloatBuffer(524288);
+        private final float[] array = new float[524288];
         private int vertices = 0;
         private float u;
         private float v;
@@ -72,7 +70,7 @@ public class ShapeRenderer {
         private int len = 3;
         private int p = 0;
         private boolean noColor = false;
-        public static Tesselator instance = new Tesselator();
+        public static final Tesselator instance = new Tesselator();
 
         private Tesselator() {
         }
@@ -172,20 +170,9 @@ public class ShapeRenderer {
                 this.end();
             }
         }
-
-        public void color(int c) {
-            int r = c >> 16 & 0xFF;
-            int g = c >> 8 & 0xFF;
-            int b = c & 0xFF;
-            this.color(r, g, b);
-        }
-
-        public void noColor() {
-            this.noColor = true;
-        }
     }
 
-    public static void renderAABB(double x0,double y0,double z0,double x1,double y1,double z1,int col) {
+    public static void renderAABB(double x0,double y0,double z0,double x1,double y1,double z1) {
         GLUtil.assertRenderThread();
         GL11.glEnable(3042);
         GL11.glDisable(3553);
@@ -223,11 +210,7 @@ public class ShapeRenderer {
         GL11.glEnable(3553);
     }
 
-    public static void renderAABB(AABB aabb, int col){
-        renderAABB(aabb.x0,aabb.y0, aabb.z0, aabb.x1, aabb.y1, aabb.z1,col);
-    }
-
-    public static void drawFace0(boolean flipVertexOrder){
-
+    public static void renderAABB(AABB aabb){
+        renderAABB(aabb.x0,aabb.y0, aabb.z0, aabb.x1, aabb.y1, aabb.z1);
     }
 }

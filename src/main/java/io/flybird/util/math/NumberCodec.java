@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
  * @author GrassBlock2022
  */
 public class NumberCodec {
-    public static ByteBuffer buffer = ByteBuffer.allocate(8);
+    public static final ByteBuffer buffer = ByteBuffer.allocate(8);
 
     public static byte[] split(short n) {
         return buffer.clear().putShort(n).array();

@@ -332,8 +332,8 @@ public class BufferUtil {
 
     /**
      * build nbt tag from bytebuffer.
-     * @param byteBuf
-     * @return
+     * @param byteBuf source
+     * @return nbt
      */
     public static NBTBase toNBT(ByteBuf byteBuf) {
         NBTBase base;
@@ -350,8 +350,8 @@ public class BufferUtil {
 
     /**
      * wrap some data to buffer.
-     * @param arr
-     * @return
+     * @param arr array.
+     * @return wrapped buffer.
      */
     public static ByteBuf wrap(byte[] arr) {
         ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer(arr.length);

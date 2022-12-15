@@ -11,14 +11,14 @@ import org.lwjgl.opengl.GL11;
 import java.nio.ByteOrder;
 
 public class VertexArrayBuilder {
-    int drawMode;
+    final int drawMode;
 
     //data
     public int vertexCount = 0;
-    double[] color;
-    double[] normal;
-    double[] tc;
-    double[] vertex;
+    final double[] color;
+    final double[] normal;
+    final double[] tc;
+    final double[] vertex;
     double[] raw;
 
     //texture

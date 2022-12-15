@@ -10,7 +10,7 @@ import java.util.zip.ZipInputStream;
 
 public class ResourcePack {
     private ZipFile file;
-    private ArrayList<ZipEntry> entries=new ArrayList<>();
+    private final ArrayList<ZipEntry> entries=new ArrayList<>();
 
     /**
      * load file from disk，read all entries to file path

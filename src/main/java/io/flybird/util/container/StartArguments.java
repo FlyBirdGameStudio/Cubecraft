@@ -8,7 +8,7 @@ import java.util.HashMap;
  * @author GrassBlock2022
  */
 public class StartArguments {
-    public HashMap<String,String> dispatchedArgs=new HashMap<>();
+    public final HashMap<String,String> dispatchedArgs=new HashMap<>();
 
     /**
      * feed arg to object

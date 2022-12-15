@@ -1,8 +1,5 @@
 package io.flybird.cubecraft.auth;
 
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
-
 public class Session {
     private String name;
     private final String type;

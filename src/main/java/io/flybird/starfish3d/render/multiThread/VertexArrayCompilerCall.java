@@ -4,10 +4,10 @@ import io.flybird.util.container.ArrayQueue;
 import io.flybird.util.logging.LogHandler;
 
 public class VertexArrayCompilerCall<T extends VertexArrayCompileCallable> implements Runnable {
-    public T compileCallable;
-    public ArrayQueue<DrawCompile> queue;
-    public ArrayQueue<IDrawCompile> allQueue;
-    private LogHandler logger=LogHandler.create("Starfish3D/VertexArrayCompileCall");
+    public final T compileCallable;
+    public final ArrayQueue<DrawCompile> queue;
+    public final ArrayQueue<IDrawCompile> allQueue;
+    private final LogHandler logger=LogHandler.create("Starfish3D/VertexArrayCompileCall");
 
     public VertexArrayCompilerCall(T compileCallable, ArrayQueue<DrawCompile> queue, ArrayQueue<IDrawCompile> allQueue) {
         this.compileCallable = compileCallable;

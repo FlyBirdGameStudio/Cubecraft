@@ -11,14 +11,14 @@ import java.nio.FloatBuffer;
 
 
 public class ProjectionMatrixFrustum extends ICuller{
-    public float[][] m_Frustum = new float[6][4];
+    public final float[][] m_Frustum = new float[6][4];
 
     private final FloatBuffer _proj = BufferUtils.createFloatBuffer(16);
     private final FloatBuffer _modl = BufferUtils.createFloatBuffer(16);
     private final FloatBuffer _clip = BufferUtils.createFloatBuffer(16);
-    float[] proj = new float[16];
-    float[] modl = new float[16];
-    float[] clip = new float[16];
+    final float[] proj = new float[16];
+    final float[] modl = new float[16];
+    final float[] clip = new float[16];
 
     private final FrustumIntersection frustumIntersection=new FrustumIntersection();
 
@@ -32,7 +32,7 @@ public class ProjectionMatrixFrustum extends ICuller{
     }
 
     private void normalizePlane(float[][] frustum, int side) {
-        float magnitude = (float)Math.sqrt((double)(frustum[side][0] * frustum[side][0] + frustum[side][1] * frustum[side][1] + frustum[side][2] * frustum[side][2]));
+        float magnitude = (float)Math.sqrt(frustum[side][0] * frustum[side][0] + frustum[side][1] * frustum[side][1] + frustum[side][2] * frustum[side][2]);
         frustum[side][0] /= magnitude;
         frustum[side][1] /= magnitude;
         frustum[side][2] /= magnitude;

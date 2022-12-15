@@ -46,14 +46,15 @@ public abstract class Texture {
 
     public abstract void load(ITextureImage image);
 
-    //meta
-    //public abstract int getType();
-
     public int getHeight() {
         return height;
     }
 
     public int getWidth() {
         return width;
+    }
+
+    public void destroy() {
+        GL11.glDeleteTextures(this.glId);
     }
 }

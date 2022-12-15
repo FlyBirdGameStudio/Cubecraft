@@ -4,16 +4,16 @@ package io.flybird.starfish3d.platform;
 import io.flybird.starfish3d.event.*;
 import io.flybird.util.ImageUtil;
 import io.flybird.util.container.BufferUtil;
-import io.flybird.util.event.DirectEventBus;
-import io.flybird.util.event.EventBus;
 import io.flybird.util.event.CachedEventBus;
+import io.flybird.util.event.EventBus;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.nio.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 public class Window {
@@ -29,7 +29,7 @@ public class Window {
 
 
     //window
-    public EventBus windowEvent = new CachedEventBus();
+    public final EventBus windowEvent = new CachedEventBus();
     private long handle;
     private boolean visible;
     private boolean focused;

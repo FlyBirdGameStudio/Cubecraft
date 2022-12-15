@@ -1,7 +1,7 @@
 package io.flybird.cubecraft.world.chunk;
 
 import io.flybird.cubecraft.internal.BiomeType;
-import io.flybird.cubecraft.internal.BlockType;
+import io.flybird.cubecraft.internal.block.BlockType;
 import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.block.entity.BlockEntity;
@@ -37,7 +37,7 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
     private final Double2ByteArray temperature = new Double2ByteArray(WIDTH * WIDTH);
     private final Double2ByteArray humidity = new Double2ByteArray(WIDTH * WIDTH);
 
-    public ChunkProcessTask task = new ChunkProcessTask(this);
+    public final ChunkProcessTask task = new ChunkProcessTask(this);
 
     public void tick(){
         this.task.run();
@@ -109,7 +109,7 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
 
     public void setLight(int x, int y, int z, byte l) {
         if (x >= 0 && y >= 0 && z >= 0 && x < WIDTH && y < HEIGHT && z < WIDTH) {
-            ArrayUtil.setDispatched(x, y, z, WIDTH, this.light, l);
+            this.light[ArrayUtil.calcDispatchPos3d(WIDTH,HEIGHT,WIDTH,x,y,z)]=l;
         }
     }
 

@@ -8,7 +8,4 @@ public record WorldGeneratorSetting(long seed,HashMap<String,Object> map) {
         return (double) map.getOrDefault(s,v);
     }
 
-    public long getValueOrDefaultAsLong(String s, long v) {
-        return (long) map.getOrDefault(s,v);
-    }
 }

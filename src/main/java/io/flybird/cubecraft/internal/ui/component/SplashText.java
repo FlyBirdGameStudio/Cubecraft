@@ -1,9 +1,9 @@
 package io.flybird.cubecraft.internal.ui.component;
 
-import io.flybird.cubecraft.client.gui.FontRenderer;
-import io.flybird.cubecraft.client.gui.Text;
+import io.flybird.cubecraft.client.gui.base.SmoothedFontRenderer;
+import io.flybird.cubecraft.client.gui.base.Text;
 import io.flybird.cubecraft.client.gui.component.Component;
-import io.flybird.cubecraft.client.gui.layout.LayoutManager;
+import io.flybird.cubecraft.client.gui.component.LayoutManager;
 import io.flybird.util.file.FAMLDeserializer;
 import io.flybird.util.file.XmlReader;
 import com.google.gson.*;
@@ -35,7 +35,7 @@ public class SplashText extends Component {
             GL11.glScaled(sin, sin, sin);
         }
         GL11.glRotatef(rotation,0,0,1);
-        FontRenderer.renderShadow(splashText.getText(),0,0,this.splashText.getColor(),12, this.splashText.getAlignment());
+        SmoothedFontRenderer.renderShadow(splashText.getText(),0,0,this.splashText.getColor(),12, this.splashText.getAlignment());
     }
 
 
@@ -48,20 +48,6 @@ public class SplashText extends Component {
                     Boolean.parseBoolean(element.getAttribute("bobbing"))
             );
             splashText.setLayout(famlLoadingContext.deserialize((Element) element.getElementsByTagName("layout").item(0), LayoutManager.class));
-            return splashText;
-        }
-    }
-
-    public static class JDeserializer implements JsonDeserializer<SplashText>{
-        @Override
-        public SplashText deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            JsonObject obj=jsonElement.getAsJsonObject();
-            SplashText splashText= new SplashText(
-                    jsonDeserializationContext.deserialize(obj.get("text"),Text.class),
-                    obj.get("rotation").getAsInt(),
-                    obj.get("bobbing").getAsBoolean()
-            );
-            splashText.setLayout(jsonDeserializationContext.deserialize(obj.get("layout"), LayoutManager.class));
             return splashText;
         }
     }

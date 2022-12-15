@@ -25,6 +25,16 @@ public class Texture2D extends Texture {
         GLUtil.checkGLError("load");
     }
 
+    public void load(BufferedImage img) {
+        this.width = img.getWidth();
+        this.height = img.getHeight();
+        this.bind();
+        ByteBuffer buffer=ImageUtil.getByteFromBufferedImage_RGBA(img);
+        GL11.glTexImage2D(this.getBindingType(),0,GL11.GL_RGBA,width,height,0,GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE,buffer);
+        BufferUtil.free(buffer);
+        GLUtil.checkGLError("load");
+    }
+
     @Override
     public int getBindingType() {
         if (this.multiSample) {

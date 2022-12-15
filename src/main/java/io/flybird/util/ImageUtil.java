@@ -16,15 +16,6 @@ public class ImageUtil {
         return pixels;
     }
 
-    public static ByteBuffer getByteFromBufferedImage_ARGB(BufferedImage img){
-        int w=img.getWidth();
-        int h=img.getHeight();
-        ByteBuffer pixels = BufferUtils.createByteBuffer(w*h*4);
-        pixels.put(unpackIntAsARGBByte(readImageAsRawInt(img)));
-        pixels.position(0);
-        return pixels;
-    }
-
     /**
      * read a buffered image,get pixel data as int array.
      * @param img img

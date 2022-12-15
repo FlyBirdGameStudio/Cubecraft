@@ -10,11 +10,11 @@ import java.util.HashMap;
  * @author GrassBlock2022
  */
 public class KeyMap<K extends Key,V extends KeyGetter<K>> {
-    public HashMap<Integer,V> map=new HashMap<>();
+    public final HashMap<Integer,V> map=new HashMap<>();
 
     /**
      * add an object,using key as map key.
-     * @param v
+     * @param v obj
      */
     public void add(V v){
         if (!map.containsKey(v.getKey().hashCode())){

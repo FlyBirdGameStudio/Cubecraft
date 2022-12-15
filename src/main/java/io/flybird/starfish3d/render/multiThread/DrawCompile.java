@@ -3,10 +3,11 @@ package io.flybird.starfish3d.render.multiThread;
 import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.starfish3d.render.draw.VertexArrayBuilder;
 import io.flybird.starfish3d.render.drawcall.IRenderCall;
+import org.jetbrains.annotations.NotNull;
 
 public record DrawCompile(IRenderCall call, VertexArrayBuilder builder, VertexArrayCompileCallable obj) implements Comparable<DrawCompile>,IDrawCompile{
     @Override
-    public int compareTo(DrawCompile o) {
+    public int compareTo(@NotNull DrawCompile o) {
         return 0;
     }
 

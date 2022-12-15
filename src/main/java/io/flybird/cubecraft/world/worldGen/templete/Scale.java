@@ -4,9 +4,9 @@ import io.flybird.cubecraft.world.worldGen.noiseGenerator.Synth;
 
 public class Scale
 extends Synth {
-    private Synth synth;
-    private double xScale;
-    private double yScale;
+    private final Synth synth;
+    private final double xScale;
+    private final double yScale;
 
     public Scale(Synth synth, double xScale, double yScale) {
         this.synth = synth;

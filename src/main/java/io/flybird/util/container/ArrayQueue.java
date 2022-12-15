@@ -122,27 +122,6 @@ public class ArrayQueue<E> {
     }
 
     /**
-     * poll object by order,by prediction
-     *
-     * @param count  item count.
-     * @param pollIf prediction
-     * @return item by order.
-     */
-    public List<E> pollIf(int count, Prediction<E> pollIf) {
-        ArrayList<E> returns = new ArrayList<>(1);
-        for (E e : this.list) {
-            if (pollIf.If(e)) {
-                returns.add(e);
-            }//给我standby到满足条件
-            if (returns.size() >= count) {
-                break;
-            }
-        }
-
-        return returns;
-    }
-
-    /**
      * remove by prediction
      *
      * @param tester prediction

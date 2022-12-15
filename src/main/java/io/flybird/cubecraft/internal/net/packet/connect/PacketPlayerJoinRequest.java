@@ -40,7 +40,7 @@ public class PacketPlayerJoinRequest implements Packet {
 
     @Override
     public void readPacketData(ByteBuf buffer) {
-        NBTTagCompound tag = null;
+        NBTTagCompound tag;
         try {
             tag = (NBTTagCompound) NBTBuilder.read(new ByteBufInputStream(buffer));
         } catch (IOException e) {

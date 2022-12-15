@@ -12,8 +12,8 @@ public class Sync {
     private static final long NANOS_IN_SECOND = 1000000000L;
     private static long nextFrame = 0L;
     private static boolean initialised = false;
-    private static RunningAvg sleepDurations = new RunningAvg(10);
-    private static RunningAvg yieldDurations = new RunningAvg(10);
+    private static final RunningAvg sleepDurations = new RunningAvg(10);
+    private static final RunningAvg yieldDurations = new RunningAvg(10);
 
     Sync() {
     }
@@ -38,7 +38,7 @@ public class Sync {
                     Thread.yield();
                     yieldDurations.add((t1 = getTime()) - t0);
                 }
-            } catch (InterruptedException var5) {
+            } catch (InterruptedException ignored) {
             }
 
             nextFrame = Math.max(nextFrame + 1000000000L / (long)fps, getTime());
@@ -48,17 +48,14 @@ public class Sync {
     private static void initialise() {
         initialised = true;
         sleepDurations.init(1000000L);
-        yieldDurations.init((long)((int)((double)(-(getTime() - getTime())) * 1.333)));
+        yieldDurations.init((int)((double)(-(getTime() - getTime())) * 1.333));
         nextFrame = getTime();
         String osName = System.getProperty("os.name");
         if (osName.startsWith("Win")) {
-            Thread timerAccuracyThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(Long.MAX_VALUE);
-                    } catch (Exception var2) {}
-                }
+            Thread timerAccuracyThread = new Thread(() -> {
+                try {
+                    Thread.sleep(Long.MAX_VALUE);
+                } catch (Exception ignored) {}
             });
             timerAccuracyThread.setName("LWJGL Timer");
             timerAccuracyThread.setDaemon(true);

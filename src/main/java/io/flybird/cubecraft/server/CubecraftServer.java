@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 public class CubecraftServer extends LoopTickingApplication {
     private ServerStatus status = ServerStatus.UNAVAILABLE;
 
-    GameSetting setting= new GameSetting("/data/configs/settings.properties","server");
+    final GameSetting setting= new GameSetting("/data/configs/settings.properties","server");
     private Level level;
     private final ExecutorService worldTickingService = Executors.newFixedThreadPool(this.setting.getValueAsInt("server.worldTickThread",1));
 
@@ -30,7 +30,7 @@ public class CubecraftServer extends LoopTickingApplication {
         this.levelName = levelName;
     }
 
-    private ServerNettyPipeline serverIO =new ServerNettyPipeline();
+    private final ServerNettyPipeline serverIO =new ServerNettyPipeline();
     private final PlayerTable playerTable =new PlayerTable();
 
     private final int port;

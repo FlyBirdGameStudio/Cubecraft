@@ -1,10 +1,10 @@
 package io.flybird.cubecraft.internal;
 
 import io.flybird.cubecraft.client.Cubecraft;
-import io.flybird.cubecraft.client.gui.Popup;
+import io.flybird.cubecraft.client.gui.base.Popup;
 import io.flybird.cubecraft.client.gui.ScreenUtil;
 import io.flybird.starfish3d.event.KeyPressEvent;
-import io.flybird.cubecraft.client.gui.screen.Screen;
+import io.flybird.cubecraft.client.gui.component.Screen;
 import io.flybird.cubecraft.client.resources.ResourceManager;
 import io.flybird.starfish3d.platform.Keyboard;
 import io.flybird.util.event.EventHandler;

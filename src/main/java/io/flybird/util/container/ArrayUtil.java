@@ -1,9 +1,6 @@
 package io.flybird.util.container;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Objects;
 
 /**
  * simple util for array.
@@ -88,18 +85,6 @@ public class ArrayUtil {
     }
 
     /**
-     * allocate data array from varargs.
-     *
-     * @param args args
-     * @param <T>  Template class for atrray.
-     * @return data
-     */
-    @SafeVarargs
-    public static <T> T[] allocate(T... args) {
-        return args;
-    }
-
-    /**
      * connect arrays to an big array.
      *
      * @param a arrays
@@ -115,17 +100,6 @@ public class ArrayUtil {
         return unBox(data.toArray(new Byte[0]));
     }
 
-
-    public static <T> boolean startWith(T[] t, T[] arr) {
-        boolean b = true;
-        for (int i = 0; i < t.length; i++) {
-            if (t[i] != arr[i]) {
-                b = false;
-                break;
-            }
-        }
-        return b;
-    }
 
     public static boolean startWith(byte[] t, byte[] arr) {
         boolean b = true;
@@ -158,51 +132,13 @@ public class ArrayUtil {
 
     public static double[] copySub(int start, int end, double[] arr) {
         double[] result = new double[end - start];
-        for (int i = start; i < end; i++) {
-            result[i - start] = arr[i];
-        }
+        if (end - start >= 0) System.arraycopy(arr, start, result, 0, end - start);
         return result;
     }
 
     public static byte[] copySub(int start, byte end, byte[] arr) {
         byte[] result = new byte[end - start];
-        for (int i = start; i < end; i++) {
-            result[i - start] = arr[i];
-        }
+        if (end - start >= 0) System.arraycopy(arr, start, result, 0, end - start);
         return result;
     }
-
-
-    public static <T> T getDispatched(int x, int y, int z, int size, T[] arr) {
-        return arr[y * size * size + z * size + x];
-    }
-
-    public static <T> void setDispatched(int x, int y, int z, int size, T[] arr, T target) {
-        arr[y * size * size + z * size + x] = target;
-    }
-
-    public static byte getDispatched(int x, int y, int z, int size, byte[] arr) {
-        return arr[y * size * size + z * size + x];
-    }
-
-    public static void setDispatched(int x, int y, int z, int size, byte[] arr, byte target) {
-        arr[y * size * size + z * size + x] = target;
-    }
-
-    public static double getDispatched(int x, int y, int z, int size, double[] arr) {
-        return arr[y * size * size + z * size + x];
-    }
-
-    public static void setDispatched(int x, int y, int z, int size, double[] arr, double target) {
-        arr[y * size * size + z * size + x] = target;
-    }
-
-    public static int getDispatched(int x, int y, int z, int size, int[] arr) {
-        return arr[y * size * size + z * size + x];
-    }
-
-    public static void setDispatched(int x, int y, int z, int size, int[] arr, byte target) {
-        arr[y * size * size + z * size + x] = target;
-    }
-
 }

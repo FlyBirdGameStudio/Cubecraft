@@ -1,7 +1,5 @@
 package io.flybird.util.container.namespace;
 
-import io.flybird.cubecraft.internal.block.BlockBehaviorRegistry;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

@@ -9,8 +9,8 @@ import org.joml.Vector3d;
  * @author GrassBlock2022
  */
 public class HitBox extends AABB {
-    HittableObject obj;
-    Vector3d vec;
+    final HittableObject obj;
+    final Vector3d vec;
 
     public HitBox(AABB collisionBox, HittableObject obj, Vector3d vec) {
         super(collisionBox);

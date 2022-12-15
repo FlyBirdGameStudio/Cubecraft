@@ -4,5 +4,5 @@ public enum ServerStatus {
     STARTUP,
     RUNNING,
     STOPPING,
-    UNAVAILABLE;
+    UNAVAILABLE
 }

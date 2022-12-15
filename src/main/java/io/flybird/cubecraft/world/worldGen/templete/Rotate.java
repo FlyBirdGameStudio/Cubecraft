@@ -4,9 +4,9 @@ import io.flybird.cubecraft.world.worldGen.noiseGenerator.Synth;
 
 public class Rotate
 extends Synth {
-    private Synth synth;
-    private double sin;
-    private double cos;
+    private final Synth synth;
+    private final double sin;
+    private final double cos;
 
     public Rotate(Synth synth, double angle) {
         this.synth = synth;

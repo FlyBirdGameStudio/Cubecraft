@@ -29,7 +29,7 @@ public class Resource implements ITextureImage {
     @Override
     public BufferedImage getAsImage() {
         InputStream in = new ByteArrayInputStream(this.data);
-        BufferedImage image = null;
+        BufferedImage image;
         try {
             image = ImageIO.read(in);
         } catch (IOException e) {

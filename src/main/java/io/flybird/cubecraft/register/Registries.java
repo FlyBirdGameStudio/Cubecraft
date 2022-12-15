@@ -5,8 +5,7 @@ import com.google.gson.GsonBuilder;
 import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.auth.SessionService;
 import io.flybird.cubecraft.client.Cubecraft;
-import io.flybird.cubecraft.client.gui.ScreenLoader;
-import io.flybird.cubecraft.client.gui.renderer.ComponentRenderManager;
+import io.flybird.cubecraft.client.gui.GUIManager;
 import io.flybird.cubecraft.client.render.model.ModelManager;
 import io.flybird.cubecraft.client.render.model.block.BlockModel;
 import io.flybird.cubecraft.client.render.model.block.IColorMap;
@@ -14,6 +13,7 @@ import io.flybird.cubecraft.client.render.model.object.EntityModel;
 import io.flybird.cubecraft.client.render.renderer.IWorldRenderer;
 import io.flybird.cubecraft.client.render.worldObjectRenderer.IBlockRenderer;
 import io.flybird.cubecraft.client.render.worldObjectRenderer.IEntityRenderer;
+import io.flybird.cubecraft.client.resources.ResourceLocation;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.IWorldProvider;
 import io.flybird.cubecraft.world.biome.BiomeMap;
@@ -45,7 +45,7 @@ public class Registries {
     public static final NameSpacedRegisterMap<SessionService, ?> SESSION_SERVICE = new NameSpacedRegisterMap<>(null);
     public static final NameSpacedConstructingMap<Packet> PACKET = new NameSpacedConstructingMap<>();
     public static final I18nHelper I18N =new I18nHelper();
-    public static final ScreenLoader SCREEN_LOADER = new ScreenLoader();
+    public static final GUIManager GUI_MANAGER = new GUIManager();
 
     public static Cubecraft CLIENT;
     public static CubecraftServer SERVER;
@@ -53,11 +53,10 @@ public class Registries {
     //render
     public static final NameSpacedRegisterMap<IBlockRenderer, ?> BLOCK_RENDERER = new NameSpacedRegisterMap<>(null);
     public static final NameSpacedRegisterMap<IEntityRenderer, ?> ENTITY_RENDERER = new NameSpacedRegisterMap<>(null);
-    public static final ModelManager<BlockModel> BLOCK_MODEL = new ModelManager<>(BlockModel.class);
-    public static final ModelManager<EntityModel> ENTITY_MODEL = new ModelManager<>(EntityModel.class);
+    public static final ModelManager<BlockModel> BLOCK_MODEL = new ModelManager<>(BlockModel.class, ResourceLocation.blockModel("cubecraft","fallback.json"));
+    public static final ModelManager<EntityModel> ENTITY_MODEL = new ModelManager<>(EntityModel.class,null);//todo:fallback
     public static final TextureManager TEXTURE = new TextureManager();
     public static final NameSpacedRegisterMap<IColorMap, ?> COLOR_MAP = new NameSpacedRegisterMap<>(null);
-    public static final ComponentRenderManager COMPONENT_RENDERER = new ComponentRenderManager();
     public static final NameSpacedConstructingMap<IWorldRenderer> WORLD_RENDERER = new NameSpacedConstructingMap<>(Window.class, IWorld.class, Player.class, Camera.class, GameSetting.class);
 
     //content
@@ -68,9 +67,6 @@ public class Registries {
     public static final BiomeMap BIOME = new BiomeMap();
     public static final NameSpacedRegisterMap<Item, ?> ITEM = new NameSpacedRegisterMap<>(null);
     public static final NameSpacedRegisterMap<IWorldProvider,?> WORLD_PROVIDER =new NameSpacedRegisterMap<>(null);
-
-
-
 
     private Registries() {
         throw new RuntimeException("you should not create instance of this!");

@@ -16,15 +16,25 @@ public class BlockRenderUtil {
     public static final double CLASSIC_LIGHT_4 = 0.5;
 
     public static double getSmoothedLight(IWorld world, long x, long y, long z, Vector3d relativePos) {
-        double _000 = MathHelper.median(world.getLight(x - 1, y, z), world.getLight(x, y - 1, z), world.getLight(x, y, z - 1));
-        double _100 = MathHelper.median(world.getLight(x + 1, y, z), world.getLight(x, y - 1, z), world.getLight(x, y, z - 1));
-        double _010 = MathHelper.median(world.getLight(x - 1, y, z), world.getLight(x, y + 1, z), world.getLight(x, y, z - 1));
-        double _110 = MathHelper.median(world.getLight(x + 1, y, z), world.getLight(x, y + 1, z), world.getLight(x, y, z - 1));
+        double a = world.getLight(x-1,y-1,z-1);
+        double b = world.getLight(x+1,y-1,z-1);
+        double c = world.getLight(x-1,y+1,z-1);
+        double d = world.getLight(x+1,y+1,z-1);
 
-        double _001 = MathHelper.median(world.getLight(x - 1, y, z), world.getLight(x, y - 1, z), world.getLight(x, y, z + 1));
-        double _101 = MathHelper.median(world.getLight(x + 1, y, z), world.getLight(x, y - 1, z), world.getLight(x, y, z + 1));
-        double _011 = MathHelper.median(world.getLight(x - 1, y, z), world.getLight(x, y + 1, z), world.getLight(x, y, z + 1));
-        double _111 = MathHelper.median(world.getLight(x + 1, y, z), world.getLight(x, y + 1, z), world.getLight(x, y, z + 1));
+        double e = world.getLight(x-1,y-1,z+1);
+        double f = world.getLight(x+1,y-1,z+1);
+        double g = world.getLight(x-1,y+1,z+1);
+        double h = world.getLight(x+1,y+1,z+1);
+
+        double _000 = MathHelper.median(a,world.getLight(x - 1, y, z), world.getLight(x, y - 1, z), world.getLight(x, y, z - 1));
+        double _100 = MathHelper.median(b,world.getLight(x + 1, y, z), world.getLight(x, y - 1, z), world.getLight(x, y, z - 1));
+        double _010 = MathHelper.median(c,world.getLight(x - 1, y, z), world.getLight(x, y + 1, z), world.getLight(x, y, z - 1));
+        double _110 = MathHelper.median(d,world.getLight(x + 1, y, z), world.getLight(x, y + 1, z), world.getLight(x, y, z - 1));
+
+        double _001 = MathHelper.median(e,world.getLight(x - 1, y, z), world.getLight(x, y - 1, z), world.getLight(x, y, z + 1));
+        double _101 = MathHelper.median(f,world.getLight(x + 1, y, z), world.getLight(x, y - 1, z), world.getLight(x, y, z + 1));
+        double _011 = MathHelper.median(g,world.getLight(x - 1, y, z), world.getLight(x, y + 1, z), world.getLight(x, y, z + 1));
+        double _111 = MathHelper.median(h,world.getLight(x + 1, y, z), world.getLight(x, y + 1, z), world.getLight(x, y, z + 1));
 
         return MathHelper.linear_interpolate3d(_000, _001, _010, _011, _100, _101, _110, _111, relativePos.x, relativePos.y, relativePos.z);
         //_000,_001,_010,_011,_100,_101,_110,_111

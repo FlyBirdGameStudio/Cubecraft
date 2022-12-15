@@ -2,10 +2,10 @@ package io.flybird.cubecraft.internal.ui.component;
 
 
 
-import io.flybird.cubecraft.client.gui.FontRenderer;
-import io.flybird.cubecraft.client.gui.Text;
+import io.flybird.cubecraft.client.gui.base.SmoothedFontRenderer;
+import io.flybird.cubecraft.client.gui.base.Text;
 import io.flybird.cubecraft.client.gui.component.Component;
-import io.flybird.cubecraft.client.gui.layout.LayoutManager;
+import io.flybird.cubecraft.client.gui.component.LayoutManager;
 import io.flybird.util.file.FAMLDeserializer;
 import io.flybird.util.file.XmlReader;
 import com.google.gson.*;
@@ -15,7 +15,6 @@ import java.lang.reflect.Type;
 
 public class Label extends Component {
     public Text text;
-    public int size=16;
     public int color;
     public Label(Text text) {
         this.text=text;
@@ -25,7 +24,7 @@ public class Label extends Component {
 
     @Override
     public void render() {
-        FontRenderer.renderShadow(text.getText(),layoutManager.ax,layoutManager.ay, text.getColor(), layoutManager.aHeight,text.getAlignment());
+        SmoothedFontRenderer.render(text.getText(),layoutManager.ax,layoutManager.ay, text.getColor(), layoutManager.aHeight,text.getAlignment());
     }
 
 
@@ -38,15 +37,6 @@ public class Label extends Component {
         }
     }
 
-    public static class JDeserializer implements JsonDeserializer<Label>{
-        @Override
-        public Label deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            JsonObject node=jsonElement.getAsJsonObject();
-            Label label=new Label(jsonDeserializationContext.deserialize(node.get("text"),Text.class));
-            label.setLayout(jsonDeserializationContext.deserialize(node.get("layout"),LayoutManager.class));
-            return label;
-        }
-    }
 
     public void setText(Text text) {
         this.text = text;

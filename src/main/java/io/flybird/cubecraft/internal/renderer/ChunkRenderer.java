@@ -30,19 +30,14 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ChunkRenderer extends IWorldRenderer implements EventListener {
-    public Texture2D terrain = new Texture2D(false, true);
     public LogHandler logHandler = LogHandler.create("Client/ChunkRenderer");
     private final ProjectionMatrixFrustum frustum = new ProjectionMatrixFrustum(this.camera);
-    public KeyMap<RenderChunkPos, RenderChunk> chunks = new KeyMap<>();
-    public ArrayList<RenderChunk> callListAlpha = new ArrayList<>();
-    public ArrayList<RenderChunk> callListTransParent = new ArrayList<>();
+    public final KeyMap<RenderChunkPos, RenderChunk> chunks = new KeyMap<>();
+    public final ArrayList<RenderChunk> callListAlpha = new ArrayList<>();
+    public final ArrayList<RenderChunk> callListTransParent = new ArrayList<>();
 
-    public IDrawService<RenderChunk> updateService;
+    public final IDrawService<RenderChunk> updateService;
 
-    public int allCount;
-    public int visibleCount;
-    public int transVisibleCount;
-    public int updateCount;
 
     public ChunkRenderer(Window window, IWorld world, Player player, Camera cam, GameSetting setting) {
         super(window, world, player, cam, setting);
@@ -71,8 +66,6 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
     }
 
     private void drawChunks() {
-        transVisibleCount = 0;
-        visibleCount = 0;
         int d = setting.getValueAsInt("client.render.terrain.renderDistance", 4);
 
         LevelRenderer.setRenderState(this.setting, world);

@@ -1,7 +1,7 @@
 package io.flybird.util.network.base;
 
 public abstract class UDPEventLoop implements Runnable{
-    protected UDPPipeline parent;
+    protected final UDPPipeline parent;
     public UDPEventLoop(UDPPipeline udpPipeline) {
         this.parent=udpPipeline;
     }

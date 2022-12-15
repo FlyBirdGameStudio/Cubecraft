@@ -3,10 +3,8 @@ package io.flybird.starfish3d.render;
 import io.flybird.util.container.BufferUtil;
 import org.joml.Matrix4d;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-
 
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
