@@ -1,5 +1,6 @@
 package io.flybird.cubecraft.world.block;
 
+import io.flybird.cubecraft.client.ClientRegistries;
 import io.flybird.cubecraft.client.render.worldObjectRenderer.BlockModelRenderer;
 import io.flybird.cubecraft.client.resources.ResourceLocation;
 import io.flybird.cubecraft.register.Registries;
@@ -17,7 +18,7 @@ import org.joml.Vector3d;
  */
 public abstract class Block {
     public Block(String defaultRegisterId) {
-        Registries.BLOCK_RENDERER.registerItem(defaultRegisterId, new BlockModelRenderer(ResourceLocation.blockModel(defaultRegisterId.split(":")[0], defaultRegisterId.split(":")[1] + ".json")));
+        ClientRegistries.BLOCK_RENDERER.registerItem(defaultRegisterId, new BlockModelRenderer(ResourceLocation.blockModel(defaultRegisterId.split(":")[0], defaultRegisterId.split(":")[1] + ".json")));
     }
 
     public Block() {
@@ -46,7 +47,7 @@ public abstract class Block {
     public abstract AABB[] getSelectionBoxSizes();
 
     /**
-     * defines resistance of a block.if entity goes into it,speed will multiply this value.
+     * defines resistance of a block. If entity goes into it,speed will multiply this value.
      *
      * @return resistance(0.0 ~ 1.0)
      */
@@ -72,9 +73,9 @@ public abstract class Block {
 //  ------ ticking ------
 
     /**
-     * when a block updates,this will be invoke.
+     * when a block updates,this will be invoked.
      *
-     * @param dimension happened dimention
+     * @param dimension happened dimension
      * @param x         happened position
      * @param y         happened position
      * @param z         happened position
@@ -84,16 +85,14 @@ public abstract class Block {
     }
 
     /**
-     * when a block random ticks,this will be invoke.
+     * when a block random ticks,this will be invoked.
      *
-     * @param dimension happened dimention
+     * @param dimension happened dimension
      * @param x         happened position
      * @param y         happened position
      * @param z         happened position
      */
-    public void onBlockRandomTick(IWorld dimension, long x, long y, long z) {
-        //do nth
-    }
+    public void onBlockRandomTick(IWorld dimension, long x, long y, long z) {}
 
     //  ------ metadata ------
     //this part is about attributes :)
@@ -116,11 +115,11 @@ public abstract class Block {
         return aabbs;
     }
 
-    public HitBox[] getSelectionBox(long x, long y, long z, BlockState bs) {
-        HitBox[] hits = new HitBox[getSelectionBoxSizes().length];
+    public HitBox<Entity,IWorld>[] getSelectionBox(long x, long y, long z, BlockState bs) {
+        HitBox<Entity,IWorld>[] hits = new HitBox[getSelectionBoxSizes().length];
         for (int i = 0; i < getSelectionBoxSizes().length; i++) {
             AABB aabb = getCollisionBoxSizes()[i];
-            hits[i] = new HitBox(new AABB(x + aabb.x0, y + aabb.y0, z + aabb.z0, x + aabb.x1, y + aabb.y1, z + aabb.z1), bs, new Vector3d(x, y, z));
+            hits[i] = new HitBox<>(new AABB(x + aabb.x0, y + aabb.y0, z + aabb.z0, x + aabb.x1, y + aabb.y1, z + aabb.z1), bs, new Vector3d(x, y, z));
         }
         return hits;
     }

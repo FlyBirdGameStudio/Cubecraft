@@ -1,7 +1,7 @@
 package io.flybird.cubecraft.internal.net.packet.playing;
 
-import io.flybird.util.network.packet.PacketConstructor;
-import io.flybird.util.network.packet.Packet;
+import io.flybird.cubecraft.network.packet.Packet;
+import io.flybird.cubecraft.network.packet.PacketConstructor;
 import io.flybird.cubecraft.world.chunk.Chunk;
 import io.flybird.cubecraft.world.chunk.ChunkPos;
 import io.flybird.util.container.BufferUtil;
@@ -15,9 +15,8 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 @TypeItem("cubecraft:chunk_data")
-//@CompressPacket
 public class PacketChunkData implements Packet {
-    private Chunk chunk;
+    private final Chunk chunk;
 
     public PacketChunkData(Chunk chunk) {
         this.chunk = chunk;

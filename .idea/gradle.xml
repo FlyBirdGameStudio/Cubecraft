@@ -12,6 +12,11 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/client" />
+            <option value="$PROJECT_DIR$/common" />
+            <option value="$PROJECT_DIR$/internal" />
+            <option value="$PROJECT_DIR$/server" />
+            <option value="$PROJECT_DIR$/starfish3d" />
           </set>
         </option>
       </GradleProjectSettings>

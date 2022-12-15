@@ -1,8 +1,12 @@
 package io.flybird.cubecraft.internal.renderer;
 
-import io.flybird.cubecraft.GameSetting;
+import io.flybird.cubecraft.client.ClientRegistries;
+import io.flybird.starfish3d.render.culling.OcclusionCuller;
+import io.flybird.starfish3d.render.multiThread.*;
+import io.flybird.util.GameSetting;
 import io.flybird.cubecraft.client.render.model.RenderType;
-import io.flybird.cubecraft.client.render.object.*;
+import io.flybird.cubecraft.client.render.object.RenderChunk;
+import io.flybird.cubecraft.client.render.object.RenderChunkPos;
 import io.flybird.cubecraft.client.render.renderer.IWorldRenderer;
 import io.flybird.cubecraft.client.render.renderer.LevelRenderer;
 import io.flybird.cubecraft.register.Registries;
@@ -13,8 +17,6 @@ import io.flybird.starfish3d.platform.Window;
 import io.flybird.starfish3d.render.Camera;
 import io.flybird.starfish3d.render.GLUtil;
 import io.flybird.starfish3d.render.culling.ProjectionMatrixFrustum;
-import io.flybird.starfish3d.render.multiThread.*;
-import io.flybird.starfish3d.render.textures.Texture2D;
 import io.flybird.util.container.CollectionUtil;
 import io.flybird.util.container.keymap.KeyMap;
 import io.flybird.util.event.EventHandler;
@@ -24,25 +26,17 @@ import io.flybird.util.math.MathHelper;
 import org.joml.Vector3d;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ChunkRenderer extends IWorldRenderer implements EventListener {
-    public Texture2D terrain = new Texture2D(false, true);
     public LogHandler logHandler = LogHandler.create("Client/ChunkRenderer");
     private final ProjectionMatrixFrustum frustum = new ProjectionMatrixFrustum(this.camera);
-    public KeyMap<RenderChunkPos, RenderChunk> chunks = new KeyMap<>();
-    public ArrayList<RenderChunk> callListAlpha = new ArrayList<>();
-    public ArrayList<RenderChunk> callListTransParent = new ArrayList<>();
-
-    public IDrawService<RenderChunk> updateService;
-
-    public int allCount;
-    public int visibleCount;
-    public int transVisibleCount;
-    public int updateCount;
+    public final KeyMap<RenderChunkPos, RenderChunk> chunks = new KeyMap<>();
+    public final ArrayList<RenderChunk> callListAlpha = new ArrayList<>();
+    public final ArrayList<RenderChunk> callListTransParent = new ArrayList<>();
+    public final IDrawService<RenderChunk> updateService;
+    private final OcclusionCuller occlusionCuller=new OcclusionCuller(this.camera);
 
     public ChunkRenderer(Window window, IWorld world, Player player, Camera cam, GameSetting setting) {
         super(window, world, player, cam, setting);
@@ -71,15 +65,13 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
     }
 
     private void drawChunks() {
-        transVisibleCount = 0;
-        visibleCount = 0;
         int d = setting.getValueAsInt("client.render.terrain.renderDistance", 4);
 
         LevelRenderer.setRenderState(this.setting, world);
 
         AtomicInteger counter=new AtomicInteger();
 
-        Registries.TEXTURE.getTexture2DTileMapContainer().bind("cubecraft:terrain");
+        ClientRegistries.TEXTURE.getTexture2DTileMapContainer().bind("cubecraft:terrain");
         this.drawChunk(RenderType.ALPHA, this.callListAlpha, d,counter);
         GL11.glDepthMask(false);
         Registries.DEBUG_INFO.putI("cubecraft:chunk_render/visible_alpha",counter.get());
@@ -88,7 +80,7 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
         Registries.DEBUG_INFO.putI("cubecraft:chunk_render/visible_transparent",counter.get());
         GL11.glDepthMask(true);
 
-        Registries.TEXTURE.getTexture2DTileMapContainer().unbind("cubecraft:terrain");
+        ClientRegistries.TEXTURE.getTexture2DTileMapContainer().unbind("cubecraft:terrain");
 
         GLUtil.checkGLError("draw_chunks");
 
@@ -100,6 +92,7 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
             if (
                     this.camera.objectDistanceSmallerThan(chunk.getKey().clipToWorldPosition(), dist * 16)
                             && this.frustum.aabbVisible(chunk.getVisibleArea(this.camera))
+                            && this.occlusionCuller.aabbVisible(chunk.getVisibleArea(camera))
                             && chunk.isFilled(type)
             ) {
                 GL11.glPushMatrix();
@@ -114,7 +107,7 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
     private void updateChunks() {
         int d = setting.getValueAsInt("client.render.terrain.renderDistance", 4);
 
-        if (this.updateService.getCache().size() > 0) {
+        if (this.updateService.getCache().size() > 16) {
             try {
                 this.updateService.getCache().sort((o1, o2) -> {
                     if (o1 == null) {
@@ -140,8 +133,10 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
                     }
                     return !camera.objectDistanceSmallerThan(c.getKey().clipToWorldPosition(), d * 16);
                 });
-            }catch (Exception ignored) {}
+            }catch (ConcurrentModificationException ignored) {}
         }
+
+
 
         //draw available compile
         GLUtil.checkGLError("pre_draw");
@@ -178,7 +173,6 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
 
     //try to add chunk in distance but not exist
     public void checkForChunkAdd() {
-        ArrayList<RenderChunkPos> adds = new ArrayList<>();
         int d = this.setting.getValueAsInt("client.render.terrain.renderDistance", 4);
         long playerCX = (long) (this.camera.getPosition().x / 16);
         long playerCZ = (long) (this.camera.getPosition().z / 16);
@@ -190,19 +184,14 @@ public class ChunkRenderer extends IWorldRenderer implements EventListener {
                     if (this.frustum.aabbVisible(RenderChunk.getAABBFromPos(pos, this.camera))) {
                         RenderChunk chunk = this.chunks.get(pos);
                         if (chunk == null) {
-                            chunk = new RenderChunk(world, pos.x(), pos.y(), pos.z());
+                            chunk=new RenderChunk(world, pos.x(), pos.y(), pos.z());
                             this.chunks.add(chunk);
-                            adds.add(pos);
+                            this.updateService.startDrawing(chunk);
                         }
                     }
                 }
             }
         }
-        for (RenderChunkPos p : adds) {
-            RenderChunk chunk = this.chunks.get(p);
-            this.updateService.startDrawing(chunk);
-        }
-
 
         Iterator<RenderChunk> iterator = this.chunks.map.values().iterator();
         while (iterator.hasNext()) {

@@ -2,7 +2,7 @@ package io.flybird.cubecraft.world.worldGen.templete;
 
 import io.flybird.cubecraft.world.worldGen.noiseGenerator.Synth;
 
-public class Modification extends Synth{
+public class Modification extends Synth {
     final double scale;
     final double offset;
     final double scaleVert;

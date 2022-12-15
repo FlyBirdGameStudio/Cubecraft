@@ -1,11 +1,11 @@
 package io.flybird.cubecraft.internal;
 
+import io.flybird.cubecraft.client.ClientRegistries;
 import io.flybird.cubecraft.client.Cubecraft;
-import io.flybird.cubecraft.client.gui.Popup;
+import io.flybird.cubecraft.client.gui.base.Popup;
 import io.flybird.cubecraft.client.gui.ScreenUtil;
 import io.flybird.starfish3d.event.KeyPressEvent;
-import io.flybird.cubecraft.client.gui.screen.Screen;
-import io.flybird.cubecraft.client.resources.ResourceManager;
+import io.flybird.cubecraft.client.gui.component.Screen;
 import io.flybird.starfish3d.platform.Keyboard;
 import io.flybird.util.event.EventHandler;
 import io.flybird.util.event.EventListener;
@@ -25,7 +25,7 @@ public class ClientInputHandler implements EventListener {
         if (e.key() == Keyboard.KEY_F12) {
             Screen screen=this.client.getScreen();
             this.client.getLoadingScreen().intro();
-            ResourceManager.instance.reload(this.client);
+            ClientRegistries.RESOURCE_MANAGER.reload(this.client);
             this.client.setScreen(screen);
             this.client.getLoadingScreen().dispose();
         }
@@ -36,7 +36,7 @@ public class ClientInputHandler implements EventListener {
         }
         if(e.key()==Keyboard.KEY_F9){
             ScreenUtil.createPopup("reloading...","reloading...",40, Popup.INFO);
-            ResourceManager.instance.reload(this.client);
+            ClientRegistries.RESOURCE_MANAGER.reload(this.client);
             ScreenUtil.createPopup("reload success","fully reloaded.",40,Popup.SUCCESS);
         }
         if(e.key()==Keyboard.KEY_F3){

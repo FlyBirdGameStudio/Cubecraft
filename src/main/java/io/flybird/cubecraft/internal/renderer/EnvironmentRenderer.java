@@ -1,12 +1,12 @@
 package io.flybird.cubecraft.internal.renderer;
 
-import io.flybird.cubecraft.GameSetting;
+import io.flybird.util.GameSetting;
 import io.flybird.cubecraft.client.render.renderer.IWorldRenderer;
 import io.flybird.cubecraft.client.render.renderer.LevelRenderer;
 import io.flybird.cubecraft.register.Registries;
+import io.flybird.cubecraft.world.worldGen.noiseGenerator.PerlinNoise;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.entity.humanoid.Player;
-import io.flybird.cubecraft.world.worldGen.noiseGenerator.PerlinNoise;
 import io.flybird.starfish3d.platform.Window;
 import io.flybird.starfish3d.render.Camera;
 import io.flybird.starfish3d.render.GLUtil;

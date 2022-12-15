@@ -1,11 +1,11 @@
 package io.flybird.cubecraft.world;
 
-import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.world.chunk.*;
 import io.flybird.cubecraft.world.entity.Entity;
 import io.flybird.cubecraft.world.entity.EntityLocation;
 import io.flybird.cubecraft.world.entity.humanoid.Player;
 import io.flybird.cubecraft.world.worldGen.ChunkProvider;
+import io.flybird.util.GameSetting;
 import io.flybird.util.container.CollectionUtil;
 import io.flybird.util.math.MathHelper;
 import io.flybird.util.container.Vector3;

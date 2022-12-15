@@ -1,14 +1,17 @@
 package io.flybird.cubecraft.internal.ui.layout;
 
-import io.flybird.cubecraft.client.gui.layout.Border;
-import io.flybird.cubecraft.client.gui.layout.LayoutManager;
+import io.flybird.cubecraft.client.gui.component.Border;
+import io.flybird.cubecraft.client.gui.component.LayoutManager;
 import io.flybird.util.file.FAMLDeserializer;
 import io.flybird.util.file.XmlReader;
 import com.google.gson.Gson;
 import org.w3c.dom.Element;
 
 public class ViewportLayout extends LayoutManager {
-    public float left, right, bottom, top;
+    public final float left;
+    public final float right;
+    public final float bottom;
+    public final float top;
 
     public ViewportLayout(int left, int right, int bottom, int top, int layer) {
         this.left = left;

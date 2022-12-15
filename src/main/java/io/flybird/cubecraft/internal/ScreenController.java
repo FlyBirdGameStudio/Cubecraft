@@ -1,16 +1,17 @@
 package io.flybird.cubecraft.internal;
 
+import io.flybird.cubecraft.client.ClientRegistries;
 import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.client.VersionCheck;
 import io.flybird.cubecraft.client.event.ScreenInitializeEvent;
-import io.flybird.cubecraft.client.gui.Popup;
+import io.flybird.cubecraft.client.gui.base.Popup;
 import io.flybird.cubecraft.client.gui.ScreenUtil;
 import io.flybird.cubecraft.client.gui.component.Component;
 import io.flybird.cubecraft.internal.ui.component.Label;
 import io.flybird.cubecraft.internal.ui.component.SplashText;
 import io.flybird.cubecraft.internal.ui.component.Button;
-import io.flybird.cubecraft.client.gui.screen.HUDScreen;
-import io.flybird.cubecraft.client.gui.screen.Screen;
+import io.flybird.cubecraft.client.gui.HUDScreen;
+import io.flybird.cubecraft.client.gui.component.Screen;
 import io.flybird.cubecraft.extansion.ModManager;
 import io.flybird.cubecraft.register.Registries;
 import io.flybird.util.event.EventHandler;
@@ -45,18 +46,18 @@ public class ScreenController implements EventListener {
 
             //content buttons
             if (Objects.equals(e.component().getID(), "button_singleplayer")) {
-                Screen screen = Registries.SCREEN_LOADER.loadByExtName("cubecraft", "single_player_screen.xml");
-                screen.setParentScreen(Registries.SCREEN_LOADER.loadByExtName("cubecraft", "title_screen.xml"));
+                Screen screen = ClientRegistries.GUI_MANAGER.loadFAML("cubecraft", "single_player_screen.xml");
+                screen.setParentScreen(ClientRegistries.GUI_MANAGER.loadFAML("cubecraft", "title_screen.xml"));
                 e.component().getParent().getPlatform().setScreen(screen);
             }
             if (Objects.equals(e.component().getID(), "button_multiplayer")) {
-                Screen screen = Registries.SCREEN_LOADER.loadByExtName("cubecraft", "multi_player_screen.xml");
-                screen.setParentScreen(Registries.SCREEN_LOADER.loadByExtName("cubecraft", "title_screen.xml"));
+                Screen screen = ClientRegistries.GUI_MANAGER.loadFAML("cubecraft", "multi_player_screen.xml");
+                screen.setParentScreen(ClientRegistries.GUI_MANAGER.loadFAML("cubecraft", "title_screen.xml"));
                 e.component().getParent().getPlatform().setScreen(screen);
             }
             if (Objects.equals(e.component().getID(), "button_option")) {
-                Screen screen = Registries.SCREEN_LOADER.loadByExtName("cubecraft", "setting_screen.xml");
-                screen.setParentScreen(Registries.SCREEN_LOADER.loadByExtName("cubecraft", "title_screen.xml"));
+                Screen screen = ClientRegistries.GUI_MANAGER.loadFAML("cubecraft", "setting_screen.xml");
+                screen.setParentScreen(ClientRegistries.GUI_MANAGER.loadFAML("cubecraft", "title_screen.xml"));
                 e.component().getParent().getPlatform().setScreen(screen);
             }
             if (Objects.equals(e.component().getID(), "button_quit")) {
@@ -72,8 +73,8 @@ public class ScreenController implements EventListener {
                 e.component().getParent().getPlatform().setScreen(new HUDScreen());
             }
             if (Objects.equals(e.component().getID(), "button_option")) {
-                Screen screen = Registries.SCREEN_LOADER.loadByExtName("cubecraft", "setting_screen.xml");
-                screen.setParentScreen(Registries.SCREEN_LOADER.loadByExtName("cubecraft", "pause_screen.xml"));
+                Screen screen = ClientRegistries.GUI_MANAGER.loadFAML("cubecraft", "setting_screen.xml");
+                screen.setParentScreen(ClientRegistries.GUI_MANAGER.loadFAML("cubecraft", "pause_screen.xml"));
                 e.component().getParent().getPlatform().setScreen(screen);
             }
             if (Objects.equals(e.component().getID(), "button_achievement")) {
@@ -116,7 +117,11 @@ public class ScreenController implements EventListener {
 
     @EventHandler
     public void onScreenInit_TitleScreen(ScreenInitializeEvent e) {
+
         if (Objects.equals(e.screen().getID(), "cubecraft:title_screen")) {
+
+            //((SplashText) e.screen().getComponents().get("splash")).getSplashText().setText("\ue701");
+
             ((Label) e.screen().getComponents().get("version_string")).text.setText(Registries.I18N.get(
                     "title_screen.version", Cubecraft.VERSION, ModManager.getLoadedMods().size()
             ));
@@ -126,24 +131,24 @@ public class ScreenController implements EventListener {
             Calendar c = Calendar.getInstance();
             c.setTime(new Date());
             if (c.get(Calendar.MONTH) == Calendar.OCTOBER && c.get(Calendar.DATE) == 23) {
-                ((SplashText) e.screen().getComponents().get("splash")).getSplashText().setText("Happy Birthday,FlyBirdStudio!");
+                ((SplashText) e.screen().getComponents().get("splash")).getText().setText("Happy Birthday,FlyBirdStudio!");
             }
             if (c.get(Calendar.MONTH) == Calendar.JUNE && c.get(Calendar.DATE) == 1) {
-                ((SplashText) e.screen().getComponents().get("splash")).getSplashText().setText("Happy Birthday,Notch!");
+                ((SplashText) e.screen().getComponents().get("splash")).getText().setText("Happy Birthday,Notch!");
             }
             if (c.get(Calendar.MONTH) == Calendar.MAY && c.get(Calendar.DATE) == 10) {
-                ((SplashText) e.screen().getComponents().get("splash")).getSplashText().setText("Happy Birthday,Minecraft!");
+                ((SplashText) e.screen().getComponents().get("splash")).getText().setText("Happy Birthday,Minecraft!");
             }
 
             if (c.get(Calendar.MONTH) == Calendar.SEPTEMBER && c.get(Calendar.DATE) == 18) {
-                ((SplashText) e.screen().getComponents().get("splash")).getSplashText().setText("");
+                ((SplashText) e.screen().getComponents().get("splash")).getText().setText("");
                 for (Component comp:e.screen().getComponents().values()){
                     if(comp instanceof Button){
                         ((Button) comp).enabled=false;
                     }
                 }
             }
-
+            /*
             if (c.get(Calendar.MONTH) == Calendar.DECEMBER && c.get(Calendar.DATE) == 13) {
                 ((SplashText) e.screen().getComponents().get("splash")).getSplashText().setText("");
                 for (Component comp:e.screen().getComponents().values()){
@@ -152,6 +157,8 @@ public class ScreenController implements EventListener {
                     }
                 }
             }
+
+             */
         }
     }
 }

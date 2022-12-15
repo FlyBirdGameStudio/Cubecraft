@@ -1,6 +1,5 @@
 package io.flybird.cubecraft.world;
 
-import io.flybird.cubecraft.world.block.Tile;
 
 @Deprecated
 public class _Level {
@@ -15,7 +14,6 @@ public class _Level {
         return 0;
     }
     public boolean isSolidTile(long x, long y, long z) {
-        if(getTile(x,y,z)==0)return false;
-        return Tile.tiles[getTile(x, y, z)].isSolid();
+        return false;
     }
 }

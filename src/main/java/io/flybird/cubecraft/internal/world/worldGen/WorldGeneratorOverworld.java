@@ -1,17 +1,17 @@
 package io.flybird.cubecraft.internal.world.worldGen;
 
-import io.flybird.cubecraft.internal.WorldType;
+import io.flybird.cubecraft.internal.type.WorldType;
 import io.flybird.cubecraft.register.Registries;
+import io.flybird.cubecraft.world.worldGen.noiseGenerator.PerlinNoise;
+import io.flybird.cubecraft.world.worldGen.noiseGenerator.Synth;
+import io.flybird.cubecraft.world.worldGen.templete.Scale;
 import io.flybird.cubecraft.world.block.BlockState;
 import io.flybird.cubecraft.world.chunk.Chunk;
 import io.flybird.cubecraft.world.chunk.ChunkPos;
 import io.flybird.cubecraft.world.worldGen.pipeline.GenerateStage;
 import io.flybird.cubecraft.world.worldGen.WorldGenListener;
 import io.flybird.cubecraft.world.worldGen.WorldGeneratorSetting;
-import io.flybird.cubecraft.world.worldGen.noiseGenerator.PerlinNoise;
-import io.flybird.cubecraft.world.worldGen.noiseGenerator.Synth;
 import io.flybird.cubecraft.world.worldGen.pipeline.IChunkGenerator;
-import io.flybird.cubecraft.world.worldGen.templete.Scale;
 
 import java.util.Random;
 

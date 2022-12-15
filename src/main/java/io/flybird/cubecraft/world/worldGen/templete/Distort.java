@@ -4,8 +4,8 @@ import io.flybird.cubecraft.world.worldGen.noiseGenerator.Synth;
 
 public class Distort
 extends Synth {
-    private Synth source;
-    private Synth distort;
+    private final Synth source;
+    private final Synth distort;
 
     public Distort(Synth source, Synth distort) {
         this.source = source;

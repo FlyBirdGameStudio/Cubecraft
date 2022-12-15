@@ -1,7 +1,7 @@
 package io.flybird.cubecraft.internal.net.packet.connect;
 
-import io.flybird.util.network.packet.PacketConstructor;
-import io.flybird.util.network.packet.Packet;
+import io.flybird.cubecraft.network.packet.Packet;
+import io.flybird.cubecraft.network.packet.PacketConstructor;
 import io.flybird.cubecraft.world.LevelInfo;
 import io.flybird.util.container.namespace.TypeItem;
 import io.flybird.util.file.NBTBuilder;
@@ -41,7 +41,7 @@ public class PacketPlayerJoinWorldResponse implements Packet {
 
     @Override
     public void readPacketData(ByteBuf buffer) {
-        NBTTagCompound tag= null;
+        NBTTagCompound tag;
         try {
             tag = (NBTTagCompound) NBTBuilder.read(new ByteBufInputStream(buffer));
         } catch (IOException e) {

@@ -1,6 +1,7 @@
 package io.flybird.cubecraft.internal.renderer;
 
-import io.flybird.cubecraft.GameSetting;
+import io.flybird.cubecraft.client.ClientRegistries;
+import io.flybird.util.GameSetting;
 import io.flybird.cubecraft.client.render.renderer.IWorldRenderer;
 import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.IWorld;
@@ -25,7 +26,7 @@ public class EntityRenderer extends IWorldRenderer {
             allCount++;
             visibleCount++;
             try {
-                Registries.ENTITY_RENDERER.get(e.getID()).render(e);
+                ClientRegistries.ENTITY_RENDERER.get(e.getID()).render(e);
             }catch (Exception ignored){}
         }
         Registries.DEBUG_INFO.putI("cubecraft:entity_renderer/all_entities",visibleCount);

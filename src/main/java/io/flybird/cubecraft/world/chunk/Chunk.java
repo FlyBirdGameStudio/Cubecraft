@@ -1,16 +1,14 @@
 package io.flybird.cubecraft.world.chunk;
 
-import io.flybird.cubecraft.internal.BiomeType;
-import io.flybird.cubecraft.internal.BlockType;
 import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.IWorld;
+import io.flybird.cubecraft.world.block.BlockState;
+import io.flybird.cubecraft.world.block.EnumFacing;
 import io.flybird.cubecraft.world.block.entity.BlockEntity;
 import io.flybird.util.container.ArrayUtil;
 import io.flybird.util.container.Double2ByteArray;
 import io.flybird.util.container.DynamicNameIdMap;
 import io.flybird.util.container.keymap.KeyGetter;
-import io.flybird.cubecraft.world.block.BlockState;
-import io.flybird.cubecraft.world.block.EnumFacing;
 import io.flybird.util.file.NBTDataIO;
 import io.flybird.util.file.nbt.NBTTagByteArray;
 import io.flybird.util.file.nbt.NBTTagCompound;
@@ -37,7 +35,7 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
     private final Double2ByteArray temperature = new Double2ByteArray(WIDTH * WIDTH);
     private final Double2ByteArray humidity = new Double2ByteArray(WIDTH * WIDTH);
 
-    public ChunkProcessTask task = new ChunkProcessTask(this);
+    public final ChunkProcessTask task = new ChunkProcessTask(this);
 
     public void tick(){
         this.task.run();
@@ -48,8 +46,8 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
         this.z = p.z();
         this.y = p.y();
 
-        this.id.fill(BlockType.AIR);
-        this.biome.fill(BiomeType.PLAINS);
+        this.id.fill("cubecraft:air");
+        this.biome.fill("cubecraft:plains");
 
         Arrays.fill(meta, (byte) 0);
         Arrays.fill(facing, EnumFacing.Up.getNumID());
@@ -109,7 +107,7 @@ public class Chunk implements KeyGetter<ChunkPos>, NBTDataIO {
 
     public void setLight(int x, int y, int z, byte l) {
         if (x >= 0 && y >= 0 && z >= 0 && x < WIDTH && y < HEIGHT && z < WIDTH) {
-            ArrayUtil.setDispatched(x, y, z, WIDTH, this.light, l);
+            this.light[ArrayUtil.calcDispatchPos3d(WIDTH,HEIGHT,WIDTH,x,y,z)]=l;
         }
     }
 

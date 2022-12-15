@@ -1,7 +1,7 @@
 package io.flybird.cubecraft.world.block;
 
 import io.flybird.cubecraft.register.Registries;
-import io.flybird.cubecraft.world.HittableObject;
+import io.flybird.util.math.HittableObject;
 import io.flybird.cubecraft.world.IWorld;
 import io.flybird.cubecraft.world.entity.Entity;
 import io.flybird.util.file.NBTDataIO;
@@ -10,7 +10,9 @@ import io.flybird.util.math.AABB;
 import io.flybird.util.math.HitBox;
 import io.flybird.util.math.HitResult;
 
-public class BlockState implements NBTDataIO, HittableObject {
+import java.util.WeakHashMap;
+
+public class BlockState implements NBTDataIO, HittableObject<Entity,IWorld> {
     private long x;
     private long y;
     private long z;
@@ -63,7 +65,7 @@ public class BlockState implements NBTDataIO, HittableObject {
         return this.getBlock().getCollisionBox(x, y, z);
     }
 
-    public HitBox[] getSelectionBox() {
+    public HitBox<Entity,IWorld>[] getSelectionBox() {
         return this.getBlock().getSelectionBox(x, y, z, this);
     }
 

@@ -1,0 +1,55 @@
+{
+  "used_textures":[
+    "cubecraft:mycelium_top.png",
+    "cubecraft:mycelium_side.png",
+    "cubecraft:dirt.png"
+  ],
+  "inventory_projection": "isometric",
+  "components":[
+    {
+      "id": "#default",
+      "type":"cube",
+      "render_type": "alpha",
+      "start":[0,0,0],
+      "end":[1,1,1],
+      "faces": {
+        "top":{
+          "id":"cubecraft:cube_0",
+          "texture": "cubecraft:/mycelium_top.png",
+          "culling": "solid",
+          "uv": [0,1,0,1]
+        },
+        "bottom":{
+          "id":"cubecraft:cube_1",
+          "texture": "cubecraft:/dirt.png",
+          "culling": "solid",
+          "uv": [0,1,0,1]
+        },
+        "left":{
+          "id":"cubecraft:cube_2",
+          "texture": "cubecraft:/mycelium_side.png",
+          "culling": "solid",
+          "uv": [0,1,0,1]
+        },
+        "right":{
+          "id":"cubecraft:cube_3",
+          "texture": "cubecraft:/mycelium_side.png",
+          "culling": "solid",
+          "uv": [0,1,0,1]
+        },
+        "front":{
+          "id":"cubecraft:cube_4",
+          "texture": "cubecraft:/mycelium_side.png",
+          "culling": "solid",
+          "uv": [0,1,0,1]
+        },
+        "back":{
+          "id":"cubecraft:cube_5",
+          "texture": "cubecraft:/mycelium_side.png",
+          "culling": "solid",
+          "uv": [0,1,0,1]
+        }
+      }
+    }
+  ]
+}

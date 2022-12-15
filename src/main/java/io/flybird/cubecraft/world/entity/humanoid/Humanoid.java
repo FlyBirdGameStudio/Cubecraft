@@ -1,9 +1,9 @@
 package io.flybird.cubecraft.world.entity.humanoid;
 
 import io.flybird.cubecraft.world.IWorld;
+import io.flybird.cubecraft.world.entity.Entity;
 import io.flybird.util.math.AABB;
 import io.flybird.util.math.HitBox;
-import io.flybird.cubecraft.world.entity.Entity;
 import org.joml.Vector3d;
 
 public abstract class Humanoid extends Entity {
@@ -18,8 +18,8 @@ public abstract class Humanoid extends Entity {
     }
 
     @Override
-    public HitBox[] getSelectionBoxes() {
-        return new HitBox[]{new HitBox(this.collisionBox,this,this.collisionBox.getCenter())};
+    public HitBox<Entity,IWorld>[] getSelectionBoxes() {
+        return new HitBox[]{new HitBox<>(this.collisionBox,this,this.collisionBox.getCenter())};
     }
 
     @Override

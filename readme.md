@@ -45,7 +45,7 @@ MojangStudio 和 Microsoft 没有起诉我们 ：）
 Cubecraft is a simple Minecraft high imitation developed with java and lwjgl. Different from the reducibility and gameplay of traditional works, this game will pay more attention to framing and high scalability. The purpose of its existence is to better produce Minecraft high imitation or other works of the same people, and it also serves as our technical platform. If data compatibility can be achieved, this platform will serve for the content creation of the mc community in the future (I hope it will still exist)
 
 
-Due to our excessive rewriting of the world structure (such as 64 bit integers and other strange features), cubecraft is temporarily unable to make any data compatibility with minecraft. In the future, we may (as far as possible) implement data compatibility with minecraft. (In addition, the architecture of cubecraft has been basically stable. If anyone wants to write a data compatible mod, welcome.)
+Due to our excessive rewriting of the world structure (such as 64-bit integers and other strange features), cubecraft is temporarily unable to make any data compatibility with minecraft. In the future, we may (as far as possible) implement data compatibility with minecraft. (In addition, the architecture of cubecraft has been basically stable. If anyone wants to write a data compatible mod, welcome.)
 
 ### Use:
 ##### Compile yourself

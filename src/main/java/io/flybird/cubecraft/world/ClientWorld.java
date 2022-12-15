@@ -1,9 +1,9 @@
 package io.flybird.cubecraft.world;
 
 import io.flybird.cubecraft.client.Cubecraft;
+
 import io.flybird.cubecraft.world.chunk.*;
 import io.flybird.cubecraft.world.entity.Entity;
-import io.flybird.cubecraft.world.entity.humanoid.Player;
 import io.flybird.cubecraft.world.event.world.ChunkLoadEvent;
 
 import java.util.ConcurrentModificationException;
@@ -13,7 +13,7 @@ public class ClientWorld extends IWorld {
     final Cubecraft client;
 
     //todo:add remote world id
-    public ClientWorld(LevelInfo levelInfo, Cubecraft client,String name) {
+    public ClientWorld(LevelInfo levelInfo, Cubecraft client, String name) {
         super(name,levelInfo);
         this.client = client;
     }

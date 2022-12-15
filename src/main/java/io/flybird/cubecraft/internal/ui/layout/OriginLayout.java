@@ -1,7 +1,7 @@
 package io.flybird.cubecraft.internal.ui.layout;
 
-import io.flybird.cubecraft.client.gui.layout.Border;
-import io.flybird.cubecraft.client.gui.layout.LayoutManager;
+import io.flybird.cubecraft.client.gui.component.Border;
+import io.flybird.cubecraft.client.gui.component.LayoutManager;
 import io.flybird.util.file.FAMLDeserializer;
 import io.flybird.util.file.XmlReader;
 import com.google.gson.Gson;
@@ -25,7 +25,6 @@ public class OriginLayout extends LayoutManager {
                 case "left_middle"->LEFT_MIDDLE;
                 case "left_bottom"->LEFT_BOTTOM;
                 case "middle_top"->MIDDLE_TOP;
-                case "middle_middle"->MIDDLE_MIDDLE;
                 case "middle_bottom"->MIDDLE_BOTTOM;
                 case "right_top"->RIGHT_TOP;
                 case "right_middle"->RIGHT_MIDDLE;
@@ -44,30 +43,18 @@ public class OriginLayout extends LayoutManager {
         this.layer=layer;
     }
 
-    public Origin origin;
-    public int rx,ry;
+    public final Origin origin;
+    public final int rx;
+    public final int ry;
 
     @Override
     public void resize(int x,int y,int scrWidth, int scrHeight) {
         int ox=0,oy=0;
         switch (this.origin) {
-            case LEFT_TOP -> {
-                ox = 0;
-                oy = 0;
-            }
-            case LEFT_MIDDLE -> {
-                ox = 0;
-                oy = scrHeight / 2 - height / 2;
-            }
-            case LEFT_BOTTOM -> {
-                ox = 0;
-                oy = scrHeight - height;
-            }
-
-            case MIDDLE_TOP -> {
-                ox = scrWidth / 2 - width / 2;
-                oy = 0;
-            }
+            case LEFT_TOP -> {}
+            case LEFT_MIDDLE -> oy = scrHeight / 2 - height / 2;
+            case LEFT_BOTTOM -> oy = scrHeight - height;
+            case MIDDLE_TOP -> ox = scrWidth / 2 - width / 2;
             case MIDDLE_MIDDLE -> {
                 ox = scrWidth / 2 - width / 2;
                 oy = scrHeight / 2 - height / 2;
@@ -76,10 +63,7 @@ public class OriginLayout extends LayoutManager {
                 ox = scrWidth / 2 - width / 2;
                 oy = scrHeight - height;
             }
-            case RIGHT_TOP -> {
-                ox = scrWidth - width;
-                oy = 0;
-            }
+            case RIGHT_TOP -> ox = scrWidth - width;
             case RIGHT_MIDDLE -> {
                 ox = scrWidth - width;
                 oy = scrHeight / 2 - height / 2;

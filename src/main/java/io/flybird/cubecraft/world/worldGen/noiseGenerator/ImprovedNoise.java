@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class ImprovedNoise
 extends Synth {
-    private int[] p = new int[512];
+    private final int[] p = new int[512];
     public double scale;
 
     public ImprovedNoise() {

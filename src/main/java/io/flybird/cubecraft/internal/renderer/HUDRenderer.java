@@ -1,7 +1,6 @@
 package io.flybird.cubecraft.internal.renderer;
 
-import io.flybird.cubecraft.GameSetting;
-import io.flybird.cubecraft.client.Cubecraft;
+import io.flybird.util.GameSetting;
 import io.flybird.cubecraft.client.render.renderer.IWorldRenderer;
 import io.flybird.cubecraft.client.render.renderer.LevelRenderer;
 import io.flybird.cubecraft.world.IWorld;
@@ -28,7 +27,7 @@ public class HUDRenderer extends IWorldRenderer {
             GL11.glPushMatrix();
             this.camera.setupObjectCamera(aabb.minPos());
             for (HitBox hitBox:sel.getBlock().getSelectionBox(0,0,0,sel)){
-                ShapeRenderer.renderAABB(hitBox, 0xFFFFFF);
+                ShapeRenderer.renderAABB(hitBox);
             }
             GL11.glPopMatrix();
         }

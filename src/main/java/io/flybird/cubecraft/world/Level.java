@@ -1,8 +1,8 @@
 package io.flybird.cubecraft.world;
 
-import io.flybird.cubecraft.GameSetting;
 import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.entity.EntityLocation;
+import io.flybird.util.GameSetting;
 import io.flybird.util.file.FileUtil;
 
 import java.util.Date;
@@ -10,8 +10,8 @@ import java.util.HashMap;
 
 public class Level {
     private final String name;
-    public HashMap<String,IWorld> dims = new HashMap<>();
-    private LevelInfo levelInfo;
+    public final HashMap<String,IWorld> dims = new HashMap<>();
+    private final LevelInfo levelInfo;
     private EntityLocation getEntityLocation;
 
     public Level(String name, GameSetting setting) {

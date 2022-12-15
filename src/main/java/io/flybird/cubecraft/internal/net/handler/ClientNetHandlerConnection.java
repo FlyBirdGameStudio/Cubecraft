@@ -2,12 +2,12 @@ package io.flybird.cubecraft.internal.net.handler;
 
 import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerJoinResponse;
+import io.flybird.cubecraft.network.NetHandlerContext;
+import io.flybird.cubecraft.client.network.ClientNetHandler;
+import io.flybird.cubecraft.network.packet.PacketEventHandler;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerJoinWorld;
 import io.flybird.cubecraft.internal.net.packet.connect.PacketPlayerJoinWorldResponse;
-import io.flybird.cubecraft.register.Registries;
-import io.flybird.util.network.NetHandlerContext;
-import io.flybird.util.network.packet.PacketEventHandler;
-import io.flybird.util.network.handler.ClientNetHandler;
 
 public class ClientNetHandlerConnection extends ClientNetHandler {
     public ClientNetHandlerConnection(Cubecraft client) {

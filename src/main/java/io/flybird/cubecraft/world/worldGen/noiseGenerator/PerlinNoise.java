@@ -6,10 +6,6 @@ public class PerlinNoise extends Synth {
     private final ImprovedNoise[] noiseLevels;
     private final int levels;
 
-    public PerlinNoise(int levels) {
-        this(new Random(), levels);
-    }
-
     public PerlinNoise(Random random, int levels) {
         this.levels = levels;
         this.noiseLevels = new ImprovedNoise[levels];

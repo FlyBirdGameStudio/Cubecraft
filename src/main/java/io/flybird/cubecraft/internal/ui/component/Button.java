@@ -1,9 +1,9 @@
 package io.flybird.cubecraft.internal.ui.component;
 
 
-import io.flybird.cubecraft.client.gui.Text;
+import io.flybird.cubecraft.client.gui.base.Text;
 import io.flybird.cubecraft.client.gui.component.Component;
-import io.flybird.cubecraft.client.gui.layout.LayoutManager;
+import io.flybird.cubecraft.client.gui.component.LayoutManager;
 import io.flybird.cubecraft.register.Registries;
 import io.flybird.starfish3d.event.MouseClickEvent;
 import io.flybird.util.event.Event;
@@ -47,11 +47,6 @@ public class Button extends Component {
         int y0 = this.layoutManager.ay;
         int y1 = y0 + this.layoutManager.aHeight;
         this.hovered = xm > x0 && xm < x1 && ym > y0 && ym < y1;
-    }
-
-    @Override
-    public void render() {
-        Registries.COMPONENT_RENDERER.get(this.getClass()).render(this);
     }
 
     @EventHandler

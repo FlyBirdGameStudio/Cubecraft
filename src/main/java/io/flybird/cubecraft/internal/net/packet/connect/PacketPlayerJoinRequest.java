@@ -1,8 +1,9 @@
 package io.flybird.cubecraft.internal.net.packet.connect;
 
 import io.flybird.cubecraft.auth.Session;
-import io.flybird.util.network.packet.PacketConstructor;
-import io.flybird.util.network.packet.Packet;
+import io.flybird.cubecraft.network.packet.Packet;
+import io.flybird.cubecraft.network.packet.PacketConstructor;
+import io.flybird.cubecraft.register.Registries;
 import io.flybird.util.container.namespace.TypeItem;
 import io.flybird.util.file.NBTBuilder;
 import io.flybird.util.file.nbt.NBTTagCompound;
@@ -30,7 +31,7 @@ public class PacketPlayerJoinRequest implements Packet {
     public void writePacketData(ByteBuf buffer) {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("type", this.session.getType());
-        tag.setCompoundTag("data", SESSION_SERVICE.get(this.session.getType()).write(session));
+        tag.setCompoundTag("data", Registries.SESSION_SERVICE.get(this.session.getType()).write(session));
         try {
             NBTBuilder.write(tag,new ByteBufOutputStream(buffer));
         } catch (IOException e) {
@@ -40,13 +41,13 @@ public class PacketPlayerJoinRequest implements Packet {
 
     @Override
     public void readPacketData(ByteBuf buffer) {
-        NBTTagCompound tag = null;
+        NBTTagCompound tag;
         try {
             tag = (NBTTagCompound) NBTBuilder.read(new ByteBufInputStream(buffer));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        SESSION_SERVICE.get(tag.getString("type")).read(session, tag.getCompoundTag("data"));
+        Registries.SESSION_SERVICE.get(tag.getString("type")).read(session, tag.getCompoundTag("data"));
     }
 
     public Session getSession() {

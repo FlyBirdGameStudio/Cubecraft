@@ -1,7 +1,7 @@
 package io.flybird.cubecraft.internal.net.packet.connect;
 
-import io.flybird.util.network.packet.PacketConstructor;
-import io.flybird.util.network.packet.Packet;
+import io.flybird.cubecraft.network.packet.Packet;
+import io.flybird.cubecraft.network.packet.PacketConstructor;
 import io.flybird.util.container.BufferUtil;
 import io.flybird.util.container.namespace.TypeItem;
 import io.netty.buffer.ByteBuf;

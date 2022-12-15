@@ -1,5 +1,6 @@
 package io.flybird.cubecraft.world;
 
+import io.flybird.cubecraft.internal.type.BlockType;
 import io.flybird.cubecraft.register.Registries;
 import io.flybird.cubecraft.world.event.block.BlockChangeEvent;
 import io.flybird.cubecraft.world.block.BlockState;
@@ -19,12 +20,13 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class IWorld {
     private final EventBus eventBus = new CachedEventBus();
-    public HashMap<Vector3<Long>, Integer> scheduledTickEvents = new HashMap<>();//event,remaining time
-    public KeyMap<ChunkPos, Chunk> chunks = new KeyMap<>();//position,chunk
-    public HashMap<String, Entity> entities = new HashMap<>();//uuid,entity
+    public final HashMap<Vector3<Long>, Integer> scheduledTickEvents = new HashMap<>();//event,remaining time
+    public final KeyMap<ChunkPos, Chunk> chunks = new KeyMap<>();//position,chunk
+    public final HashMap<String, Entity> entities = new HashMap<>();//uuid,entity
     private final LevelInfo levelInfo;
     private long time;
     private final String id;
@@ -69,8 +71,8 @@ public class IWorld {
         return true;
     }
 
-    public ArrayList<HitBox> getSelectionBox(Entity entity, Vector3d from, Vector3d dest) {
-        ArrayList<HitBox> result = new ArrayList<>();
+    public ArrayList<HitBox<Entity,IWorld>> getSelectionBox(Entity entity, Vector3d from, Vector3d dest) {
+        ArrayList<HitBox<Entity,IWorld>> result = new ArrayList<>();
 
         for (long x = (long) Math.min(from.x, dest.x) - 2; x < Math.max(from.x, dest.x) + 2; x++) {
             for (long y = (long) Math.min(from.y, dest.y) - 2; y < Math.max(from.y, dest.y + 2) + 2; y++) {
@@ -157,7 +159,7 @@ public class IWorld {
         ChunkPos chunkPos = ChunkPos.fromWorldPos(x, y, z);
         Chunk c = getChunk(chunkPos);
         if (c == null) {
-            return Registries.BLOCK.get("cubecraft:air").defaultState(x, y, z);
+            return Registries.BLOCK.get(BlockType.AIR).defaultState(x, y, z);
         }
 
         return c.getBlockState(
@@ -260,7 +262,7 @@ public class IWorld {
 
     public int getLight(long x, long y, long z) {
         if (getBlockState(x, y, z).getBlock().isSolid()) {
-            return 0;
+            return 48;
         } else {
             return 128;
         }
@@ -301,4 +303,17 @@ public class IWorld {
     public LevelInfo getLevelInfo() {
         return levelInfo;
     }
+
+    public boolean isAllNearMatch(long x, long y, long z, Predicate<BlockState> predicate){
+        BlockState[] states=new BlockState[]{
+                getBlockState(x+1, y, z),
+                getBlockState(x-1, y, z),
+                getBlockState(x, y+1, z),
+                getBlockState(x, y-1, z),
+                getBlockState(x, y, z+1),
+                getBlockState(x, y, z-1)
+        };
+        return Arrays.stream(states).allMatch(predicate);
+    }
+
 }

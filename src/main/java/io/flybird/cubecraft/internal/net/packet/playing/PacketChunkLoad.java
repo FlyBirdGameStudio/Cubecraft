@@ -1,7 +1,7 @@
 package io.flybird.cubecraft.internal.net.packet.playing;
 
-import io.flybird.util.network.packet.PacketConstructor;
-import io.flybird.util.network.packet.Packet;
+import io.flybird.cubecraft.network.packet.Packet;
+import io.flybird.cubecraft.network.packet.PacketConstructor;
 import io.flybird.cubecraft.world.chunk.ChunkLoadLevel;
 import io.flybird.cubecraft.world.chunk.ChunkLoadTicket;
 import io.flybird.util.container.BufferUtil;

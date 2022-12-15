@@ -6,7 +6,7 @@ import io.flybird.util.math.AABB;
 @Deprecated
 public class _Entity {
 
-    protected _Level world;
+    protected final _Level world;
 
     //position
     public double xo;
@@ -25,7 +25,7 @@ public class _Entity {
     //physic
     public AABB collisionBox;
 
-    public boolean onGround = false;
+    public final boolean onGround = false;
 
     public boolean removed = false;
     protected float heightOffset = 0.0f;
@@ -45,9 +45,9 @@ public class _Entity {
         this.removed = true;
     }
 
-    protected void setSize(float w, float h) {
-        this.bbWidth = w;
-        this.bbHeight = h;
+    protected void setSize() {
+        this.bbWidth = (float) 0.2;
+        this.bbHeight = (float) 0.2;
     }
 
     public void setPos(double x, double y, double z) {
@@ -64,14 +64,14 @@ public class _Entity {
         this.zo = this.z;
     }
 
-    public void move(double xa, double ya, double za) {
+    public void move() {
     }
 
     public boolean isLit() {
         return false;
     }
 
-    public void render(float a) {
+    public void render() {
     }
 
 }

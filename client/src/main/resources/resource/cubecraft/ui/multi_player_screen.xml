@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<faml ext="cubecraft_ui">
+    <meta>
+        <type>image-bg-blur-mask</type>
+        <id>cubecraft:multi_player_screen</id>
+    </meta>
+    <elements>
+        <textbar id="server_search" limit="20">
+            <layout type="origin">
+                <layout>[0,30,176,30]</layout>
+                <type>left_top</type>
+                <border>[4,4,4,4]</border>
+            </layout>
+            <text type="lang" color="aaaaaa" align="left">multiplayer.search_server</text>
+        </textbar>
+
+        <topbar id="top">
+            <layout type="flow">
+                <type>top</type>
+                <layout>[24,0]</layout>
+                <border>[0,0,0,0]</border>
+            </layout>
+            <text type="lang" color="ffffff" align="left">multiplayer.title</text>
+        </topbar>
+        <button id="join_server" style="ore_ui">
+            <layout type="origin">
+                <layout>[0,-34,176,30]</layout>
+                <type>left_bottom</type>
+                <border>[4,4,4,4]</border>
+            </layout>
+            <text type="lang" color="ffffff" align="middle">multiplayer.button.join</text>
+        </button>
+        <button id="create_server" style="ore_ui">
+            <layout type="origin">
+                <layout>[0,-4,88,30]</layout>
+                <type>left_bottom</type>
+                <border>[4,4,4,4]</border>
+            </layout>
+            <text type="lang" color="ffffff" align="middle">multiplayer.button.create</text>
+        </button>
+        <button id="delete_server" style="ore_ui">
+            <layout type="origin">
+                <layout>[88,-4,88,30]</layout>
+                <type>left_bottom</type>
+                <border>[4,4,4,4]</border>
+            </layout>
+            <text type="lang" color="ffffff" align="middle">multiplayer.button.delete</text>
+        </button>
+        <panel id="side_bg">
+            <layout type="origin">
+                <layout>[0,24,180,2147483600]</layout>
+                <type>left_top</type>
+                <border>[0,0,0,0]</border>
+            </layout>
+        </panel>
+    </elements>
+</faml>

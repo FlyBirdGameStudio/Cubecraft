@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Main-Class: io.flybird.cubecraft.client.ClientMain
+Class-Path: lib/lwjgl-stb-3.3.1.jar lib/netty-codec-redis-4.1.85.Final.j
+ ar lib/netty-resolver-dns-native-macos-4.1.85.Final-lib/osx-aarch_64.ja
+ r lib/annotations-23.0.0.jar lib/netty-all-4.1.85.Final.jar lib/lwjgl-o
+ pengl-3.3.1.jar lib/netty-resolver-dns-4.1.85.Final.jar lib/netty-commo
+ n-4.1.85.Final.jar lib/lwjgl-3.3.1.jar lib/joml-1.10.4.jar lib/netty-tr
+ ansport-native-epoll-4.1.85.Final-linux-aarch_64.jar lib/netty-resolver
+ -dns-native-macos-4.1.85.Final-osx-x86_64.jar lib/netty-codec-mqtt-4.1.
+ 85.Final.jar lib/netty-transport-native-unix-common-4.1.85.Final.jar li
+ b/netty-codec-http-4.1.85.Final.jar lib/netty-resolver-dns-classes-maco
+ s-4.1.85.Final.jar lib/netty-codec-xml-4.1.85.Final.jar lib/netty-trans
+ port-4.1.85.Final.jar lib/netty-codec-stomp-4.1.85.Final.jar lib/netty-
+ transport-sctp-4.1.85.Final.jar lib/netty-buffer-4.1.85.Final.jar lib/n
+ etty-transport-native-kqueue-4.1.85.Final-osx-aarch_64.jar lib/netty-re
+ solver-4.1.85.Final.jar lib/netty-transport-native-kqueue-4.1.85.Final-
+ osx-x86_64.jar lib/netty-codec-socks-4.1.85.Final.jar lib/lwjgl-glfw-3.
+ 3.1.jar lib/lwjgl-openal-3.3.1.jar lib/guava-21.0.jar lib/netty-codec-h
+ ttp2-4.1.85.Final.jar lib/leveldb-0.12.jar lib/netty-codec-4.1.85.Final
+ .jar lib/netty-handler-proxy-4.1.85.Final.jar lib/leveldb-api-0.12.jar 
+ lib/netty-codec-smtp-4.1.85.Final.jar lib/netty-transport-rxtx-4.1.85.F
+ inal.jar lib/gson-2.10.jar lib/netty-transport-native-epoll-4.1.85.Fina
+ l-linux-x86_64.jar lib/netty-transport-classes-epoll-4.1.85.Final.jar l
+ ib/netty-codec-memcache-4.1.85.Final.jar lib/netty-codec-dns-4.1.85.Fin
+ al.jar lib/netty-transport-classes-kqueue-4.1.85.Final.jar lib/netty-ha
+ ndler-4.1.85.Final.jar lib/netty-codec-haproxy-4.1.85.Final.jar lib/net
+ ty-transport-udt-4.1.85.Final.jar lib/FlyBirdCommon.jar lib/Starfish3d.
+ jar
+

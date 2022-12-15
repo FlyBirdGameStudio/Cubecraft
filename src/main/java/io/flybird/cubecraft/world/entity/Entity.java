@@ -1,10 +1,11 @@
 package io.flybird.cubecraft.world.entity;
 
 import io.flybird.cubecraft.register.Registries;
-import io.flybird.cubecraft.world.HittableObject;
+import io.flybird.util.math.HitResult;
+import io.flybird.util.math.HittableObject;
 import io.flybird.cubecraft.world.IWorld;
-import io.flybird.cubecraft.world.entity.item.Item;
 import io.flybird.cubecraft.world.item.Inventory;
+import io.flybird.cubecraft.world.entity.item.Item;
 import io.flybird.util.file.NBTDataIO;
 import io.flybird.util.file.nbt.NBTTagCompound;
 import io.flybird.util.math.*;
@@ -15,15 +16,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-public abstract class Entity implements HittableObject, NBTDataIO {
-
-
-    private Inventory inventory;
+public abstract class Entity implements HittableObject<Entity,IWorld>, NBTDataIO {
+    public static final String AUTO_REGISTER_SPAWN_EGG_ID = "_spawn_egg";
+    private final Inventory inventory;
     public boolean sneak = false;
     protected String uuid;
 
 
-    public HitResult hitResult;
+    public HitResult<Entity, IWorld> hitResult;
     public IWorld world;
     public boolean runningMode;
     public boolean flyingMode = false;
@@ -52,6 +52,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
     public boolean horizontalCollision = false;
 
     public Entity(IWorld world) {
+        this.inventory= Registries.INVENTORY.create(this.getID());
         this.world = world;
         this.resetPos();
         this.uuid = UUID.nameUUIDFromBytes(String.valueOf(System.currentTimeMillis() ^ this.hashCode()).getBytes(StandardCharsets.UTF_8)).toString();
@@ -79,7 +80,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
     }
 
     /**
-     * this is offset but not set.yaw value will clamp to -90~90（degree）
+     * this is offset but not set. Yaw value will clamp to -90~90（degree）
      *
      * @param xo yaw
      * @param yo pitch
@@ -183,7 +184,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
      *
      * @return boxes
      */
-    public abstract HitBox[] getSelectionBoxes();
+    public abstract HitBox<Entity,IWorld>[] getSelectionBoxes();
 
     /**
      * define where the camera is from entity.
@@ -262,7 +263,7 @@ public abstract class Entity implements HittableObject, NBTDataIO {
         this.hitResult = null;
         Vector3d from = new Vector3d(x, y + 1.62, z);
 
-        this.hitResult = RayTest.rayTrace(world.getSelectionBox(this, from, getHitTargetPos()), from, getHitTargetPos());
+        this.hitResult = RayTest.<Entity,IWorld>rayTrace(world.getSelectionBox(this, from, getHitTargetPos()), from, getHitTargetPos());
     }
 
     public Vector3d getHitTargetPos() {
@@ -274,17 +275,8 @@ public abstract class Entity implements HittableObject, NBTDataIO {
     public boolean isFree(double xa, double ya, double za) {
         AABB box = this.collisionBox.cloneMove(xa, ya, za);
         ArrayList<AABB> aABBs = this.world.getCollisionBox(box);
-        if (aABBs.size() > 0) {
-            return false;
-        }
-        return true;//!this.world.containsAnyLiquid(box);
+        return aABBs.size() <= 0;//!this.world.containsAnyLiquid(box);
     }
-
-
-    public void render(float interpolationTime) {
-        Registries.ENTITY_MODEL.get(this.getID()).render(this);
-    }
-
 
 //  ------ data ------
 
@@ -316,6 +308,8 @@ public abstract class Entity implements HittableObject, NBTDataIO {
         physics.setFloat("pitch", this.yRot);
         physics.setFloat("roll", this.zRot);
         compound.setCompoundTag("physics", physics);
+
+        compound.setCompoundTag("inventory",this.inventory.getData());
 
         return compound;
     }
@@ -359,25 +353,16 @@ public abstract class Entity implements HittableObject, NBTDataIO {
         return false;
     }
 
-    @Override
-    public void onHit(Entity from, IWorld world, HitResult hr) {
-
-    }
-
-    @Override
-    public void onInteract(Entity from, IWorld world, HitResult hr) {
-
-    }
 
     public void attack() {
         if (this.hitResult != null) {
-            this.hitResult.hit(world, this);
+            this.hitResult.hit(this,this.world);
         }
     }
 
     public void interact() {
         if (this.hitResult != null) {
-            this.hitResult.interact(world, this);
+            this.hitResult.interact(this,world);
         }
     }
 
@@ -401,5 +386,15 @@ public abstract class Entity implements HittableObject, NBTDataIO {
         this.yRot = (float) location.getYRot();
         this.zRot = (float) location.getZRot();
         this.setWorld(worlds.get(location.getDim()));
+    }
+
+    @Override
+    public void onHit(Entity from, IWorld world, HitResult<Entity,IWorld> hr) {
+        //todo
+    }
+
+    @Override
+    public void onInteract(Entity from, IWorld world, HitResult<Entity,IWorld> hr) {
+        //todo
     }
 }

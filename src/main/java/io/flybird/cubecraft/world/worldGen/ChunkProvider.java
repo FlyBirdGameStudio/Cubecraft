@@ -7,22 +7,22 @@ import io.flybird.cubecraft.world.chunk.Chunk;
 import io.flybird.cubecraft.world.chunk.ChunkPos;
 import io.flybird.cubecraft.world.worldGen.noiseGenerator.PerlinNoise;
 import io.flybird.cubecraft.world.worldGen.noiseGenerator.Synth;
-import io.flybird.cubecraft.world.worldGen.pipeline.ChunkGeneratorPipeline;
 import io.flybird.cubecraft.world.worldGen.templete.Scale;
+import io.flybird.cubecraft.world.worldGen.pipeline.ChunkGeneratorPipeline;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Random;
 
 public class ChunkProvider implements IChunkProvider{
-    public ChunkGeneratorPipeline pipeline;
+    public final ChunkGeneratorPipeline pipeline;
 
     public static final int REGION_GRID_SIZE = 64;
-    public static HashMap<String, ChunkProvider> providers = new HashMap<>();
+    public static final HashMap<String, ChunkProvider> providers = new HashMap<>();
 
-    public IWorld world;
+    public final IWorld world;
 
-    Synth test;
+    final Synth test;
 
     public ChunkProvider(IWorld world) {
         this.world = world;

@@ -1,9 +1,8 @@
 package io.flybird.cubecraft.world.entity.particle;
 
-import io.flybird.starfish3d.render.draw.VertexArrayBuilder;
-
-import io.flybird.cubecraft.world.entity._Entity;
 import io.flybird.cubecraft.world._Level;
+import io.flybird.cubecraft.world.entity._Entity;
+import io.flybird.starfish3d.render.draw.VertexArrayBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +10,8 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 public class ParticleEngine {
-    protected _Level world;
-    private List<Particle> particles = new ArrayList<>();
+    protected final _Level world;
+    private final List<Particle> particles = new ArrayList<>();
 
 
     public ParticleEngine(_Level world ) {
@@ -47,8 +46,7 @@ public class ParticleEngine {
         VertexArrayBuilder t = new VertexArrayBuilder(16);
         GL11.glColor4f(0.8f, 0.8f, 0.8f, 1.0f);
         t.begin();
-        for (int i = 0; i < this.particles.size(); ++i) {
-            Particle p = this.particles.get(i);
+        for (Particle p : this.particles) {
             if (p.isLit() == (layer == 1)) continue;
             p.render(t, a, xa, ya, za, xa2, za2);
         }

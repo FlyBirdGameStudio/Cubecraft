@@ -16,11 +16,6 @@ public class Player extends Humanoid {
     }
 
     @Override
-    public void render(float interpolationTime) {
-
-    }
-
-    @Override
     public String getID() {
         return "cubecraft:player";
     }

@@ -1,10 +1,10 @@
 package io.flybird.cubecraft.internal.ui.component;
 
-import io.flybird.cubecraft.client.gui.FontAlignment;
+import io.flybird.cubecraft.client.gui.font.FontAlignment;
+import io.flybird.cubecraft.client.gui.base.Text;
 import io.flybird.cubecraft.client.gui.component.Component;
+import io.flybird.cubecraft.client.gui.component.LayoutManager;
 import io.flybird.cubecraft.register.Registries;
-import io.flybird.cubecraft.client.gui.Text;
-import io.flybird.cubecraft.client.gui.layout.LayoutManager;
 import io.flybird.starfish3d.event.MouseClickEvent;
 import io.flybird.util.event.EventHandler;
 import io.flybird.util.file.FAMLDeserializer;
@@ -18,11 +18,6 @@ public class TopBar extends Component {
 
     public TopBar(Text text) {
         this.text = text;
-    }
-
-    @Override
-    public void render() {
-        Registries.COMPONENT_RENDERER.get(this.getClass()).render(this);
     }
 
     public static class XMLDeserializer implements FAMLDeserializer<TopBar> {

@@ -4,19 +4,15 @@ import io.flybird.cubecraft.client.ClientMain;
 import io.flybird.cubecraft.client.Cubecraft;
 import io.flybird.cubecraft.extansion.event.ModLoadEvent;
 import io.flybird.util.logging.LogHandler;
-import io.flybird.util.ReflectHelper;
-import io.flybird.util.task.LoadTask;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.jar.Attributes;
-import java.util.jar.JarFile;
+
 
 public class ModManager {
-    static LogHandler logger = LogHandler.create("ModLoader");
-    public static HashMap<String, Mod> mods = new HashMap<>();
+    static final LogHandler logger = LogHandler.create("ModLoader");
+    public static final HashMap<String, Mod> mods = new HashMap<>();
 
     public static HashMap<String, Mod> getLoadedMods() {
         return mods;
@@ -34,7 +30,7 @@ public class ModManager {
     }
 
     public static void loadMod(Class<?> clazz,boolean client) {
-        Mod mod = null;
+        Mod mod;
         try {
             mod = (Mod) clazz
                     .getDeclaredConstructor()

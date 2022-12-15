@@ -1,7 +1,7 @@
 package io.flybird.cubecraft.world.entity.particle;
 
-import io.flybird.cubecraft.world.entity._Entity;
 import io.flybird.cubecraft.world._Level;
+import io.flybird.cubecraft.world.entity._Entity;
 import io.flybird.starfish3d.render.draw.VertexArrayBuilder;
 
 public class Particle
@@ -9,17 +9,17 @@ extends _Entity {
     private float xd;
     private float yd;
     private float zd;
-    public int tex;
-    private float uo;
-    private float vo;
-    private int age = 0;
-    private int lifetime = 0;
-    private float size;
+    public final int tex;
+    private final float uo;
+    private final float vo;
+    private int age;
+    private final int lifetime;
+    private final float size;
 
     public Particle(_Level world, float x, float y, float z, float xa, float ya, float za, int tex) {
         super(world);
         this.tex = tex;
-        this.setSize(0.2f, 0.2f);
+        this.setSize();
         this.heightOffset = this.bbHeight / 2.0f;
         this.setPos(x, y, z);
         this.xd = xa + (float)(Math.random() * 2.0 - 1.0) * 0.4f;
@@ -46,7 +46,7 @@ extends _Entity {
             this.remove();
         }
         this.yd = (float)((double)this.yd - 0.04);
-        this.move(this.xd, this.yd, this.zd);
+        this.move();
         this.xd *= 0.98f;
         this.yd *= 0.98f;
         this.zd *= 0.98f;
