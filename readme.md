@@ -1,4 +1,8 @@
 # Cubecraft
+这个项目已经被弃用，并且将被切换到C#。
+This project is f*cked and will be soon moved to c#.
+
+
 一个简单的minecraft高仿  
 by [FlyBirdStudio](http://sunrisestudio.top)
 
