@@ -1,0 +1,14 @@
+{
+  "info": {
+    "name": "Cubecraft Internal",
+    "author": "GrassBlock2022",
+    "version": "0.1",
+    "website": "http://sunrisestudio.top/",
+    "desc": "Cubecraft bundled internal content pack",
+    "icon": "/resource/cubecraft/texture/mod_icon.png"
+  },
+  "mod_loader": {
+    "class": "io.flybird.cubecraft.internal.InternalContent",
+    "resource_namespace": "cubecraft"
+  }
+}

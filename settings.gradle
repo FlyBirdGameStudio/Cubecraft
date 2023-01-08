@@ -1,7 +1,8 @@
 rootProject.name = 'CubecraftGradle'
-include 'common'
-include 'starfish3d'
-include 'client'
-include 'internal'
-include 'server'
 
+include 'source:Quantum3D'
+include 'source:Common'
+include 'source:Main'
+include 'source:Client'
+include 'source:Server'
+include 'source:Internal'

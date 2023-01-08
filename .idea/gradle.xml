@@ -12,13 +12,16 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/client" />
-            <option value="$PROJECT_DIR$/common" />
-            <option value="$PROJECT_DIR$/internal" />
-            <option value="$PROJECT_DIR$/server" />
-            <option value="$PROJECT_DIR$/starfish3d" />
+            <option value="$PROJECT_DIR$/source" />
+            <option value="$PROJECT_DIR$/source/Client" />
+            <option value="$PROJECT_DIR$/source/Common" />
+            <option value="$PROJECT_DIR$/source/Internal" />
+            <option value="$PROJECT_DIR$/source/Main" />
+            <option value="$PROJECT_DIR$/source/Quantum3D" />
+            <option value="$PROJECT_DIR$/source/Server" />
           </set>
         </option>
+        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

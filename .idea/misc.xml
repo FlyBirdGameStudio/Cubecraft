@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="EntryPointsManager">
-    <list size="10">
+    <list size="12">
       <item index="0" class="java.lang.String" itemvalue="io.flybird.cubecraft.client.resources.ResourceLoadHandler" />
       <item index="1" class="java.lang.String" itemvalue="io.flybird.cubecraft.extansion.CubecraftMod" />
-      <item index="2" class="java.lang.String" itemvalue="io.flybird.cubecraft.network.packet.PacketEventHandler" />
-      <item index="3" class="java.lang.String" itemvalue="io.flybird.cubecraft.world.worldGen.WorldGenListener" />
-      <item index="4" class="java.lang.String" itemvalue="io.flybird.util.container.namespace.FieldRegistry" />
-      <item index="5" class="java.lang.String" itemvalue="io.flybird.util.container.namespace.ItemGetter" />
-      <item index="6" class="java.lang.String" itemvalue="io.flybird.util.container.namespace.ItemRegisterFunc" />
-      <item index="7" class="java.lang.String" itemvalue="io.flybird.util.event.EventHandler" />
-      <item index="8" class="java.lang.String" itemvalue="io.flybird.util.network.packet.PacketConstructor" />
-      <item index="9" class="java.lang.String" itemvalue="io.flybird.util.network.packet.PacketEventHandler" />
+      <item index="2" class="java.lang.String" itemvalue="io.flybird.cubecraft.network.packet.PacketConstructor" />
+      <item index="3" class="java.lang.String" itemvalue="io.flybird.cubecraft.network.packet.PacketEventHandler" />
+      <item index="4" class="java.lang.String" itemvalue="io.flybird.cubecraft.world.worldGen.WorldGenListener" />
+      <item index="5" class="java.lang.String" itemvalue="io.flybird.util.container.namespace.FieldRegistry" />
+      <item index="6" class="java.lang.String" itemvalue="io.flybird.util.container.namespace.ItemGetter" />
+      <item index="7" class="java.lang.String" itemvalue="io.flybird.util.container.namespace.ItemRegisterFunc" />
+      <item index="8" class="java.lang.String" itemvalue="io.flybird.util.container.namespace.TypeItem" />
+      <item index="9" class="java.lang.String" itemvalue="io.flybird.util.event.EventHandler" />
+      <item index="10" class="java.lang.String" itemvalue="io.flybird.util.network.packet.PacketConstructor" />
+      <item index="11" class="java.lang.String" itemvalue="io.flybird.util.network.packet.PacketEventHandler" />
     </list>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
